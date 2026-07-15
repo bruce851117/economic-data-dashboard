@@ -1,0 +1,353 @@
+{
+  "source": "U.S. Bureau of Labor Statistics",
+  "source_type": "BLS Public Data API",
+  "api_url": "https://api.bls.gov/publicAPI/v2/timeseries/data/",
+  "source_url": "https://www.bls.gov/news.release/cpi.t02.htm",
+  "title": "Consumer Price Index for All Urban Consumers",
+  "reference_period": "June 2026",
+  "updated_at_utc": "2026-07-15T06:58:23.785753+00:00",
+  "data_changed": true,
+  "row_count": 10,
+  "data": [
+    {
+      "name_en": "All items",
+      "name_zh": "整體 CPI",
+      "unadjusted_series_id": "CUUR0000SA0",
+      "adjusted_series_id": "CUSR0000SA0",
+      "reference_year": 2026,
+      "reference_month": 6,
+      "reference_period": "June 2026",
+      "relative_importance": 100.0,
+      "unadjusted_index": 333.952,
+      "year_over_year_percent_change": 3.531,
+      "unadjusted_month_over_month_change": -0.349,
+      "seasonally_adjusted_index": 332.568,
+      "seasonally_adjusted_changes": [
+        {
+          "year": 2026,
+          "month": 4,
+          "period_name": "April",
+          "percent_change": 0.64
+        },
+        {
+          "year": 2026,
+          "month": 5,
+          "period_name": "May",
+          "percent_change": 0.473
+        },
+        {
+          "year": 2026,
+          "month": 6,
+          "period_name": "June",
+          "percent_change": -0.422
+        }
+      ]
+    },
+    {
+      "name_en": "All items less food and energy",
+      "name_zh": "核心 CPI",
+      "unadjusted_series_id": "CUUR0000SA0L1E",
+      "adjusted_series_id": "CUSR0000SA0L1E",
+      "reference_year": 2026,
+      "reference_month": 6,
+      "reference_period": "June 2026",
+      "relative_importance": 78.762,
+      "unadjusted_index": 336.882,
+      "year_over_year_percent_change": 2.594,
+      "unadjusted_month_over_month_change": 0.011,
+      "seasonally_adjusted_index": 336.065,
+      "seasonally_adjusted_changes": [
+        {
+          "year": 2026,
+          "month": 4,
+          "period_name": "April",
+          "percent_change": 0.376
+        },
+        {
+          "year": 2026,
+          "month": 5,
+          "period_name": "May",
+          "percent_change": 0.208
+        },
+        {
+          "year": 2026,
+          "month": 6,
+          "period_name": "June",
+          "percent_change": -0.017
+        }
+      ]
+    },
+    {
+      "name_en": "Food",
+      "name_zh": "食品",
+      "unadjusted_series_id": "CUUR0000SAF1",
+      "adjusted_series_id": "CUSR0000SAF1",
+      "reference_year": 2026,
+      "reference_month": 6,
+      "reference_period": "June 2026",
+      "relative_importance": 13.447,
+      "unadjusted_index": 349.731,
+      "year_over_year_percent_change": 3.014,
+      "unadjusted_month_over_month_change": 0.2,
+      "seasonally_adjusted_index": 349.609,
+      "seasonally_adjusted_changes": [
+        {
+          "year": 2026,
+          "month": 4,
+          "period_name": "April",
+          "percent_change": 0.504
+        },
+        {
+          "year": 2026,
+          "month": 5,
+          "period_name": "May",
+          "percent_change": 0.156
+        },
+        {
+          "year": 2026,
+          "month": 6,
+          "period_name": "June",
+          "percent_change": 0.206
+        }
+      ]
+    },
+    {
+      "name_en": "Energy",
+      "name_zh": "能源",
+      "unadjusted_series_id": "CUUR0000SA0E",
+      "adjusted_series_id": "CUSR0000SA0E",
+      "reference_year": 2026,
+      "reference_month": 6,
+      "reference_period": "June 2026",
+      "relative_importance": 7.791,
+      "unadjusted_index": 328.95,
+      "year_over_year_percent_change": 15.702,
+      "unadjusted_month_over_month_change": -4.939,
+      "seasonally_adjusted_index": 319.29,
+      "seasonally_adjusted_changes": [
+        {
+          "year": 2026,
+          "month": 4,
+          "period_name": "April",
+          "percent_change": 3.808
+        },
+        {
+          "year": 2026,
+          "month": 5,
+          "period_name": "May",
+          "percent_change": 3.884
+        },
+        {
+          "year": 2026,
+          "month": 6,
+          "period_name": "June",
+          "percent_change": -5.714
+        }
+      ]
+    },
+    {
+      "name_en": "Shelter",
+      "name_zh": "居住成本",
+      "unadjusted_series_id": "CUUR0000SAH1",
+      "adjusted_series_id": "CUSR0000SAH1",
+      "reference_year": 2026,
+      "reference_month": 6,
+      "reference_period": "June 2026",
+      "relative_importance": 35.149,
+      "unadjusted_index": 429.062,
+      "year_over_year_percent_change": 3.275,
+      "unadjusted_month_over_month_change": 0.09,
+      "seasonally_adjusted_index": 428.501,
+      "seasonally_adjusted_changes": [
+        {
+          "year": 2026,
+          "month": 4,
+          "period_name": "April",
+          "percent_change": 0.607
+        },
+        {
+          "year": 2026,
+          "month": 5,
+          "period_name": "May",
+          "percent_change": 0.318
+        },
+        {
+          "year": 2026,
+          "month": 6,
+          "period_name": "June",
+          "percent_change": 0.118
+        }
+      ]
+    },
+    {
+      "name_en": "Commodities less food and energy",
+      "name_zh": "核心商品",
+      "unadjusted_series_id": "CUUR0000SA0L1",
+      "adjusted_series_id": "CUSR0000SA0L1",
+      "reference_year": 2026,
+      "reference_month": 6,
+      "reference_period": "June 2026",
+      "relative_importance": 86.553,
+      "unadjusted_index": 331.486,
+      "year_over_year_percent_change": 3.612,
+      "unadjusted_month_over_month_change": -0.435,
+      "seasonally_adjusted_index": 329.915,
+      "seasonally_adjusted_changes": [
+        {
+          "year": 2026,
+          "month": 4,
+          "period_name": "April",
+          "percent_change": 0.661
+        },
+        {
+          "year": 2026,
+          "month": 5,
+          "period_name": "May",
+          "percent_change": 0.523
+        },
+        {
+          "year": 2026,
+          "month": 6,
+          "period_name": "June",
+          "percent_change": -0.52
+        }
+      ]
+    },
+    {
+      "name_en": "New vehicles",
+      "name_zh": "新車",
+      "unadjusted_series_id": "CUUR0000SETA01",
+      "adjusted_series_id": "CUSR0000SETA01",
+      "reference_year": 2026,
+      "reference_month": 6,
+      "reference_period": "June 2026",
+      "relative_importance": 3.734,
+      "unadjusted_index": 179.338,
+      "year_over_year_percent_change": 0.502,
+      "unadjusted_month_over_month_change": 0.102,
+      "seasonally_adjusted_index": 178.67,
+      "seasonally_adjusted_changes": [
+        {
+          "year": 2026,
+          "month": 4,
+          "period_name": "April",
+          "percent_change": -0.162
+        },
+        {
+          "year": 2026,
+          "month": 5,
+          "period_name": "May",
+          "percent_change": -0.258
+        },
+        {
+          "year": 2026,
+          "month": 6,
+          "period_name": "June",
+          "percent_change": -0.024
+        }
+      ]
+    },
+    {
+      "name_en": "Used cars and trucks",
+      "name_zh": "二手車與卡車",
+      "unadjusted_series_id": "CUUR0000SETA02",
+      "adjusted_series_id": "CUSR0000SETA02",
+      "reference_year": 2026,
+      "reference_month": 6,
+      "reference_period": "June 2026",
+      "relative_importance": 2.629,
+      "unadjusted_index": 183.36,
+      "year_over_year_percent_change": -1.774,
+      "unadjusted_month_over_month_change": 1.554,
+      "seasonally_adjusted_index": 179.591,
+      "seasonally_adjusted_changes": [
+        {
+          "year": 2026,
+          "month": 4,
+          "period_name": "April",
+          "percent_change": -0.004
+        },
+        {
+          "year": 2026,
+          "month": 5,
+          "period_name": "May",
+          "percent_change": 0.102
+        },
+        {
+          "year": 2026,
+          "month": 6,
+          "period_name": "June",
+          "percent_change": -0.23
+        }
+      ]
+    },
+    {
+      "name_en": "Medical care services",
+      "name_zh": "醫療照護服務",
+      "unadjusted_series_id": "CUUR0000SAM2",
+      "adjusted_series_id": "CUSR0000SAM2",
+      "reference_year": 2026,
+      "reference_month": 6,
+      "reference_period": "June 2026",
+      "relative_importance": 6.821,
+      "unadjusted_index": 652.152,
+      "year_over_year_percent_change": 2.918,
+      "unadjusted_month_over_month_change": -0.067,
+      "seasonally_adjusted_index": 651.533,
+      "seasonally_adjusted_changes": [
+        {
+          "year": 2026,
+          "month": 4,
+          "period_name": "April",
+          "percent_change": -0.004
+        },
+        {
+          "year": 2026,
+          "month": 5,
+          "period_name": "May",
+          "percent_change": 0.528
+        },
+        {
+          "year": 2026,
+          "month": 6,
+          "period_name": "June",
+          "percent_change": -0.124
+        }
+      ]
+    },
+    {
+      "name_en": "Transportation services",
+      "name_zh": "運輸服務",
+      "unadjusted_series_id": "CUUR0000SAS4",
+      "adjusted_series_id": "CUSR0000SAS4",
+      "reference_year": 2026,
+      "reference_month": 6,
+      "reference_period": "June 2026",
+      "relative_importance": 6.377,
+      "unadjusted_index": 462.494,
+      "year_over_year_percent_change": 3.415,
+      "unadjusted_month_over_month_change": -0.741,
+      "seasonally_adjusted_index": 457.169,
+      "seasonally_adjusted_changes": [
+        {
+          "year": 2026,
+          "month": 4,
+          "period_name": "April",
+          "percent_change": 0.331
+        },
+        {
+          "year": 2026,
+          "month": 5,
+          "period_name": "May",
+          "percent_change": -0.577
+        },
+        {
+          "year": 2026,
+          "month": 6,
+          "period_name": "June",
+          "percent_change": -0.349
+        }
+      ]
+    }
+  ]
+}
