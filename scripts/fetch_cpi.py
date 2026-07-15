@@ -1354,6 +1354,14 @@ def save_json(
             for value in row["values"]
         )
 
+        missing_periods = [
+            periods[index]["period"]
+            for index, value in enumerate(
+                row["values"]
+            )
+            if value is None
+        ]
+
         if coverage < len(periods):
             incomplete_derived_rows += 1
 
@@ -1362,6 +1370,32 @@ def save_json(
             row["name"],
             f"{coverage}/{len(periods)}",
         )
+
+        if missing_periods:
+            print(
+                "Derived missing periods:",
+                row["name"],
+                ", ".join(missing_periods),
+            )
+
+            for detail in row.get(
+                "calculation_details",
+                [],
+            ):
+                if (
+                    detail.get("period")
+                    not in missing_periods
+                ):
+                    continue
+
+                print(
+                    "Derived missing detail:",
+                    row["name"],
+                    json.dumps(
+                        detail,
+                        ensure_ascii=False,
+                    ),
+                )
 
     print(
         "Derived rows with incomplete coverage:",
