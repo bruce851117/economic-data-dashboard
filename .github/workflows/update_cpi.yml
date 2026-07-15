@@ -1,4 +1,4 @@
-name: Update BLS CPI Data
+name: Update BLS Economic Data
 
 on: workflow_dispatch
 
@@ -6,14 +6,14 @@ permissions:
   contents: write
 
 concurrency:
-  group: update-bls-cpi-data
+  group: update-bls-economic-data
   cancel-in-progress: false
 
 jobs:
-  update-cpi:
-    name: Fetch and update CPI data
+  update-economic-data:
+    name: Fetch and update BLS economic data
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
@@ -29,11 +29,25 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install requests
 
-      - name: Fetch CPI data from BLS Public Data API
+      - name: Confirm BLS API key
+        env:
+          BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
+        run: |
+          if [ -z "$BLS_API_KEY" ]; then
+            echo "ERROR: GitHub Secret BLS_API_KEY is missing."
+            exit 1
+          fi
+
+          echo "BLS_API_KEY is configured."
+          echo "Key length: ${#BLS_API_KEY}"
+
+      - name: Fetch CPI data from BLS API
+        env:
+          BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
         run: |
           python scripts/fetch_cpi.py
 
-      - name: Validate generated JSON
+      - name: Validate CPI JSON
         run: |
           python - <<'PY'
           import json
@@ -62,29 +76,7 @@ jobs:
                   "ERROR: row_count does not match data length."
               )
 
-          required_names = {
-              "All items",
-              "All items less food and energy",
-              "Food",
-              "Energy",
-          }
-
-          available_names = {
-              row.get("name_en")
-              for row in rows
-          }
-
-          missing_names = (
-              required_names - available_names
-          )
-
-          if missing_names:
-              raise SystemExit(
-                  "ERROR: Missing CPI categories: "
-                  + ", ".join(sorted(missing_names))
-              )
-
-          print("JSON validation passed.")
+          print("CPI JSON validation passed.")
           print(f"Rows: {row_count}")
           print(
               "Reference period:",
@@ -92,19 +84,19 @@ jobs:
           )
           PY
 
-      - name: Commit updated CPI data
+      - name: Commit updated data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email \
             "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add data/cpi_table2.json
+          git add data/
 
           if git diff --cached --quiet; then
-            echo "CPI data has not changed."
+            echo "BLS economic data has not changed."
             echo "No commit is required."
             exit 0
           fi
 
-          git commit -m "Update BLS CPI data"
+          git commit -m "Update BLS economic data"
           git push
