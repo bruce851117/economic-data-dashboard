@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#0f172a"
+  >
+
+  <title>美國經濟數據 Dashboard</title>
+
+  <style>
+    :root {
+      --bg: #f3f6fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --border: #dbe3ef;
+      --border-strong: #c3cfdf;
+      --text: #172033;
+      --muted: #64748b;
+      --navy: #12233f;
+      --navy-hover: #1b3154;
+      --blue: #2563eb;
+      --blue-soft: #dbeafe;
+      --blue-softer: #eff6ff;
+      --slate-soft: #f1f5f9;
+      --positive: #c62828;
+      --negative: #087f5b;
+      --neutral: #64748b;
+      --warning: #9a6700;
+      --warning-bg: #fff8dd;
+      --latest: #fff8df;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(
+          circle at top right,
+          rgba(37, 99, 235, 0.08),
+          transparent 28rem
+        ),
+        var(--bg);
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans TC",
+        "Microsoft JhengHei",
+        sans-serif;
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .app-header {
+      color: white;
+      background:
+        linear-gradient(
+          135deg,
+          #0c172b 0%,
+          #142a4b 60%,
+          #18355f 100%
+        );
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.22);
+    }
+
+    .header-inner {
+      width: min(1500px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 18px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .eyebrow {
+      margin-bottom: 5px;
+      color: #93c5fd;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 36px);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .header-description {
+      max-width: 760px;
+      margin: 9px 0 0;
+      color: #cbd5e1;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .source-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 15px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 10px;
+      color: white;
+      background: rgba(255, 255, 255, 0.08);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: 0.2s ease;
+    }
+
+    .source-link:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-top: 22px;
+    }
+
+    .tab-button {
+      min-height: 42px;
+      padding: 0 18px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      color: #cbd5e1;
+      background: transparent;
+      cursor: pointer;
+      font-weight: 800;
+      transition: 0.2s ease;
+    }
+
+    .tab-button:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .tab-button.active {
+      color: #0f2748;
+      background: white;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+    }
+
+    main {
+      width: min(1500px, calc(100% - 32px));
+      margin: 24px auto 48px;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .toolbar-label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .filter-button {
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: 9px;
+      color: #334155;
+      background: white;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 800;
+      transition: 0.18s ease;
+    }
+
+    .filter-button:hover {
+      border-color: #93b4e5;
+      background: var(--blue-softer);
+    }
+
+    .filter-button.active {
+      border-color: var(--blue);
+      color: white;
+      background: var(--blue);
+    }
+
+    .status-line {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px 14px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.13);
+    }
+
+    .table-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .table-titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 17px 18px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(
+        180deg,
+        #ffffff,
+        #f8fafc
+      );
+    }
+
+    .table-title {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .table-subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .legend-positive {
+      color: var(--positive);
+      font-weight: 800;
+    }
+
+    .legend-negative {
+      color: var(--negative);
+      font-weight: 800;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+    }
+
+    table {
+      width: 100%;
+      min-width: 900px;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      height: 48px;
+      padding: 9px 12px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border-strong);
+      color: #334155;
+      background: #eef3f9;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    thead th:last-child {
+      border-right: 0;
+    }
+
+    .item-header {
+      position: sticky;
+      left: 0;
+      z-index: 8;
+      width: 360px;
+      min-width: 360px;
+      text-align: left;
+    }
+
+    .code-header {
+      position: sticky;
+      left: 360px;
+      z-index: 8;
+      width: 150px;
+      min-width: 150px;
+      text-align: left;
+    }
+
+    tbody td {
+      height: 43px;
+      padding: 8px 12px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: white;
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    tbody td:last-child {
+      border-right: 0;
+    }
+
+    .item-cell {
+      position: sticky;
+      left: 0;
+      z-index: 3;
+      width: 360px;
+      min-width: 360px;
+      text-align: left;
+      box-shadow: 5px 0 9px -10px rgba(15, 23, 42, 0.8);
+    }
+
+    .code-cell {
+      position: sticky;
+      left: 360px;
+      z-index: 3;
+      width: 150px;
+      min-width: 150px;
+      color: #52657d;
+      text-align: left;
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+      font-size: 11px;
+      white-space: nowrap;
+      box-shadow: 5px 0 9px -10px rgba(15, 23, 42, 0.8);
+    }
+
+    .name-wrapper {
+      display: flex;
+      align-items: center;
+      min-height: 25px;
+    }
+
+    .level-guide {
+      flex: 0 0 auto;
+      width: 3px;
+      height: 22px;
+      margin-right: 9px;
+      border-radius: 4px;
+      background: rgba(37, 99, 235, 0.45);
+    }
+
+    .item-name {
+      line-height: 1.35;
+    }
+
+    .level-0 .item-name {
+      font-weight: 900;
+    }
+
+    .level-1 .item-name {
+      font-weight: 850;
+    }
+
+    .level-2 .item-name {
+      font-weight: 700;
+    }
+
+    .level-3 .item-name,
+    .level-4 .item-name {
+      font-weight: 600;
+    }
+
+    .level-0 td {
+      color: white;
+      background: var(--navy);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .level-0 .code-cell {
+      color: #cbd5e1;
+    }
+
+    .level-0 .level-guide {
+      background: #60a5fa;
+    }
+
+    .level-1 td {
+      background: #dbeafe;
+    }
+
+    .level-2 td {
+      background: #eff6ff;
+    }
+
+    .level-3 td {
+      background: #f6f8fb;
+    }
+
+    .level-4 td {
+      background: white;
+    }
+
+    .level-0 .item-cell,
+    .level-0 .code-cell {
+      background: var(--navy);
+    }
+
+    .level-1 .item-cell,
+    .level-1 .code-cell {
+      background: #dbeafe;
+    }
+
+    .level-2 .item-cell,
+    .level-2 .code-cell {
+      background: #eff6ff;
+    }
+
+    .level-3 .item-cell,
+    .level-3 .code-cell {
+      background: #f6f8fb;
+    }
+
+    .level-4 .item-cell,
+    .level-4 .code-cell {
+      background: white;
+    }
+
+    .value-cell {
+      min-width: 90px;
+      text-align: right;
+      font-weight: 800;
+    }
+
+    .value-positive {
+      color: var(--positive);
+    }
+
+    .value-negative {
+      color: var(--negative);
+    }
+
+    .value-neutral {
+      color: var(--neutral);
+    }
+
+    .level-0 .value-positive {
+      color: #ffb4b4;
+    }
+
+    .level-0 .value-negative {
+      color: #86efc0;
+    }
+
+    .level-0 .value-neutral {
+      color: #cbd5e1;
+    }
+
+    .latest-column {
+      box-shadow:
+        inset 3px 0 0 rgba(234, 179, 8, 0.35),
+        inset -3px 0 0 rgba(234, 179, 8, 0.2);
+    }
+
+    thead .latest-column {
+      color: #6b4f00;
+      background: #fff0b8;
+    }
+
+    tbody tr:not(.level-0) .latest-column {
+      background-image:
+        linear-gradient(
+          rgba(255, 248, 223, 0.6),
+          rgba(255, 248, 223, 0.6)
+        );
+    }
+
+    .seasonality-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 19px;
+      margin-left: 6px;
+      padding: 0 6px;
+      border-radius: 999px;
+      color: #9a6700;
+      background: #fff1b8;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      font-size: 9px;
+      font-weight: 900;
+    }
+
+    .unavailable {
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .loading,
+    .error-box,
+    .empty-state {
+      padding: 48px 24px;
+      text-align: center;
+    }
+
+    .loading {
+      color: var(--muted);
+    }
+
+    .loading-spinner {
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 13px;
+      border: 3px solid #dbeafe;
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .error-box {
+      color: #991b1b;
+      background: #fff1f2;
+    }
+
+    .error-title {
+      margin-bottom: 7px;
+      font-weight: 900;
+    }
+
+    .footnote {
+      padding: 13px 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--surface-soft);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .employment-placeholder {
+      padding: 54px 24px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .placeholder-icon {
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 16px;
+      border-radius: 16px;
+      color: white;
+      background: linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+      );
+      font-size: 26px;
+      font-weight: 900;
+    }
+
+    .employment-placeholder h2 {
+      margin: 0 0 8px;
+      font-size: 21px;
+    }
+
+    .employment-placeholder p {
+      max-width: 620px;
+      margin: 0 auto;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    @media (max-width: 800px) {
+      .header-inner,
+      main {
+        width: min(100% - 20px, 1500px);
+      }
+
+      .header-top,
+      .toolbar,
+      .table-titlebar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .source-link {
+        align-self: flex-start;
+      }
+
+      .status-line {
+        justify-content: flex-start;
+      }
+
+      .legend {
+        white-space: normal;
+      }
+
+      .item-header,
+      .item-cell {
+        width: 255px;
+        min-width: 255px;
+      }
+
+      .code-header,
+      .code-cell {
+        left: 255px;
+        width: 125px;
+        min-width: 125px;
+      }
+
+      table {
+        min-width: 760px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-top">
+        <div>
+          <div class="eyebrow">
+            BLS Economic Data
+          </div>
+
+          <h1>美國經濟數據 Dashboard</h1>
+
+          <p class="header-description">
+            透過美國勞工統計局（BLS）Public Data API
+            整理 CPI 與就業市場資料。
+          </p>
+        </div>
+
+        <a
+          class="source-link"
+          href="https://www.bls.gov/"
+          target="_blank"
+          rel="noopener noreferrer"
+       s="tabs" aria-label="資料分頁">
+        <button
+          class="tab-button active"
+          type="button"
+          data-tab="cpi"
+        >
+          CPI
+        </button>
+
+        <button
+          class="tab-button"
+          type="button"
+          data-tab="employment"
+        >
+          非農就業
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section
+      id="panel-cpi"
+      class="tab-panel active"
+    >
+      <div class="toolbar">
+        <div class="toolbar-group">
+          <span class="toolbar-label">
+            顯示期間
+          </span>
+
+          <button
+            class="filter-button"
+            type="button"
+            data-months="3"
+          >
+            最近3個月
+          </button>
+
+          <button
+            class="filter-button active"
+            type="button"
+            data-months="6"
+          >
+            最近6個月
+          </button>
+
+          <button
+            class="filter-button"
+            type="button"
+            data-months="12"
+          >
+            最近12個月
+          </button>
+        </div>
+
+        <div class="status-line">
+          <span class="status-dot"></span>
+
+          <span id="cpi-range">
+            載入中
+          </span>
+
+          <span id="cpi-updated"></span>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-titlebar">
+          <div>
+            <h2 class="table-title">
+              CPI 月增率
+            </h2>
+
+            <p class="table-subtitle">
+              季節調整後月增率，單位：%
+            </p>
+          </div>
+
+          <div class="legend">
+            <span class="legend-positive">
+              正值
+            </span>
+
+            <span class="legend-negative">
+              負值
+            </span>
+
+            <span>
+              最新月份以淡黃色標示
+            </span>
+          </div>
+        </div>
+
+        <div id="cpi-content">
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            正在讀取 CPI 資料
+          </div>
+        </div>
+
+        <div class="footnote">
+          註：除 Health Insurance 外，各列使用季節調整
+          CPI 指數計算月增率。Health Insurance 使用 BLS
+          未季調 Series，並以 NSA 標示。顯示值四捨五入至
+          小數點後兩位。
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="panel-employment"
+      class="tab-panel"
+    >
+      <div class="employment-placeholder">
+        <div class="placeholder-icon">
+          NFP
+        </div>
+
+        <h2>非農就業分頁</h2>
+
+        <p>
+          CPI 分頁完成後，此處將加入 Payroll Employment、
+          Labor Force、失業流量、失業原因、失業率及平均失業
+          期間等資料，同樣保存最近12個月並預設顯示最近6個月。
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const state = {
+      cpiData: null,
+      cpiMonths: 6,
+    };
+
+    const tabButtons = document.querySelectorAll(
+      ".tab-button"
+    );
+
+    const tabPanels = document.querySelectorAll(
+      ".tab-panel"
+    );
+
+    const filterButtons = document.querySelectorAll(
+      ".filter-button"
+    );
+
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const tabName = button.dataset.tab;
+
+        tabButtons.forEach((item) => {
+          item.classList.toggle(
+            "active",
+            item === button
+          );
+        });
+
+        tabPanels.forEach((panel) => {
+          panel.classList.toggle(
+            "active",
+            panel.id === `panel-${tabName}`
+          );
+        });
+      });
+    });
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        state.cpiMonths = Number(
+          button.dataset.months
+        );
+
+        filterButtons.forEach((item) => {
+          item.classList.toggle(
+            "active",
+            item === button
+          );
+        });
+
+        renderCpiTable();
+      });
+    });
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatValue(value) {
+      if (
+        value === null ||
+        value === undefined ||
+        Number.isNaN(Number(value))
+      ) {
+        return {
+          display: "—",
+          className: "unavailable",
+        };
+      }
+
+      const numericValue = Number(value);
+
+      let className = "value-neutral";
+
+      if (numericValue > 0) {
+        className = "value-positive";
+      } else if (numericValue < 0) {
+        className = "value-negative";
+      }
+
+      return {
+        display: numericValue.toFixed(2),
+        className,
+      };
+    }
+
+    function formatUpdatedAt(value) {
+      if (!value) {
+        return "";
+      }
+
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) {
+        return "";
+      }
+
+      return new Intl.DateTimeFormat(
+        "zh-TW",
+        {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+          timeZone: "Asia/Taipei",
+        }
+      ).format(date);
+    }
+
+    function buildIndent(level) {
+      const indent = Math.max(
+        0,
+        Number(level) || 0
+      ) * 22;
+
+      return `padding-left: ${12 + indent}px;`;
+    }
+
+    function renderCpiTable() {
+      const container = document.getElementById(
+        "cpi-content"
+      );
+
+      const rangeElement = document.getElementById(
+        "cpi-range"
+      );
+
+      const updatedElement = document.getElementById(
+        "cpi-updated"
+      );
+
+      if (!state.cpiData) {
+        return;
+      }
+
+      const allPeriods = Array.isArray(
+        state.cpiData.periods
+      )
+        ? state.cpiData.periods
+        : [];
+
+      const allRows = Array.isArray(
+        state.cpiData.rows
+      )
+        ? state.cpiData.rows
+        : [];
+
+      const requestedMonths = Math.min(
+        state.cpiMonths,
+        allPeriods.length
+      );
+
+      const startIndex = (
+        allPeriods.length - requestedMonths
+      );
+
+      const periods = allPeriods.slice(
+        startIndex
+      );
+
+      if (!periods.length || !allRows.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            CPI資料目前為空。
+          </div>
+        `;
+
+        return;
+      }
+
+      rangeElement.textContent = (
+        `${periods[0].period} ～ ` +
+        `${periods[periods.length - 1].period}`
+      );
+
+      const updatedText = formatUpdatedAt(
+        state.cpiData.updated_at_utc
+      );
+
+      updatedElement.textContent = updatedText
+        ? `資料更新：${updatedText}`
+        : "";
+
+      const headerCells = periods
+        .map((period, index) => {
+          const isLatest = (
+            index === periods.length - 1
+          );
+
+          return `
+            <th
+              class="${
+                isLatest ? "latest-column" : ""
+              }"
+              title="${
+                escapeHtml(period.period_name)
+              } ${escapeHtml(period.year)}"
+            >
+              ${escapeHtml(period.label)}
+            </th>
+          `;
+        })
+        .join("");
+
+      const bodyRows = allRows
+        .map((row) => {
+          const level = Number(row.level) || 0;
+
+          const values = Array.isArray(row.values)
+            ? row.values.slice(startIndex)
+            : [];
+
+          const displayValues = periods.map(
+            (_, index) => {
+              const formatted = formatValue(
+                values[index]
+              );
+
+              const isLatest = (
+                index === periods.length - 1
+              );
+
+              return `
+                <td
+                  class="
+                    value-cell
+                    ${formatted.className}
+                    ${
+                      isLatest
+                        ? "latest-column"
+                        : ""
+                    }
+                  "
+                >
+                  ${formatted.display}
+                </td>
+              `;
+            }
+          ).join("");
+
+          const nsaBadge = (
+            row.seasonality === "NSA"
+          )
+            ? `
+              <span
+                class="seasonality-badge"
+                title="Not Seasonally Adjusted"
+              >
+                NSA
+              </span>
+            `
+            : "";
+
+          const title = row.series_title
+            ? ` title="${escapeHtml(
+                row.series_title
+              )}"`
+            : "";
+
+          return `
+            <tr class="level-${level}">
+              <td
+                class="item-cell"
+                style="${buildIndent(level)}"
+                ${title}
+              >
+                <div class="name-wrapper">
+                  ${
+                    level > 0
+                      ? '<span class="level-guide"></span>'
+                      : ""
+                  }
+
+                  <span class="item-name">
+                    ${escapeHtml(row.name)}
+                  </span>
+                </div>
+              </td>
+
+              <td class="code-cell">
+                ${escapeHtml(row.display_code)}
+                ${nsaBadge}
+              </td>
+
+              ${displayValues}
+            </tr>
+          `;
+        })
+        .join("");
+
+      container.innerHTML = `
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th class="item-header">
+                  項目
+                </th>
+
+                <th class="code-header">
+                  代碼
+                </th>
+
+                ${headerCells}
+              </tr>
+            </thead>
+
+            <tbody>
+              ${bodyRows}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    async function loadCpiData() {
+      const container = document.getElementById(
+        "cpi-content"
+      );
+
+      try {
+        const response = await fetch(
+          `data/cpi.json?t=${Date.now()}`,
+          {
+            cache: "no-store",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            `HTTP ${response.status}`
+          );
+        }
+
+        const payload = await response.json();
+
+        if (
+          !Array.isArray(payload.periods) ||
+          !Array.isArray(payload.rows)
+        ) {
+          throw new Error(
+            "CPI JSON格式不正確"
+          );
+        }
+
+        state.cpiData = payload;
+
+        renderCpiTable();
+      } catch (error) {
+        console.error(error);
+
+        container.innerHTML = `
+          <div class="error-box">
+            <div class="error-title">
+              CPI資料載入失敗
+            </div>
+
+            <div>
+              請確認 data/cpi.json 已存在，
+              並且 GitHub Pages 已完成部署。
+            </div>
+
+            <div style="margin-top: 8px;">
+              ${escapeHtml(error.message)}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    loadCpiData();
+  </script>
+</body>
+</html>

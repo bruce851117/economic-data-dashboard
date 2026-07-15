@@ -21,42 +21,34 @@ OUTPUT_PATH = (
 )
 
 
-# level：
-# 0 = 最上層主要分類
-# 1 = 第一層子分類
-# 2 = 第二層子分類
-# 3 = 第三層子分類
-# 4 = 第四層子分類
-#
-# display_code：
-# 顯示使用者提供的 Bloomberg／資料終端代碼。
-#
-# bls_series_id：
-# BLS Public Data API 實際使用的季調 CPI Series ID。
 CPI_SERIES = [
     {
         "name": "All Items",
         "display_code": "CPI INDX",
         "bls_series_id": "CUSR0000SA0",
         "level": 0,
+        "seasonality": "SA",
     },
     {
         "name": "Food",
         "display_code": "CPSFFOOD",
         "bls_series_id": "CUSR0000SAF1",
         "level": 0,
+        "seasonality": "SA",
     },
     {
         "name": "Energy",
         "display_code": "CPUPENER",
         "bls_series_id": "CUSR0000SA0E",
         "level": 0,
+        "seasonality": "SA",
     },
     {
         "name": "All Items Less Food and Energy",
         "display_code": "CPUPAXFE",
         "bls_series_id": "CUSR0000SA0L1E",
         "level": 0,
+        "seasonality": "SA",
     },
     {
         "name": (
@@ -66,18 +58,21 @@ CPI_SERIES = [
         "display_code": "CPUPCXFE",
         "bls_series_id": "CUSR0000SACL1E",
         "level": 1,
+        "seasonality": "SA",
     },
     {
         "name": "Household Furnishings and Supplies",
         "display_code": "CPIQHFAS",
         "bls_series_id": "CUSR0000SAH3",
         "level": 2,
+        "seasonality": "SA",
     },
     {
         "name": "Apparel",
         "display_code": "CPSCTOT",
         "bls_series_id": "CUSR0000SAA",
         "level": 2,
+        "seasonality": "SA",
     },
     {
         "name": (
@@ -87,30 +82,35 @@ CPI_SERIES = [
         "display_code": "CPIQTCMS",
         "bls_series_id": "CUSR0000SAT1",
         "level": 2,
+        "seasonality": "SA",
     },
     {
         "name": "New Vehicles",
         "display_code": "CPSTNV",
         "bls_series_id": "CUSR0000SETA01",
         "level": 3,
+        "seasonality": "SA",
     },
     {
         "name": "Used Cars and Trucks",
         "display_code": "CPSTUCTR",
         "bls_series_id": "CUSR0000SETA02",
         "level": 3,
+        "seasonality": "SA",
     },
     {
         "name": "Medical Care Commodities",
         "display_code": "CPUMCMDY",
         "bls_series_id": "CUSR0000SAM1",
         "level": 2,
+        "seasonality": "SA",
     },
     {
         "name": "Recreation Commodities",
         "display_code": "CPIQRECS",
         "bls_series_id": "CUSR0000SARC",
         "level": 2,
+        "seasonality": "SA",
     },
     {
         "name": (
@@ -119,42 +119,49 @@ CPI_SERIES = [
         "display_code": "CPIQECCS",
         "bls_series_id": "CUSR0000SAE2",
         "level": 2,
+        "seasonality": "SA",
     },
     {
         "name": "Alcoholic Beverages",
         "display_code": "CPSFAB",
-        "bls_series_id": "CUSR0000SAB",
+        "bls_series_id": "CUSR0000SAF116",
         "level": 2,
+        "seasonality": "SA",
     },
     {
         "name": "Other Goods",
         "display_code": "CPIQOTGS",
         "bls_series_id": "CUSR0000SAG",
         "level": 2,
+        "seasonality": "SA",
     },
     {
         "name": "Services Excluding Energy Services",
         "display_code": "CPUPSXEN",
         "bls_series_id": "CUSR0000SASLE",
         "level": 1,
+        "seasonality": "SA",
     },
     {
         "name": "Shelter",
         "display_code": "CPSHSHLT",
         "bls_series_id": "CUSR0000SAH1",
         "level": 2,
+        "seasonality": "SA",
     },
     {
         "name": "Rent of Primary Residence",
         "display_code": "CPSHRPR",
         "bls_series_id": "CUSR0000SEHA",
         "level": 4,
+        "seasonality": "SA",
     },
     {
         "name": "Lodging Away from Home",
         "display_code": "CPSHLODG",
         "bls_series_id": "CUSR0000SEHB",
         "level": 4,
+        "seasonality": "SA",
     },
     {
         "name": (
@@ -163,6 +170,7 @@ CPI_SERIES = [
         "display_code": "CPSHOEQR",
         "bls_series_id": "CUSR0000SEHC",
         "level": 4,
+        "seasonality": "SA",
     },
     {
         "name": (
@@ -171,42 +179,49 @@ CPI_SERIES = [
         "display_code": "CPSHWSTC",
         "bls_series_id": "CUSR0000SEHG01",
         "level": 2,
+        "seasonality": "SA",
     },
     {
         "name": "Medical Care Services",
         "display_code": "CPUMSERV",
         "bls_series_id": "CUSR0000SAM2",
         "level": 2,
+        "seasonality": "SA",
     },
     {
         "name": "Professional Services",
         "display_code": "CPUMPROF Index",
         "bls_series_id": "CUSR0000SEMC",
         "level": 3,
+        "seasonality": "SA",
     },
     {
         "name": "Hospital and Related Services",
         "display_code": "CPUMHOSP Index",
         "bls_series_id": "CUSR0000SEMD",
         "level": 3,
+        "seasonality": "SA",
     },
     {
         "name": "Health Insurance",
         "display_code": "CPRMHEUS",
-        "bls_series_id": "CUSR0000SEME",
+        "bls_series_id": "CUUR0000SEME",
         "level": 3,
+        "seasonality": "NSA",
     },
     {
         "name": "Transportation Services",
         "display_code": "CPSSTRAN",
         "bls_series_id": "CUSR0000SAS4",
         "level": 2,
+        "seasonality": "SA",
     },
     {
         "name": "Car and Truck Rental",
         "display_code": "CPIQCTRS Index",
         "bls_series_id": "CUSR0000SETD03",
         "level": 3,
+        "seasonality": "SA",
     },
     {
         "name": (
@@ -215,30 +230,35 @@ CPI_SERIES = [
         "display_code": "CPSTMVMR",
         "bls_series_id": "CUSR0000SETD",
         "level": 3,
+        "seasonality": "SA",
     },
     {
         "name": "Motor Vehicle Insurance",
         "display_code": "CPSTMVSA",
         "bls_series_id": "CUSR0000SETE",
         "level": 3,
+        "seasonality": "SA",
     },
     {
         "name": "Public Transportation",
         "display_code": "CPSTPUBL",
         "bls_series_id": "CUSR0000SETG",
         "level": 3,
+        "seasonality": "SA",
     },
     {
         "name": "Airline Fare",
         "display_code": "CPSTAIRF",
         "bls_series_id": "CUSR0000SETG01",
         "level": 4,
+        "seasonality": "SA",
     },
     {
         "name": "Recreation Services",
         "display_code": "CPIQRESS",
         "bls_series_id": "CUSR0000SERA",
         "level": 2,
+        "seasonality": "SA",
     },
     {
         "name": (
@@ -247,14 +267,12 @@ CPI_SERIES = [
         "display_code": "CPIQECSS",
         "bls_series_id": "CUSR0000SAE1",
         "level": 2,
+        "seasonality": "SA",
     },
 ]
 
 
 def get_registration_key():
-    """
-    從 GitHub Actions Environment 取得 BLS API Key。
-    """
     registration_key = os.environ.get(
         "BLS_API_KEY",
         "",
@@ -273,12 +291,6 @@ def current_year():
 
 
 def fetch_cpi_series():
-    """
-    使用註冊版 BLS Public Data API 抓取 CPI Series。
-
-    需要至少13個月的指數，才能計算最近12個月月增率；
-    這裡抓目前年份與前一年度，以涵蓋跨年情況。
-    """
     registration_key = get_registration_key()
 
     series_ids = [
@@ -302,8 +314,10 @@ def fetch_cpi_series():
     print(f"API URL: {BLS_API_URL}")
     print(f"Requested CPI series: {len(series_ids)}")
     print(
-        f"Requested years: "
-        f"{payload['startyear']} to {payload['endyear']}"
+        "Requested years:",
+        payload["startyear"],
+        "to",
+        payload["endyear"],
     )
 
     response = requests.post(
@@ -376,12 +390,7 @@ def fetch_cpi_series():
     return returned_series
 
 
-def parse_monthly_observations(series):
-    """
-    將 BLS Series 轉成按日期排序的月資料。
-
-    排除 M13 年度平均，只保留 M01 至 M12。
-    """
+def parse_observations(series):
     observations = []
 
     for observation in series.get("data", []):
@@ -417,15 +426,6 @@ def parse_monthly_observations(series):
                     "latest",
                     False,
                 ),
-                "footnotes": [
-                    footnote.get("text", "")
-                    for footnote in observation.get(
-                        "footnotes",
-                        []
-                    )
-                    if footnote
-                    and footnote.get("text")
-                ],
             }
         )
 
@@ -443,9 +443,6 @@ def calculate_percent_change(
     current_value,
     previous_value,
 ):
-    """
-    由季調 CPI 指數計算月增率。
-    """
     if previous_value == 0:
         return None
 
@@ -454,21 +451,17 @@ def calculate_percent_change(
         - 1
     ) * 100
 
-    # JSON 儲存4位小數，網頁顯示2位小數。
     return round(result, 4)
 
 
-def calculate_monthly_changes(observations):
-    """
-    計算每個月相對上月的季調月增率。
-    """
+def build_monthly_changes(observations):
     changes = []
 
     for index in range(1, len(observations)):
         current = observations[index]
         previous = observations[index - 1]
 
-        monthly_change = calculate_percent_change(
+        value = calculate_percent_change(
             current["index_value"],
             previous["index_value"],
         )
@@ -479,20 +472,16 @@ def calculate_monthly_changes(observations):
                 "month": current["month"],
                 "period": current["period"],
                 "period_name": current["period_name"],
-                "value": monthly_change,
+                "value": value,
                 "index_value": current["index_value"],
                 "latest": current["latest"],
             }
         )
 
-    # 只保存最近12個月的月增率
     return changes[-12:]
 
 
-def build_cpi_rows(api_series):
-    """
-    依使用者指定順序建立33個 CPI 顯示項目。
-    """
+def build_rows(api_series):
     api_lookup = {
         series.get("seriesID", ""): series
         for series in api_series
@@ -505,41 +494,27 @@ def build_cpi_rows(api_series):
         series_id = config["bls_series_id"]
         series = api_lookup.get(series_id)
 
-        if not series:
-            missing_series.append(
-                {
-                    "name": config["name"],
-                    "series_id": series_id,
-                    "reason": (
-                        "Series was not returned by BLS API"
-                    ),
-                }
+        monthly_changes = []
+        series_title = ""
+
+        if series:
+            observations = parse_observations(
+                series
             )
 
-            rows.append(
-                {
-                    "order": order,
-                    "name": config["name"],
-                    "display_code": (
-                        config["display_code"]
-                    ),
-                    "bls_series_id": series_id,
-                    "level": config["level"],
-                    "available": False,
-                    "series_title": "",
-                    "months": [],
-                }
+            monthly_changes = build_monthly_changes(
+                observations
             )
 
-            continue
+            catalog = series.get(
+                "catalog",
+                {},
+            ) or {}
 
-        observations = parse_monthly_observations(
-            series
-        )
-
-        monthly_changes = calculate_monthly_changes(
-            observations
-        )
+            series_title = catalog.get(
+                "series_title",
+                "",
+            )
 
         if not monthly_changes:
             missing_series.append(
@@ -553,8 +528,6 @@ def build_cpi_rows(api_series):
                 }
             )
 
-        catalog = series.get("catalog", {}) or {}
-
         rows.append(
             {
                 "order": order,
@@ -564,21 +537,11 @@ def build_cpi_rows(api_series):
                 ),
                 "bls_series_id": series_id,
                 "level": config["level"],
-                "available": bool(monthly_changes),
-                "series_title": catalog.get(
-                    "series_title",
-                    "",
-                ),
-                "survey_name": catalog.get(
-                    "survey_name",
-                    "",
-                ),
                 "seasonality": (
-                    "Seasonally Adjusted"
+                    config["seasonality"]
                 ),
-                "unit": (
-                    "Percent change from previous month"
-                ),
+                "available": bool(monthly_changes),
+                "series_title": series_title,
                 "months": monthly_changes,
             }
         )
@@ -586,20 +549,15 @@ def build_cpi_rows(api_series):
     return rows, missing_series
 
 
-def collect_available_periods(rows):
-    """
-    建立整張 CPI 表格共用的月份清單。
-    """
-    periods = {}
+def collect_periods(rows):
+    period_lookup = {}
 
     for row in rows:
         for month in row.get("months", []):
-            period = month["period"]
-
-            periods[period] = {
+            period_lookup[month["period"]] = {
                 "year": month["year"],
                 "month": month["month"],
-                "period": period,
+                "period": month["period"],
                 "period_name": month["period_name"],
                 "label": (
                     f"{str(month['year'])[2:]} "
@@ -607,27 +565,22 @@ def collect_available_periods(rows):
                 ),
             }
 
-    result = list(periods.values())
+    periods = list(period_lookup.values())
 
-    result.sort(
+    periods.sort(
         key=lambda item: (
             item["year"],
             item["month"],
         )
     )
 
-    return result[-12:]
+    return periods[-12:]
 
 
-def align_rows_to_periods(rows, periods):
-    """
-    讓所有列都遵循相同的12個月份順序。
-
-    若個別 Series 某月沒有數值，就填入 None。
-    """
+def align_rows(rows, periods):
     period_keys = [
-        period["period"]
-        for period in periods
+        item["period"]
+        for item in periods
     ]
 
     aligned_rows = []
@@ -659,9 +612,6 @@ def align_rows_to_periods(rows, periods):
 
 
 def load_existing_payload():
-    """
-    讀取目前的 data/cpi.json。
-    """
     if not OUTPUT_PATH.exists():
         return None
 
@@ -681,18 +631,12 @@ def save_json(
     rows,
     missing_series,
 ):
-    """
-    儲存 CPI JSON。
-
-    若 CPI 資料與既有資料完全相同，
-    保留原更新時間，避免無意義 Commit。
-    """
     OUTPUT_PATH.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    aligned_rows = align_rows_to_periods(
+    aligned_rows = align_rows(
         rows,
         periods,
     )
@@ -705,23 +649,13 @@ def save_json(
     )
 
     if existing:
-        old_periods = existing.get(
-            "periods",
-            [],
-        )
-        old_rows = existing.get(
-            "rows",
-            [],
-        )
-        old_missing = existing.get(
-            "missing_series",
-            [],
-        )
-
         if (
-            old_periods == periods
-            and old_rows == aligned_rows
-            and old_missing == missing_series
+            existing.get("periods", []) == periods
+            and existing.get("rows", []) == aligned_rows
+            and existing.get(
+                "missing_series",
+                [],
+            ) == missing_series
         ):
             data_changed = False
 
@@ -741,12 +675,13 @@ def save_json(
         "source_url": BLS_SOURCE_URL,
         "title": (
             "Consumer Price Index - "
-            "Seasonally Adjusted Monthly Change"
+            "Monthly Percent Change"
         ),
         "description": (
-            "Seasonally adjusted month-over-month "
-            "percent changes calculated from BLS "
-            "CPI index levels."
+            "Seasonally adjusted monthly percent "
+            "changes calculated from BLS CPI index "
+            "levels. Health Insurance uses the "
+            "not seasonally adjusted BLS series."
         ),
         "updated_at_utc": updated_at_utc,
         "data_changed": data_changed,
@@ -820,16 +755,16 @@ def main():
 
     api_series = fetch_cpi_series()
 
-    rows, missing_series = build_cpi_rows(
+    rows, missing_series = build_rows(
         api_series
     )
 
-    periods = collect_available_periods(rows)
+    periods = collect_periods(rows)
 
-    if len(periods) < 6:
+    if len(periods) != 12:
         raise RuntimeError(
-            "Fewer than 6 CPI periods were generated. "
-            "The output is not sufficient for the dashboard."
+            "Expected 12 CPI periods, but generated "
+            f"{len(periods)} periods."
         )
 
     save_json(
