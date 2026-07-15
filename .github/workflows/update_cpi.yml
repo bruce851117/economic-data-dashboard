@@ -1,13 +1,8 @@
 name: Update BLS CPI Data
 
 on:
-  # 允許從 GitHub Actions 頁面手動執行
+  # 只允許手動觸發，不設定任何自動排程
   workflow_dispatch:
-
-  # 每天台灣時間 20:30 自動檢查一次
-  # UTC 12:30 = 台灣時間 20:30
-  schedule:
-    - cron: "30 12 * * *"
 
 permissions:
   contents: write
@@ -23,29 +18,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-          cache: "pip"
-
-      - name: Create requirements file if missing
-        run: |
-          if [ ! -f requirements.txt ]; then
-            cat > requirements.txt <<'EOF'
-          beautifulsoup4
-          lxml
-          pandas
-          requests
-          EOF
-          fi
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install beautifulsoup4 lxml pandas requests
 
       - name: Fetch BLS CPI data
         run: |
@@ -60,30 +43,53 @@ jobs:
           path = Path("data/cpi_table2.json")
 
           if not path.exists():
-              raise SystemExit("data/cpi_table2.json was not created.")
+              raise SystemExit(
+                  "ERROR: data/cpi_table2.json was not created."
+              )
 
           with path.open("r", encoding="utf-8") as file:
               payload = json.load(file)
 
           row_count = payload.get("row_count", 0)
           data = payload.get("data", [])
+          columns = payload.get("columns", [])
 
           if row_count <= 0:
-              raise SystemExit("The generated JSON contains no rows.")
+              raise SystemExit(
+                  "ERROR: The generated JSON contains no rows."
+              )
 
           if not data:
-              raise SystemExit("The generated JSON data array is empty.")
+              raise SystemExit(
+                  "ERROR: The generated JSON data array is empty."
+              )
 
-          print(f"JSON validation passed: {row_count} rows")
-          print(f"Reference period: {payload.get('reference_period', '')}")
+          if not columns:
+              raise SystemExit(
+                  "ERROR: The generated JSON contains no columns."
+              )
+
+          if row_count != len(data):
+              raise SystemExit(
+                  "ERROR: row_count does not match data length."
+              )
+
+          print("JSON validation passed.")
+          print(f"Rows: {row_count}")
+          print(f"Columns: {len(columns)}")
+          print(
+              "Reference period:",
+              payload.get("reference_period", "")
+          )
           PY
 
       - name: Commit updated data
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add data/cpi_table2.json requirements.txt
+          git add data/cpi_table2.json
 
           if git diff --cached --quiet; then
             echo "No CPI data changes detected."
