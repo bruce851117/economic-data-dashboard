@@ -39,15 +39,15 @@
 
       --latest-header: #ffefb1;
 
+      --derived-header: #4c1d95;
+      --derived-header-light: #6d28d9;
+      --derived-item: #ede9fe;
+
       --shadow:
         0 9px 28px rgba(15, 23, 42, 0.08);
 
       --radius: 14px;
 
-      /*
-       * 不論切換3M、6M或12M，
-       * 項目欄與月份欄都維持固定寬度。
-       */
       --item-width: 440px;
       --month-width: 68px;
     }
@@ -264,6 +264,10 @@
       box-shadow: var(--shadow);
     }
 
+    .derived-card {
+      margin-top: 22px;
+    }
+
     .table-heading {
       display: flex;
       align-items: center;
@@ -279,6 +283,16 @@
         );
     }
 
+    .derived-heading {
+      color: #ffffff;
+      background:
+        linear-gradient(
+          135deg,
+          var(--derived-header),
+          var(--derived-header-light)
+        );
+    }
+
     .table-title {
       margin: 0;
       color: #1c2e47;
@@ -286,10 +300,18 @@
       font-weight: 700;
     }
 
+    .derived-heading .table-title {
+      color: #ffffff;
+    }
+
     .table-subtitle {
       margin: 5px 0 0;
       color: var(--text-secondary);
       font-size: 12px;
+    }
+
+    .derived-heading .table-subtitle {
+      color: #ddd6fe;
     }
 
     .legend {
@@ -301,10 +323,8 @@
       font-size: 12px;
     }
 
-    .heat-legend {
-      display: flex;
-      align-items: center;
-      gap: 7px;
+    .derived-heading .legend {
+      color: #ede9fe;
     }
 
     .heat-gradient {
@@ -333,11 +353,14 @@
       font-weight: 700;
     }
 
-    /*
-     * 卡片寬度固定為整個可用寬度，
-     * 表格只使用實際的欄位寬度。
-     * 選擇3M時，右側剩餘空間自然留白。
-     */
+    .derived-heading .legend-low {
+      color: #bbf7d0;
+    }
+
+    .derived-heading .legend-high {
+      color: #fecaca;
+    }
+
     .table-scroll {
       width: 100%;
       overflow-x: auto;
@@ -444,10 +467,6 @@
       line-height: 1.4;
     }
 
-    /*
-     * 階層顏色只套用於左側項目欄。
-     * 右側數字欄由JavaScript動態套用色階。
-     */
     .level-0 .item-cell {
       color: #ffffff;
       background: var(--level-0);
@@ -499,10 +518,41 @@
       font-weight: 500;
     }
 
-    /*
-     * 數字文字不再依正負值變紅或變綠。
-     * 所有有效數字都使用同一種深色文字。
-     */
+    .derived-item-cell {
+      color: #3b0764;
+      background: var(--derived-item);
+      font-weight: 700;
+    }
+
+    .derived-item-cell .item-name {
+      color: #3b0764;
+      font-weight: 700;
+    }
+
+    .derived-marker {
+      flex: 0 0 auto;
+      width: 4px;
+      height: 23px;
+      margin-right: 10px;
+      border-radius: 4px;
+      background: #7c3aed;
+    }
+
+    .derived-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 19px;
+      margin-left: 8px;
+      padding: 0 7px;
+      border-radius: 999px;
+      color: #ffffff;
+      background: #7c3aed;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      vertical-align: middle;
+    }
+
     .value-cell {
       width: var(--month-width);
       min-width: var(--month-width);
@@ -524,10 +574,6 @@
       font-weight: 500;
     }
 
-    /*
-     * 最新月份只在表頭使用淡黃色。
-     * 數字儲存格不再疊加黃色，避免干擾色階。
-     */
     thead .latest-column {
       color: #604b00;
       background: var(--latest-header);
@@ -592,6 +638,11 @@
       background: #f8fafc;
       font-size: 11px;
       line-height: 1.7;
+    }
+
+    .derived-note {
+      color: #5b21b6;
+      background: #f5f3ff;
     }
 
     .employment-placeholder {
@@ -792,18 +843,12 @@
           </div>
 
           <div class="legend">
-            <span class="legend-low">
-              低
-            </span>
-
+            <span class="legend-low">低</span>
             <span class="heat-gradient"></span>
-
-            <span class="legend-high">
-              高
-            </span>
+            <span class="legend-high">高</span>
 
             <span>
-              每列依完整12個月獨立計算
+              每列依完整12個月獨立計算色階
             </span>
           </div>
         </div>
@@ -816,10 +861,47 @@
         </div>
 
         <div class="table-note">
-          註：每一列均以該項目完整12個月資料建立獨立色階。
-          該列數值越高越偏紅，數值越低越偏綠，中間值接近
-          白色。即使切換至最近3個月或最近6個月，色階仍以
-          完整12個月計算，方便不同期間維持一致比較基準。
+          註：各月份欄固定寬度。每列色階均使用該項目完整
+          12個月資料計算；數值越高越偏紅，越低越偏綠。
+        </div>
+      </div>
+
+      <div class="table-card derived-card">
+        <div class="table-heading derived-heading">
+          <div>
+            <h2 class="table-title">
+              衍生核心通膨指標
+            </h2>
+
+            <p class="table-subtitle">
+              Derived CPI Measures，單位：%
+            </p>
+          </div>
+
+          <div class="legend">
+            <span class="legend-low">低</span>
+            <span class="heat-gradient"></span>
+            <span class="legend-high">高</span>
+
+            <span>
+              使用最新 Relative Importance
+            </span>
+          </div>
+        </div>
+
+        <div id="derived-content">
+          <div class="loading-box">
+            <div class="spinner"></div>
+            正在讀取衍生指標
+          </div>
+        </div>
+
+        <div class="table-note derived-note">
+          註：衍生指標不是 BLS 直接發布的獨立 Series，而是
+          使用最新可取得的 Relative Importance，依排除式加權
+          公式計算。2025年10月因美國聯邦政府停擺、CPI資料
+          蒐集中斷，官方月增率缺值，因此該月顯示「—」，
+          不進行插值或估算。
         </div>
       </div>
     </section>
@@ -864,26 +946,23 @@
     }
 
     function showFatalError(message) {
-      var content = document.getElementById(
-        "cpi-content"
-      );
-
-      if (!content) {
-        return;
-      }
-
-      content.innerHTML =
+      var errorHtml =
         '<div class="error-box">' +
           '<div class="error-title">' +
             'CPI資料載入失敗' +
-          '</div>' +
-          '<div>' +
-            '請確認 data/cpi.json 已存在並已部署。' +
           '</div>' +
           '<div class="error-detail">' +
             escapeHtml(message) +
           '</div>' +
         '</div>';
+
+      document.getElementById(
+        "cpi-content"
+      ).innerHTML = errorHtml;
+
+      document.getElementById(
+        "derived-content"
+      ).innerHTML = errorHtml;
     }
 
     function changeTab(tabName) {
@@ -930,7 +1009,7 @@
           monthCount === 12
         );
 
-      renderCpiTable();
+      renderDashboard();
     }
 
     function isValidNumber(value) {
@@ -950,11 +1029,6 @@
       return Number(value).toFixed(2);
     }
 
-    /*
-     * 將兩個RGB顏色依比例混合。
-     * ratio = 0 時使用第一個顏色，
-     * ratio = 1 時使用第二個顏色。
-     */
     function interpolateColor(
       startColor,
       endColor,
@@ -997,13 +1071,6 @@
       );
     }
 
-    /*
-     * 取得單一列的12個月有效數字，
-     * 並計算最小值、最大值及中間值。
-     *
-     * 色階永遠使用完整12個月，
-     * 不依目前顯示3M、6M或12M改變。
-     */
     function calculateRowScale(values) {
       var validValues = values
         .filter(isValidNumber)
@@ -1023,27 +1090,13 @@
         validValues
       );
 
-      var midpoint = (
-        minimum + maximum
-      ) / 2;
-
       return {
         minimum: minimum,
-        midpoint: midpoint,
+        midpoint: (minimum + maximum) / 2,
         maximum: maximum
       };
     }
 
-    /*
-     * Excel風格三色色階：
-     *
-     * 最低值：綠色
-     * 中間值：白色
-     * 最高值：紅色
-     *
-     * 為了讓深色文字仍清楚可讀，
-     * 最深顏色不使用過度飽和的紅綠色。
-     */
     function getHeatmapColor(value, scale) {
       if (
         !isValidNumber(value) ||
@@ -1123,7 +1176,7 @@
     }
 
     function buildColumnGroup(monthCount) {
-      var columns =
+      var html =
         '<colgroup>' +
           '<col class="item-column">';
 
@@ -1132,115 +1185,50 @@
         index < monthCount;
         index += 1
       ) {
-        columns +=
+        html +=
           '<col class="month-column">';
       }
 
-      columns += '</colgroup>';
+      html += '</colgroup>';
 
-      return columns;
+      return html;
     }
 
-    function renderCpiTable() {
-      if (!cpiData) {
-        return;
-      }
+    function getDisplayedPeriods() {
+      var periods = cpiData.periods || [];
 
-      var content = document.getElementById(
-        "cpi-content"
-      );
-
-      var rangeElement =
-        document.getElementById(
-          "period-range"
-        );
-
-      var updatedElement =
-        document.getElementById(
-          "updated-time"
-        );
-
-      var allPeriods = Array.isArray(
-        cpiData.periods
-      )
-        ? cpiData.periods
-        : [];
-
-      var rows = Array.isArray(
-        cpiData.rows
-      )
-        ? cpiData.rows
-        : [];
-
-      if (
-        allPeriods.length === 0 ||
-        rows.length === 0
-      ) {
-        content.innerHTML =
-          '<div class="empty-box">' +
-            'CPI資料目前為空。' +
-          '</div>';
-
-        return;
-      }
-
-      var monthCount = Math.min(
+      var count = Math.min(
         visibleMonths,
-        allPeriods.length
+        periods.length
       );
 
-      var startIndex =
-        allPeriods.length - monthCount;
+      var startIndex = (
+        periods.length - count
+      );
 
-      /*
-       * JSON月份為舊到新。
-       * 先取得最近N個月，再反轉成新到舊。
-       */
-      var displayedPeriods =
-        allPeriods
+      return {
+        startIndex: startIndex,
+        periods: periods
           .slice(startIndex)
-          .reverse();
+          .reverse()
+      };
+    }
 
-      var newestPeriod = displayedPeriods[0];
-
-      var oldestPeriod =
-        displayedPeriods[
-          displayedPeriods.length - 1
-        ];
-
-      rangeElement.textContent =
-        newestPeriod.period +
-        " ～ " +
-        oldestPeriod.period +
-        "（新到舊）";
-
-      var formattedTime = formatTaipeiTime(
-        cpiData.updated_at_utc
-      );
-
-      updatedElement.textContent =
-        formattedTime
-          ? "資料更新：" + formattedTime
-          : "";
-
+    function buildTableHeader(
+      displayedPeriods
+    ) {
       var html =
-        '<div class="table-scroll">' +
-          '<table>' +
-            buildColumnGroup(
-              displayedPeriods.length
-            ) +
-            '<thead>' +
-              '<tr>' +
-                '<th class="item-header">' +
-                  '項目' +
-                '</th>';
+        '<thead>' +
+          '<tr>' +
+            '<th class="item-header">' +
+              '項目' +
+            '</th>';
 
       displayedPeriods.forEach(
         function (period, index) {
-          var latestClass =
-            index === 0
-              ? " latest-column"
-              : "";
+          var latestClass = index === 0
+            ? " latest-column"
+            : "";
 
           html +=
             '<th class="month-header ' +
@@ -1252,43 +1240,97 @@
       );
 
       html +=
-              '</tr>' +
-            '</thead>' +
+          '</tr>' +
+        '</thead>';
+
+      return html;
+    }
+
+    function buildValueCells(
+      displayedValues,
+      allValues
+    ) {
+      var scale = calculateRowScale(
+        allValues
+      );
+
+      var html = "";
+
+      displayedValues.forEach(
+        function (value) {
+          var isMissing = !isValidNumber(
+            value
+          );
+
+          var backgroundColor =
+            getHeatmapColor(
+              value,
+              scale
+            );
+
+          var className = isMissing
+            ? "value-cell missing-value"
+            : "value-cell";
+
+          html +=
+            '<td ' +
+              'class="' +
+                className +
+              '" ' +
+              'style="background-color:' +
+                backgroundColor +
+              ';">' +
+                formatValue(value) +
+            '</td>';
+        }
+      );
+
+      return html;
+    }
+
+    function renderCpiTable(
+      displayedPeriods,
+      startIndex
+    ) {
+      var rows = Array.isArray(
+        cpiData.rows
+      )
+        ? cpiData.rows
+        : [];
+
+      var html =
+        '<div class="table-scroll">' +
+          '<table>' +
+            buildColumnGroup(
+              displayedPeriods.length
+            ) +
+            buildTableHeader(
+              displayedPeriods
+            ) +
             '<tbody>';
 
       rows.forEach(function (row) {
-        var level = Number(row.level) || 0;
-
-        level = Math.max(
+        var level = Math.max(
           0,
-          Math.min(4, level)
+          Math.min(
+            4,
+            Number(row.level) || 0
+          )
         );
 
-        /*
-         * allValues保留JSON完整12個月順序，
-         * 用於計算該列色階。
-         */
         var allValues = Array.isArray(
           row.values
         )
           ? row.values
           : [];
 
-        var rowScale = calculateRowScale(
-          allValues
+        var displayedValues = allValues
+          .slice(startIndex)
+          .reverse();
+
+        var paddingLeft = (
+          13 + level * 23
         );
-
-        /*
-         * 畫面只顯示目前選擇的月份，
-         * 並反轉為新到舊。
-         */
-        var displayedValues =
-          allValues
-            .slice(startIndex)
-            .reverse();
-
-        var paddingLeft =
-          13 + level * 23;
 
         html +=
           '<tr class="level-' +
@@ -1312,57 +1354,12 @@
                   escapeHtml(row.name) +
                 '</span>' +
               '</div>' +
-            '</td>';
-
-        displayedPeriods.forEach(
-          function (period, index) {
-            var value = displayedValues[index];
-
-            var valueText = formatValue(value);
-
-            var missingClass = isValidNumber(value)
-              ? ""
-              : " missing-value";
-
-            var backgroundColor =
-              getHeatmapColor(
-                value,
-                rowScale
-              );
-
-            var titleText = "";
-
-            if (
-              rowScale &&
-              isValidNumber(value)
-            ) {
-              titleText =
-                ' title="' +
-                escapeHtml(
-                  "本列12個月範圍：" +
-                  rowScale.minimum.toFixed(2) +
-                  " ～ " +
-                  rowScale.maximum.toFixed(2)
-                ) +
-                '"';
-            }
-
-            html +=
-              '<td ' +
-                'class="value-cell' +
-                  missingClass +
-                '" ' +
-                'style="background-color:' +
-                  backgroundColor +
-                ';"' +
-                titleText +
-              '>' +
-                valueText +
-              '</td>';
-          }
-        );
-
-        html += '</tr>';
+            '</td>' +
+            buildValueCells(
+              displayedValues,
+              allValues
+            ) +
+          '</tr>';
       });
 
       html +=
@@ -1370,12 +1367,155 @@
           '</table>' +
         '</div>';
 
-      content.innerHTML = html;
+      document.getElementById(
+        "cpi-content"
+      ).innerHTML = html;
+    }
+
+    function renderDerivedTable(
+      displayedPeriods,
+      startIndex
+    ) {
+      var rows = Array.isArray(
+        cpiData.derived_rows
+      )
+        ? cpiData.derived_rows
+        : [];
+
+      if (rows.length === 0) {
+        document.getElementById(
+          "derived-content"
+        ).innerHTML =
+          '<div class="empty-box">' +
+            '目前沒有衍生指標資料。' +
+          '</div>';
+
+        return;
+      }
+
+      var html =
+        '<div class="table-scroll">' +
+          '<table>' +
+            buildColumnGroup(
+              displayedPeriods.length
+            ) +
+            buildTableHeader(
+              displayedPeriods
+            ) +
+            '<tbody>';
+
+      rows.forEach(function (row) {
+        var allValues = Array.isArray(
+          row.values
+        )
+          ? row.values
+          : [];
+
+        var displayedValues = allValues
+          .slice(startIndex)
+          .reverse();
+
+        var titleText =
+          "母項目：" +
+          String(row.base_series || "") +
+          "；排除：" +
+          (
+            Array.isArray(row.excluded_series)
+              ? row.excluded_series.join("、")
+              : ""
+          );
+
+        html +=
+          '<tr>' +
+            '<td ' +
+              'class="item-cell derived-item-cell" ' +
+              'title="' +
+                escapeHtml(titleText) +
+              '">' +
+              '<div class="item-wrapper">' +
+                '<span class="derived-marker">' +
+                '</span>' +
+                '<span class="item-name">' +
+                  escapeHtml(row.name) +
+                  '<span class="derived-badge">' +
+                    'Derived' +
+                  '</span>' +
+                '</span>' +
+              '</div>' +
+            '</td>' +
+            buildValueCells(
+              displayedValues,
+              allValues
+            ) +
+          '</tr>';
+      });
+
+      html +=
+            '</tbody>' +
+          '</table>' +
+        '</div>';
+
+      document.getElementById(
+        "derived-content"
+      ).innerHTML = html;
+    }
+
+    function renderDashboard() {
+      if (!cpiData) {
+        return;
+      }
+
+      var result = getDisplayedPeriods();
+
+      var displayedPeriods = result.periods;
+      var startIndex = result.startIndex;
+
+      if (!displayedPeriods.length) {
+        showFatalError(
+          "CPI JSON 中沒有月份資料。"
+        );
+
+        return;
+      }
+
+      var newest = displayedPeriods[0];
+
+      var oldest = displayedPeriods[
+        displayedPeriods.length - 1
+      ];
+
+      document.getElementById(
+        "period-range"
+      ).textContent =
+        newest.period +
+        " ～ " +
+        oldest.period +
+        "（新到舊）";
+
+      var updatedTime = formatTaipeiTime(
+        cpiData.updated_at_utc
+      );
+
+      document.getElementById(
+        "updated-time"
+      ).textContent = updatedTime
+        ? "資料更新：" + updatedTime
+        : "";
+
+      renderCpiTable(
+        displayedPeriods,
+        startIndex
+      );
+
+      renderDerivedTable(
+        displayedPeriods,
+        startIndex
+      );
     }
 
     function fetchWithTimeout(
       url,
-      timeoutMilliseconds
+      milliseconds
     ) {
       var controller =
         new AbortController();
@@ -1384,7 +1524,7 @@
         function () {
           controller.abort();
         },
-        timeoutMilliseconds
+        milliseconds
       );
 
       return fetch(
@@ -1400,20 +1540,18 @@
     }
 
     function loadCpiData() {
-      var jsonUrl =
+      var url =
         "./data/cpi.json?v=" +
         new Date().getTime();
 
       fetchWithTimeout(
-        jsonUrl,
+        url,
         15000
       )
         .then(function (response) {
           if (!response.ok) {
             throw new Error(
-              "讀取 " +
-              jsonUrl +
-              " 失敗，HTTP " +
+              "讀取CPI資料失敗，HTTP " +
               response.status
             );
           }
@@ -1427,14 +1565,13 @@
             !Array.isArray(payload.rows)
           ) {
             throw new Error(
-              "data/cpi.json 格式不正確，" +
-              "找不到 periods 或 rows。"
+              "data/cpi.json 格式不正確。"
             );
           }
 
           cpiData = payload;
 
-          renderCpiTable();
+          renderDashboard();
         })
         .catch(function (error) {
           var message =
@@ -1442,8 +1579,7 @@
 
           if (error.name === "AbortError") {
             message =
-              "讀取 data/cpi.json 超過15秒，" +
-              "請檢查 GitHub Pages 部署狀態。";
+              "讀取 data/cpi.json 超過15秒。";
           }
 
           showFatalError(message);
