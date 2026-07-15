@@ -21,255 +21,230 @@ OUTPUT_PATH = (
 )
 
 
-# level：
-# 0 = 最上層分類
-# 1 = 第一層子分類
-# 2 = 第二層子分類
-# 3 = 第三層子分類
-# 4 = 第四層子分類
-#
-# 所有項目均使用季節調整後的 CPI-U Series。
-# Health Insurance 已依使用者要求完全移除。
 CPI_SERIES = [
     {
         "name": "All Items",
-        "display_code": "CPI INDX",
         "bls_series_id": "CUSR0000SA0",
         "level": 0,
-        "seasonality": "SA",
     },
     {
         "name": "Food",
-        "display_code": "CPSFFOOD",
         "bls_series_id": "CUSR0000SAF1",
         "level": 0,
-        "seasonality": "SA",
     },
     {
         "name": "Energy",
-        "display_code": "CPUPENER",
         "bls_series_id": "CUSR0000SA0E",
         "level": 0,
-        "seasonality": "SA",
     },
     {
         "name": "All Items Less Food and Energy",
-        "display_code": "CPUPAXFE",
         "bls_series_id": "CUSR0000SA0L1E",
         "level": 0,
-        "seasonality": "SA",
     },
     {
         "name": (
             "Commodities Excluding Food "
             "and Energy Commodities"
         ),
-        "display_code": "CPUPCXFE",
         "bls_series_id": "CUSR0000SACL1E",
         "level": 1,
-        "seasonality": "SA",
     },
     {
         "name": "Household Furnishings and Supplies",
-        "display_code": "CPIQHFAS",
         "bls_series_id": "CUSR0000SAH31",
         "level": 2,
-        "seasonality": "SA",
     },
     {
         "name": "Apparel",
-        "display_code": "CPSCTOT",
         "bls_series_id": "CUSR0000SAA",
         "level": 2,
-        "seasonality": "SA",
     },
     {
         "name": (
             "Transportation Commodities "
             "Less Motor Fuel"
         ),
-        "display_code": "CPIQTCMS",
         "bls_series_id": "CUSR0000SATCLTB",
         "level": 2,
-        "seasonality": "SA",
     },
     {
         "name": "New Vehicles",
-        "display_code": "CPSTNV",
         "bls_series_id": "CUSR0000SETA01",
         "level": 3,
-        "seasonality": "SA",
     },
     {
         "name": "Used Cars and Trucks",
-        "display_code": "CPSTUCTR",
         "bls_series_id": "CUSR0000SETA02",
         "level": 3,
-        "seasonality": "SA",
     },
     {
         "name": "Medical Care Commodities",
-        "display_code": "CPUMCMDY",
         "bls_series_id": "CUSR0000SAM1",
         "level": 2,
-        "seasonality": "SA",
     },
     {
         "name": "Recreation Commodities",
-        "display_code": "CPIQRECS",
         "bls_series_id": "CUSR0000SARC",
         "level": 2,
-        "seasonality": "SA",
     },
     {
         "name": (
             "Education and Communication Commodities"
         ),
-        "display_code": "CPIQECCS",
         "bls_series_id": "CUSR0000SAEC",
         "level": 2,
-        "seasonality": "SA",
     },
     {
         "name": "Alcoholic Beverages",
-        "display_code": "CPSFAB",
         "bls_series_id": "CUSR0000SAF116",
         "level": 2,
-        "seasonality": "SA",
     },
     {
         "name": "Other Goods",
-        "display_code": "CPIQOTGS",
         "bls_series_id": "CUSR0000SAGC",
         "level": 2,
-        "seasonality": "SA",
     },
     {
         "name": "Services Excluding Energy Services",
-        "display_code": "CPUPSXEN",
         "bls_series_id": "CUSR0000SASLE",
         "level": 1,
-        "seasonality": "SA",
     },
     {
         "name": "Shelter",
-        "display_code": "CPSHSHLT",
         "bls_series_id": "CUSR0000SAH1",
         "level": 2,
-        "seasonality": "SA",
     },
     {
         "name": "Rent of Primary Residence",
-        "display_code": "CPSHRPR",
         "bls_series_id": "CUSR0000SEHA",
         "level": 4,
-        "seasonality": "SA",
     },
     {
         "name": "Lodging Away from Home",
-        "display_code": "CPSHLODG",
         "bls_series_id": "CUSR0000SEHB",
         "level": 4,
-        "seasonality": "SA",
     },
     {
         "name": (
             "Owners' Equivalent Rent of Residences"
         ),
-        "display_code": "CPSHOEQR",
         "bls_series_id": "CUSR0000SEHC",
         "level": 4,
-        "seasonality": "SA",
     },
     {
         "name": (
             "Water, Sewer and Trash Collection Services"
         ),
-        "display_code": "CPSHWSTC",
         "bls_series_id": "CUSR0000SEHG",
         "level": 2,
-        "seasonality": "SA",
     },
     {
         "name": "Medical Care Services",
-        "display_code": "CPUMSERV",
         "bls_series_id": "CUSR0000SAM2",
         "level": 2,
-        "seasonality": "SA",
     },
     {
         "name": "Professional Services",
-        "display_code": "CPUMPROF Index",
         "bls_series_id": "CUSR0000SEMC",
         "level": 3,
-        "seasonality": "SA",
     },
     {
         "name": "Hospital and Related Services",
-        "display_code": "CPUMHOSP Index",
         "bls_series_id": "CUSR0000SEMD",
         "level": 3,
-        "seasonality": "SA",
     },
     {
         "name": "Transportation Services",
-        "display_code": "CPSSTRAN",
         "bls_series_id": "CUSR0000SAS4",
         "level": 2,
-        "seasonality": "SA",
     },
     {
         "name": "Car and Truck Rental",
-        "display_code": "CPIQCTRS Index",
         "bls_series_id": "CUSR0000SETA04",
         "level": 3,
-        "seasonality": "SA",
     },
     {
         "name": (
             "Motor Vehicle Maintenance and Repair"
         ),
-        "display_code": "CPSTMVMR",
         "bls_series_id": "CUSR0000SETD",
         "level": 3,
-        "seasonality": "SA",
     },
     {
         "name": "Motor Vehicle Insurance",
-        "display_code": "CPSTMVSA",
         "bls_series_id": "CUSR0000SETE",
         "level": 3,
-        "seasonality": "SA",
     },
     {
         "name": "Public Transportation",
-        "display_code": "CPSTPUBL",
         "bls_series_id": "CUSR0000SETG",
         "level": 3,
-        "seasonality": "SA",
     },
     {
         "name": "Airline Fare",
-        "display_code": "CPSTAIRF",
         "bls_series_id": "CUSR0000SETG01",
         "level": 4,
-        "seasonality": "SA",
     },
     {
         "name": "Recreation Services",
-        "display_code": "CPIQRESS",
         "bls_series_id": "CUSR0000SARS",
         "level": 2,
-        "seasonality": "SA",
     },
     {
         "name": (
             "Education and Communication Services"
         ),
-        "display_code": "CPIQECSS",
         "bls_series_id": "CUSR0000SAES",
         "level": 2,
-        "seasonality": "SA",
+    },
+]
+
+
+DERIVED_SERIES = [
+    {
+        "name": "Core Services Less Shelter",
+        "base": "Services Excluding Energy Services",
+        "exclude": [
+            "Shelter",
+        ],
+    },
+    {
+        "name": "Core Services Less Rent & OER",
+        "base": "Services Excluding Energy Services",
+        "exclude": [
+            "Rent of Primary Residence",
+            "Owners' Equivalent Rent of Residences",
+        ],
+    },
+    {
+        "name": (
+            "Core Services Less Shelter & "
+            "Public Transportation"
+        ),
+        "base": "Services Excluding Energy Services",
+        "exclude": [
+            "Shelter",
+            "Public Transportation",
+        ],
+    },
+    {
+        "name": "Core Less Shelter & Used Cars",
+        "base": "All Items Less Food and Energy",
+        "exclude": [
+            "Shelter",
+            "Used Cars and Trucks",
+        ],
+    },
+    {
+        "name": "Core Goods Less Used Cars",
+        "base": (
+            "Commodities Excluding Food "
+            "and Energy Commodities"
+        ),
+        "exclude": [
+            "Used Cars and Trucks",
+        ],
     },
 ]
 
@@ -307,7 +282,11 @@ def fetch_cpi_series():
         "calculations": False,
         "annualaverage": False,
         "catalog": True,
-        "aspects": False,
+
+        # 要求 BLS 回傳 CPI Aspect metadata。
+        # Relative Importance 的 aspect code 是 I。
+        "aspects": True,
+
         "registrationkey": registration_key,
     }
 
@@ -315,6 +294,7 @@ def fetch_cpi_series():
     print("Calling registered BLS Public Data API.")
     print(f"API URL: {BLS_API_URL}")
     print(f"Requested CPI series: {len(series_ids)}")
+    print("Aspects requested: True")
     print(
         "Requested years:",
         payload["startyear"],
@@ -392,6 +372,146 @@ def fetch_cpi_series():
     return returned_series
 
 
+def to_float(value):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def normalize_aspect_code(value):
+    if value is None:
+        return ""
+
+    return (
+        str(value)
+        .strip()
+        .upper()
+        .replace(" ", "")
+        .replace("_", "")
+        .replace("-", "")
+    )
+
+
+def extract_relative_importance_from_node(node):
+    """
+    BLS API 的 aspect 結構可能隨 API 回傳形式略有不同。
+
+    此函數會遞迴搜尋：
+    - aspectType
+    - aspect_type
+    - aspectCode
+    - aspect_code
+    - code
+    - name / aspectName
+
+    若識別到 code I 或文字 Relative Importance，
+    就嘗試讀取該物件中的 value。
+    """
+    if isinstance(node, list):
+        for item in node:
+            result = extract_relative_importance_from_node(
+                item
+            )
+
+            if result is not None:
+                return result
+
+        return None
+
+    if not isinstance(node, dict):
+        return None
+
+    possible_code_keys = [
+        "aspectType",
+        "aspect_type",
+        "aspectCode",
+        "aspect_code",
+        "code",
+        "type",
+    ]
+
+    possible_name_keys = [
+        "aspectName",
+        "aspect_name",
+        "name",
+        "description",
+        "variableName",
+        "variable_name",
+    ]
+
+    code_values = [
+        normalize_aspect_code(node.get(key))
+        for key in possible_code_keys
+        if key in node
+    ]
+
+    name_values = [
+        str(node.get(key, "")).strip().lower()
+        for key in possible_name_keys
+        if key in node
+    ]
+
+    is_relative_importance = (
+        "I" in code_values
+        or any(
+            "relative importance" in value
+            for value in name_values
+        )
+    )
+
+    if is_relative_importance:
+        possible_value_keys = [
+            "value",
+            "aspectValue",
+            "aspect_value",
+            "dataValue",
+            "data_value",
+        ]
+
+        for key in possible_value_keys:
+            if key not in node:
+                continue
+
+            number = to_float(node.get(key))
+
+            if number is not None:
+                return number
+
+    for value in node.values():
+        if isinstance(value, (dict, list)):
+            result = extract_relative_importance_from_node(
+                value
+            )
+
+            if result is not None:
+                return result
+
+    return None
+
+
+def extract_relative_importance(observation):
+    """
+    從單月 observation 的 aspect metadata 中讀取：
+    I = Relative Importance。
+    """
+    possible_containers = [
+        observation.get("aspects"),
+        observation.get("aspect"),
+        observation.get("metadata"),
+    ]
+
+    for container in possible_containers:
+        result = extract_relative_importance_from_node(
+            container
+        )
+
+        if result is not None:
+            return result
+
+    return None
+
+
 def parse_observations(series):
     observations = []
 
@@ -407,12 +527,20 @@ def parse_observations(series):
         try:
             month = int(period[1:])
             year = int(observation["year"])
-            value = float(observation["value"])
+            index_value = float(
+                observation["value"]
+            )
         except (KeyError, TypeError, ValueError):
             continue
 
         if not 1 <= month <= 12:
             continue
+
+        relative_importance = (
+            extract_relative_importance(
+                observation
+            )
+        )
 
         observations.append(
             {
@@ -423,7 +551,10 @@ def parse_observations(series):
                     "periodName",
                     "",
                 ),
-                "index_value": value,
+                "index_value": index_value,
+                "relative_importance": (
+                    relative_importance
+                ),
                 "latest": observation.get(
                     "latest",
                     False,
@@ -453,10 +584,19 @@ def calculate_percent_change(
         - 1
     ) * 100
 
-    return round(result, 4)
+    return round(result, 6)
 
 
 def build_monthly_changes(observations):
+    """
+    計算月增率。
+
+    對於 t 月月增率，會優先使用 t 月 observation
+    隨附的 Relative Importance。
+
+    BLS 每月新聞稿的 Relative Importance 通常代表
+    計算當月價格相對變化所搭配的前一期權重。
+    """
     changes = []
 
     for index in range(1, len(observations)):
@@ -468,6 +608,15 @@ def build_monthly_changes(observations):
             previous["index_value"],
         )
 
+        relative_importance = (
+            current.get("relative_importance")
+        )
+
+        if relative_importance is None:
+            relative_importance = (
+                previous.get("relative_importance")
+            )
+
         changes.append(
             {
                 "year": current["year"],
@@ -476,6 +625,9 @@ def build_monthly_changes(observations):
                 "period_name": current["period_name"],
                 "value": value,
                 "index_value": current["index_value"],
+                "relative_importance": (
+                    relative_importance
+                ),
                 "latest": current["latest"],
             }
         )
@@ -534,14 +686,9 @@ def build_rows(api_series):
             {
                 "order": order,
                 "name": config["name"],
-                "display_code": (
-                    config["display_code"]
-                ),
                 "bls_series_id": series_id,
                 "level": config["level"],
-                "seasonality": (
-                    config["seasonality"]
-                ),
+                "seasonality": "SA",
                 "available": bool(monthly_changes),
                 "series_title": series_title,
                 "months": monthly_changes,
@@ -594,6 +741,7 @@ def align_rows(rows, periods):
         }
 
         values = []
+        relative_importance = []
 
         for period in period_keys:
             month = month_lookup.get(period)
@@ -604,13 +752,232 @@ def align_rows(rows, periods):
                 else None
             )
 
+            relative_importance.append(
+                month.get("relative_importance")
+                if month
+                else None
+            )
+
         aligned_row = dict(row)
         aligned_row["values"] = values
+        aligned_row["relative_importance"] = (
+            relative_importance
+        )
         aligned_row.pop("months", None)
 
         aligned_rows.append(aligned_row)
 
     return aligned_rows
+
+
+def calculate_exclusion_aggregate(
+    base_change,
+    base_weight,
+    excluded_components,
+):
+    """
+    近似排除式加權月增率：
+
+    (
+        母項目權重 × 母項目月增率
+        -
+        Σ 排除項目權重 × 排除項目月增率
+    )
+    ÷
+    (
+        母項目權重
+        -
+        Σ 排除項目權重
+    )
+    """
+    if (
+        base_change is None
+        or base_weight is None
+    ):
+        return None
+
+    excluded_weight = 0.0
+    excluded_contribution = 0.0
+
+    for component in excluded_components:
+        component_change = component.get("change")
+        component_weight = component.get("weight")
+
+        if (
+            component_change is None
+            or component_weight is None
+        ):
+            return None
+
+        excluded_weight += component_weight
+
+        excluded_contribution += (
+            component_weight
+            * component_change
+        )
+
+    effective_weight = (
+        base_weight - excluded_weight
+    )
+
+    if effective_weight <= 0:
+        return None
+
+    base_contribution = (
+        base_weight * base_change
+    )
+
+    result = (
+        base_contribution
+        - excluded_contribution
+    ) / effective_weight
+
+    return round(result, 6)
+
+
+def build_derived_rows(aligned_rows, periods):
+    rows_by_name = {
+        row["name"]: row
+        for row in aligned_rows
+    }
+
+    derived_rows = []
+
+    for order, definition in enumerate(
+        DERIVED_SERIES
+    ):
+        base_row = rows_by_name.get(
+            definition["base"]
+        )
+
+        excluded_rows = [
+            rows_by_name.get(name)
+            for name in definition["exclude"]
+        ]
+
+        values = []
+        calculation_details = []
+
+        for index, period in enumerate(periods):
+            base_change = None
+            base_weight = None
+
+            if base_row:
+                base_change = base_row["values"][index]
+                base_weight = (
+                    base_row["relative_importance"][index]
+                )
+
+            excluded_components = []
+
+            for excluded_name, excluded_row in zip(
+                definition["exclude"],
+                excluded_rows,
+            ):
+                excluded_change = None
+                excluded_weight = None
+
+                if excluded_row:
+                    excluded_change = (
+                        excluded_row["values"][index]
+                    )
+
+                    excluded_weight = (
+                        excluded_row[
+                            "relative_importance"
+                        ][index]
+                    )
+
+                excluded_components.append(
+                    {
+                        "name": excluded_name,
+                        "change": excluded_change,
+                        "weight": excluded_weight,
+                    }
+                )
+
+            value = calculate_exclusion_aggregate(
+                base_change=base_change,
+                base_weight=base_weight,
+                excluded_components=(
+                    excluded_components
+                ),
+            )
+
+            excluded_weight_total = None
+            effective_weight = None
+
+            valid_excluded_weights = [
+                item["weight"]
+                for item in excluded_components
+                if item["weight"] is not None
+            ]
+
+            if (
+                base_weight is not None
+                and len(valid_excluded_weights)
+                == len(excluded_components)
+            ):
+                excluded_weight_total = sum(
+                    valid_excluded_weights
+                )
+
+                effective_weight = (
+                    base_weight
+                    - excluded_weight_total
+                )
+
+            values.append(value)
+
+            calculation_details.append(
+                {
+                    "period": period["period"],
+                    "base_name": definition["base"],
+                    "base_change": base_change,
+                    "base_relative_importance": (
+                        base_weight
+                    ),
+                    "excluded_components": (
+                        excluded_components
+                    ),
+                    "excluded_relative_importance": (
+                        excluded_weight_total
+                    ),
+                    "effective_relative_importance": (
+                        effective_weight
+                    ),
+                    "result": value,
+                    "status": (
+                        "calculated"
+                        if value is not None
+                        else "missing_relative_importance"
+                    ),
+                }
+            )
+
+        derived_rows.append(
+            {
+                "order": order,
+                "name": definition["name"],
+                "type": "derived",
+                "badge": "Derived",
+                "level": 0,
+                "base_series": definition["base"],
+                "excluded_series": (
+                    definition["exclude"]
+                ),
+                "values": values,
+                "calculation_details": (
+                    calculation_details
+                ),
+                "method": (
+                    "Relative-importance-weighted "
+                    "exclusion formula"
+                ),
+            }
+        )
+
+    return derived_rows
 
 
 def load_existing_payload():
@@ -643,6 +1010,11 @@ def save_json(
         periods,
     )
 
+    derived_rows = build_derived_rows(
+        aligned_rows,
+        periods,
+    )
+
     existing = load_existing_payload()
 
     data_changed = True
@@ -653,11 +1025,12 @@ def save_json(
     if existing:
         same_data = (
             existing.get("periods", []) == periods
-            and existing.get("rows", []) == aligned_rows
-            and existing.get(
-                "missing_series",
-                [],
-            ) == missing_series
+            and existing.get("rows", [])
+            == aligned_rows
+            and existing.get("derived_rows", [])
+            == derived_rows
+            and existing.get("missing_series", [])
+            == missing_series
         )
 
         if same_data:
@@ -681,11 +1054,6 @@ def save_json(
             "Consumer Price Index - "
             "Seasonally Adjusted Monthly Change"
         ),
-        "description": (
-            "Seasonally adjusted monthly percent "
-            "changes calculated from BLS CPI index "
-            "levels."
-        ),
         "updated_at_utc": updated_at_utc,
         "data_changed": data_changed,
         "default_months": 6,
@@ -696,12 +1064,31 @@ def save_json(
         ],
         "period_count": len(periods),
         "row_count": len(aligned_rows),
+        "derived_row_count": len(derived_rows),
         "missing_series_count": len(
             missing_series
         ),
         "periods": periods,
         "rows": aligned_rows,
+        "derived_rows": derived_rows,
         "missing_series": missing_series,
+        "derived_methodology": {
+            "method": (
+                "Relative-importance-weighted "
+                "exclusion formula"
+            ),
+            "formula": (
+                "(base weight × base change "
+                "- excluded weighted changes) "
+                "÷ effective remaining weight"
+            ),
+            "official_bls_series": False,
+            "caveat": (
+                "Derived dashboard measures are "
+                "approximations and may differ from "
+                "official BLS special aggregate indexes."
+            ),
+        },
     }
 
     temporary_path = OUTPUT_PATH.with_suffix(
@@ -723,37 +1110,58 @@ def save_json(
 
     print("=" * 72)
     print(f"Saved CPI rows: {len(aligned_rows)}")
+    print(f"Saved derived rows: {len(derived_rows)}")
     print(f"Saved periods: {len(periods)}")
     print(
-        f"Missing series: {len(missing_series)}"
+        f"Missing source series: "
+        f"{len(missing_series)}"
     )
     print(f"Data changed: {data_changed}")
     print(f"Output path: {OUTPUT_PATH}")
 
-    if periods:
-        print(
-            "Period range:",
-            periods[0]["period"],
-            "to",
-            periods[-1]["period"],
+    missing_weight_count = 0
+
+    for row in aligned_rows:
+        available_weights = sum(
+            value is not None
+            for value in row[
+                "relative_importance"
+            ]
         )
 
-    if missing_series:
-        print("WARNING: Missing CPI series:")
+        if available_weights < len(periods):
+            missing_weight_count += 1
 
-        for item in missing_series:
             print(
-                f"- {item['name']} "
-                f"({item['series_id']}): "
-                f"{item['reason']}"
+                "Relative Importance coverage:",
+                row["name"],
+                f"{available_weights}/{len(periods)}",
             )
+
+    print(
+        "Rows with incomplete Relative Importance:",
+        missing_weight_count,
+    )
+
+    for row in derived_rows:
+        calculated_count = sum(
+            value is not None
+            for value in row["values"]
+        )
+
+        print(
+            "Derived coverage:",
+            row["name"],
+            f"{calculated_count}/{len(periods)}",
+        )
 
     print("=" * 72)
 
 
 def main():
     print(
-        "Starting registered BLS CPI data update."
+        "Starting registered BLS CPI data update "
+        "with Relative Importance."
     )
 
     api_series = fetch_cpi_series()
@@ -772,8 +1180,8 @@ def main():
 
     if len(rows) != 32:
         raise RuntimeError(
-            "Expected 32 CPI rows after removing "
-            f"Health Insurance, but generated {len(rows)}."
+            "Expected 32 CPI rows, but generated "
+            f"{len(rows)} rows."
         )
 
     save_json(
