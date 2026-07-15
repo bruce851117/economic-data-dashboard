@@ -6,7 +6,7 @@
   "title": "Consumer Price Index for All Urban Consumers",
   "reference_period": "June 2026",
   "updated_at_utc": "2026-07-15T06:58:23.785753+00:00",
-  "data_changed": true,
+  "data_changed": false,
   "row_count": 10,
   "data": [
     {
