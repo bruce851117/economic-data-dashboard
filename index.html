@@ -37,12 +37,7 @@
       --level-3: #f3f7fc;
       --level-4: #ffffff;
 
-      --positive: #c62828;
-      --negative: #087f5b;
-      --neutral: #64748b;
-
       --latest-header: #ffefb1;
-      --latest-overlay: rgba(255, 243, 196, 0.55);
 
       --shadow:
         0 9px 28px rgba(15, 23, 42, 0.08);
@@ -50,8 +45,8 @@
       --radius: 14px;
 
       /*
-       * 切換3M、6M、12M時，
-       * 以下兩個寬度都不會改變。
+       * 不論切換3M、6M或12M，
+       * 項目欄與月份欄都維持固定寬度。
        */
       --item-width: 440px;
       --month-width: 68px;
@@ -301,25 +296,47 @@
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 13px;
+      gap: 10px;
       color: var(--text-secondary);
       font-size: 12px;
     }
 
-    .legend-positive {
-      color: var(--positive);
+    .heat-legend {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .heat-gradient {
+      width: 120px;
+      height: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 999px;
+      background:
+        linear-gradient(
+          to right,
+          rgb(99, 190, 123),
+          rgb(219, 242, 224),
+          rgb(255, 255, 255),
+          rgb(250, 220, 217),
+          rgb(226, 111, 106)
+        );
+    }
+
+    .legend-low {
+      color: #237a3b;
       font-weight: 700;
     }
 
-    .legend-negative {
-      color: var(--negative);
+    .legend-high {
+      color: #b42318;
       font-weight: 700;
     }
 
     /*
-     * 外層容器維持整個卡片寬度。
-     * 表格本身則只使用實際需要的寬度。
-     * 3M時右側空間會自然保留空白。
+     * 卡片寬度固定為整個可用寬度，
+     * 表格只使用實際的欄位寬度。
+     * 選擇3M時，右側剩餘空間自然留白。
      */
     .table-scroll {
       width: 100%;
@@ -329,9 +346,6 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    /*
-     * 不使用width: 100%，避免月份欄被自動撐寬。
-     */
     table {
       width: max-content;
       min-width: 0;
@@ -430,25 +444,19 @@
       line-height: 1.4;
     }
 
-    .level-0 td {
+    /*
+     * 階層顏色只套用於左側項目欄。
+     * 右側數字欄由JavaScript動態套用色階。
+     */
+    .level-0 .item-cell {
       color: #ffffff;
       background: var(--level-0);
       border-color: rgba(255, 255, 255, 0.12);
     }
 
-    .level-0 .item-cell {
-      color: #ffffff;
-      background: var(--level-0);
-    }
-
     .level-0 .item-name {
       color: #ffffff;
       font-weight: 700;
-    }
-
-    .level-1 td {
-      color: #183153;
-      background: var(--level-1);
     }
 
     .level-1 .item-cell {
@@ -461,11 +469,6 @@
       font-weight: 700;
     }
 
-    .level-2 td {
-      color: #213954;
-      background: var(--level-2);
-    }
-
     .level-2 .item-cell {
       color: #213954;
       background: var(--level-2);
@@ -474,11 +477,6 @@
     .level-2 .item-name {
       color: #213954;
       font-weight: 600;
-    }
-
-    .level-3 td {
-      color: #2e4056;
-      background: var(--level-3);
     }
 
     .level-3 .item-cell {
@@ -491,11 +489,6 @@
       font-weight: 500;
     }
 
-    .level-4 td {
-      color: #35465b;
-      background: var(--level-4);
-    }
-
     .level-4 .item-cell {
       color: #35465b;
       background: var(--level-4);
@@ -506,6 +499,10 @@
       font-weight: 500;
     }
 
+    /*
+     * 數字文字不再依正負值變紅或變綠。
+     * 所有有效數字都使用同一種深色文字。
+     */
     .value-cell {
       width: var(--month-width);
       min-width: var(--month-width);
@@ -513,55 +510,27 @@
       overflow: hidden;
       padding-right: 7px;
       padding-left: 7px;
+      color: #182436;
+      background: #ffffff;
       text-align: right;
       font-size: 12px;
       font-weight: 650;
       white-space: nowrap;
     }
 
-    .positive {
-      color: var(--positive) !important;
-    }
-
-    .negative {
-      color: var(--negative) !important;
-    }
-
-    .neutral {
-      color: var(--neutral) !important;
-    }
-
-    .level-0 .positive {
-      color: #ffb8b8 !important;
-    }
-
-    .level-0 .negative {
-      color: #7ce7b9 !important;
-    }
-
-    .level-0 .neutral {
-      color: #d3deec !important;
-    }
-
     .missing-value {
-      color: #98a5b5 !important;
+      color: #98a5b5;
+      background: #f8fafc !important;
       font-weight: 500;
     }
 
+    /*
+     * 最新月份只在表頭使用淡黃色。
+     * 數字儲存格不再疊加黃色，避免干擾色階。
+     */
     thead .latest-column {
       color: #604b00;
       background: var(--latest-header);
-    }
-
-    tbody tr:not(.level-0) .latest-column {
-      background-image:
-        linear-gradient(
-          var(--latest-overlay),
-          var(--latest-overlay)
-        );
-    }
-
-    .latest-column {
       box-shadow:
         inset 3px 0 0 rgba(217, 166, 0, 0.2),
         inset -3px 0 0 rgba(217, 166, 0, 0.14);
@@ -823,16 +792,18 @@
           </div>
 
           <div class="legend">
-            <span class="legend-positive">
-              正值
+            <span class="legend-low">
+              低
             </span>
 
-            <span class="legend-negative">
-              負值
+            <span class="heat-gradient"></span>
+
+            <span class="legend-high">
+              高
             </span>
 
             <span>
-              最新月份以淡黃色標示
+              每列依完整12個月獨立計算
             </span>
           </div>
         </div>
@@ -845,9 +816,10 @@
         </div>
 
         <div class="table-note">
-          註：月份由左至右依最新至最舊排列。項目欄及每個
-          月份欄均使用固定寬度；切換至最近3個月時，右側
-          未使用區域將維持空白，不會拉寬月份欄。
+          註：每一列均以該項目完整12個月資料建立獨立色階。
+          該列數值越高越偏紅，數值越低越偏綠，中間值接近
+          白色。即使切換至最近3個月或最近6個月，色階仍以
+          完整12個月計算，方便不同期間維持一致比較基準。
         </div>
       </div>
     </section>
@@ -961,39 +933,168 @@
       renderCpiTable();
     }
 
+    function isValidNumber(value) {
+      return (
+        value !== null &&
+        value !== undefined &&
+        value !== "" &&
+        !isNaN(Number(value))
+      );
+    }
+
     function formatValue(value) {
+      if (!isValidNumber(value)) {
+        return "—";
+      }
+
+      return Number(value).toFixed(2);
+    }
+
+    /*
+     * 將兩個RGB顏色依比例混合。
+     * ratio = 0 時使用第一個顏色，
+     * ratio = 1 時使用第二個顏色。
+     */
+    function interpolateColor(
+      startColor,
+      endColor,
+      ratio
+    ) {
+      var boundedRatio = Math.max(
+        0,
+        Math.min(1, ratio)
+      );
+
+      var red = Math.round(
+        startColor[0] +
+        (
+          endColor[0] - startColor[0]
+        ) * boundedRatio
+      );
+
+      var green = Math.round(
+        startColor[1] +
+        (
+          endColor[1] - startColor[1]
+        ) * boundedRatio
+      );
+
+      var blue = Math.round(
+        startColor[2] +
+        (
+          endColor[2] - startColor[2]
+        ) * boundedRatio
+      );
+
+      return (
+        "rgb(" +
+        red +
+        ", " +
+        green +
+        ", " +
+        blue +
+        ")"
+      );
+    }
+
+    /*
+     * 取得單一列的12個月有效數字，
+     * 並計算最小值、最大值及中間值。
+     *
+     * 色階永遠使用完整12個月，
+     * 不依目前顯示3M、6M或12M改變。
+     */
+    function calculateRowScale(values) {
+      var validValues = values
+        .filter(isValidNumber)
+        .map(Number);
+
+      if (validValues.length === 0) {
+        return null;
+      }
+
+      var minimum = Math.min.apply(
+        null,
+        validValues
+      );
+
+      var maximum = Math.max.apply(
+        null,
+        validValues
+      );
+
+      var midpoint = (
+        minimum + maximum
+      ) / 2;
+
+      return {
+        minimum: minimum,
+        midpoint: midpoint,
+        maximum: maximum
+      };
+    }
+
+    /*
+     * Excel風格三色色階：
+     *
+     * 最低值：綠色
+     * 中間值：白色
+     * 最高值：紅色
+     *
+     * 為了讓深色文字仍清楚可讀，
+     * 最深顏色不使用過度飽和的紅綠色。
+     */
+    function getHeatmapColor(value, scale) {
       if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(Number(value))
+        !isValidNumber(value) ||
+        !scale
       ) {
-        return {
-          text: "—",
-          className: "missing-value"
-        };
+        return "#f8fafc";
       }
 
       var number = Number(value);
 
-      if (number > 0) {
-        return {
-          text: number.toFixed(2),
-          className: "positive"
-        };
+      var greenColor = [99, 190, 123];
+      var whiteColor = [255, 255, 255];
+      var redColor = [226, 111, 106];
+
+      if (scale.minimum === scale.maximum) {
+        return "rgb(255, 255, 255)";
       }
 
-      if (number < 0) {
-        return {
-          text: number.toFixed(2),
-          className: "negative"
-        };
+      if (number <= scale.midpoint) {
+        var lowerRange = (
+          scale.midpoint - scale.minimum
+        );
+
+        var lowerRatio = lowerRange === 0
+          ? 0.5
+          : (
+              number - scale.minimum
+            ) / lowerRange;
+
+        return interpolateColor(
+          greenColor,
+          whiteColor,
+          lowerRatio
+        );
       }
 
-      return {
-        text: number.toFixed(2),
-        className: "neutral"
-      };
+      var upperRange = (
+        scale.maximum - scale.midpoint
+      );
+
+      var upperRatio = upperRange === 0
+        ? 0.5
+        : (
+            number - scale.midpoint
+          ) / upperRange;
+
+      return interpolateColor(
+        whiteColor,
+        redColor,
+        upperRatio
+      );
     }
 
     function formatTaipeiTime(value) {
@@ -1092,8 +1193,8 @@
         allPeriods.length - monthCount;
 
       /*
-       * JSON順序是舊到新。
-       * 擷取最近N個月後，反轉為新到舊。
+       * JSON月份為舊到新。
+       * 先取得最近N個月，再反轉成新到舊。
        */
       var displayedPeriods =
         allPeriods
@@ -1163,12 +1264,24 @@
           Math.min(4, level)
         );
 
+        /*
+         * allValues保留JSON完整12個月順序，
+         * 用於計算該列色階。
+         */
         var allValues = Array.isArray(
           row.values
         )
           ? row.values
           : [];
 
+        var rowScale = calculateRowScale(
+          allValues
+        );
+
+        /*
+         * 畫面只顯示目前選擇的月份，
+         * 並反轉為新到舊。
+         */
         var displayedValues =
           allValues
             .slice(startIndex)
@@ -1205,22 +1318,46 @@
           function (period, index) {
             var value = displayedValues[index];
 
-            var formatted =
-              formatValue(value);
+            var valueText = formatValue(value);
 
-            var latestClass =
-              index === 0
-                ? " latest-column"
-                : "";
+            var missingClass = isValidNumber(value)
+              ? ""
+              : " missing-value";
+
+            var backgroundColor =
+              getHeatmapColor(
+                value,
+                rowScale
+              );
+
+            var titleText = "";
+
+            if (
+              rowScale &&
+              isValidNumber(value)
+            ) {
+              titleText =
+                ' title="' +
+                escapeHtml(
+                  "本列12個月範圍：" +
+                  rowScale.minimum.toFixed(2) +
+                  " ～ " +
+                  rowScale.maximum.toFixed(2)
+                ) +
+                '"';
+            }
 
             html +=
-              '<td class="' +
-                'value-cell ' +
-                formatted.className +
-                " " +
-                latestClass +
-              '">' +
-                formatted.text +
+              '<td ' +
+                'class="value-cell' +
+                  missingClass +
+                '" ' +
+                'style="background-color:' +
+                  backgroundColor +
+                ';"' +
+                titleText +
+              '>' +
+                valueText +
               '</td>';
           }
         );
@@ -1378,4 +1515,3 @@
   </script>
 </body>
 </html>
-``
