@@ -10,72 +10,68 @@
 
   <meta
     name="theme-color"
-    content="#12233f"
+    content="#132744"
   >
 
   <title>美國經濟數據 Dashboard</title>
 
   <style>
     :root {
-      --page-background: #f3f6fb;
-      --card-background: #ffffff;
-      --header-background: #12233f;
-      --header-background-light: #1a365f;
+      --background: #f3f6fb;
+      --surface: #ffffff;
+      --border: #d7e1ee;
+      --border-dark: #becbdb;
 
-      --text-primary: #172033;
-      --text-secondary: #5f6f84;
-      --text-light: #dbe7f7;
+      --text: #172033;
+      --text-secondary: #5f7086;
 
-      --border: #d7e0ec;
-      --border-dark: #bdcadb;
+      --header: #12243f;
+      --header-light: #1c3c67;
 
       --blue: #2563eb;
       --blue-hover: #1d4ed8;
-      --blue-light: #dceafe;
-      --blue-lighter: #edf5ff;
-      --blue-lightest: #f5f9ff;
 
-      --level-zero: #122744;
-      --level-one: #d7e8ff;
-      --level-two: #eaf3ff;
-      --level-three: #f3f7fc;
-      --level-four: #ffffff;
+      --level-0: #142946;
+      --level-1: #d9e9ff;
+      --level-2: #eaf3ff;
+      --level-3: #f3f7fc;
+      --level-4: #ffffff;
 
       --positive: #c62828;
       --negative: #087f5b;
-      --neutral: #67768a;
+      --neutral: #64748b;
 
-      --latest-header: #fff0b5;
-      --latest-cell: rgba(255, 246, 207, 0.55);
+      --latest-header: #ffefb1;
+      --latest-overlay: rgba(255, 243, 196, 0.55);
 
       --shadow:
-        0 8px 26px rgba(15, 23, 42, 0.08);
+        0 9px 28px rgba(15, 23, 42, 0.08);
 
       --radius: 14px;
+      --item-width: 440px;
+      --month-width: 68px;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html {
+    html,
+    body {
       min-height: 100%;
-      background: var(--page-background);
     }
 
     body {
-      min-height: 100vh;
       margin: 0;
-      color: var(--text-primary);
+      color: var(--text);
       background:
         radial-gradient(
           circle at top right,
           rgba(37, 99, 235, 0.08),
           transparent 440px
         ),
-        var(--page-background);
+        var(--background);
       font-family:
-        Inter,
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
@@ -97,11 +93,11 @@
       background:
         linear-gradient(
           135deg,
-          var(--header-background) 0%,
-          var(--header-background-light) 100%
+          var(--header),
+          var(--header-light)
         );
       box-shadow:
-        0 7px 24px rgba(15, 23, 42, 0.2);
+        0 7px 24px rgba(15, 23, 42, 0.22);
     }
 
     .header-inner {
@@ -125,51 +121,47 @@
       font-size: clamp(25px, 3vw, 36px);
       font-weight: 750;
       line-height: 1.25;
-      letter-spacing: -0.025em;
+      letter-spacing: -0.02em;
     }
 
     .page-description {
       max-width: 800px;
       margin: 9px 0 0;
-      color: var(--text-light);
+      color: #d5e1ef;
       font-size: 14px;
-      font-weight: 400;
       line-height: 1.7;
     }
 
     .tabs {
       display: flex;
-      align-items: center;
       gap: 8px;
       margin-top: 22px;
     }
 
     .tab-button {
       min-height: 42px;
-      padding: 0 18px;
+      padding: 0 19px;
       border: 1px solid transparent;
       border-radius: 9px;
-      color: #ced9e8;
+      color: #d4dfec;
       background: transparent;
       cursor: pointer;
-      font-size: 14px;
       font-weight: 650;
       transition:
         color 0.18s ease,
-        background-color 0.18s ease,
-        box-shadow 0.18s ease;
+        background 0.18s ease;
     }
 
     .tab-button:hover {
       color: #ffffff;
-      background: rgba(255, 255, 255, 0.09);
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .tab-button.active {
-      color: #173052;
+      color: #173253;
       background: #ffffff;
       box-shadow:
-        0 4px 15px rgba(0, 0, 0, 0.16);
+        0 4px 15px rgba(0, 0, 0, 0.15);
     }
 
     main {
@@ -194,7 +186,7 @@
       padding: 15px 16px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      background: var(--card-background);
+      background: var(--surface);
       box-shadow: var(--shadow);
     }
 
@@ -206,18 +198,18 @@
     }
 
     .toolbar-label {
-      margin-right: 2px;
-      color: #52637a;
+      margin-right: 3px;
+      color: #52657c;
       font-size: 13px;
-      font-weight: 650;
+      font-weight: 700;
     }
 
-    .filter-button {
+    .month-button {
       min-height: 39px;
       padding: 0 15px;
       border: 1px solid #bdcce0;
       border-radius: 9px;
-      color: #233752;
+      color: #263a55;
       background: #ffffff;
       cursor: pointer;
       font-size: 13px;
@@ -225,27 +217,22 @@
       transition:
         color 0.18s ease,
         border-color 0.18s ease,
-        background-color 0.18s ease,
-        transform 0.18s ease;
+        background 0.18s ease;
     }
 
-    .filter-button:hover {
-      border-color: #7ca7eb;
-      color: #174ba4;
-      background: #f0f6ff;
+    .month-button:hover {
+      border-color: #7aa4e4;
+      color: #164ca8;
+      background: #eff6ff;
     }
 
-    .filter-button:active {
-      transform: translateY(1px);
-    }
-
-    .filter-button.active {
+    .month-button.active {
       border-color: var(--blue);
       color: #ffffff;
       background: var(--blue);
     }
 
-    .filter-button.active:hover {
+    .month-button.active:hover {
       border-color: var(--blue-hover);
       background: var(--blue-hover);
     }
@@ -260,7 +247,7 @@
       font-size: 12px;
     }
 
-    .status-indicator {
+    .status-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
@@ -273,7 +260,7 @@
       overflow: hidden;
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      background: var(--card-background);
+      background: var(--surface);
       box-shadow: var(--shadow);
     }
 
@@ -287,14 +274,14 @@
       background:
         linear-gradient(
           180deg,
-          #ffffff 0%,
-          #f8fafc 100%
+          #ffffff,
+          #f8fafc
         );
     }
 
     .table-title {
       margin: 0;
-      color: #1c2d45;
+      color: #1c2e47;
       font-size: 18px;
       font-weight: 700;
     }
@@ -303,7 +290,6 @@
       margin: 5px 0 0;
       color: var(--text-secondary);
       font-size: 12px;
-      font-weight: 400;
     }
 
     .legend {
@@ -327,30 +313,28 @@
 
     .table-scroll {
       overflow-x: auto;
-      overflow-y: visible;
-      overscroll-behavior-x: contain;
       -webkit-overflow-scrolling: touch;
     }
 
     table {
       width: 100%;
-      min-width: 760px;
+      min-width: max-content;
       border-collapse: separate;
       border-spacing: 0;
-      color: var(--text-primary);
+      table-layout: auto;
       font-size: 13px;
       font-variant-numeric: tabular-nums;
     }
 
     thead th {
-      height: 48px;
-      padding: 9px 13px;
+      height: 45px;
+      padding: 7px 5px;
       border-right: 1px solid var(--border);
       border-bottom: 1px solid var(--border-dark);
       color: #263850;
       background: #edf2f8;
       text-align: center;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       white-space: nowrap;
     }
@@ -362,54 +346,63 @@
     .item-header {
       position: sticky;
       left: 0;
-      z-index: 8;
-      width: 440px;
-      min-width: 440px;
+      z-index: 5;
+      width: var(--item-width);
+      min-width: var(--item-width);
+      max-width: var(--item-width);
+      padding-left: 13px;
       text-align: left;
       box-shadow:
         7px 0 10px -12px rgba(15, 23, 42, 0.9);
     }
 
+    .month-header {
+      width: var(--month-width);
+      min-width: var(--month-width);
+      max-width: var(--month-width);
+    }
+
     tbody td {
-      height: 43px;
-      padding: 8px 13px;
+      height: 41px;
+      padding: 7px 5px;
       border-right: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
       vertical-align: middle;
-    }
-
-    tbody tr:last-child td {
-      border-bottom: 0;
     }
 
     tbody td:last-child {
       border-right: 0;
     }
 
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
     .item-cell {
       position: sticky;
       left: 0;
       z-index: 3;
-      width: 440px;
-      min-width: 440px;
+      width: var(--item-width);
+      min-width: var(--item-width);
+      max-width: var(--item-width);
       text-align: left;
       box-shadow:
         7px 0 10px -12px rgba(15, 23, 42, 0.9);
     }
 
-    .name-container {
+    .item-wrapper {
       display: flex;
       align-items: center;
       min-height: 25px;
     }
 
-    .level-line {
+    .level-marker {
       flex: 0 0 auto;
       width: 3px;
       height: 21px;
       margin-right: 9px;
       border-radius: 4px;
-      background: #75a7f7;
+      background: #72a7f8;
     }
 
     .item-name {
@@ -419,13 +412,13 @@
 
     .level-0 td {
       color: #ffffff;
-      background: var(--level-zero);
+      background: var(--level-0);
       border-color: rgba(255, 255, 255, 0.12);
     }
 
     .level-0 .item-cell {
       color: #ffffff;
-      background: var(--level-zero);
+      background: var(--level-0);
     }
 
     .level-0 .item-name {
@@ -433,18 +426,14 @@
       font-weight: 700;
     }
 
-    .level-0 .level-line {
-      background: #73b3ff;
-    }
-
     .level-1 td {
       color: #183153;
-      background: var(--level-one);
+      background: var(--level-1);
     }
 
     .level-1 .item-cell {
       color: #183153;
-      background: var(--level-one);
+      background: var(--level-1);
     }
 
     .level-1 .item-name {
@@ -454,12 +443,12 @@
 
     .level-2 td {
       color: #213954;
-      background: var(--level-two);
+      background: var(--level-2);
     }
 
     .level-2 .item-cell {
       color: #213954;
-      background: var(--level-two);
+      background: var(--level-2);
     }
 
     .level-2 .item-name {
@@ -469,12 +458,12 @@
 
     .level-3 td {
       color: #2e4056;
-      background: var(--level-three);
+      background: var(--level-3);
     }
 
     .level-3 .item-cell {
       color: #2e4056;
-      background: var(--level-three);
+      background: var(--level-3);
     }
 
     .level-3 .item-name {
@@ -484,12 +473,12 @@
 
     .level-4 td {
       color: #35465b;
-      background: var(--level-four);
+      background: var(--level-4);
     }
 
     .level-4 .item-cell {
       color: #35465b;
-      background: var(--level-four);
+      background: var(--level-4);
     }
 
     .level-4 .item-name {
@@ -498,44 +487,44 @@
     }
 
     .value-cell {
-      min-width: 92px;
+      width: var(--month-width);
+      min-width: var(--month-width);
+      max-width: var(--month-width);
+      padding-right: 7px;
+      padding-left: 7px;
       text-align: right;
+      font-size: 12px;
       font-weight: 650;
+      white-space: nowrap;
     }
 
-    .value-positive {
+    .positive {
       color: var(--positive) !important;
     }
 
-    .value-negative {
+    .negative {
       color: var(--negative) !important;
     }
 
-    .value-neutral {
+    .neutral {
       color: var(--neutral) !important;
     }
 
-    .level-0 .value-positive {
+    .level-0 .positive {
       color: #ffb8b8 !important;
     }
 
-    .level-0 .value-negative {
+    .level-0 .negative {
       color: #7ce7b9 !important;
     }
 
-    .level-0 .value-neutral {
+    .level-0 .neutral {
       color: #d3deec !important;
     }
 
-    .disabled-value {
-      color: #9aa7b7 !important;
+    .missing-value {
+      color: #98a5b5 !important;
       font-weight: 500;
-    }
-
-    .latest-column {
-      box-shadow:
-        inset 3px 0 0 rgba(217, 166, 0, 0.22),
-        inset -3px 0 0 rgba(217, 166, 0, 0.15);
     }
 
     thead .latest-column {
@@ -546,9 +535,15 @@
     tbody tr:not(.level-0) .latest-column {
       background-image:
         linear-gradient(
-          var(--latest-cell),
-          var(--latest-cell)
+          var(--latest-overlay),
+          var(--latest-overlay)
         );
+    }
+
+    .latest-column {
+      box-shadow:
+        inset 3px 0 0 rgba(217, 166, 0, 0.2),
+        inset -3px 0 0 rgba(217, 166, 0, 0.14);
     }
 
     .nsa-badge {
@@ -562,21 +557,20 @@
       background: #fff0b5;
       font-size: 9px;
       font-weight: 800;
-      vertical-align: middle;
     }
 
-    .loading,
-    .empty-message,
-    .error-message {
+    .loading-box,
+    .error-box,
+    .empty-box {
       padding: 52px 24px;
       text-align: center;
     }
 
-    .loading {
+    .loading-box {
       color: var(--text-secondary);
     }
 
-    .loading-spinner {
+    .spinner {
       width: 32px;
       height: 32px;
       margin: 0 auto 13px;
@@ -592,7 +586,7 @@
       }
     }
 
-    .error-message {
+    .error-box {
       color: #991b1b;
       background: #fff1f2;
     }
@@ -600,6 +594,18 @@
     .error-title {
       margin-bottom: 7px;
       font-weight: 750;
+    }
+
+    .error-detail {
+      max-width: 800px;
+      margin: 8px auto 0;
+      overflow-wrap: anywhere;
+      color: #b42318;
+      font-family:
+        Consolas,
+        "SFMono-Regular",
+        monospace;
+      font-size: 12px;
     }
 
     .table-note {
@@ -634,7 +640,7 @@
           #2563eb,
           #174bb5
         );
-      font-size: 19px;
+      font-size: 18px;
       font-weight: 750;
     }
 
@@ -642,18 +648,21 @@
       margin: 0 0 9px;
       color: #1d2e45;
       font-size: 21px;
-      font-weight: 700;
     }
 
     .employment-placeholder p {
       max-width: 660px;
       margin: 0 auto;
       color: var(--text-secondary);
-      font-size: 14px;
       line-height: 1.8;
     }
 
     @media (max-width: 850px) {
+      :root {
+        --item-width: 290px;
+        --month-width: 64px;
+      }
+
       .header-inner,
       main {
         width: min(100% - 20px, 1500px);
@@ -668,21 +677,12 @@
       .status-area {
         justify-content: flex-start;
       }
-
-      .item-header,
-      .item-cell {
-        width: 290px;
-        min-width: 290px;
-      }
-
-      table {
-        min-width: 690px;
-      }
     }
 
     @media (max-width: 520px) {
-      .header-inner {
-        padding-top: 20px;
+      :root {
+        --item-width: 245px;
+        --month-width: 62px;
       }
 
       .tabs {
@@ -691,7 +691,6 @@
 
       .tab-button {
         flex: 1;
-        padding: 0 10px;
       }
 
       .toolbar-left {
@@ -705,19 +704,14 @@
         grid-column: 1 / -1;
       }
 
-      .filter-button {
+      .month-button {
         width: 100%;
         padding: 0 7px;
         font-size: 12px;
       }
 
-      .item-header,
-      .item-cell {
-        width: 245px;
-        min-width: 245px;
-      }
-
-      .item-name {
+      .item-name,
+      .value-cell {
         font-size: 12px;
       }
     }
@@ -740,29 +734,29 @@
         整理 CPI 與就業市場資料。
       </p>
 
-      <nav class="tabs" aria-label="資料分頁">
+      <div class="tabs">
         <button
+          id="tab-cpi"
           class="tab-button active"
           type="button"
-          data-tab="cpi"
         >
           CPI
         </button>
 
         <button
+          id="tab-employment"
           class="tab-button"
           type="button"
-          data-tab="employment"
         >
           非農就業
         </button>
-      </nav>
+      </div>
     </div>
   </header>
 
   <main>
     <section
-      id="panel-cpi"
+      id="cpi-panel"
       class="tab-panel active"
     >
       <div class="toolbar">
@@ -772,38 +766,38 @@
           </span>
 
           <button
-            class="filter-button"
+            id="months-3"
+            class="month-button"
             type="button"
-            data-months="3"
           >
             最近3個月
           </button>
 
           <button
-            class="filter-button active"
+            id="months-6"
+            class="month-button active"
             type="button"
-            data-months="6"
           >
             最近6個月
           </button>
 
           <button
-            class="filter-button"
+            id="months-12"
+            class="month-button"
             type="button"
-            data-months="12"
           >
             最近12個月
           </button>
         </div>
 
         <div class="status-area">
-          <span class="status-indicator"></span>
+          <span class="status-dot"></span>
 
-          <span id="cpi-range">
-            載入中
+          <span id="period-range">
+            正在初始化
           </span>
 
-          <span id="cpi-updated"></span>
+          <span id="updated-time"></span>
         </div>
       </div>
 
@@ -816,6 +810,7 @@
 
             <p class="table-subtitle">
               季節調整後月增率，單位：%
+              （月份由新到舊）
             </p>
           </div>
 
@@ -835,24 +830,23 @@
         </div>
 
         <div id="cpi-content">
-          <div class="loading">
-            <div class="loading-spinner"></div>
-
+          <div class="loading-box">
+            <div class="spinner"></div>
             正在讀取 CPI 資料
           </div>
         </div>
 
         <div class="table-note">
-          註：除 Health Insurance 外，各列使用季節調整
-          CPI 指數計算月增率。Health Insurance 使用 BLS
-          未季調 Series，並以 NSA 標示。顯示值四捨五入至
-          小數點後兩位。
+          註：月份由左至右依最新至最舊排列。除 Health
+          Insurance 外，各列使用季節調整 CPI 指數計算月增率。
+          Health Insurance 使用 BLS 未季調 Series，並以 NSA
+          標示。
         </div>
       </div>
     </section>
 
     <section
-      id="panel-employment"
+      id="employment-panel"
       class="tab-panel"
     >
       <div class="employment-placeholder">
@@ -865,7 +859,7 @@
         <p>
           下一階段將加入 Payroll Employment、Labor Force、
           勞動參與率、失業流量、失業原因、失業率與平均失業
-          期間。資料將保存最近12個月，預設顯示最近6個月。
+          期間。
         </p>
       </div>
     </section>
@@ -874,115 +868,146 @@
   <script>
     "use strict";
 
-    const dashboardState = {
-      cpiData: null,
-      visibleMonths: 6,
-    };
-
-    const tabButtons = document.querySelectorAll(
-      ".tab-button"
-    );
-
-    const tabPanels = document.querySelectorAll(
-      ".tab-panel"
-    );
-
-    const filterButtons = document.querySelectorAll(
-      ".filter-button"
-    );
-
-    tabButtons.forEach((button) => {
-      button.addEventListener(
-        "click",
-        (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-
-          const selectedTab = button.dataset.tab;
-
-          tabButtons.forEach((tabButton) => {
-            tabButton.classList.toggle(
-              "active",
-              tabButton === button
-            );
-          });
-
-          tabPanels.forEach((panel) => {
-            panel.classList.toggle(
-              "active",
-              panel.id === `panel-${selectedTab}`
-            );
-          });
-        }
-      );
-    });
-
-    filterButtons.forEach((button) => {
-      button.addEventListener(
-        "click",
-        (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-
-          dashboardState.visibleMonths = Number(
-            button.dataset.months
-          );
-
-          filterButtons.forEach(
-            (filterButton) => {
-              filterButton.classList.toggle(
-                "active",
-                filterButton === button
-              );
-            }
-          );
-
-          renderCpiTable();
-        }
-      );
-    });
+    var cpiData = null;
+    var visibleMonths = 6;
 
     function escapeHtml(value) {
-      return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+      return String(
+        value === null || value === undefined
+          ? ""
+          : value
+      )
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
 
-    function formatCpiValue(value) {
+    function showFatalError(message) {
+      var content = document.getElementById(
+        "cpi-content"
+      );
+
+      if (!content) {
+        return;
+      }
+
+      content.innerHTML =
+        '<div class="error-box">' +
+          '<div class="error-title">' +
+            'CPI資料載入失敗' +
+          '</div>' +
+          '<div>' +
+            '請確認 data/cpi.json 已存在並已部署。' +
+          '</div>' +
+          '<div class="error-detail">' +
+            escapeHtml(message) +
+          '</div>' +
+        '</div>';
+    }
+
+    window.addEventListener(
+      "error",
+      function (event) {
+        showFatalError(
+          event.message || "JavaScript執行錯誤"
+        );
+      }
+    );
+
+    window.addEventListener(
+      "unhandledrejection",
+      function (event) {
+        var reason = event.reason;
+
+        showFatalError(
+          reason && reason.message
+            ? reason.message
+            : String(reason || "未知非同步錯誤")
+        );
+      }
+    );
+
+    function changeTab(tabName) {
+      var showCpi = tabName === "cpi";
+
+      document
+        .getElementById("tab-cpi")
+        .classList.toggle("active", showCpi);
+
+      document
+        .getElementById("tab-employment")
+        .classList.toggle("active", !showCpi);
+
+      document
+        .getElementById("cpi-panel")
+        .classList.toggle("active", showCpi);
+
+      document
+        .getElementById("employment-panel")
+        .classList.toggle("active", !showCpi);
+    }
+
+    function changeMonthRange(monthCount) {
+      visibleMonths = monthCount;
+
+      document
+        .getElementById("months-3")
+        .classList.toggle(
+          "active",
+          monthCount === 3
+        );
+
+      document
+        .getElementById("months-6")
+        .classList.toggle(
+          "active",
+          monthCount === 6
+        );
+
+      document
+        .getElementById("months-12")
+        .classList.toggle(
+          "active",
+          monthCount === 12
+        );
+
+      renderCpiTable();
+    }
+
+    function formatValue(value) {
       if (
         value === null ||
         value === undefined ||
         value === "" ||
-        Number.isNaN(Number(value))
+        isNaN(Number(value))
       ) {
         return {
           text: "—",
-          className: "disabled-value",
+          className: "missing-value"
         };
       }
 
-      const numericValue = Number(value);
+      var number = Number(value);
 
-      if (numericValue > 0) {
+      if (number > 0) {
         return {
-          text: numericValue.toFixed(2),
-          className: "value-positive",
+          text: number.toFixed(2),
+          className: "positive"
         };
       }
 
-      if (numericValue < 0) {
+      if (number < 0) {
         return {
-          text: numericValue.toFixed(2),
-          className: "value-negative",
+          text: number.toFixed(2),
+          className: "negative"
         };
       }
 
       return {
-        text: numericValue.toFixed(2),
-        className: "value-neutral",
+        text: number.toFixed(2),
+        className: "neutral"
       };
     }
 
@@ -991,9 +1016,9 @@
         return "";
       }
 
-      const date = new Date(value);
+      var date = new Date(value);
 
-      if (Number.isNaN(date.getTime())) {
+      if (isNaN(date.getTime())) {
         return "";
       }
 
@@ -1006,286 +1031,356 @@
           hour: "2-digit",
           minute: "2-digit",
           hour12: false,
-          timeZone: "Asia/Taipei",
+          timeZone: "Asia/Taipei"
         }
       ).format(date);
     }
 
-    function getItemPadding(level) {
-      const normalizedLevel = Math.max(
-        0,
-        Number(level) || 0
-      );
-
-      return 13 + normalizedLevel * 23;
-    }
-
     function renderCpiTable() {
-      const content = document.getElementById(
-        "cpi-content"
-      );
-
-      const range = document.getElementById(
-        "cpi-range"
-      );
-
-      const updated = document.getElementById(
-        "cpi-updated"
-      );
-
-      if (!dashboardState.cpiData) {
+      if (!cpiData) {
         return;
       }
 
-      const allPeriods = Array.isArray(
-        dashboardState.cpiData.periods
+      var content = document.getElementById(
+        "cpi-content"
+      );
+
+      var rangeElement =
+        document.getElementById(
+          "period-range"
+        );
+
+      var updatedElement =
+        document.getElementById(
+          "updated-time"
+        );
+
+      var allPeriods = Array.isArray(
+        cpiData.periods
       )
-        ? dashboardState.cpiData.periods
+        ? cpiData.periods
         : [];
 
-      const allRows = Array.isArray(
-        dashboardState.cpiData.rows
+      var rows = Array.isArray(
+        cpiData.rows
       )
-        ? dashboardState.cpiData.rows
+        ? cpiData.rows
         : [];
 
-      const displayedMonthCount = Math.min(
-        dashboardState.visibleMonths,
+      if (
+        allPeriods.length === 0 ||
+        rows.length === 0
+      ) {
+        content.innerHTML =
+          '<div class="empty-box">' +
+            'CPI資料目前為空。' +
+          '</div>';
+
+        return;
+      }
+
+      var monthCount = Math.min(
+        visibleMonths,
         allPeriods.length
       );
 
-      const startIndex = Math.max(
-        0,
-        allPeriods.length - displayedMonthCount
+      var startIndex =
+        allPeriods.length - monthCount;
+
+      /*
+       * JSON內的月份順序是舊到新。
+       * 先擷取最近N個月，再反轉成新到舊。
+       */
+      var displayedPeriods =
+        allPeriods
+          .slice(startIndex)
+          .reverse();
+
+      var newestPeriod = displayedPeriods[0];
+
+      var oldestPeriod =
+        displayedPeriods[
+          displayedPeriods.length - 1
+        ];
+
+      rangeElement.textContent =
+        newestPeriod.period +
+        " ～ " +
+        oldestPeriod.period +
+        "（新到舊）";
+
+      var formattedTime = formatTaipeiTime(
+        cpiData.updated_at_utc
       );
 
-      const displayedPeriods = allPeriods.slice(
-        startIndex
+      updatedElement.textContent =
+        formattedTime
+          ? "資料更新：" + formattedTime
+          : "";
+
+      var html =
+        '<div class="table-scroll">' +
+          '<table>' +
+            '<thead>' +
+              '<tr>' +
+                '<th class="item-header">' +
+                  '項目' +
+                '</th>';
+
+      displayedPeriods.forEach(
+        function (period, index) {
+          var latestClass =
+            index === 0
+              ? " latest-column"
+              : "";
+
+          html +=
+            '<th class="month-header ' +
+              latestClass +
+            '">' +
+              escapeHtml(period.label) +
+            '</th>';
+        }
       );
 
-      if (
-        displayedPeriods.length === 0 ||
-        allRows.length === 0
-      ) {
-        content.innerHTML = `
-          <div class="empty-message">
-            CPI資料目前為空。
-          </div>
-        `;
+      html +=
+              '</tr>' +
+            '</thead>' +
+            '<tbody>';
 
-        return;
-      }
+      rows.forEach(function (row) {
+        var level = Number(row.level) || 0;
 
-      const firstPeriod = displayedPeriods[0];
-      const lastPeriod = displayedPeriods[
-        displayedPeriods.length - 1
-      ];
+        level = Math.max(
+          0,
+          Math.min(4, level)
+        );
 
-      range.textContent = (
-        `${firstPeriod.period} ～ ${lastPeriod.period}`
-      );
+        var allValues = Array.isArray(
+          row.values
+        )
+          ? row.values
+          : [];
 
-      const updatedTime = formatTaipeiTime(
-        dashboardState.cpiData.updated_at_utc
-      );
+        /*
+         * 數值必須和月份使用相同順序：
+         * 先擷取最近N個月，再反轉為新到舊。
+         */
+        var displayedValues =
+          allValues
+            .slice(startIndex)
+            .reverse();
 
-      updated.textContent = updatedTime
-        ? `資料更新：${updatedTime}`
-        : "";
+        var paddingLeft =
+          13 + level * 23;
 
-      const monthHeaders = displayedPeriods
-        .map((period, index) => {
-          const isLatest = (
-            index === displayedPeriods.length - 1
-          );
+        html +=
+          '<tr class="level-' +
+            level +
+          '">' +
+            '<td ' +
+              'class="item-cell" ' +
+              'style="padding-left:' +
+                paddingLeft +
+              'px;">' +
+              '<div class="item-wrapper">';
 
-          return `
-            <th
-              class="${
-                isLatest ? "latest-column" : ""
-              }"
-              title="${
-                escapeHtml(period.period_name)
-              } ${escapeHtml(period.year)}"
-            >
-              ${escapeHtml(period.label)}
-            </th>
-          `;
-        })
-        .join("");
+        if (level > 0) {
+          html +=
+            '<span class="level-marker">' +
+            '</span>';
+        }
 
-      const tableRows = allRows
-        .map((row) => {
-          const level = Math.min(
-            4,
-            Math.max(0, Number(row.level) || 0)
-          );
+        html +=
+                '<span class="item-name">' +
+                  escapeHtml(row.name);
 
-          const allValues = Array.isArray(
-            row.values
-          )
-            ? row.values
-            : [];
+        if (row.seasonality === "NSA") {
+          html +=
+            '<span class="nsa-badge">' +
+              'NSA' +
+            '</span>';
+        }
 
-          const displayedValues = allValues.slice(
-            startIndex
-          );
+        html +=
+                '</span>' +
+              '</div>' +
+            '</td>';
 
-          const valueCells = displayedPeriods
-            .map((period, index) => {
-              const formatted = formatCpiValue(
-                displayedValues[index]
-              );
+        displayedPeriods.forEach(
+          function (period, index) {
+            var value = displayedValues[index];
 
-              const isLatest = (
-                index === displayedPeriods.length - 1
-              );
+            var formatted =
+              formatValue(value);
 
-              return `
-                <td
-                  class="
-                    value-cell
-                    ${formatted.className}
-                    ${
-                      isLatest
-                        ? "latest-column"
-                        : ""
-                    }
-                  "
-                >
-                  ${formatted.text}
-                </td>
-              `;
-            })
-            .join("");
+            var latestClass =
+              index === 0
+                ? " latest-column"
+                : "";
 
-          const levelLine = level > 0
-            ? '<span class="level-line"></span>'
-            : "";
-
-          const nsaBadge = (
-            row.seasonality === "NSA"
-          )
-            ? `
-              <span
-                class="nsa-badge"
-                title="Not Seasonally Adjusted"
-              >
-                NSA
-              </span>
-            `
-            : "";
-
-          const rowTitle = row.series_title
-            ? `title="${escapeHtml(
-                row.series_title
-              )}"`
-            : "";
-
-          return `
-            <tr class="level-${level}">
-              <td
-                class="item-cell"
-                style="
-                  padding-left:
-                  ${getItemPadding(level)}px;
-                "
-                ${rowTitle}
-              >
-                <div class="name-container">
-                  ${levelLine}
-
-                  <span class="item-name">
-                    ${escapeHtml(row.name)}
-                    ${nsaBadge}
-                  </span>
-                </div>
-              </td>
-
-              ${valueCells}
-            </tr>
-          `;
-        })
-        .join("");
-
-      content.innerHTML = `
-        <div class="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th class="item-header">
-                  項目
-                </th>
-
-                ${monthHeaders}
-              </tr>
-            </thead>
-
-            <tbody>
-              ${tableRows}
-            </tbody>
-          </table>
-        </div>
-      `;
-    }
-
-    async function loadCpiData() {
-      const content = document.getElementById(
-        "cpi-content"
-      );
-
-      try {
-        const response = await fetch(
-          `data/cpi.json?timestamp=${Date.now()}`,
-          {
-            method: "GET",
-            cache: "no-store",
+            html +=
+              '<td class="' +
+                'value-cell ' +
+                formatted.className +
+                " " +
+                latestClass +
+              '">' +
+                formatted.text +
+              '</td>';
           }
         );
 
-        if (!response.ok) {
-          throw new Error(
-            `資料請求失敗：HTTP ${response.status}`
-          );
-        }
+        html += '</tr>';
+      });
 
-        const payload = await response.json();
+      html +=
+            '</tbody>' +
+          '</table>' +
+        '</div>';
 
-        if (
-          !Array.isArray(payload.periods) ||
-          !Array.isArray(payload.rows)
-        ) {
-          throw new Error(
-            "data/cpi.json 的資料格式不正確"
-          );
-        }
-
-        dashboardState.cpiData = payload;
-
-        renderCpiTable();
-      } catch (error) {
-        console.error(error);
-
-        content.innerHTML = `
-          <div class="error-message">
-            <div class="error-title">
-              CPI資料載入失敗
-            </div>
-
-            <div>
-              請確認 data/cpi.json 已存在，
-              並等待 GitHub Pages 完成部署。
-            </div>
-
-            <div style="margin-top: 8px;">
-              ${escapeHtml(error.message)}
-            </div>
-          </div>
-        `;
-      }
+      content.innerHTML = html;
     }
 
-    loadCpiData();
+    function fetchWithTimeout(
+      url,
+      timeoutMilliseconds
+    ) {
+      var controller =
+        new AbortController();
+
+      var timeoutId = setTimeout(
+        function () {
+          controller.abort();
+        },
+        timeoutMilliseconds
+      );
+
+      return fetch(
+        url,
+        {
+          method: "GET",
+          cache: "no-store",
+          signal: controller.signal
+        }
+      ).finally(function () {
+        clearTimeout(timeoutId);
+      });
+    }
+
+    function loadCpiData() {
+      var jsonUrl =
+        "./data/cpi.json?v=" +
+        new Date().getTime();
+
+      fetchWithTimeout(
+        jsonUrl,
+        15000
+      )
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error(
+              "讀取 " +
+              jsonUrl +
+              " 失敗，HTTP " +
+              response.status
+            );
+          }
+
+          return response.json();
+        })
+        .then(function (payload) {
+          if (
+            !payload ||
+            !Array.isArray(payload.periods) ||
+            !Array.isArray(payload.rows)
+          ) {
+            throw new Error(
+              "data/cpi.json 格式不正確，" +
+              "找不到 periods 或 rows。"
+            );
+          }
+
+          cpiData = payload;
+
+          renderCpiTable();
+        })
+        .catch(function (error) {
+          var message =
+            error.message || String(error);
+
+          if (error.name === "AbortError") {
+            message =
+              "讀取 data/cpi.json 超過15秒，" +
+              "請檢查 GitHub Pages 部署狀態。";
+          }
+
+          showFatalError(message);
+        });
+    }
+
+    function initializeDashboard() {
+      document
+        .getElementById("tab-cpi")
+        .addEventListener(
+          "click",
+          function (event) {
+            event.preventDefault();
+            changeTab("cpi");
+          }
+        );
+
+      document
+        .getElementById("tab-employment")
+        .addEventListener(
+          "click",
+          function (event) {
+            event.preventDefault();
+            changeTab("employment");
+          }
+        );
+
+      document
+        .getElementById("months-3")
+        .addEventListener(
+          "click",
+          function (event) {
+            event.preventDefault();
+            changeMonthRange(3);
+          }
+        );
+
+      document
+        .getElementById("months-6")
+        .addEventListener(
+          "click",
+          function (event) {
+            event.preventDefault();
+            changeMonthRange(6);
+          }
+        );
+
+      document
+        .getElementById("months-12")
+        .addEventListener(
+          "click",
+          function (event) {
+            event.preventDefault();
+            changeMonthRange(12);
+          }
+        );
+
+      loadCpiData();
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener(
+        "DOMContentLoaded",
+        initializeDashboard
+      );
+    } else {
+      initializeDashboard();
+    }
   </script>
 </body>
 </html>
