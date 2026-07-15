@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -16,121 +17,294 @@ BLS_SOURCE_URL = (
 OUTPUT_PATH = (
     Path(__file__).resolve().parent.parent
     / "data"
-    / "cpi_table2.json"
+    / "cpi.json"
 )
 
 
+# level：
+# 0 = 最上層主要分類
+# 1 = 第一層子分類
+# 2 = 第二層子分類
+# 3 = 第三層子分類
+# 4 = 第四層子分類
+#
+# display_code：
+# 顯示使用者提供的 Bloomberg／資料終端代碼。
+#
+# bls_series_id：
+# BLS Public Data API 實際使用的季調 CPI Series ID。
 CPI_SERIES = [
     {
-        "name_en": "All items",
-        "name_zh": "整體 CPI",
-        "unadjusted": "CUUR0000SA0",
-        "adjusted": "CUSR0000SA0",
+        "name": "All Items",
+        "display_code": "CPI INDX",
+        "bls_series_id": "CUSR0000SA0",
+        "level": 0,
     },
     {
-        "name_en": "All items less food and energy",
-        "name_zh": "核心 CPI",
-        "unadjusted": "CUUR0000SA0L1E",
-        "adjusted": "CUSR0000SA0L1E",
+        "name": "Food",
+        "display_code": "CPSFFOOD",
+        "bls_series_id": "CUSR0000SAF1",
+        "level": 0,
     },
     {
-        "name_en": "Food",
-        "name_zh": "食品",
-        "unadjusted": "CUUR0000SAF1",
-        "adjusted": "CUSR0000SAF1",
+        "name": "Energy",
+        "display_code": "CPUPENER",
+        "bls_series_id": "CUSR0000SA0E",
+        "level": 0,
     },
     {
-        "name_en": "Energy",
-        "name_zh": "能源",
-        "unadjusted": "CUUR0000SA0E",
-        "adjusted": "CUSR0000SA0E",
+        "name": "All Items Less Food and Energy",
+        "display_code": "CPUPAXFE",
+        "bls_series_id": "CUSR0000SA0L1E",
+        "level": 0,
     },
     {
-        "name_en": "Shelter",
-        "name_zh": "居住成本",
-        "unadjusted": "CUUR0000SAH1",
-        "adjusted": "CUSR0000SAH1",
+        "name": (
+            "Commodities Excluding Food "
+            "and Energy Commodities"
+        ),
+        "display_code": "CPUPCXFE",
+        "bls_series_id": "CUSR0000SACL1E",
+        "level": 1,
     },
     {
-        "name_en": "Commodities less food and energy",
-        "name_zh": "核心商品",
-        "unadjusted": "CUUR0000SA0L1",
-        "adjusted": "CUSR0000SA0L1",
+        "name": "Household Furnishings and Supplies",
+        "display_code": "CPIQHFAS",
+        "bls_series_id": "CUSR0000SAH3",
+        "level": 2,
     },
     {
-        "name_en": "New vehicles",
-        "name_zh": "新車",
-        "unadjusted": "CUUR0000SETA01",
-        "adjusted": "CUSR0000SETA01",
+        "name": "Apparel",
+        "display_code": "CPSCTOT",
+        "bls_series_id": "CUSR0000SAA",
+        "level": 2,
     },
     {
-        "name_en": "Used cars and trucks",
-        "name_zh": "二手車與卡車",
-        "unadjusted": "CUUR0000SETA02",
-        "adjusted": "CUSR0000SETA02",
+        "name": (
+            "Transportation Commodities "
+            "Less Motor Fuel"
+        ),
+        "display_code": "CPIQTCMS",
+        "bls_series_id": "CUSR0000SAT1",
+        "level": 2,
     },
     {
-        "name_en": "Medical care services",
-        "name_zh": "醫療照護服務",
-        "unadjusted": "CUUR0000SAM2",
-        "adjusted": "CUSR0000SAM2",
+        "name": "New Vehicles",
+        "display_code": "CPSTNV",
+        "bls_series_id": "CUSR0000SETA01",
+        "level": 3,
     },
     {
-        "name_en": "Transportation services",
-        "name_zh": "運輸服務",
-        "unadjusted": "CUUR0000SAS4",
-        "adjusted": "CUSR0000SAS4",
+        "name": "Used Cars and Trucks",
+        "display_code": "CPSTUCTR",
+        "bls_series_id": "CUSR0000SETA02",
+        "level": 3,
+    },
+    {
+        "name": "Medical Care Commodities",
+        "display_code": "CPUMCMDY",
+        "bls_series_id": "CUSR0000SAM1",
+        "level": 2,
+    },
+    {
+        "name": "Recreation Commodities",
+        "display_code": "CPIQRECS",
+        "bls_series_id": "CUSR0000SARC",
+        "level": 2,
+    },
+    {
+        "name": (
+            "Education and Communication Commodities"
+        ),
+        "display_code": "CPIQECCS",
+        "bls_series_id": "CUSR0000SAE2",
+        "level": 2,
+    },
+    {
+        "name": "Alcoholic Beverages",
+        "display_code": "CPSFAB",
+        "bls_series_id": "CUSR0000SAB",
+        "level": 2,
+    },
+    {
+        "name": "Other Goods",
+        "display_code": "CPIQOTGS",
+        "bls_series_id": "CUSR0000SAG",
+        "level": 2,
+    },
+    {
+        "name": "Services Excluding Energy Services",
+        "display_code": "CPUPSXEN",
+        "bls_series_id": "CUSR0000SASLE",
+        "level": 1,
+    },
+    {
+        "name": "Shelter",
+        "display_code": "CPSHSHLT",
+        "bls_series_id": "CUSR0000SAH1",
+        "level": 2,
+    },
+    {
+        "name": "Rent of Primary Residence",
+        "display_code": "CPSHRPR",
+        "bls_series_id": "CUSR0000SEHA",
+        "level": 4,
+    },
+    {
+        "name": "Lodging Away from Home",
+        "display_code": "CPSHLODG",
+        "bls_series_id": "CUSR0000SEHB",
+        "level": 4,
+    },
+    {
+        "name": (
+            "Owners' Equivalent Rent of Residences"
+        ),
+        "display_code": "CPSHOEQR",
+        "bls_series_id": "CUSR0000SEHC",
+        "level": 4,
+    },
+    {
+        "name": (
+            "Water, Sewer and Trash Collection Services"
+        ),
+        "display_code": "CPSHWSTC",
+        "bls_series_id": "CUSR0000SEHG01",
+        "level": 2,
+    },
+    {
+        "name": "Medical Care Services",
+        "display_code": "CPUMSERV",
+        "bls_series_id": "CUSR0000SAM2",
+        "level": 2,
+    },
+    {
+        "name": "Professional Services",
+        "display_code": "CPUMPROF Index",
+        "bls_series_id": "CUSR0000SEMC",
+        "level": 3,
+    },
+    {
+        "name": "Hospital and Related Services",
+        "display_code": "CPUMHOSP Index",
+        "bls_series_id": "CUSR0000SEMD",
+        "level": 3,
+    },
+    {
+        "name": "Health Insurance",
+        "display_code": "CPRMHEUS",
+        "bls_series_id": "CUSR0000SEME",
+        "level": 3,
+    },
+    {
+        "name": "Transportation Services",
+        "display_code": "CPSSTRAN",
+        "bls_series_id": "CUSR0000SAS4",
+        "level": 2,
+    },
+    {
+        "name": "Car and Truck Rental",
+        "display_code": "CPIQCTRS Index",
+        "bls_series_id": "CUSR0000SETD03",
+        "level": 3,
+    },
+    {
+        "name": (
+            "Motor Vehicle Maintenance and Repair"
+        ),
+        "display_code": "CPSTMVMR",
+        "bls_series_id": "CUSR0000SETD",
+        "level": 3,
+    },
+    {
+        "name": "Motor Vehicle Insurance",
+        "display_code": "CPSTMVSA",
+        "bls_series_id": "CUSR0000SETE",
+        "level": 3,
+    },
+    {
+        "name": "Public Transportation",
+        "display_code": "CPSTPUBL",
+        "bls_series_id": "CUSR0000SETG",
+        "level": 3,
+    },
+    {
+        "name": "Airline Fare",
+        "display_code": "CPSTAIRF",
+        "bls_series_id": "CUSR0000SETG01",
+        "level": 4,
+    },
+    {
+        "name": "Recreation Services",
+        "display_code": "CPIQRESS",
+        "bls_series_id": "CUSR0000SERA",
+        "level": 2,
+    },
+    {
+        "name": (
+            "Education and Communication Services"
+        ),
+        "display_code": "CPIQECSS",
+        "bls_series_id": "CUSR0000SAE1",
+        "level": 2,
     },
 ]
+
+
+def get_registration_key():
+    """
+    從 GitHub Actions Environment 取得 BLS API Key。
+    """
+    registration_key = os.environ.get(
+        "BLS_API_KEY",
+        "",
+    ).strip()
+
+    if not registration_key:
+        raise RuntimeError(
+            "Missing BLS_API_KEY environment variable."
+        )
+
+    return registration_key
 
 
 def current_year():
     return datetime.now(timezone.utc).year
 
 
-def build_series_lookup():
-    lookup = {}
-
-    for item in CPI_SERIES:
-        lookup[item["unadjusted"]] = {
-            "item": item,
-            "adjustment": "unadjusted",
-        }
-
-        lookup[item["adjusted"]] = {
-            "item": item,
-            "adjustment": "adjusted",
-        }
-
-    return lookup
-
-
-def fetch_bls_api():
+def fetch_cpi_series():
     """
-    呼叫 BLS 官方 Public Data API。
+    使用註冊版 BLS Public Data API 抓取 CPI Series。
 
-    不再抓取 BLS HTML，也不透過 Cloudflare Worker
-    代理 BLS 資料。
+    需要至少13個月的指數，才能計算最近12個月月增率；
+    這裡抓目前年份與前一年度，以涵蓋跨年情況。
     """
-    series_ids = []
+    registration_key = get_registration_key()
 
-    for item in CPI_SERIES:
-        series_ids.append(item["unadjusted"])
-        series_ids.append(item["adjusted"])
+    series_ids = [
+        item["bls_series_id"]
+        for item in CPI_SERIES
+    ]
 
     payload = {
         "seriesid": series_ids,
         "startyear": str(current_year() - 2),
         "endyear": str(current_year()),
-        "calculations": True,
+        "calculations": False,
         "annualaverage": False,
-        "aspects": True,
+        "catalog": True,
+        "aspects": False,
+        "registrationkey": registration_key,
     }
 
-    print("=" * 70)
-    print("Calling BLS Public Data API.")
+    print("=" * 72)
+    print("Calling registered BLS Public Data API.")
     print(f"API URL: {BLS_API_URL}")
-    print(f"Series requested: {len(series_ids)}")
+    print(f"Requested CPI series: {len(series_ids)}")
+    print(
+        f"Requested years: "
+        f"{payload['startyear']} to {payload['endyear']}"
+    )
 
     response = requests.post(
         BLS_API_URL,
@@ -143,7 +317,7 @@ def fetch_bls_api():
             ),
         },
         json=payload,
-        timeout=60,
+        timeout=90,
     )
 
     print(f"HTTP status: {response.status_code}")
@@ -153,7 +327,7 @@ def fetch_bls_api():
 
     if response.status_code != 200:
         raise RuntimeError(
-            "BLS API request failed.\n"
+            "BLS API returned an HTTP error.\n"
             f"HTTP status: {response.status_code}\n"
             f"Response: {response.text[:3000]}"
         )
@@ -166,39 +340,52 @@ def fetch_bls_api():
         ) from error
 
     status = result.get("status", "")
+    messages = result.get("message", [])
+
+    print(f"BLS response status: {status}")
+
+    if messages:
+        print("BLS response messages:")
+
+        for message in messages:
+            print(f"- {message}")
 
     if status != "REQUEST_SUCCEEDED":
         raise RuntimeError(
-            "BLS API request was not successful.\n"
+            "BLS API request did not succeed.\n"
             f"Status: {status}\n"
-            f"Messages: {result.get('message', [])}"
+            f"Messages: {messages}"
         )
 
-    series = (
+    returned_series = (
         result
         .get("Results", {})
         .get("series", [])
     )
 
-    if not series:
+    if not returned_series:
         raise RuntimeError(
             "BLS API returned no CPI series."
         )
 
-    print(f"Series returned: {len(series)}")
-    print("=" * 70)
+    print(
+        f"Returned CPI series: {len(returned_series)}"
+    )
+    print("=" * 72)
 
-    return series
+    return returned_series
 
 
-def valid_monthly_observations(series):
+def parse_monthly_observations(series):
     """
-    保留正式月份 M01 至 M12，排除年度平均 M13。
+    將 BLS Series 轉成按日期排序的月資料。
+
+    排除 M13 年度平均，只保留 M01 至 M12。
     """
     observations = []
 
-    for item in series.get("data", []):
-        period = item.get("period", "")
+    for observation in series.get("data", []):
+        period = observation.get("period", "")
 
         if not period.startswith("M"):
             continue
@@ -208,44 +395,37 @@ def valid_monthly_observations(series):
 
         try:
             month = int(period[1:])
-        except ValueError:
+            year = int(observation["year"])
+            value = float(observation["value"])
+        except (KeyError, TypeError, ValueError):
             continue
 
         if not 1 <= month <= 12:
             continue
 
-        try:
-            value = float(item["value"])
-        except (KeyError, TypeError, ValueError):
-            continue
-
         observations.append(
             {
-                "year": int(item["year"]),
+                "year": year,
                 "month": month,
-                "period": period,
-                "period_name": item.get(
+                "period": f"{year}-{month:02d}",
+                "period_name": observation.get(
                     "periodName",
                     "",
                 ),
-                "value": value,
-                "latest": item.get(
+                "index_value": value,
+                "latest": observation.get(
                     "latest",
                     False,
                 ),
                 "footnotes": [
                     footnote.get("text", "")
-                    for footnote in item.get(
+                    for footnote in observation.get(
                         "footnotes",
-                        [],
+                        []
                     )
                     if footnote
                     and footnote.get("text")
                 ],
-                "aspects": item.get(
-                    "aspects",
-                    [],
-                ),
             }
         )
 
@@ -259,261 +439,229 @@ def valid_monthly_observations(series):
     return observations
 
 
-def percent_change(new_value, old_value):
-    if old_value == 0:
-        return None
-
-    return round(
-        (
-            (new_value / old_value)
-            - 1
-        ) * 100,
-        3,
-    )
-
-
-def find_observation(
-    observations,
-    year,
-    month,
+def calculate_percent_change(
+    current_value,
+    previous_value,
 ):
-    for observation in observations:
-        if (
-            observation["year"] == year
-            and observation["month"] == month
-        ):
-            return observation
-
-    return None
-
-
-def previous_month(year, month):
-    if month == 1:
-        return year - 1, 12
-
-    return year, month - 1
-
-
-def extract_relative_importance(observation):
     """
-    嘗試從 API aspect metadata 擷取相對重要性。
-
-    若該 series 或月份沒有提供，就回傳 None。
+    由季調 CPI 指數計算月增率。
     """
-    if not observation:
+    if previous_value == 0:
         return None
 
-    aspects = observation.get("aspects", [])
+    result = (
+        (current_value / previous_value)
+        - 1
+    ) * 100
 
-    if isinstance(aspects, dict):
-        aspects = [aspects]
-
-    for aspect in aspects:
-        if not isinstance(aspect, dict):
-            continue
-
-        aspect_type = str(
-            aspect.get(
-                "aspectType",
-                aspect.get(
-                    "aspect_type",
-                    aspect.get("code", ""),
-                ),
-            )
-        ).upper()
-
-        aspect_name = str(
-            aspect.get(
-                "aspectName",
-                aspect.get(
-                    "name",
-                    aspect.get("description", ""),
-                ),
-            )
-        ).lower()
-
-        if (
-            aspect_type == "I"
-            or "relative importance" in aspect_name
-        ):
-            raw_value = aspect.get(
-                "value",
-                aspect.get("aspectValue"),
-            )
-
-            try:
-                return float(raw_value)
-            except (TypeError, ValueError):
-                return raw_value
-
-    return None
+    # JSON 儲存4位小數，網頁顯示2位小數。
+    return round(result, 4)
 
 
-def build_output_rows(api_series):
-    lookup = build_series_lookup()
-    observations_by_series = {}
+def calculate_monthly_changes(observations):
+    """
+    計算每個月相對上月的季調月增率。
+    """
+    changes = []
 
-    for series in api_series:
-        series_id = series.get("seriesID", "")
+    for index in range(1, len(observations)):
+        current = observations[index]
+        previous = observations[index - 1]
 
-        observations_by_series[series_id] = (
-            valid_monthly_observations(series)
+        monthly_change = calculate_percent_change(
+            current["index_value"],
+            previous["index_value"],
         )
+
+        changes.append(
+            {
+                "year": current["year"],
+                "month": current["month"],
+                "period": current["period"],
+                "period_name": current["period_name"],
+                "value": monthly_change,
+                "index_value": current["index_value"],
+                "latest": current["latest"],
+            }
+        )
+
+    # 只保存最近12個月的月增率
+    return changes[-12:]
+
+
+def build_cpi_rows(api_series):
+    """
+    依使用者指定順序建立33個 CPI 顯示項目。
+    """
+    api_lookup = {
+        series.get("seriesID", ""): series
+        for series in api_series
+    }
 
     rows = []
+    missing_series = []
 
-    for item in CPI_SERIES:
-        unadjusted_id = item["unadjusted"]
-        adjusted_id = item["adjusted"]
+    for order, config in enumerate(CPI_SERIES):
+        series_id = config["bls_series_id"]
+        series = api_lookup.get(series_id)
 
-        unadjusted = observations_by_series.get(
-            unadjusted_id,
-            [],
-        )
-
-        adjusted = observations_by_series.get(
-            adjusted_id,
-            [],
-        )
-
-        if not unadjusted:
-            print(
-                f"WARNING: No unadjusted data: "
-                f"{unadjusted_id}"
-            )
-            continue
-
-        if not adjusted:
-            print(
-                f"WARNING: No adjusted data: "
-                f"{adjusted_id}"
-            )
-            continue
-
-        latest_unadjusted = unadjusted[-1]
-        latest_adjusted = adjusted[-1]
-
-        reference_year = latest_unadjusted["year"]
-        reference_month = latest_unadjusted["month"]
-
-        year_ago = find_observation(
-            unadjusted,
-            reference_year - 1,
-            reference_month,
-        )
-
-        previous_year, previous_month_number = (
-            previous_month(
-                reference_year,
-                reference_month,
-            )
-        )
-
-        previous_unadjusted = find_observation(
-            unadjusted,
-            previous_year,
-            previous_month_number,
-        )
-
-        adjusted_changes = []
-
-        for index in range(
-            max(1, len(adjusted) - 3),
-            len(adjusted),
-        ):
-            current = adjusted[index]
-            previous = adjusted[index - 1]
-
-            adjusted_changes.append(
+        if not series:
+            missing_series.append(
                 {
-                    "year": current["year"],
-                    "month": current["month"],
-                    "period_name": current[
-                        "period_name"
-                    ],
-                    "percent_change": (
-                        percent_change(
-                            current["value"],
-                            previous["value"],
-                        )
+                    "name": config["name"],
+                    "series_id": series_id,
+                    "reason": (
+                        "Series was not returned by BLS API"
                     ),
                 }
             )
 
-        row = {
-            "name_en": item["name_en"],
-            "name_zh": item["name_zh"],
-            "unadjusted_series_id": unadjusted_id,
-            "adjusted_series_id": adjusted_id,
-            "reference_year": reference_year,
-            "reference_month": reference_month,
-            "reference_period": (
-                f"{latest_unadjusted['period_name']} "
-                f"{reference_year}"
-            ),
-            "relative_importance": (
-                extract_relative_importance(
-                    latest_unadjusted
-                )
-            ),
-            "unadjusted_index": (
-                latest_unadjusted["value"]
-            ),
-            "year_over_year_percent_change": (
-                percent_change(
-                    latest_unadjusted["value"],
-                    year_ago["value"],
-                )
-                if year_ago
-                else None
-            ),
-            "unadjusted_month_over_month_change": (
-                percent_change(
-                    latest_unadjusted["value"],
-                    previous_unadjusted["value"],
-                )
-                if previous_unadjusted
-                else None
-            ),
-            "seasonally_adjusted_index": (
-                latest_adjusted["value"]
-            ),
-            "seasonally_adjusted_changes": (
-                adjusted_changes
-            ),
+            rows.append(
+                {
+                    "order": order,
+                    "name": config["name"],
+                    "display_code": (
+                        config["display_code"]
+                    ),
+                    "bls_series_id": series_id,
+                    "level": config["level"],
+                    "available": False,
+                    "series_title": "",
+                    "months": [],
+                }
+            )
+
+            continue
+
+        observations = parse_monthly_observations(
+            series
+        )
+
+        monthly_changes = calculate_monthly_changes(
+            observations
+        )
+
+        if not monthly_changes:
+            missing_series.append(
+                {
+                    "name": config["name"],
+                    "series_id": series_id,
+                    "reason": (
+                        "Series contained no usable "
+                        "monthly observations"
+                    ),
+                }
+            )
+
+        catalog = series.get("catalog", {}) or {}
+
+        rows.append(
+            {
+                "order": order,
+                "name": config["name"],
+                "display_code": (
+                    config["display_code"]
+                ),
+                "bls_series_id": series_id,
+                "level": config["level"],
+                "available": bool(monthly_changes),
+                "series_title": catalog.get(
+                    "series_title",
+                    "",
+                ),
+                "survey_name": catalog.get(
+                    "survey_name",
+                    "",
+                ),
+                "seasonality": (
+                    "Seasonally Adjusted"
+                ),
+                "unit": (
+                    "Percent change from previous month"
+                ),
+                "months": monthly_changes,
+            }
+        )
+
+    return rows, missing_series
+
+
+def collect_available_periods(rows):
+    """
+    建立整張 CPI 表格共用的月份清單。
+    """
+    periods = {}
+
+    for row in rows:
+        for month in row.get("months", []):
+            period = month["period"]
+
+            periods[period] = {
+                "year": month["year"],
+                "month": month["month"],
+                "period": period,
+                "period_name": month["period_name"],
+                "label": (
+                    f"{str(month['year'])[2:]} "
+                    f"{month['period_name'][:3]}"
+                ),
+            }
+
+    result = list(periods.values())
+
+    result.sort(
+        key=lambda item: (
+            item["year"],
+            item["month"],
+        )
+    )
+
+    return result[-12:]
+
+
+def align_rows_to_periods(rows, periods):
+    """
+    讓所有列都遵循相同的12個月份順序。
+
+    若個別 Series 某月沒有數值，就填入 None。
+    """
+    period_keys = [
+        period["period"]
+        for period in periods
+    ]
+
+    aligned_rows = []
+
+    for row in rows:
+        month_lookup = {
+            month["period"]: month
+            for month in row.get("months", [])
         }
 
-        rows.append(row)
+        values = []
 
-    if not rows:
-        raise RuntimeError(
-            "No CPI output rows could be created."
-        )
+        for period in period_keys:
+            month = month_lookup.get(period)
 
-    names = {
-        row["name_en"]
-        for row in rows
-    }
+            values.append(
+                month.get("value")
+                if month
+                else None
+            )
 
-    required_names = {
-        "All items",
-        "All items less food and energy",
-        "Food",
-        "Energy",
-    }
+        aligned_row = dict(row)
+        aligned_row["values"] = values
+        aligned_row.pop("months", None)
 
-    missing_names = required_names - names
+        aligned_rows.append(aligned_row)
 
-    if missing_names:
-        raise RuntimeError(
-            "Required CPI categories are missing: "
-            + ", ".join(sorted(missing_names))
-        )
-
-    return rows
+    return aligned_rows
 
 
 def load_existing_payload():
+    """
+    讀取目前的 data/cpi.json。
+    """
     if not OUTPUT_PATH.exists():
         return None
 
@@ -528,23 +676,26 @@ def load_existing_payload():
         return None
 
 
-def save_json(rows):
+def save_json(
+    periods,
+    rows,
+    missing_series,
+):
+    """
+    儲存 CPI JSON。
+
+    若 CPI 資料與既有資料完全相同，
+    保留原更新時間，避免無意義 Commit。
+    """
     OUTPUT_PATH.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    latest_row = max(
+    aligned_rows = align_rows_to_periods(
         rows,
-        key=lambda row: (
-            row["reference_year"],
-            row["reference_month"],
-        ),
+        periods,
     )
-
-    reference_period = latest_row[
-        "reference_period"
-    ]
 
     existing = load_existing_payload()
 
@@ -554,9 +705,24 @@ def save_json(rows):
     )
 
     if existing:
-        old_data = existing.get("data", [])
+        old_periods = existing.get(
+            "periods",
+            [],
+        )
+        old_rows = existing.get(
+            "rows",
+            [],
+        )
+        old_missing = existing.get(
+            "missing_series",
+            [],
+        )
 
-        if old_data == rows:
+        if (
+            old_periods == periods
+            and old_rows == aligned_rows
+            and old_missing == missing_series
+        ):
             data_changed = False
 
             updated_at_utc = existing.get(
@@ -568,18 +734,36 @@ def save_json(rows):
         "source": (
             "U.S. Bureau of Labor Statistics"
         ),
-        "source_type": "BLS Public Data API",
+        "source_type": (
+            "BLS Public Data API Version 2"
+        ),
         "api_url": BLS_API_URL,
         "source_url": BLS_SOURCE_URL,
         "title": (
-            "Consumer Price Index for "
-            "All Urban Consumers"
+            "Consumer Price Index - "
+            "Seasonally Adjusted Monthly Change"
         ),
-        "reference_period": reference_period,
+        "description": (
+            "Seasonally adjusted month-over-month "
+            "percent changes calculated from BLS "
+            "CPI index levels."
+        ),
         "updated_at_utc": updated_at_utc,
         "data_changed": data_changed,
-        "row_count": len(rows),
-        "data": rows,
+        "default_months": 6,
+        "available_filter_options": [
+            3,
+            6,
+            12,
+        ],
+        "period_count": len(periods),
+        "row_count": len(aligned_rows),
+        "missing_series_count": len(
+            missing_series
+        ),
+        "periods": periods,
+        "rows": aligned_rows,
+        "missing_series": missing_series,
     }
 
     temporary_path = OUTPUT_PATH.with_suffix(
@@ -599,22 +783,60 @@ def save_json(rows):
 
     temporary_path.replace(OUTPUT_PATH)
 
-    print("=" * 70)
-    print(f"Saved {len(rows)} CPI categories.")
-    print(f"Reference period: {reference_period}")
+    print("=" * 72)
+    print(f"Saved CPI rows: {len(aligned_rows)}")
+    print(f"Saved periods: {len(periods)}")
+    print(
+        f"Missing series: {len(missing_series)}"
+    )
     print(f"Data changed: {data_changed}")
     print(f"Output path: {OUTPUT_PATH}")
-    print("=" * 70)
+
+    if periods:
+        print(
+            "Period range:",
+            periods[0]["period"],
+            "to",
+            periods[-1]["period"],
+        )
+
+    if missing_series:
+        print("WARNING: Missing CPI series:")
+
+        for item in missing_series:
+            print(
+                f"- {item['name']} "
+                f"({item['series_id']}): "
+                f"{item['reason']}"
+            )
+
+    print("=" * 72)
 
 
 def main():
-    print("Starting CPI update through BLS Public Data API.")
+    print(
+        "Starting registered BLS CPI data update."
+    )
 
-    api_series = fetch_bls_api()
+    api_series = fetch_cpi_series()
 
-    rows = build_output_rows(api_series)
+    rows, missing_series = build_cpi_rows(
+        api_series
+    )
 
-    save_json(rows)
+    periods = collect_available_periods(rows)
+
+    if len(periods) < 6:
+        raise RuntimeError(
+            "Fewer than 6 CPI periods were generated. "
+            "The output is not sufficient for the dashboard."
+        )
+
+    save_json(
+        periods=periods,
+        rows=rows,
+        missing_series=missing_series,
+    )
 
 
 if __name__ == "__main__":

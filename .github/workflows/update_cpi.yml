@@ -41,7 +41,7 @@ jobs:
           echo "BLS_API_KEY is configured."
           echo "Key length: ${#BLS_API_KEY}"
 
-      - name: Fetch CPI data from BLS API
+      - name: Fetch CPI data
         env:
           BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
         run: |
@@ -53,50 +53,117 @@ jobs:
           import json
           from pathlib import Path
 
-          path = Path("data/cpi_table2.json")
+          path = Path("data/cpi.json")
 
           if not path.exists():
               raise SystemExit(
-                  "ERROR: data/cpi_table2.json was not created."
+                  "ERROR: data/cpi.json was not created."
               )
 
           with path.open("r", encoding="utf-8") as file:
               payload = json.load(file)
 
-          rows = payload.get("data", [])
-          row_count = payload.get("row_count", 0)
+          periods = payload.get("periods", [])
+          rows = payload.get("rows", [])
+          period_count = payload.get(
+              "period_count",
+              0,
+          )
+          row_count = payload.get(
+              "row_count",
+              0,
+          )
 
-          if not rows:
+          if len(periods) != 12:
               raise SystemExit(
-                  "ERROR: CPI data is empty."
+                  "ERROR: CPI JSON must contain "
+                  f"12 periods, but found {len(periods)}."
+              )
+
+          if len(rows) != 33:
+              raise SystemExit(
+                  "ERROR: CPI JSON must contain "
+                  f"33 rows, but found {len(rows)}."
+              )
+
+          if period_count != len(periods):
+              raise SystemExit(
+                  "ERROR: period_count does not "
+                  "match periods length."
               )
 
           if row_count != len(rows):
               raise SystemExit(
-                  "ERROR: row_count does not match data length."
+                  "ERROR: row_count does not "
+                  "match rows length."
               )
 
+          required_names = {
+              "All Items",
+              "Food",
+              "Energy",
+              "All Items Less Food and Energy",
+              "Shelter",
+              "Medical Care Services",
+              "Transportation Services",
+              "Airline Fare",
+          }
+
+          available_names = {
+              row.get("name")
+              for row in rows
+          }
+
+          missing_names = (
+              required_names - available_names
+          )
+
+          if missing_names:
+              raise SystemExit(
+                  "ERROR: Required CPI rows missing: "
+                  + ", ".join(sorted(missing_names))
+              )
+
+          for row in rows:
+              values = row.get("values", [])
+
+              if len(values) != len(periods):
+                  raise SystemExit(
+                      "ERROR: CPI row has incorrect "
+                      f"value count: {row.get('name')}"
+                  )
+
           print("CPI JSON validation passed.")
-          print(f"Rows: {row_count}")
+          print(f"Periods: {len(periods)}")
+          print(f"Rows: {len(rows)}")
           print(
-              "Reference period:",
-              payload.get("reference_period", ""),
+              "Range:",
+              periods[0].get("period"),
+              "to",
+              periods[-1].get("period"),
+          )
+          print(
+              "Unavailable series:",
+              payload.get(
+                  "missing_series_count",
+                  0,
+              ),
           )
           PY
 
-      - name: Commit updated data
+      - name: Commit updated CPI data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email \
             "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add data/
+          git add data/cpi.json
 
           if git diff --cached --quiet; then
-            echo "BLS economic data has not changed."
+            echo "CPI data has not changed."
             echo "No commit is required."
             exit 0
           fi
 
-          git commit -m "Update BLS economic data"
+          git commit -m "Update BLS CPI data"
           git push
