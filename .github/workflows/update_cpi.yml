@@ -1,7 +1,7 @@
 name: Update BLS CPI Data
 
 on:
-  # 只允許手動觸發，不設定任何自動排程
+  # 只允許手動或 API 觸發，不會定時執行
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,39 @@ jobs:
           python -m pip install --upgrade pip
           pip install beautifulsoup4 lxml pandas requests
 
-      - name: Fetch BLS CPI data
+      - name: Confirm proxy configuration
+        env:
+          BLS_PROXY_URL: ${{ secrets.BLS_PROXY_URL }}
+          BLS_PROXY_KEY: ${{ secrets.BLS_PROXY_KEY }}
+        run: |
+          if [ -z "$BLS_PROXY_URL" ]; then
+            echo "ERROR: BLS_PROXY_URL is missing."
+            exit 1
+          fi
+
+          if [ -z "$BLS_PROXY_KEY" ]; then
+            echo "ERROR: BLS_PROXY_KEY is missing."
+            exit 1
+          fi
+
+          echo "BLS_PROXY_URL is configured."
+          echo "BLS_PROXY_KEY is configured."
+          echo "Proxy host:"
+          python - <<'PY'
+          import os
+          from urllib.parse import urlparse
+
+          proxy_url = os.environ["BLS_PROXY_URL"]
+          parsed = urlparse(proxy_url)
+
+          print(parsed.netloc)
+          print(parsed.path)
+          PY
+
+      - name: Fetch BLS CPI data through Cloudflare Worker
+        env:
+          BLS_PROXY_URL: ${{ secrets.BLS_PROXY_URL }}
+          BLS_PROXY_KEY: ${{ secrets.BLS_PROXY_KEY }}
         run: |
           python scripts/fetch_cpi.py
 
@@ -50,36 +82,49 @@ jobs:
           with path.open("r", encoding="utf-8") as file:
               payload = json.load(file)
 
-          row_count = payload.get("row_count", 0)
-          data = payload.get("data", [])
+          rows = payload.get("data", [])
           columns = payload.get("columns", [])
+          row_count = payload.get("row_count", 0)
 
-          if row_count <= 0:
+          if not rows:
               raise SystemExit(
-                  "ERROR: The generated JSON contains no rows."
-              )
-
-          if not data:
-              raise SystemExit(
-                  "ERROR: The generated JSON data array is empty."
+                  "ERROR: CPI data is empty."
               )
 
           if not columns:
               raise SystemExit(
-                  "ERROR: The generated JSON contains no columns."
+                  "ERROR: CPI columns are empty."
               )
 
-          if row_count != len(data):
+          if row_count != len(rows):
               raise SystemExit(
                   "ERROR: row_count does not match data length."
               )
+
+          all_data_text = json.dumps(
+              rows,
+              ensure_ascii=False,
+          )
+
+          required_items = [
+              "All items",
+              "Food",
+              "Energy",
+              "All items less food and energy",
+          ]
+
+          for item in required_items:
+              if item not in all_data_text:
+                  raise SystemExit(
+                      f"ERROR: Required CPI item is missing: {item}"
+                  )
 
           print("JSON validation passed.")
           print(f"Rows: {row_count}")
           print(f"Columns: {len(columns)}")
           print(
               "Reference period:",
-              payload.get("reference_period", "")
+              payload.get("reference_period", ""),
           )
           PY
 
@@ -92,9 +137,11 @@ jobs:
           git add data/cpi_table2.json
 
           if git diff --cached --quiet; then
-            echo "No CPI data changes detected."
+            echo "CPI data has not changed."
+            echo "No commit is required."
             exit 0
           fi
 
           git commit -m "Update BLS CPI data"
           git push
+`
