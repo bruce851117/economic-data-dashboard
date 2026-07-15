@@ -906,6 +906,24 @@ def align_source_rows(
             {},
         )
 
+        available_weights = {
+            period_key: weight
+            for period_key, weight
+            in weight_series.items()
+            if weight is not None
+        }
+
+        latest_weight = None
+
+        if available_weights:
+            latest_period = max(
+                available_weights.keys()
+            )
+
+            latest_weight = available_weights[
+                latest_period
+            ]
+
         for period in periods:
             period_key = period["period"]
 
@@ -920,9 +938,7 @@ def align_source_rows(
             )
 
             if row["name"] in REQUIRED_WEIGHT_NAMES:
-                weight = weight_series.get(
-                    period_key
-                )
+                weight = latest_weight
             else:
                 weight = None
 
