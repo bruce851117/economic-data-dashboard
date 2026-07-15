@@ -249,6 +249,17 @@ DERIVED_SERIES = [
 ]
 
 
+WEIGHT_SERIES_NAMES = {
+    definition["base"]
+    for definition in DERIVED_SERIES
+}
+
+for definition in DERIVED_SERIES:
+    WEIGHT_SERIES_NAMES.update(
+        definition["exclude"]
+    )
+
+
 def get_registration_key():
     registration_key = os.environ.get(
         "BLS_API_KEY",
@@ -285,12 +296,30 @@ def normalize_text(value):
     )
 
 
-def fetch_cpi_series():
-    series_ids = [
-        item["bls_series_id"]
-        for item in CPI_SERIES
-    ]
+def to_unadjusted_series_id(
+    adjusted_series_id,
+):
+    """
+    將季節調整 CPI-U Series 轉成對應未季調 Series。
 
+    CUSR0000SAH1
+    -> CUUR0000SAH1
+    """
+
+    if adjusted_series_id.startswith("CUSR"):
+        return (
+            "CUUR"
+            + adjusted_series_id[4:]
+        )
+
+    return adjusted_series_id
+
+
+def request_bls_series(
+    series_ids,
+    include_aspects,
+    request_name,
+):
     payload = {
         "seriesid": series_ids,
         "startyear": str(get_current_year() - 2),
@@ -298,15 +327,14 @@ def fetch_cpi_series():
         "calculations": False,
         "annualaverage": False,
         "catalog": True,
-        "aspects": True,
+        "aspects": include_aspects,
         "registrationkey": get_registration_key(),
     }
 
     print("=" * 72)
-    print("Calling registered BLS Public Data API.")
-    print(f"API URL: {BLS_API_URL}")
-    print(f"Requested CPI series: {len(series_ids)}")
-    print("Aspects requested: True")
+    print(f"BLS request: {request_name}")
+    print(f"Requested series: {len(series_ids)}")
+    print(f"Aspects requested: {include_aspects}")
     print(
         "Requested years:",
         payload["startyear"],
@@ -335,7 +363,7 @@ def fetch_cpi_series():
 
     if response.status_code != 200:
         raise RuntimeError(
-            "BLS API returned an HTTP error.\n"
+            f"{request_name} returned HTTP error.\n"
             f"HTTP status: {response.status_code}\n"
             f"Response: {response.text[:3000]}"
         )
@@ -344,7 +372,7 @@ def fetch_cpi_series():
         result = response.json()
     except requests.JSONDecodeError as error:
         raise RuntimeError(
-            "BLS API did not return valid JSON."
+            f"{request_name} did not return valid JSON."
         ) from error
 
     status = result.get("status", "")
@@ -360,7 +388,7 @@ def fetch_cpi_series():
 
     if status != "REQUEST_SUCCEEDED":
         raise RuntimeError(
-            "BLS API request did not succeed.\n"
+            f"{request_name} failed.\n"
             f"Status: {status}\n"
             f"Messages: {messages}"
         )
@@ -373,95 +401,100 @@ def fetch_cpi_series():
 
     if not returned_series:
         raise RuntimeError(
-            "BLS API returned no CPI series."
+            f"{request_name} returned no series."
         )
 
     print(
-        f"Returned CPI series: {len(returned_series)}"
+        f"Returned series: {len(returned_series)}"
     )
-
-    print_debug_aspect_sample(returned_series)
-
     print("=" * 72)
 
     return returned_series
 
 
-def print_debug_aspect_sample(api_series):
-    """
-    印出第一筆含有 aspects 的月資料範例，
-    方便確認 BLS 實際回傳結構。
-    """
+def fetch_adjusted_data():
+    series_ids = [
+        item["bls_series_id"]
+        for item in CPI_SERIES
+    ]
 
-    for series in api_series:
-        for observation in series.get("data", []):
-            if "aspects" not in observation:
-                continue
-
-            aspects = observation.get("aspects")
-
-            print(
-                "Aspect sample series:",
-                series.get("seriesID", ""),
-            )
-
-            print(
-                "Aspect sample period:",
-                observation.get("year", ""),
-                observation.get("period", ""),
-            )
-
-            print(
-                "Observation keys:",
-                sorted(observation.keys()),
-            )
-
-            print(
-                "Observation aspects sample:",
-                json.dumps(
-                    aspects,
-                    ensure_ascii=False,
-                )[:3000],
-            )
-
-            return
-
-    print(
-        "WARNING: No observation-level aspects "
-        "were found in API response."
+    return request_bls_series(
+        series_ids=series_ids,
+        include_aspects=False,
+        request_name=(
+            "Seasonally adjusted CPI indexes"
+        ),
     )
 
 
-def is_relative_importance_code(value):
+def fetch_relative_importance_data():
+    """
+    只抓衍生指標計算所需要的母項目與排除項目，
+    不必重抓全部32個權重 Series。
+    """
+
+    config_by_name = {
+        item["name"]: item
+        for item in CPI_SERIES
+    }
+
+    series_ids = []
+
+    for name in sorted(WEIGHT_SERIES_NAMES):
+        config = config_by_name.get(name)
+
+        if not config:
+            raise RuntimeError(
+                "Missing source configuration for "
+                f"weight series: {name}"
+            )
+
+        unadjusted_id = (
+            to_unadjusted_series_id(
+                config["bls_series_id"]
+            )
+        )
+
+        if unadjusted_id not in series_ids:
+            series_ids.append(unadjusted_id)
+
+    print(
+        "Relative Importance source series:",
+        ", ".join(series_ids),
+    )
+
+    return request_bls_series(
+        series_ids=series_ids,
+        include_aspects=True,
+        request_name=(
+            "Unadjusted CPI Relative Importance"
+        ),
+    )
+
+
+def is_relative_importance_name(value):
     normalized = normalize_text(value)
 
-    return normalized in {
-        "I",
-        "RELATIVEIMPORTANCE",
-    }
+    return (
+        normalized == "I"
+        or normalized == "RELATIVEIMPORTANCE"
+    )
 
 
 def extract_relative_importance(node):
     """
-    從單一月份 observation["aspects"] 中尋找
+    從未季調 CPI observation["aspects"] 中讀取
     Relative Importance。
 
-    支援以下可能格式：
-
-    {"I": "35.149"}
-
+    支援：
     [
         {
-            "aspect_type": "I",
+            "name": "Relative importance",
             "value": "35.149"
         }
     ]
 
-    {
-        "Relative Importance": "35.149"
-    }
-
-    以及其他巢狀 list／dict 格式。
+    以及其他常見巢狀格式。
     """
 
     if node is None:
@@ -481,37 +514,27 @@ def extract_relative_importance(node):
     if not isinstance(node, dict):
         return None
 
-    # 格式：{"I": "35.149"}
     for key, value in node.items():
-        if is_relative_importance_code(key):
+        if is_relative_importance_name(key):
             direct_value = to_float(value)
 
             if direct_value is not None:
                 return direct_value
 
-            nested_value = (
-                extract_relative_importance(value)
-            )
-
-            if nested_value is not None:
-                return nested_value
-
-    possible_code_keys = [
+    identity_keys = [
+        "name",
+        "aspect_name",
+        "aspectName",
         "aspect_type",
         "aspectType",
         "aspect_code",
         "aspectCode",
         "code",
         "type",
-        "name",
-        "aspect_name",
-        "aspectName",
         "description",
-        "variable_name",
-        "variableName",
     ]
 
-    possible_value_keys = [
+    value_keys = [
         "value",
         "Value",
         "aspect_value",
@@ -520,25 +543,20 @@ def extract_relative_importance(node):
         "dataValue",
     ]
 
-    aspect_identity = ""
+    is_relative_importance = False
 
-    for key in possible_code_keys:
+    for key in identity_keys:
         if key not in node:
             continue
 
-        candidate = normalize_text(
+        if is_relative_importance_name(
             node.get(key)
-        )
-
-        if (
-            candidate == "I"
-            or candidate == "RELATIVEIMPORTANCE"
         ):
-            aspect_identity = candidate
+            is_relative_importance = True
             break
 
-    if aspect_identity:
-        for key in possible_value_keys:
+    if is_relative_importance:
+        for key in value_keys:
             if key not in node:
                 continue
 
@@ -547,22 +565,6 @@ def extract_relative_importance(node):
             if value is not None:
                 return value
 
-    # 格式可能為 {"I": {"value": 35.149}}
-    for key, child in node.items():
-        if is_relative_importance_code(key):
-            if isinstance(child, dict):
-                for value_key in possible_value_keys:
-                    if value_key not in child:
-                        continue
-
-                    value = to_float(
-                        child.get(value_key)
-                    )
-
-                    if value is not None:
-                        return value
-
-    # 最後遞迴搜尋其他巢狀內容
     for child in node.values():
         if isinstance(child, (dict, list)):
             result = extract_relative_importance(
@@ -575,7 +577,51 @@ def extract_relative_importance(node):
     return None
 
 
-def parse_observations(series):
+def print_weight_aspect_sample(
+    weight_api_series,
+):
+    for series in weight_api_series:
+        for observation in series.get("data", []):
+            aspects = observation.get("aspects")
+
+            if not aspects:
+                continue
+
+            print(
+                "Weight aspect sample series:",
+                series.get("seriesID", ""),
+            )
+
+            print(
+                "Weight aspect sample period:",
+                observation.get("year", ""),
+                observation.get("period", ""),
+            )
+
+            print(
+                "Weight aspect sample:",
+                json.dumps(
+                    aspects,
+                    ensure_ascii=False,
+                )[:3000],
+            )
+
+            print(
+                "Parsed Relative Importance sample:",
+                extract_relative_importance(
+                    aspects
+                ),
+            )
+
+            return
+
+    print(
+        "WARNING: Weight request returned no "
+        "observation-level aspect sample."
+    )
+
+
+def parse_monthly_indexes(series):
     observations = []
 
     for observation in series.get("data", []):
@@ -601,12 +647,6 @@ def parse_observations(series):
         if not 1 <= month <= 12:
             continue
 
-        relative_importance = (
-            extract_relative_importance(
-                observation.get("aspects")
-            )
-        )
-
         observations.append(
             {
                 "year": year,
@@ -617,9 +657,6 @@ def parse_observations(series):
                     "",
                 ),
                 "index_value": index_value,
-                "relative_importance": (
-                    relative_importance
-                ),
                 "latest": observation.get(
                     "latest",
                     False,
@@ -635,6 +672,69 @@ def parse_observations(series):
     )
 
     return observations
+
+
+def build_weight_lookup(
+    weight_api_series,
+):
+    """
+    回傳：
+
+    {
+        "CUUR0000SAH1": {
+            "2026-06": 35.149,
+            ...
+        }
+    }
+    """
+
+    lookup = {}
+
+    for series in weight_api_series:
+        series_id = series.get("seriesID", "")
+
+        monthly_weights = {}
+
+        for observation in series.get("data", []):
+            period = str(
+                observation.get("period", "")
+            )
+
+            if (
+                not period.startswith("M")
+                or period == "M13"
+            ):
+                continue
+
+            try:
+                year = int(observation["year"])
+                month = int(period[1:])
+            except (KeyError, TypeError, ValueError):
+                continue
+
+            if not 1 <= month <= 12:
+                continue
+
+            relative_importance = (
+                extract_relative_importance(
+                    observation.get("aspects")
+                )
+            )
+
+            if relative_importance is None:
+                continue
+
+            period_key = (
+                f"{year}-{month:02d}"
+            )
+
+            monthly_weights[period_key] = (
+                relative_importance
+            )
+
+        lookup[series_id] = monthly_weights
+
+    return lookup
 
 
 def calculate_percent_change(
@@ -653,28 +753,14 @@ def calculate_percent_change(
     )
 
 
-def build_monthly_changes(observations):
+def build_monthly_changes(
+    observations,
+):
     changes = []
 
     for index in range(1, len(observations)):
         current = observations[index]
         previous = observations[index - 1]
-
-        change_value = calculate_percent_change(
-            current["index_value"],
-            previous["index_value"],
-        )
-
-        relative_importance = (
-            current.get("relative_importance")
-        )
-
-        if relative_importance is None:
-            relative_importance = (
-                previous.get(
-                    "relative_importance"
-                )
-            )
 
         changes.append(
             {
@@ -682,11 +768,11 @@ def build_monthly_changes(observations):
                 "month": current["month"],
                 "period": current["period"],
                 "period_name": current["period_name"],
-                "value": change_value,
-                "index_value": current["index_value"],
-                "relative_importance": (
-                    relative_importance
+                "value": calculate_percent_change(
+                    current["index_value"],
+                    previous["index_value"],
                 ),
+                "index_value": current["index_value"],
                 "latest": current["latest"],
             }
         )
@@ -694,10 +780,12 @@ def build_monthly_changes(observations):
     return changes[-12:]
 
 
-def build_rows(api_series):
+def build_rows(
+    adjusted_api_series,
+):
     api_lookup = {
         series.get("seriesID", ""): series
-        for series in api_series
+        for series in adjusted_api_series
     }
 
     rows = []
@@ -711,7 +799,7 @@ def build_rows(api_series):
         series_title = ""
 
         if series:
-            observations = parse_observations(
+            observations = parse_monthly_indexes(
                 series
             )
 
@@ -746,6 +834,11 @@ def build_rows(api_series):
                 "order": order,
                 "name": config["name"],
                 "bls_series_id": series_id,
+                "weight_series_id": (
+                    to_unadjusted_series_id(
+                        series_id
+                    )
+                ),
                 "level": config["level"],
                 "seasonality": "SA",
                 "available": bool(monthly_changes),
@@ -766,9 +859,7 @@ def collect_periods(rows):
                 "year": month["year"],
                 "month": month["month"],
                 "period": month["period"],
-                "period_name": (
-                    month["period_name"]
-                ),
+                "period_name": month["period_name"],
                 "label": (
                     f"{str(month['year'])[2:]} "
                     f"{month['period_name'][:3]}"
@@ -787,7 +878,48 @@ def collect_periods(rows):
     return periods[-12:]
 
 
-def align_rows(rows, periods):
+def find_relative_importance(
+    weight_lookup,
+    weight_series_id,
+    current_period,
+    previous_period,
+):
+    """
+    BLS 的當月月增率通常搭配前一期 Relative
+    Importance。優先採用前一期月份；若缺值，
+    再嘗試目前月份。
+    """
+
+    series_weights = weight_lookup.get(
+        weight_series_id,
+        {},
+    )
+
+    previous_weight = series_weights.get(
+        previous_period
+    )
+
+    if previous_weight is not None:
+        return previous_weight
+
+    return series_weights.get(current_period)
+
+
+def previous_period_key(
+    year,
+    month,
+):
+    if month == 1:
+        return f"{year - 1}-12"
+
+    return f"{year}-{month - 1:02d}"
+
+
+def align_rows(
+    rows,
+    periods,
+    weight_lookup,
+):
     period_keys = [
         item["period"]
         for item in periods
@@ -804,20 +936,34 @@ def align_rows(rows, periods):
         values = []
         relative_importance = []
 
-        for period_key in period_keys:
-            month = month_lookup.get(period_key)
+        for period in periods:
+            period_key = period["period"]
+
+            month_data = month_lookup.get(
+                period_key
+            )
 
             values.append(
-                month.get("value")
-                if month
+                month_data.get("value")
+                if month_data
                 else None
             )
 
-            relative_importance.append(
-                month.get("relative_importance")
-                if month
-                else None
+            previous_key = previous_period_key(
+                period["year"],
+                period["month"],
             )
+
+            weight = find_relative_importance(
+                weight_lookup=weight_lookup,
+                weight_series_id=(
+                    row["weight_series_id"]
+                ),
+                current_period=period_key,
+                previous_period=previous_key,
+            )
+
+            relative_importance.append(weight)
 
         aligned_row = dict(row)
 
@@ -877,14 +1023,16 @@ def calculate_exclusion_aggregate(
     if effective_weight <= 0:
         return None
 
-    result = (
+    return round(
         (
-            base_weight * base_change
+            (
+                base_weight * base_change
+            )
+            - excluded_contribution
         )
-        - excluded_contribution
-    ) / effective_weight
-
-    return round(result, 6)
+        / effective_weight,
+        6,
+    )
 
 
 def build_derived_rows(
@@ -958,17 +1106,17 @@ def build_derived_rows(
                 )
 
             result = calculate_exclusion_aggregate(
-                base_change,
-                base_weight,
-                excluded_components,
+                base_change=base_change,
+                base_weight=base_weight,
+                excluded_components=(
+                    excluded_components
+                ),
             )
 
             excluded_weights = [
-                component["weight"]
-                for component
-                in excluded_components
-                if component["weight"]
-                is not None
+                item["weight"]
+                for item in excluded_components
+                if item["weight"] is not None
             ]
 
             excluded_weight_total = None
@@ -1024,7 +1172,6 @@ def build_derived_rows(
                 "name": definition["name"],
                 "type": "derived",
                 "badge": "Derived",
-                "level": 0,
                 "base_series": definition["base"],
                 "excluded_series": (
                     definition["exclude"]
@@ -1061,21 +1208,12 @@ def load_existing_payload():
 def save_json(
     periods,
     rows,
+    derived_rows,
     missing_series,
 ):
     OUTPUT_PATH.parent.mkdir(
         parents=True,
         exist_ok=True,
-    )
-
-    aligned_rows = align_rows(
-        rows,
-        periods,
-    )
-
-    derived_rows = build_derived_rows(
-        aligned_rows,
-        periods,
     )
 
     existing = load_existing_payload()
@@ -1091,7 +1229,7 @@ def save_json(
             existing.get("periods", [])
             == periods
             and existing.get("rows", [])
-            == aligned_rows
+            == rows
             and existing.get("derived_rows", [])
             == derived_rows
             and existing.get(
@@ -1131,7 +1269,7 @@ def save_json(
             12,
         ],
         "period_count": len(periods),
-        "row_count": len(aligned_rows),
+        "row_count": len(rows),
         "derived_row_count": len(
             derived_rows
         ),
@@ -1139,11 +1277,15 @@ def save_json(
             missing_series
         ),
         "periods": periods,
-        "rows": aligned_rows,
+        "rows": rows,
         "derived_rows": derived_rows,
         "missing_series": missing_series,
         "derived_methodology": {
             "official_bls_series": False,
+            "weight_source": (
+                "BLS CPI-U unadjusted series "
+                "Relative Importance aspect"
+            ),
             "method": (
                 "Relative-importance-weighted "
                 "exclusion formula"
@@ -1179,7 +1321,7 @@ def save_json(
     temporary_path.replace(OUTPUT_PATH)
 
     print("=" * 72)
-    print(f"Saved CPI rows: {len(aligned_rows)}")
+    print(f"Saved CPI rows: {len(rows)}")
     print(
         f"Saved derived rows: {len(derived_rows)}"
     )
@@ -1191,9 +1333,18 @@ def save_json(
     print(f"Data changed: {data_changed}")
     print(f"Output path: {OUTPUT_PATH}")
 
-    incomplete_weight_rows = 0
+    required_weight_names = sorted(
+        WEIGHT_SERIES_NAMES
+    )
 
-    for row in aligned_rows:
+    rows_by_name = {
+        row["name"]: row
+        for row in rows
+    }
+
+    for name in required_weight_names:
+        row = rows_by_name[name]
+
         coverage = sum(
             value is not None
             for value in row[
@@ -1201,19 +1352,11 @@ def save_json(
             ]
         )
 
-        if coverage < len(periods):
-            incomplete_weight_rows += 1
-
         print(
             "Relative Importance coverage:",
-            row["name"],
+            name,
             f"{coverage}/{len(periods)}",
         )
-
-    print(
-        "Rows with incomplete Relative Importance:",
-        incomplete_weight_rows,
-    )
 
     incomplete_derived_rows = 0
 
@@ -1236,7 +1379,6 @@ def save_json(
         "Derived rows with incomplete coverage:",
         incomplete_derived_rows,
     )
-
     print("=" * 72)
 
 
@@ -1246,10 +1388,18 @@ def main():
         "with Relative Importance."
     )
 
-    api_series = fetch_cpi_series()
+    adjusted_api_series = fetch_adjusted_data()
+
+    weight_api_series = (
+        fetch_relative_importance_data()
+    )
+
+    print_weight_aspect_sample(
+        weight_api_series
+    )
 
     rows, missing_series = build_rows(
-        api_series
+        adjusted_api_series
     )
 
     periods = collect_periods(rows)
@@ -1266,9 +1416,25 @@ def main():
             f"{len(rows)} rows."
         )
 
+    weight_lookup = build_weight_lookup(
+        weight_api_series
+    )
+
+    aligned_rows = align_rows(
+        rows=rows,
+        periods=periods,
+        weight_lookup=weight_lookup,
+    )
+
+    derived_rows = build_derived_rows(
+        aligned_rows=aligned_rows,
+        periods=periods,
+    )
+
     save_json(
         periods=periods,
-        rows=rows,
+        rows=aligned_rows,
+        derived_rows=derived_rows,
         missing_series=missing_series,
     )
 
