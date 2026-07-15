@@ -690,13 +690,13 @@ def build_monthly_changes(observations):
             previous["index_value"],
         )
 
-        /*
+        """*
          * BLS t月新聞稿所使用的 Relative
          * Importance 通常標示為前一期月份。
          *
          * 先找 current period 的 aspect；
          * 若 current 沒有，再使用 previous。
-         */
+         *"""
         relative_importance = (
             current.get("relative_importance")
         )
