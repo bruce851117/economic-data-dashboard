@@ -65,10 +65,12 @@ jobs:
 
           periods = payload.get("periods", [])
           rows = payload.get("rows", [])
+
           period_count = payload.get(
               "period_count",
               0,
           )
+
           row_count = payload.get(
               "row_count",
               0,
@@ -80,10 +82,10 @@ jobs:
                   f"12 periods, but found {len(periods)}."
               )
 
-          if len(rows) != 33:
+          if len(rows) != 32:
               raise SystemExit(
                   "ERROR: CPI JSON must contain "
-                  f"33 rows, but found {len(rows)}."
+                  f"32 rows, but found {len(rows)}."
               )
 
           if period_count != len(periods):
@@ -98,20 +100,25 @@ jobs:
                   "match rows length."
               )
 
+          available_names = {
+              row.get("name")
+              for row in rows
+          }
+
           required_names = {
               "All Items",
               "Food",
               "Energy",
               "All Items Less Food and Energy",
-              "Shelter",
-              "Medical Care Services",
-              "Transportation Services",
-              "Airline Fare",
-          }
-
-          available_names = {
-              row.get("name")
-              for row in rows
+              "Household Furnishings and Supplies",
+              "Transportation Commodities Less Motor Fuel",
+              "Education and Communication Commodities",
+              "Alcoholic Beverages",
+              "Other Goods",
+              "Water, Sewer and Trash Collection Services",
+              "Car and Truck Rental",
+              "Recreation Services",
+              "Education and Communication Services",
           }
 
           missing_names = (
@@ -123,6 +130,49 @@ jobs:
                   "ERROR: Required CPI rows missing: "
                   + ", ".join(sorted(missing_names))
               )
+
+          if "Health Insurance" in available_names:
+              raise SystemExit(
+                  "ERROR: Health Insurance should "
+                  "not be included in CPI JSON."
+              )
+
+          expected_series = {
+              "Household Furnishings and Supplies":
+                  "CUSR0000SAH31",
+              "Transportation Commodities Less Motor Fuel":
+                  "CUSR0000SATCLTB",
+              "Education and Communication Commodities":
+                  "CUSR0000SAEC",
+              "Alcoholic Beverages":
+                  "CUSR0000SAF116",
+              "Other Goods":
+                  "CUSR0000SAGC",
+              "Water, Sewer and Trash Collection Services":
+                  "CUSR0000SEHG",
+              "Car and Truck Rental":
+                  "CUSR0000SETA04",
+              "Recreation Services":
+                  "CUSR0000SARS",
+              "Education and Communication Services":
+                  "CUSR0000SAES",
+          }
+
+          rows_by_name = {
+              row.get("name"): row
+              for row in rows
+          }
+
+          for name, expected_id in expected_series.items():
+              actual_id = rows_by_name[name].get(
+                  "bls_series_id"
+              )
+
+              if actual_id != expected_id:
+                  raise SystemExit(
+                      "ERROR: Incorrect BLS series ID "
+                      f"for {name}: {actual_id}"
+                  )
 
           for row in rows:
               values = row.get("values", [])

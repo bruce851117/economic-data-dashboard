@@ -21,6 +21,15 @@ OUTPUT_PATH = (
 )
 
 
+# level：
+# 0 = 最上層分類
+# 1 = 第一層子分類
+# 2 = 第二層子分類
+# 3 = 第三層子分類
+# 4 = 第四層子分類
+#
+# 所有項目均使用季節調整後的 CPI-U Series。
+# Health Insurance 已依使用者要求完全移除。
 CPI_SERIES = [
     {
         "name": "All Items",
@@ -63,7 +72,7 @@ CPI_SERIES = [
     {
         "name": "Household Furnishings and Supplies",
         "display_code": "CPIQHFAS",
-        "bls_series_id": "CUSR0000SAH3",
+        "bls_series_id": "CUSR0000SAH31",
         "level": 2,
         "seasonality": "SA",
     },
@@ -80,7 +89,7 @@ CPI_SERIES = [
             "Less Motor Fuel"
         ),
         "display_code": "CPIQTCMS",
-        "bls_series_id": "CUSR0000SAT1",
+        "bls_series_id": "CUSR0000SATCLTB",
         "level": 2,
         "seasonality": "SA",
     },
@@ -117,7 +126,7 @@ CPI_SERIES = [
             "Education and Communication Commodities"
         ),
         "display_code": "CPIQECCS",
-        "bls_series_id": "CUSR0000SAE2",
+        "bls_series_id": "CUSR0000SAEC",
         "level": 2,
         "seasonality": "SA",
     },
@@ -131,7 +140,7 @@ CPI_SERIES = [
     {
         "name": "Other Goods",
         "display_code": "CPIQOTGS",
-        "bls_series_id": "CUSR0000SAG",
+        "bls_series_id": "CUSR0000SAGC",
         "level": 2,
         "seasonality": "SA",
     },
@@ -177,7 +186,7 @@ CPI_SERIES = [
             "Water, Sewer and Trash Collection Services"
         ),
         "display_code": "CPSHWSTC",
-        "bls_series_id": "CUSR0000SEHG01",
+        "bls_series_id": "CUSR0000SEHG",
         "level": 2,
         "seasonality": "SA",
     },
@@ -203,13 +212,6 @@ CPI_SERIES = [
         "seasonality": "SA",
     },
     {
-        "name": "Health Insurance",
-        "display_code": "CPRMHEUS",
-        "bls_series_id": "CUUR0000SEME",
-        "level": 3,
-        "seasonality": "NSA",
-    },
-    {
         "name": "Transportation Services",
         "display_code": "CPSSTRAN",
         "bls_series_id": "CUSR0000SAS4",
@@ -219,7 +221,7 @@ CPI_SERIES = [
     {
         "name": "Car and Truck Rental",
         "display_code": "CPIQCTRS Index",
-        "bls_series_id": "CUSR0000SETD03",
+        "bls_series_id": "CUSR0000SETA04",
         "level": 3,
         "seasonality": "SA",
     },
@@ -256,7 +258,7 @@ CPI_SERIES = [
     {
         "name": "Recreation Services",
         "display_code": "CPIQRESS",
-        "bls_series_id": "CUSR0000SERA",
+        "bls_series_id": "CUSR0000SARS",
         "level": 2,
         "seasonality": "SA",
     },
@@ -265,7 +267,7 @@ CPI_SERIES = [
             "Education and Communication Services"
         ),
         "display_code": "CPIQECSS",
-        "bls_series_id": "CUSR0000SAE1",
+        "bls_series_id": "CUSR0000SAES",
         "level": 2,
         "seasonality": "SA",
     },
@@ -286,7 +288,7 @@ def get_registration_key():
     return registration_key
 
 
-def current_year():
+def get_current_year():
     return datetime.now(timezone.utc).year
 
 
@@ -300,8 +302,8 @@ def fetch_cpi_series():
 
     payload = {
         "seriesid": series_ids,
-        "startyear": str(current_year() - 2),
-        "endyear": str(current_year()),
+        "startyear": str(get_current_year() - 2),
+        "endyear": str(get_current_year()),
         "calculations": False,
         "annualaverage": False,
         "catalog": True,
@@ -649,14 +651,16 @@ def save_json(
     )
 
     if existing:
-        if (
+        same_data = (
             existing.get("periods", []) == periods
             and existing.get("rows", []) == aligned_rows
             and existing.get(
                 "missing_series",
                 [],
             ) == missing_series
-        ):
+        )
+
+        if same_data:
             data_changed = False
 
             updated_at_utc = existing.get(
@@ -675,13 +679,12 @@ def save_json(
         "source_url": BLS_SOURCE_URL,
         "title": (
             "Consumer Price Index - "
-            "Monthly Percent Change"
+            "Seasonally Adjusted Monthly Change"
         ),
         "description": (
             "Seasonally adjusted monthly percent "
             "changes calculated from BLS CPI index "
-            "levels. Health Insurance uses the "
-            "not seasonally adjusted BLS series."
+            "levels."
         ),
         "updated_at_utc": updated_at_utc,
         "data_changed": data_changed,
@@ -767,6 +770,12 @@ def main():
             f"{len(periods)} periods."
         )
 
+    if len(rows) != 32:
+        raise RuntimeError(
+            "Expected 32 CPI rows after removing "
+            f"Health Insurance, but generated {len(rows)}."
+        )
+
     save_json(
         periods=periods,
         rows=rows,
@@ -776,3 +785,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+``
