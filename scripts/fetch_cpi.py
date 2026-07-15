@@ -268,8 +268,6 @@ def get_current_year():
 
 
 def fetch_cpi_series():
-    registration_key = get_registration_key()
-
     series_ids = [
         item["bls_series_id"]
         for item in CPI_SERIES
@@ -282,12 +280,8 @@ def fetch_cpi_series():
         "calculations": False,
         "annualaverage": False,
         "catalog": True,
-
-        # 要求 BLS 回傳 CPI Aspect metadata。
-        # Relative Importance 的 aspect code 是 I。
         "aspects": True,
-
-        "registrationkey": registration_key,
+        "registrationkey": get_registration_key(),
     }
 
     print("=" * 72)
@@ -367,6 +361,33 @@ def fetch_cpi_series():
     print(
         f"Returned CPI series: {len(returned_series)}"
     )
+
+    first_series = returned_series[0]
+
+    print(
+        "First series top-level keys:",
+        sorted(first_series.keys()),
+    )
+
+    if "aspects" in first_series:
+        aspects = first_series.get("aspects", [])
+
+        print(
+            "First series aspect count:",
+            len(aspects)
+            if isinstance(aspects, list)
+            else "not-list",
+        )
+
+        if isinstance(aspects, list) and aspects:
+            print(
+                "First series aspect sample:",
+                json.dumps(
+                    aspects[0],
+                    ensure_ascii=False,
+                )[:1000],
+            )
+
     print("=" * 72)
 
     return returned_series
@@ -379,12 +400,9 @@ def to_float(value):
         return None
 
 
-def normalize_aspect_code(value):
-    if value is None:
-        return ""
-
+def normalize_code(value):
     return (
-        str(value)
+        str(value or "")
         .strip()
         .upper()
         .replace(" ", "")
@@ -393,135 +411,207 @@ def normalize_aspect_code(value):
     )
 
 
-def extract_relative_importance_from_node(node):
-    """
-    BLS API 的 aspect 結構可能隨 API 回傳形式略有不同。
-
-    此函數會遞迴搜尋：
-    - aspectType
-    - aspect_type
-    - aspectCode
-    - aspect_code
-    - code
-    - name / aspectName
-
-    若識別到 code I 或文字 Relative Importance，
-    就嘗試讀取該物件中的 value。
-    """
-    if isinstance(node, list):
-        for item in node:
-            result = extract_relative_importance_from_node(
-                item
-            )
-
-            if result is not None:
-                return result
-
+def get_first_value(data, keys):
+    if not isinstance(data, dict):
         return None
 
-    if not isinstance(node, dict):
-        return None
+    for key in keys:
+        if key in data:
+            return data.get(key)
 
-    possible_code_keys = [
-        "aspectType",
-        "aspect_type",
-        "aspectCode",
-        "aspect_code",
-        "code",
-        "type",
-    ]
+    return None
 
-    possible_name_keys = [
-        "aspectName",
-        "aspect_name",
-        "name",
-        "description",
-        "variableName",
-        "variable_name",
-    ]
 
-    code_values = [
-        normalize_aspect_code(node.get(key))
-        for key in possible_code_keys
-        if key in node
-    ]
-
-    name_values = [
-        str(node.get(key, "")).strip().lower()
-        for key in possible_name_keys
-        if key in node
-    ]
-
-    is_relative_importance = (
-        "I" in code_values
-        or any(
-            "relative importance" in value
-            for value in name_values
-        )
+def extract_aspect_period(record):
+    year = get_first_value(
+        record,
+        [
+            "year",
+            "Year",
+        ],
     )
 
-    if is_relative_importance:
-        possible_value_keys = [
+    period = get_first_value(
+        record,
+        [
+            "period",
+            "Period",
+        ],
+    )
+
+    if year is None or period is None:
+        return None
+
+    period_text = str(period).strip().upper()
+
+    if not period_text.startswith("M"):
+        try:
+            period_text = (
+                f"M{int(period_text):02d}"
+            )
+        except ValueError:
+            return None
+
+    if period_text == "M13":
+        return None
+
+    try:
+        month = int(period_text[1:])
+        year_number = int(year)
+    except (TypeError, ValueError):
+        return None
+
+    if not 1 <= month <= 12:
+        return None
+
+    return f"{year_number}-{month:02d}"
+
+
+def is_relative_importance_record(record):
+    if not isinstance(record, dict):
+        return False
+
+    aspect_type = get_first_value(
+        record,
+        [
+            "aspect_type",
+            "aspectType",
+            "aspect_code",
+            "aspectCode",
+            "code",
+            "type",
+        ],
+    )
+
+    normalized_type = normalize_code(
+        aspect_type
+    )
+
+    if normalized_type == "I":
+        return True
+
+    aspect_name = get_first_value(
+        record,
+        [
+            "aspect_name",
+            "aspectName",
+            "name",
+            "description",
+            "variable_name",
+            "variableName",
+        ],
+    )
+
+    return (
+        "relativeimportance"
+        in normalize_code(aspect_name)
+    )
+
+
+def extract_aspect_value(record):
+    value = get_first_value(
+        record,
+        [
             "value",
-            "aspectValue",
+            "Value",
             "aspect_value",
-            "dataValue",
+            "aspectValue",
             "data_value",
-        ]
+            "dataValue",
+        ],
+    )
 
-        for key in possible_value_keys:
-            if key not in node:
-                continue
+    return to_float(value)
 
-            number = to_float(node.get(key))
 
-            if number is not None:
-                return number
+def walk_aspect_records(node):
+    """
+    將可能巢狀的 aspect 結構展開成 dict 清單。
+    """
+    records = []
 
-    for value in node.values():
-        if isinstance(value, (dict, list)):
-            result = extract_relative_importance_from_node(
-                value
+    if isinstance(node, list):
+        for item in node:
+            records.extend(
+                walk_aspect_records(item)
             )
 
-            if result is not None:
-                return result
+        return records
 
-    return None
+    if not isinstance(node, dict):
+        return records
+
+    if (
+        extract_aspect_period(node) is not None
+        or is_relative_importance_record(node)
+    ):
+        records.append(node)
+
+    for value in node.values():
+        if isinstance(value, (list, dict)):
+            records.extend(
+                walk_aspect_records(value)
+            )
+
+    return records
 
 
-def extract_relative_importance(observation):
+def build_relative_importance_lookup(series):
     """
-    從單月 observation 的 aspect metadata 中讀取：
-    I = Relative Importance。
+    BLS 官方 Aspect schema：
+
+    series_id
+    year
+    period
+    aspect_type
+    value
+
+    Relative Importance 使用 aspect_type = I。
     """
+    lookup = {}
+
     possible_containers = [
-        observation.get("aspects"),
-        observation.get("aspect"),
-        observation.get("metadata"),
+        series.get("aspects"),
+        series.get("aspect"),
+        series.get("metadata"),
     ]
 
+    records = []
+
     for container in possible_containers:
-        result = extract_relative_importance_from_node(
-            container
+        records.extend(
+            walk_aspect_records(container)
         )
 
-        if result is not None:
-            return result
+    for record in records:
+        if not is_relative_importance_record(
+            record
+        ):
+            continue
 
-    return None
+        period = extract_aspect_period(record)
+        value = extract_aspect_value(record)
+
+        if period and value is not None:
+            lookup[period] = value
+
+    return lookup
 
 
 def parse_observations(series):
     observations = []
 
+    weight_lookup = (
+        build_relative_importance_lookup(series)
+    )
+
     for observation in series.get("data", []):
         period = observation.get("period", "")
 
-        if not period.startswith("M"):
-            continue
-
-        if period == "M13":
+        if (
+            not period.startswith("M")
+            or period == "M13"
+        ):
             continue
 
         try:
@@ -536,17 +626,17 @@ def parse_observations(series):
         if not 1 <= month <= 12:
             continue
 
+        period_key = f"{year}-{month:02d}"
+
         relative_importance = (
-            extract_relative_importance(
-                observation
-            )
+            weight_lookup.get(period_key)
         )
 
         observations.append(
             {
                 "year": year,
                 "month": month,
-                "period": f"{year}-{month:02d}",
+                "period": period_key,
                 "period_name": observation.get(
                     "periodName",
                     "",
@@ -579,24 +669,16 @@ def calculate_percent_change(
     if previous_value == 0:
         return None
 
-    result = (
-        (current_value / previous_value)
-        - 1
-    ) * 100
-
-    return round(result, 6)
+    return round(
+        (
+            (current_value / previous_value)
+            - 1
+        ) * 100,
+        6,
+    )
 
 
 def build_monthly_changes(observations):
-    """
-    計算月增率。
-
-    對於 t 月月增率，會優先使用 t 月 observation
-    隨附的 Relative Importance。
-
-    BLS 每月新聞稿的 Relative Importance 通常代表
-    計算當月價格相對變化所搭配的前一期權重。
-    """
     changes = []
 
     for index in range(1, len(observations)):
@@ -608,13 +690,22 @@ def build_monthly_changes(observations):
             previous["index_value"],
         )
 
+        /*
+         * BLS t月新聞稿所使用的 Relative
+         * Importance 通常標示為前一期月份。
+         *
+         * 先找 current period 的 aspect；
+         * 若 current 沒有，再使用 previous。
+         */
         relative_importance = (
             current.get("relative_importance")
         )
 
         if relative_importance is None:
             relative_importance = (
-                previous.get("relative_importance")
+                previous.get(
+                    "relative_importance"
+                )
             )
 
         changes.append(
@@ -775,21 +866,6 @@ def calculate_exclusion_aggregate(
     base_weight,
     excluded_components,
 ):
-    """
-    近似排除式加權月增率：
-
-    (
-        母項目權重 × 母項目月增率
-        -
-        Σ 排除項目權重 × 排除項目月增率
-    )
-    ÷
-    (
-        母項目權重
-        -
-        Σ 排除項目權重
-    )
-    """
     if (
         base_change is None
         or base_weight is None
@@ -800,8 +876,8 @@ def calculate_exclusion_aggregate(
     excluded_contribution = 0.0
 
     for component in excluded_components:
-        component_change = component.get("change")
-        component_weight = component.get("weight")
+        component_change = component["change"]
+        component_weight = component["weight"]
 
         if (
             component_change is None
@@ -823,12 +899,10 @@ def calculate_exclusion_aggregate(
     if effective_weight <= 0:
         return None
 
-    base_contribution = (
-        base_weight * base_change
-    )
-
     result = (
-        base_contribution
+        (
+            base_weight * base_change
+        )
         - excluded_contribution
     ) / effective_weight
 
@@ -856,17 +930,22 @@ def build_derived_rows(aligned_rows, periods):
         ]
 
         values = []
-        calculation_details = []
+        details = []
 
         for index, period in enumerate(periods):
-            base_change = None
-            base_weight = None
+            base_change = (
+                base_row["values"][index]
+                if base_row
+                else None
+            )
 
-            if base_row:
-                base_change = base_row["values"][index]
-                base_weight = (
-                    base_row["relative_importance"][index]
-                )
+            base_weight = (
+                base_row[
+                    "relative_importance"
+                ][index]
+                if base_row
+                else None
+            )
 
             excluded_components = []
 
@@ -874,52 +953,46 @@ def build_derived_rows(aligned_rows, periods):
                 definition["exclude"],
                 excluded_rows,
             ):
-                excluded_change = None
-                excluded_weight = None
-
-                if excluded_row:
-                    excluded_change = (
-                        excluded_row["values"][index]
-                    )
-
-                    excluded_weight = (
-                        excluded_row[
-                            "relative_importance"
-                        ][index]
-                    )
-
                 excluded_components.append(
                     {
                         "name": excluded_name,
-                        "change": excluded_change,
-                        "weight": excluded_weight,
+                        "change": (
+                            excluded_row["values"][index]
+                            if excluded_row
+                            else None
+                        ),
+                        "weight": (
+                            excluded_row[
+                                "relative_importance"
+                            ][index]
+                            if excluded_row
+                            else None
+                        ),
                     }
                 )
 
-            value = calculate_exclusion_aggregate(
-                base_change=base_change,
-                base_weight=base_weight,
-                excluded_components=(
-                    excluded_components
-                ),
+            result = calculate_exclusion_aggregate(
+                base_change,
+                base_weight,
+                excluded_components,
             )
 
-            excluded_weight_total = None
-            effective_weight = None
-
-            valid_excluded_weights = [
+            excluded_weights = [
                 item["weight"]
                 for item in excluded_components
                 if item["weight"] is not None
             ]
 
+            excluded_weight_total = None
+            effective_weight = None
+
             if (
                 base_weight is not None
-                and len(valid_excluded_weights)
+                and len(excluded_weights)
                 == len(excluded_components)
             ):
                 excluded_weight_total = sum(
-                    valid_excluded_weights
+                    excluded_weights
                 )
 
                 effective_weight = (
@@ -927,12 +1000,11 @@ def build_derived_rows(aligned_rows, periods):
                     - excluded_weight_total
                 )
 
-            values.append(value)
+            values.append(result)
 
-            calculation_details.append(
+            details.append(
                 {
                     "period": period["period"],
-                    "base_name": definition["base"],
                     "base_change": base_change,
                     "base_relative_importance": (
                         base_weight
@@ -946,10 +1018,10 @@ def build_derived_rows(aligned_rows, periods):
                     "effective_relative_importance": (
                         effective_weight
                     ),
-                    "result": value,
+                    "result": result,
                     "status": (
                         "calculated"
-                        if value is not None
+                        if result is not None
                         else "missing_relative_importance"
                     ),
                 }
@@ -961,15 +1033,12 @@ def build_derived_rows(aligned_rows, periods):
                 "name": definition["name"],
                 "type": "derived",
                 "badge": "Derived",
-                "level": 0,
                 "base_series": definition["base"],
                 "excluded_series": (
                     definition["exclude"]
                 ),
                 "values": values,
-                "calculation_details": (
-                    calculation_details
-                ),
+                "calculation_details": details,
                 "method": (
                     "Relative-importance-weighted "
                     "exclusion formula"
@@ -1073,6 +1142,7 @@ def save_json(
         "derived_rows": derived_rows,
         "missing_series": missing_series,
         "derived_methodology": {
+            "official_bls_series": False,
             "method": (
                 "Relative-importance-weighted "
                 "exclusion formula"
@@ -1082,11 +1152,10 @@ def save_json(
                 "- excluded weighted changes) "
                 "÷ effective remaining weight"
             ),
-            "official_bls_series": False,
             "caveat": (
-                "Derived dashboard measures are "
-                "approximations and may differ from "
-                "official BLS special aggregate indexes."
+                "Dashboard-derived approximation. "
+                "Results may differ from official BLS "
+                "special aggregate indexes."
             ),
         },
     }
@@ -1119,32 +1188,32 @@ def save_json(
     print(f"Data changed: {data_changed}")
     print(f"Output path: {OUTPUT_PATH}")
 
-    missing_weight_count = 0
+    incomplete_weight_rows = 0
 
     for row in aligned_rows:
-        available_weights = sum(
+        coverage = sum(
             value is not None
             for value in row[
                 "relative_importance"
             ]
         )
 
-        if available_weights < len(periods):
-            missing_weight_count += 1
+        if coverage < len(periods):
+            incomplete_weight_rows += 1
 
-            print(
-                "Relative Importance coverage:",
-                row["name"],
-                f"{available_weights}/{len(periods)}",
-            )
+        print(
+            "Relative Importance coverage:",
+            row["name"],
+            f"{coverage}/{len(periods)}",
+        )
 
     print(
         "Rows with incomplete Relative Importance:",
-        missing_weight_count,
+        incomplete_weight_rows,
     )
 
     for row in derived_rows:
-        calculated_count = sum(
+        coverage = sum(
             value is not None
             for value in row["values"]
         )
@@ -1152,7 +1221,7 @@ def save_json(
         print(
             "Derived coverage:",
             row["name"],
-            f"{calculated_count}/{len(periods)}",
+            f"{coverage}/{len(periods)}",
         )
 
     print("=" * 72)
