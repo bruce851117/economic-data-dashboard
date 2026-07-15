@@ -1,8 +1,6 @@
 name: Update BLS CPI Data
 
-on:
-  # 只允許手動或 API 觸發，不會定時執行
-  workflow_dispatch:
+on: workflow_dispatch
 
 permissions:
   contents: write
@@ -13,6 +11,7 @@ concurrency:
 
 jobs:
   update-cpi:
+    name: Fetch and update CPI data
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -28,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install beautifulsoup4 lxml pandas requests
+          python -m pip install beautifulsoup4 lxml pandas requests
 
       - name: Confirm proxy configuration
         env:
@@ -36,27 +35,40 @@ jobs:
           BLS_PROXY_KEY: ${{ secrets.BLS_PROXY_KEY }}
         run: |
           if [ -z "$BLS_PROXY_URL" ]; then
-            echo "ERROR: BLS_PROXY_URL is missing."
+            echo "ERROR: GitHub Secret BLS_PROXY_URL is missing."
             exit 1
           fi
 
           if [ -z "$BLS_PROXY_KEY" ]; then
-            echo "ERROR: BLS_PROXY_KEY is missing."
+            echo "ERROR: GitHub Secret BLS_PROXY_KEY is missing."
             exit 1
           fi
 
-          echo "BLS_PROXY_URL is configured."
-          echo "BLS_PROXY_KEY is configured."
-          echo "Proxy host:"
           python - <<'PY'
           import os
           from urllib.parse import urlparse
 
           proxy_url = os.environ["BLS_PROXY_URL"]
-          parsed = urlparse(proxy_url)
+          parsed_url = urlparse(proxy_url)
 
-          print(parsed.netloc)
-          print(parsed.path)
+          if parsed_url.scheme != "https":
+              raise SystemExit(
+                  "ERROR: BLS_PROXY_URL must use HTTPS."
+              )
+
+          if not parsed_url.netloc:
+              raise SystemExit(
+                  "ERROR: BLS_PROXY_URL has no valid hostname."
+              )
+
+          if parsed_url.path.rstrip("/") != "/bls-cpi":
+              raise SystemExit(
+                  "ERROR: BLS_PROXY_URL must end with /bls-cpi."
+              )
+
+          print("Proxy configuration is available.")
+          print(f"Proxy host: {parsed_url.netloc}")
+          print(f"Proxy path: {parsed_url.path}")
           PY
 
       - name: Fetch BLS CPI data through Cloudflare Worker
@@ -128,7 +140,7 @@ jobs:
           )
           PY
 
-      - name: Commit updated data
+      - name: Commit updated CPI data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email \
@@ -144,4 +156,3 @@ jobs:
 
           git commit -m "Update BLS CPI data"
           git push
-`
