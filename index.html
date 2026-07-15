@@ -1170,3 +1170,122 @@
               <span
                 class="nsa-badge"
                 title="Not Seasonally Adjusted"
+              >
+                NSA
+              </span>
+            `
+            : "";
+
+          const rowTitle = row.series_title
+            ? `title="${escapeHtml(
+                row.series_title
+              )}"`
+            : "";
+
+          return `
+            <tr class="level-${level}">
+              <td
+                class="item-cell"
+                style="
+                  padding-left:
+                  ${getItemPadding(level)}px;
+                "
+                ${rowTitle}
+              >
+                <div class="name-container">
+                  ${levelLine}
+
+                  <span class="item-name">
+                    ${escapeHtml(row.name)}
+                    ${nsaBadge}
+                  </span>
+                </div>
+              </td>
+
+              ${valueCells}
+            </tr>
+          `;
+        })
+        .join("");
+
+      content.innerHTML = `
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th class="item-header">
+                  項目
+                </th>
+
+                ${monthHeaders}
+              </tr>
+            </thead>
+
+            <tbody>
+              ${tableRows}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    async function loadCpiData() {
+      const content = document.getElementById(
+        "cpi-content"
+      );
+
+      try {
+        const response = await fetch(
+          `data/cpi.json?timestamp=${Date.now()}`,
+          {
+            method: "GET",
+            cache: "no-store",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            `資料請求失敗：HTTP ${response.status}`
+          );
+        }
+
+        const payload = await response.json();
+
+        if (
+          !Array.isArray(payload.periods) ||
+          !Array.isArray(payload.rows)
+        ) {
+          throw new Error(
+            "data/cpi.json 的資料格式不正確"
+          );
+        }
+
+        dashboardState.cpiData = payload;
+
+        renderCpiTable();
+      } catch (error) {
+        console.error(error);
+
+        content.innerHTML = `
+          <div class="error-message">
+            <div class="error-title">
+              CPI資料載入失敗
+            </div>
+
+            <div>
+              請確認 data/cpi.json 已存在，
+              並等待 GitHub Pages 完成部署。
+            </div>
+
+            <div style="margin-top: 8px;">
+              ${escapeHtml(error.message)}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    loadCpiData();
+  </script>
+</body>
+</html>
