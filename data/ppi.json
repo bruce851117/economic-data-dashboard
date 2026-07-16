@@ -5,7 +5,7 @@
   "source_url": "https://www.bls.gov/ppi/",
   "title": "Selected Producer Price Indexes",
   "description": "Monthly percent changes calculated from selected BLS PPI index levels.",
-  "updated_at_utc": "2026-07-16T02:52:50.903085+00:00",
+  "updated_at_utc": "2026-07-16T08:30:10.085691+00:00",
   "data_changed": true,
   "default_months": 6,
   "available_filter_options": [
@@ -14,7 +14,7 @@
     12
   ],
   "period_count": 12,
-  "row_count": 18,
+  "row_count": 17,
   "pce_weight_total": 21.195,
   "pce_impact_method": {
     "formula": "sum(PPI monthly percent change x PCE weight / 100)",
@@ -22,6 +22,12 @@
     "coverage": "Selected components represent 21.195 percent of the supplied PCE weights.",
     "official_bea_forecast": false,
     "caveat": "This is a mechanical proxy based on selected PPI components, not an official BEA Core PCE estimate."
+  },
+  "portfolio_management_method": {
+    "series_id": "PCU523940523940",
+    "series_name": "Portfolio Management and Investment Advice",
+    "combined_weight": 1.78,
+    "note": "Portfolio Management and Investment Advice were combined into one current industry series."
   },
   "periods": [
     {
@@ -188,51 +194,13 @@
     },
     {
       "order": 2,
-      "name": "PPI for Portfolio Management",
-      "short_name": "Portfolio Management",
-      "bls_series_id": "WPU402",
+      "name": "PPI for Portfolio Management and Investment Advice",
+      "short_name": "Portfolio Management and Investment Advice",
+      "bls_series_id": "PCU523940523940",
       "seasonality": "NSA",
-      "pce_weight": 0.89,
+      "pce_weight": 1.78,
       "available": true,
-      "series_title": "PPI Commodity data for Investment services-Portfolio management, not seasonally adjusted",
-      "values": [
-        6.140154,
-        1.390177,
-        -1.207006,
-        3.55749,
-        1.352264,
-        0.637329,
-        2.711013,
-        1.074552,
-        1.049825,
-        -1.793592,
-        4.803605,
-        0.514491
-      ],
-      "index_values": [
-        335.353,
-        340.015,
-        335.911,
-        347.861,
-        352.565,
-        354.812,
-        364.431,
-        368.347,
-        372.214,
-        365.538,
-        383.097,
-        385.068
-      ]
-    },
-    {
-      "order": 3,
-      "name": "PPI for Investment Advice",
-      "short_name": "Investment Advice",
-      "bls_series_id": "PCU523940523940P",
-      "seasonality": "NSA",
-      "pce_weight": 0.89,
-      "available": true,
-      "series_title": "PPI industry data for Portfolio management and investment advice-Primary services, not seasonally adjusted",
+      "series_title": "PPI industry data for Portfolio management and investment advice, not seasonally adjusted",
       "values": [
         5.744982,
         1.27551,
@@ -263,7 +231,7 @@
       ]
     },
     {
-      "order": 4,
+      "order": 3,
       "name": "PPI for Nursing Care Facilities",
       "short_name": "Nursing Care Facilities",
       "bls_series_id": "PCU623110623110",
@@ -301,7 +269,7 @@
       ]
     },
     {
-      "order": 5,
+      "order": 4,
       "name": "PPI for Direct Health and Medical Insurance Carriers",
       "short_name": "Direct Health and Medical Insurance Carriers",
       "bls_series_id": "PCU524114524114",
@@ -339,7 +307,7 @@
       ]
     },
     {
-      "order": 6,
+      "order": 5,
       "name": "PPI for Home Health Care Services",
       "short_name": "Home Health Care Services",
       "bls_series_id": "PCU6216--6216--",
@@ -377,7 +345,7 @@
       ]
     },
     {
-      "order": 7,
+      "order": 6,
       "name": "PPI for Domestic Scheduled Passenger Air Transportation",
       "short_name": "Domestic Scheduled Passenger Air Transportation",
       "bls_series_id": "PCU4811114811111",
@@ -415,7 +383,7 @@
       ]
     },
     {
-      "order": 8,
+      "order": 7,
       "name": "PPI for Private Passenger Auto Insurance",
       "short_name": "Private Passenger Auto Insurance",
       "bls_series_id": "PCU5241265241261",
@@ -453,7 +421,7 @@
       ]
     },
     {
-      "order": 9,
+      "order": 8,
       "name": "PPI for Medical Laboratories",
       "short_name": "Medical Laboratories",
       "bls_series_id": "PCU621511621511P",
@@ -491,7 +459,7 @@
       ]
     },
     {
-      "order": 10,
+      "order": 9,
       "name": "PPI for Diagnostic Imaging Centers",
       "short_name": "Diagnostic Imaging Centers",
       "bls_series_id": "PCU6215126215124",
@@ -529,7 +497,7 @@
       ]
     },
     {
-      "order": 11,
+      "order": 10,
       "name": "PPI for Brokerage Services",
       "short_name": "Brokerage Services",
       "bls_series_id": "WPU40110201",
@@ -567,7 +535,7 @@
       ]
     },
     {
-      "order": 12,
+      "order": 11,
       "name": "PPI for Dealer Transactions",
       "short_name": "Dealer Transactions",
       "bls_series_id": "WPU40110101",
@@ -605,7 +573,7 @@
       ]
     },
     {
-      "order": 13,
+      "order": 12,
       "name": "PPI for Workers' Compensation Insurance",
       "short_name": "Workers' Compensation Insurance",
       "bls_series_id": "PCU5241265241266",
@@ -643,7 +611,7 @@
       ]
     },
     {
-      "order": 14,
+      "order": 13,
       "name": "PPI for Commercial Bank Trust Services",
       "short_name": "Commercial Bank Trust Services",
       "bls_series_id": "PCU5221105221103",
@@ -681,7 +649,7 @@
       ]
     },
     {
-      "order": 15,
+      "order": 14,
       "name": "PPI for Homeowners' Insurance",
       "short_name": "Homeowners' Insurance",
       "bls_series_id": "PCU9241269241262",
@@ -719,7 +687,7 @@
       ]
     },
     {
-      "order": 16,
+      "order": 15,
       "name": "PPI for Employment Placement Agencies",
       "short_name": "Employment Placement Agencies",
       "bls_series_id": "PCU5613--5613--",
@@ -757,7 +725,7 @@
       ]
     },
     {
-      "order": 17,
+      "order": 16,
       "name": "PPI for Apparel",
       "short_name": "Apparel, Jewelry, Footwear, and Accessories Retailing",
       "bls_series_id": "WPS5831",
@@ -796,7 +764,7 @@
     }
   ],
   "pce_impact_row": {
-    "order": 18,
+    "order": 17,
     "name": "Estimated Impact on Core PCE",
     "short_name": "Estimated Impact on Core PCE",
     "type": "derived",
@@ -807,24 +775,24 @@
     "available": true,
     "series_title": "Weighted impact estimated from selected PPI components",
     "values": [
-      0.109223,
-      0.056547,
-      0.015934,
-      0.275966,
-      0.045353,
-      0.006748,
-      0.24595,
-      0.045511,
-      0.091282,
-      0.008728,
-      0.105057,
-      0.085317
+      0.105706,
+      0.055526,
+      0.018335,
+      0.274565,
+      0.044589,
+      0.006139,
+      0.243448,
+      0.044769,
+      0.090231,
+      0.011867,
+      0.10273,
+      0.086391
     ],
     "unit": "percentage_point",
     "calculation_details": [
       {
         "period": "2025-07",
-        "result": 0.109223,
+        "result": 0.105706,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -847,20 +815,12 @@
             "contribution": 0.00456479
           },
           {
-            "name": "PPI for Portfolio Management",
-            "series_id": "WPU402",
-            "seasonality": "NSA",
-            "ppi_mom": 6.140154,
-            "pce_weight": 0.89,
-            "contribution": 0.05464737
-          },
-          {
-            "name": "PPI for Investment Advice",
-            "series_id": "PCU523940523940P",
+            "name": "PPI for Portfolio Management and Investment Advice",
+            "series_id": "PCU523940523940",
             "seasonality": "NSA",
             "ppi_mom": 5.744982,
-            "pce_weight": 0.89,
-            "contribution": 0.05113034
+            "pce_weight": 1.78,
+            "contribution": 0.10226068
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -978,7 +938,7 @@
       },
       {
         "period": "2025-08",
-        "result": 0.056547,
+        "result": 0.055526,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -1001,20 +961,12 @@
             "contribution": -0.00072002
           },
           {
-            "name": "PPI for Portfolio Management",
-            "series_id": "WPU402",
-            "seasonality": "NSA",
-            "ppi_mom": 1.390177,
-            "pce_weight": 0.89,
-            "contribution": 0.01237258
-          },
-          {
-            "name": "PPI for Investment Advice",
-            "series_id": "PCU523940523940P",
+            "name": "PPI for Portfolio Management and Investment Advice",
+            "series_id": "PCU523940523940",
             "seasonality": "NSA",
             "ppi_mom": 1.27551,
-            "pce_weight": 0.89,
-            "contribution": 0.01135204
+            "pce_weight": 1.78,
+            "contribution": 0.02270408
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -1132,7 +1084,7 @@
       },
       {
         "period": "2025-09",
-        "result": 0.015934,
+        "result": 0.018335,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -1155,20 +1107,12 @@
             "contribution": 0.00027004
           },
           {
-            "name": "PPI for Portfolio Management",
-            "series_id": "WPU402",
-            "seasonality": "NSA",
-            "ppi_mom": -1.207006,
-            "pce_weight": 0.89,
-            "contribution": -0.01074235
-          },
-          {
-            "name": "PPI for Investment Advice",
-            "series_id": "PCU523940523940P",
+            "name": "PPI for Portfolio Management and Investment Advice",
+            "series_id": "PCU523940523940",
             "seasonality": "NSA",
             "ppi_mom": -0.937144,
-            "pce_weight": 0.89,
-            "contribution": -0.00834058
+            "pce_weight": 1.78,
+            "contribution": -0.01668116
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -1286,7 +1230,7 @@
       },
       {
         "period": "2025-10",
-        "result": 0.275966,
+        "result": 0.274565,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -1309,20 +1253,12 @@
             "contribution": 0.0029104
           },
           {
-            "name": "PPI for Portfolio Management",
-            "series_id": "WPU402",
-            "seasonality": "NSA",
-            "ppi_mom": 3.55749,
-            "pce_weight": 0.89,
-            "contribution": 0.03166166
-          },
-          {
-            "name": "PPI for Investment Advice",
-            "series_id": "PCU523940523940P",
+            "name": "PPI for Portfolio Management and Investment Advice",
+            "series_id": "PCU523940523940",
             "seasonality": "NSA",
             "ppi_mom": 3.400064,
-            "pce_weight": 0.89,
-            "contribution": 0.03026057
+            "pce_weight": 1.78,
+            "contribution": 0.06052114
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -1440,7 +1376,7 @@
       },
       {
         "period": "2025-11",
-        "result": 0.045353,
+        "result": 0.044589,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -1463,20 +1399,12 @@
             "contribution": -8.995e-05
           },
           {
-            "name": "PPI for Portfolio Management",
-            "series_id": "WPU402",
-            "seasonality": "NSA",
-            "ppi_mom": 1.352264,
-            "pce_weight": 0.89,
-            "contribution": 0.01203515
-          },
-          {
-            "name": "PPI for Investment Advice",
-            "series_id": "PCU523940523940P",
+            "name": "PPI for Portfolio Management and Investment Advice",
+            "series_id": "PCU523940523940",
             "seasonality": "NSA",
             "ppi_mom": 1.266406,
-            "pce_weight": 0.89,
-            "contribution": 0.01127101
+            "pce_weight": 1.78,
+            "contribution": 0.02254203
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -1594,7 +1522,7 @@
       },
       {
         "period": "2025-12",
-        "result": 0.006748,
+        "result": 0.006139,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -1617,20 +1545,12 @@
             "contribution": 0.0027886
           },
           {
-            "name": "PPI for Portfolio Management",
-            "series_id": "WPU402",
-            "seasonality": "NSA",
-            "ppi_mom": 0.637329,
-            "pce_weight": 0.89,
-            "contribution": 0.00567223
-          },
-          {
-            "name": "PPI for Investment Advice",
-            "series_id": "PCU523940523940P",
+            "name": "PPI for Portfolio Management and Investment Advice",
+            "series_id": "PCU523940523940",
             "seasonality": "NSA",
             "ppi_mom": 0.568949,
-            "pce_weight": 0.89,
-            "contribution": 0.00506365
+            "pce_weight": 1.78,
+            "contribution": 0.01012729
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -1748,7 +1668,7 @@
       },
       {
         "period": "2026-01",
-        "result": 0.24595,
+        "result": 0.243448,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -1771,20 +1691,12 @@
             "contribution": 0.03209404
           },
           {
-            "name": "PPI for Portfolio Management",
-            "series_id": "WPU402",
-            "seasonality": "NSA",
-            "ppi_mom": 2.711013,
-            "pce_weight": 0.89,
-            "contribution": 0.02412802
-          },
-          {
-            "name": "PPI for Investment Advice",
-            "series_id": "PCU523940523940P",
+            "name": "PPI for Portfolio Management and Investment Advice",
+            "series_id": "PCU523940523940",
             "seasonality": "NSA",
             "ppi_mom": 2.429927,
-            "pce_weight": 0.89,
-            "contribution": 0.02162635
+            "pce_weight": 1.78,
+            "contribution": 0.0432527
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -1902,7 +1814,7 @@
       },
       {
         "period": "2026-02",
-        "result": 0.045511,
+        "result": 0.044769,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -1925,20 +1837,12 @@
             "contribution": 0.00392738
           },
           {
-            "name": "PPI for Portfolio Management",
-            "series_id": "WPU402",
-            "seasonality": "NSA",
-            "ppi_mom": 1.074552,
-            "pce_weight": 0.89,
-            "contribution": 0.00956351
-          },
-          {
-            "name": "PPI for Investment Advice",
-            "series_id": "PCU523940523940P",
+            "name": "PPI for Portfolio Management and Investment Advice",
+            "series_id": "PCU523940523940",
             "seasonality": "NSA",
             "ppi_mom": 0.991168,
-            "pce_weight": 0.89,
-            "contribution": 0.0088214
+            "pce_weight": 1.78,
+            "contribution": 0.01764279
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -2056,7 +1960,7 @@
       },
       {
         "period": "2026-03",
-        "result": 0.091282,
+        "result": 0.090231,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -2079,20 +1983,12 @@
             "contribution": 0.01114757
           },
           {
-            "name": "PPI for Portfolio Management",
-            "series_id": "WPU402",
-            "seasonality": "NSA",
-            "ppi_mom": 1.049825,
-            "pce_weight": 0.89,
-            "contribution": 0.00934344
-          },
-          {
-            "name": "PPI for Investment Advice",
-            "series_id": "PCU523940523940P",
+            "name": "PPI for Portfolio Management and Investment Advice",
+            "series_id": "PCU523940523940",
             "seasonality": "NSA",
             "ppi_mom": 0.931662,
-            "pce_weight": 0.89,
-            "contribution": 0.00829179
+            "pce_weight": 1.78,
+            "contribution": 0.01658358
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -2210,7 +2106,7 @@
       },
       {
         "period": "2026-04",
-        "result": 0.008728,
+        "result": 0.011867,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -2233,20 +2129,12 @@
             "contribution": 0.00186815
           },
           {
-            "name": "PPI for Portfolio Management",
-            "series_id": "WPU402",
-            "seasonality": "NSA",
-            "ppi_mom": -1.793592,
-            "pce_weight": 0.89,
-            "contribution": -0.01596297
-          },
-          {
-            "name": "PPI for Investment Advice",
-            "series_id": "PCU523940523940P",
+            "name": "PPI for Portfolio Management and Investment Advice",
+            "series_id": "PCU523940523940",
             "seasonality": "NSA",
             "ppi_mom": -1.440911,
-            "pce_weight": 0.89,
-            "contribution": -0.01282411
+            "pce_weight": 1.78,
+            "contribution": -0.02564822
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -2364,7 +2252,7 @@
       },
       {
         "period": "2026-05",
-        "result": 0.105057,
+        "result": 0.10273,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -2387,20 +2275,12 @@
             "contribution": 0.00192666
           },
           {
-            "name": "PPI for Portfolio Management",
-            "series_id": "WPU402",
-            "seasonality": "NSA",
-            "ppi_mom": 4.803605,
-            "pce_weight": 0.89,
-            "contribution": 0.04275208
-          },
-          {
-            "name": "PPI for Investment Advice",
-            "series_id": "PCU523940523940P",
+            "name": "PPI for Portfolio Management and Investment Advice",
+            "series_id": "PCU523940523940",
             "seasonality": "NSA",
             "ppi_mom": 4.542135,
-            "pce_weight": 0.89,
-            "contribution": 0.040425
+            "pce_weight": 1.78,
+            "contribution": 0.08085
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -2518,7 +2398,7 @@
       },
       {
         "period": "2026-06",
-        "result": 0.085317,
+        "result": 0.086391,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -2541,20 +2421,12 @@
             "contribution": 0.0
           },
           {
-            "name": "PPI for Portfolio Management",
-            "series_id": "WPU402",
-            "seasonality": "NSA",
-            "ppi_mom": 0.514491,
-            "pce_weight": 0.89,
-            "contribution": 0.00457897
-          },
-          {
-            "name": "PPI for Investment Advice",
-            "series_id": "PCU523940523940P",
+            "name": "PPI for Portfolio Management and Investment Advice",
+            "series_id": "PCU523940523940",
             "seasonality": "NSA",
             "ppi_mom": 0.635192,
-            "pce_weight": 0.89,
-            "contribution": 0.00565321
+            "pce_weight": 1.78,
+            "contribution": 0.01130642
           },
           {
             "name": "PPI for Nursing Care Facilities",
