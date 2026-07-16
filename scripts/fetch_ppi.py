@@ -39,7 +39,7 @@ PPI_SERIES = [
     {
         "name": "PPI for Portfolio Management",
         "short_name": "Portfolio Management",
-        "bls_series_id": "WPU402",
+        "bls_series_id": "PCU523920523920",
         "seasonality": "NSA",
         "pce_weight": 0.890,
     },
