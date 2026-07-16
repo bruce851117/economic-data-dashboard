@@ -47,6 +47,14 @@ jobs:
         run: |
           python scripts/fetch_cpi.py
 
+
+
+      - name: Fetch PPI data
+        env:
+          BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
+        run: |
+          python scripts/fetch_ppi.py
+
       - name: Validate CPI JSON
         run: |
           python - <<'PY'
@@ -207,7 +215,7 @@ jobs:
           git config user.email \
             "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add data/cpi.json
+          git add data/cpi.json data/ppi.json
 
           if git diff --cached --quiet; then
             echo "CPI data has not changed."
