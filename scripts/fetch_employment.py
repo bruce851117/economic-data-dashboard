@@ -11,7 +11,8 @@ BLS_API_URL = (
 )
 
 BLS_EMPLOYMENT_SOURCE_URL = (
-    "https://www.bls.gov/news.release/empsit.toc.htm"
+    "https://www.bls.gov/news.release/"
+    "empsit.toc.htm"
 )
 
 OUTPUT_PATH = (
@@ -19,6 +20,8 @@ OUTPUT_PATH = (
     / "data"
     / "employment.json"
 )
+
+BLS_BATCH_SIZE = 10
 
 
 EMPLOYMENT_SERIES = [
@@ -245,12 +248,28 @@ def get_current_year():
     ).year
 
 
-def fetch_employment_series():
-    series_ids = [
-        item["series_id"]
-        for item in EMPLOYMENT_SERIES
+def split_into_batches(
+    items,
+    batch_size,
+):
+    return [
+        items[
+            index:
+            index + batch_size
+        ]
+        for index in range(
+            0,
+            len(items),
+            batch_size,
+        )
     ]
 
+
+def request_employment_batch(
+    series_ids,
+    batch_number,
+    total_batches,
+):
     payload = {
         "seriesid": series_ids,
         "startyear": str(
@@ -262,6 +281,7 @@ def fetch_employment_series():
         "calculations": False,
         "annualaverage": False,
         "catalog": True,
+        "aspects": False,
         "registrationkey": (
             get_registration_key()
         ),
@@ -269,12 +289,16 @@ def fetch_employment_series():
 
     print("=" * 72)
     print(
-        "Calling registered BLS Public Data API."
+        "BLS Employment batch:",
+        f"{batch_number}/{total_batches}",
     )
-    print(f"API URL: {BLS_API_URL}")
     print(
-        "Requested employment series:",
+        "Requested series:",
         len(series_ids),
+    )
+    print(
+        "Series IDs:",
+        ", ".join(series_ids),
     )
     print(
         "Requested years:",
@@ -315,6 +339,9 @@ def fetch_employment_series():
         raise RuntimeError(
             "BLS Employment API returned "
             "an HTTP error.\n"
+            f"Batch: {batch_number}/"
+            f"{total_batches}\n"
+            f"Series IDs: {series_ids}\n"
             f"HTTP status: "
             f"{response.status_code}\n"
             f"Response: "
@@ -326,7 +353,10 @@ def fetch_employment_series():
     except requests.JSONDecodeError as error:
         raise RuntimeError(
             "BLS Employment API did not "
-            "return valid JSON."
+            "return valid JSON.\n"
+            f"Batch: {batch_number}/"
+            f"{total_batches}\n"
+            f"Series IDs: {series_ids}"
         ) from error
 
     status = result.get(
@@ -354,8 +384,12 @@ def fetch_employment_series():
 
     if status != "REQUEST_SUCCEEDED":
         raise RuntimeError(
-            "BLS Employment API request "
+            "BLS Employment API batch "
             "did not succeed.\n"
+            f"Batch: {batch_number}/"
+            f"{total_batches}\n"
+            f"Series IDs: "
+            f"{', '.join(series_ids)}\n"
             f"Status: {status}\n"
             f"Messages: {messages}"
         )
@@ -368,17 +402,100 @@ def fetch_employment_series():
 
     if not returned_series:
         raise RuntimeError(
-            "BLS API returned no "
-            "employment series."
+            "BLS Employment API batch "
+            "returned no series.\n"
+            f"Batch: {batch_number}/"
+            f"{total_batches}\n"
+            f"Series IDs: "
+            f"{', '.join(series_ids)}"
         )
 
     print(
-        "Returned employment series:",
+        "Returned series:",
         len(returned_series),
     )
     print("=" * 72)
 
     return returned_series
+
+
+def fetch_employment_series():
+    series_ids = [
+        item["series_id"]
+        for item in EMPLOYMENT_SERIES
+    ]
+
+    batches = split_into_batches(
+        series_ids,
+        BLS_BATCH_SIZE,
+    )
+
+    print(
+        "Starting BLS employment "
+        "batch requests."
+    )
+    print(
+        "Total employment series:",
+        len(series_ids),
+    )
+    print(
+        "Batch size:",
+        BLS_BATCH_SIZE,
+    )
+    print(
+        "Total batches:",
+        len(batches),
+    )
+
+    all_series = []
+
+    for batch_index, batch in enumerate(
+        batches,
+        start=1,
+    ):
+        batch_series = (
+            request_employment_batch(
+                series_ids=batch,
+                batch_number=batch_index,
+                total_batches=len(batches),
+            )
+        )
+
+        all_series.extend(
+            batch_series
+        )
+
+    returned_ids = {
+        series.get(
+            "seriesID",
+            "",
+        )
+        for series in all_series
+    }
+
+    missing_returned_ids = [
+        series_id
+        for series_id in series_ids
+        if series_id not in returned_ids
+    ]
+
+    print("=" * 72)
+    print(
+        "Combined returned series:",
+        len(all_series),
+    )
+
+    if missing_returned_ids:
+        print(
+            "Series not returned by API:",
+            ", ".join(
+                missing_returned_ids
+            ),
+        )
+
+    print("=" * 72)
+
+    return all_series
 
 
 def parse_observations(series):
@@ -704,11 +821,6 @@ def align_rows(
     rows,
     periods,
 ):
-    period_keys = [
-        period["period"]
-        for period in periods
-    ]
-
     aligned_rows = []
 
     for row in rows:
@@ -723,9 +835,9 @@ def align_rows(
         values = []
         levels = []
 
-        for period_key in period_keys:
+        for period in periods:
             month = month_lookup.get(
-                period_key
+                period["period"]
             )
 
             values.append(
@@ -734,14 +846,16 @@ def align_rows(
                 else None
             )
 
-            levels.append(
-                month.get(
-                    "level",
-                    month.get("value"),
+            if month:
+                levels.append(
+                    month.get(
+                        "level",
+                        month.get("value"),
+                    )
                 )
-                if month
-                else None
-            )
+
+            else:
+                levels.append(None)
 
         aligned_row = dict(row)
 
@@ -873,7 +987,8 @@ def save_json(
             BLS_EMPLOYMENT_SOURCE_URL
         ),
         "title": (
-            "U.S. Employment Situation Dashboard"
+            "U.S. Employment Situation "
+            "Dashboard"
         ),
         "updated_at_utc": (
             updated_at_utc
