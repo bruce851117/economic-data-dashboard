@@ -25,14 +25,14 @@ PPI_SERIES = [
     {
         "name": "PPI for Hospitals",
         "short_name": "Hospitals",
-        "bls_series_id": "PCU622622",
+        "bls_series_id": "PCU622---622---",
         "seasonality": "NSA",
         "pce_weight": 8.569,
     },
     {
         "name": "PPI for Offices of Physicians",
         "short_name": "Offices of Physicians",
-        "bls_series_id": "PCU62116211",
+        "bls_series_id": "PCU6211--6211--",
         "seasonality": "NSA",
         "pce_weight": 4.473,
     },
@@ -46,7 +46,7 @@ PPI_SERIES = [
     {
         "name": "PPI for Investment Advice",
         "short_name": "Investment Advice",
-        "bls_series_id": "PCU5239305239301",
+        "bls_series_id": "PCU523940523940P",
         "seasonality": "NSA",
         "pce_weight": 0.890,
     },
@@ -73,7 +73,7 @@ PPI_SERIES = [
     {
         "name": "PPI for Home Health Care Services",
         "short_name": "Home Health Care Services",
-        "bls_series_id": "PCU62166216",
+        "bls_series_id": "PCU6216--6216--",
         "seasonality": "NSA",
         "pce_weight": 1.109,
     },
@@ -110,8 +110,12 @@ PPI_SERIES = [
         "pce_weight": 0.145,
     },
     {
-        "name": "PPI for Diagnostic Imaging Centers",
-        "short_name": "Diagnostic Imaging Centers",
+        "name": (
+            "PPI for Diagnostic Imaging Centers"
+        ),
+        "short_name": (
+            "Diagnostic Imaging Centers"
+        ),
         "bls_series_id": "PCU6215126215124",
         "seasonality": "NSA",
         "pce_weight": 0.145,
@@ -119,20 +123,21 @@ PPI_SERIES = [
     {
         "name": "PPI for Brokerage Services",
         "short_name": "Brokerage Services",
-        "bls_series_id": "PCU5231205231201",
+        "bls_series_id": "WPU40110201",
         "seasonality": "NSA",
         "pce_weight": 0.098,
     },
     {
         "name": "PPI for Dealer Transactions",
         "short_name": "Dealer Transactions",
-        "bls_series_id": "PCU5231105231102",
+        "bls_series_id": "WPU40110101",
         "seasonality": "NSA",
         "pce_weight": 0.098,
     },
     {
         "name": (
-            "PPI for Workers' Compensation Insurance"
+            "PPI for Workers' Compensation "
+            "Insurance"
         ),
         "short_name": (
             "Workers' Compensation Insurance"
@@ -143,7 +148,8 @@ PPI_SERIES = [
     },
     {
         "name": (
-            "PPI for Commercial Bank Trust Services"
+            "PPI for Commercial Bank "
+            "Trust Services"
         ),
         "short_name": (
             "Commercial Bank Trust Services"
@@ -161,12 +167,13 @@ PPI_SERIES = [
     },
     {
         "name": (
-            "PPI for Employment Placement Agencies"
+            "PPI for Employment "
+            "Placement Agencies"
         ),
         "short_name": (
             "Employment Placement Agencies"
         ),
-        "bls_series_id": "PCU56135613",
+        "bls_series_id": "PCU5613--5613--",
         "seasonality": "NSA",
         "pce_weight": 0.009,
     },
@@ -212,19 +219,30 @@ def fetch_ppi_series():
 
     payload = {
         "seriesid": series_ids,
-        "startyear": str(get_current_year() - 2),
-        "endyear": str(get_current_year()),
+        "startyear": str(
+            get_current_year() - 2
+        ),
+        "endyear": str(
+            get_current_year()
+        ),
         "calculations": False,
         "annualaverage": False,
         "catalog": True,
         "aspects": False,
-        "registrationkey": get_registration_key(),
+        "registrationkey": (
+            get_registration_key()
+        ),
     }
 
     print("=" * 72)
-    print("Calling registered BLS Public Data API.")
+    print(
+        "Calling registered BLS Public Data API."
+    )
     print(f"API URL: {BLS_API_URL}")
-    print(f"Requested PPI series: {len(series_ids)}")
+    print(
+        f"Requested PPI series: "
+        f"{len(series_ids)}"
+    )
     print(
         "Requested years:",
         payload["startyear"],
@@ -246,9 +264,12 @@ def fetch_ppi_series():
         timeout=90,
     )
 
-    print(f"HTTP status: {response.status_code}")
     print(
-        f"Response length: {len(response.content)} bytes"
+        f"HTTP status: {response.status_code}"
+    )
+    print(
+        f"Response length: "
+        f"{len(response.content)} bytes"
     )
 
     if response.status_code != 200:
@@ -265,10 +286,19 @@ def fetch_ppi_series():
             "BLS PPI API did not return valid JSON."
         ) from error
 
-    status = result.get("status", "")
-    messages = result.get("message", [])
+    status = result.get(
+        "status",
+        "",
+    )
 
-    print(f"BLS response status: {status}")
+    messages = result.get(
+        "message",
+        [],
+    )
+
+    print(
+        f"BLS response status: {status}"
+    )
 
     if messages:
         print("BLS response messages:")
@@ -295,7 +325,8 @@ def fetch_ppi_series():
         )
 
     print(
-        f"Returned PPI series: {len(returned_series)}"
+        f"Returned PPI series: "
+        f"{len(returned_series)}"
     )
     print("=" * 72)
 
@@ -305,9 +336,15 @@ def fetch_ppi_series():
 def parse_observations(series):
     observations = []
 
-    for observation in series.get("data", []):
+    for observation in series.get(
+        "data",
+        [],
+    ):
         period = str(
-            observation.get("period", "")
+            observation.get(
+                "period",
+                "",
+            )
         )
 
         if (
@@ -317,12 +354,23 @@ def parse_observations(series):
             continue
 
         try:
-            year = int(observation["year"])
-            month = int(period[1:])
+            year = int(
+                observation["year"]
+            )
+
+            month = int(
+                period[1:]
+            )
+
             index_value = float(
                 observation["value"]
             )
-        except (KeyError, TypeError, ValueError):
+
+        except (
+            KeyError,
+            TypeError,
+            ValueError,
+        ):
             continue
 
         if not 1 <= month <= 12:
@@ -332,10 +380,14 @@ def parse_observations(series):
             {
                 "year": year,
                 "month": month,
-                "period": f"{year}-{month:02d}",
-                "period_name": observation.get(
-                    "periodName",
-                    "",
+                "period": (
+                    f"{year}-{month:02d}"
+                ),
+                "period_name": (
+                    observation.get(
+                        "periodName",
+                        "",
+                    )
                 ),
                 "index_value": index_value,
                 "latest": observation.get(
@@ -364,19 +416,31 @@ def calculate_percent_change(
 
     return round(
         (
-            current_value / previous_value
+            (
+                current_value
+                / previous_value
+            )
             - 1
-        ) * 100,
+        )
+        * 100,
         6,
     )
 
 
-def build_monthly_changes(observations):
+def build_monthly_changes(
+    observations,
+):
     changes = []
 
-    for index in range(1, len(observations)):
+    for index in range(
+        1,
+        len(observations),
+    ):
         current = observations[index]
-        previous = observations[index - 1]
+
+        previous = observations[
+            index - 1
+        ]
 
         current_number = (
             current["year"] * 12
@@ -388,60 +452,98 @@ def build_monthly_changes(observations):
             + previous["month"]
         )
 
-        # 只計算真正相鄰月份。
-        if current_number - previous_number != 1:
+        # 只使用真正相鄰的兩個月份計算月增率。
+        # 若中間缺少月份，不跨月計算。
+        if (
+            current_number
+            - previous_number
+            != 1
+        ):
             continue
-
-        value = calculate_percent_change(
-            current["index_value"],
-            previous["index_value"],
-        )
 
         changes.append(
             {
                 "year": current["year"],
                 "month": current["month"],
                 "period": current["period"],
-                "period_name": current["period_name"],
-                "value": value,
-                "index_value": current["index_value"],
-                "previous_index_value": (
-                    previous["index_value"]
+                "period_name": (
+                    current["period_name"]
                 ),
-                "latest": current["latest"],
+                "value": (
+                    calculate_percent_change(
+                        current[
+                            "index_value"
+                        ],
+                        previous[
+                            "index_value"
+                        ],
+                    )
+                ),
+                "index_value": (
+                    current[
+                        "index_value"
+                    ]
+                ),
+                "previous_index_value": (
+                    previous[
+                        "index_value"
+                    ]
+                ),
+                "latest": (
+                    current["latest"]
+                ),
             }
         )
 
     return changes
 
 
-def build_source_rows(api_series):
+def build_source_rows(
+    api_series,
+):
     api_lookup = {
-        series.get("seriesID", ""): series
+        series.get(
+            "seriesID",
+            "",
+        ): series
         for series in api_series
     }
 
     rows = []
     missing_series = []
 
-    for order, config in enumerate(PPI_SERIES):
-        series_id = config["bls_series_id"]
-        series = api_lookup.get(series_id)
+    for order, config in enumerate(
+        PPI_SERIES
+    ):
+        series_id = config[
+            "bls_series_id"
+        ]
+
+        series = api_lookup.get(
+            series_id
+        )
 
         monthly_changes = []
         series_title = ""
 
         if series:
-            observations = parse_observations(
-                series
+            observations = (
+                parse_observations(
+                    series
+                )
             )
 
-            monthly_changes = build_monthly_changes(
-                observations
+            monthly_changes = (
+                build_monthly_changes(
+                    observations
+                )
             )
 
             catalog = (
-                series.get("catalog", {})
+                series.get(
+                    "catalog",
+                    {},
+                )
                 or {}
             )
 
@@ -453,11 +555,14 @@ def build_source_rows(api_series):
         if not monthly_changes:
             missing_series.append(
                 {
-                    "name": config["name"],
+                    "name": (
+                        config["name"]
+                    ),
                     "series_id": series_id,
                     "reason": (
                         "Series contained no usable "
-                        "consecutive monthly observations"
+                        "consecutive monthly "
+                        "observations"
                     ),
                 }
             )
@@ -479,16 +584,26 @@ def build_source_rows(api_series):
             {
                 "order": order,
                 "name": config["name"],
-                "short_name": config["short_name"],
-                "bls_series_id": series_id,
+                "short_name": (
+                    config["short_name"]
+                ),
+                "bls_series_id": (
+                    series_id
+                ),
                 "seasonality": (
-                    config["seasonality"]
+                    config[
+                        "seasonality"
+                    ]
                 ),
                 "pce_weight": (
                     config["pce_weight"]
                 ),
-                "available": bool(monthly_changes),
-                "series_title": series_title,
+                "available": bool(
+                    monthly_changes
+                ),
+                "series_title": (
+                    series_title
+                ),
                 "months": monthly_changes,
             }
         )
@@ -498,10 +613,10 @@ def build_source_rows(api_series):
 
 def collect_common_periods(rows):
     """
-    只選擇全部18個PPI項目都有月增率的月份。
+    只選擇18個PPI項目都有月增率的月份。
 
-    這能避免因不同PPI Series發布月份不同，
-    導致最下方PCE影響列缺少部分項目。
+    這能避免不同Series的最新月份不同，
+    導致PCE影響列只包含部分項目。
     """
 
     period_sets = []
@@ -509,8 +624,12 @@ def collect_common_periods(rows):
     for row in rows:
         available_periods = {
             month["period"]
-            for month in row.get("months", [])
-            if month.get("value") is not None
+            for month in row.get(
+                "months",
+                [],
+            )
+            if month.get("value")
+            is not None
         }
 
         if not available_periods:
@@ -520,7 +639,9 @@ def collect_common_periods(rows):
                 f"({row['bls_series_id']})."
             )
 
-        period_sets.append(available_periods)
+        period_sets.append(
+            available_periods
+        )
 
     common_periods = set.intersection(
         *period_sets
@@ -528,18 +649,18 @@ def collect_common_periods(rows):
 
     if len(common_periods) < 12:
         raise RuntimeError(
-            "Expected at least 12 common PPI months "
-            "across all series, but found "
+            "Expected at least 12 common PPI "
+            "months across all series, but found "
             f"{len(common_periods)}."
         )
 
-    sorted_periods = sorted(
+    selected_periods = sorted(
         common_periods
     )[-12:]
 
-    period_data = []
+    result = []
 
-    for period_key in sorted_periods:
+    for period_key in selected_periods:
         year_text, month_text = (
             period_key.split("-")
         )
@@ -547,28 +668,37 @@ def collect_common_periods(rows):
         year = int(year_text)
         month = int(month_text)
 
-        period_data.append(
+        date_value = datetime(
+            year,
+            month,
+            1,
+        )
+
+        result.append(
             {
                 "year": year,
                 "month": month,
                 "period": period_key,
-                "period_name": datetime(
-                    year,
-                    month,
-                    1,
-                ).strftime("%B"),
-                "label": datetime(
-                    year,
-                    month,
-                    1,
-                ).strftime("%y %b"),
+                "period_name": (
+                    date_value.strftime(
+                        "%B"
+                    )
+                ),
+                "label": (
+                    date_value.strftime(
+                        "%y %b"
+                    )
+                ),
             }
         )
 
-    return period_data
+    return result
 
 
-def align_rows(rows, periods):
+def align_rows(
+    rows,
+    periods,
+):
     period_keys = [
         period["period"]
         for period in periods
@@ -579,7 +709,10 @@ def align_rows(rows, periods):
     for row in rows:
         month_lookup = {
             month["period"]: month
-            for month in row.get("months", [])
+            for month in row.get(
+                "months",
+                [],
+            )
         }
 
         values = []
@@ -604,22 +737,30 @@ def align_rows(rows, periods):
 
         aligned_row = dict(row)
 
-        aligned_row["values"] = values
-        aligned_row["index_values"] = (
-            index_values
-        )
+        aligned_row[
+            "values"
+        ] = values
+
+        aligned_row[
+            "index_values"
+        ] = index_values
 
         aligned_row.pop(
             "months",
             None,
         )
 
-        aligned_rows.append(aligned_row)
+        aligned_rows.append(
+            aligned_row
+        )
 
     return aligned_rows
 
 
-def build_pce_impact_row(rows, periods):
+def build_pce_impact_row(
+    rows,
+    periods,
+):
     """
     對核心PCE的近似影響：
 
@@ -631,21 +772,30 @@ def build_pce_impact_row(rows, periods):
     values = []
     calculation_details = []
 
-    for index, period in enumerate(periods):
+    for index, period in enumerate(
+        periods
+    ):
         contribution = 0.0
-        components = []
         available_weight = 0.0
         complete = True
+        components = []
 
         for row in rows:
-            value = row["values"][index]
+            value = row[
+                "values"
+            ][index]
+
             weight = float(
                 row["pce_weight"]
             )
 
             if value is None:
                 complete = False
-                component_contribution = None
+
+                component_contribution = (
+                    None
+                )
+
             else:
                 component_contribution = (
                     float(value)
@@ -663,10 +813,14 @@ def build_pce_impact_row(rows, periods):
                 {
                     "name": row["name"],
                     "series_id": (
-                        row["bls_series_id"]
+                        row[
+                            "bls_series_id"
+                        ]
                     ),
                     "seasonality": (
-                        row["seasonality"]
+                        row[
+                            "seasonality"
+                        ]
                     ),
                     "ppi_mom": value,
                     "pce_weight": weight,
@@ -675,15 +829,20 @@ def build_pce_impact_row(rows, periods):
                             component_contribution,
                             8,
                         )
-                        if component_contribution
-                        is not None
+                        if (
+                            component_contribution
+                            is not None
+                        )
                         else None
                     ),
                 }
             )
 
         result = (
-            round(contribution, 6)
+            round(
+                contribution,
+                6,
+            )
             if complete
             else None
         )
@@ -692,17 +851,20 @@ def build_pce_impact_row(rows, periods):
 
         calculation_details.append(
             {
-                "period": period["period"],
+                "period": (
+                    period["period"]
+                ),
                 "result": result,
-                "unit": "percentage_point",
+                "unit": (
+                    "percentage_point"
+                ),
                 "complete": complete,
                 "available_weight": round(
                     available_weight,
                     3,
                 ),
-                "total_weight": round(
-                    EXPECTED_WEIGHT_TOTAL,
-                    3,
+                "total_weight": (
+                    EXPECTED_WEIGHT_TOTAL
                 ),
                 "components": components,
             }
@@ -780,9 +942,15 @@ def save_json(
 
     if existing:
         same_data = (
-            existing.get("periods", [])
+            existing.get(
+                "periods",
+                [],
+            )
             == periods
-            and existing.get("rows", [])
+            and existing.get(
+                "rows",
+                [],
+            )
             == rows
             and existing.get(
                 "pce_impact_row"
@@ -811,7 +979,9 @@ def save_json(
             "BLS Public Data API Version 2"
         ),
         "api_url": BLS_API_URL,
-        "source_url": BLS_PPI_SOURCE_URL,
+        "source_url": (
+            BLS_PPI_SOURCE_URL
+        ),
         "title": (
             "Selected Producer Price Indexes"
         ),
@@ -819,7 +989,9 @@ def save_json(
             "Monthly percent changes calculated "
             "from selected BLS PPI index levels."
         ),
-        "updated_at_utc": updated_at_utc,
+        "updated_at_utc": (
+            updated_at_utc
+        ),
         "data_changed": data_changed,
         "default_months": 6,
         "available_filter_options": [
@@ -850,21 +1022,25 @@ def save_json(
             "official_bea_forecast": False,
             "caveat": (
                 "This is a mechanical proxy based "
-                "on selected PPI components, not an "
-                "official BEA Core PCE estimate."
+                "on selected PPI components, not "
+                "an official BEA Core PCE estimate."
             ),
         },
         "periods": periods,
         "rows": rows,
-        "pce_impact_row": pce_impact_row,
+        "pce_impact_row": (
+            pce_impact_row
+        ),
         "missing_series_count": len(
             missing_series
         ),
         "missing_series": missing_series,
     }
 
-    temporary_path = OUTPUT_PATH.with_suffix(
-        ".json.tmp"
+    temporary_path = (
+        OUTPUT_PATH.with_suffix(
+            ".json.tmp"
+        )
     )
 
     with temporary_path.open(
@@ -883,8 +1059,12 @@ def save_json(
     )
 
     print("=" * 72)
-    print(f"Saved PPI rows: {len(rows)}")
-    print(f"Saved periods: {len(periods)}")
+    print(
+        f"Saved PPI rows: {len(rows)}"
+    )
+    print(
+        f"Saved periods: {len(periods)}"
+    )
     print(
         "PCE weight total:",
         payload["pce_weight_total"],
@@ -893,8 +1073,12 @@ def save_json(
         "Missing PPI series:",
         len(missing_series),
     )
-    print(f"Data changed: {data_changed}")
-    print(f"Output path: {OUTPUT_PATH}")
+    print(
+        f"Data changed: {data_changed}"
+    )
+    print(
+        f"Output path: {OUTPUT_PATH}"
+    )
 
     if periods:
         print(
@@ -906,12 +1090,15 @@ def save_json(
 
     impact_coverage = sum(
         value is not None
-        for value in pce_impact_row["values"]
+        for value in pce_impact_row[
+            "values"
+        ]
     )
 
     print(
         "PCE impact coverage:",
-        f"{impact_coverage}/{len(periods)}",
+        f"{impact_coverage}/"
+        f"{len(periods)}",
     )
 
     for period, value in zip(
@@ -929,7 +1116,8 @@ def save_json(
 
 def main():
     print(
-        "Starting registered BLS PPI data update."
+        "Starting registered BLS PPI "
+        "data update."
     )
 
     weight_total = round(
@@ -940,7 +1128,10 @@ def main():
         3,
     )
 
-    if weight_total != EXPECTED_WEIGHT_TOTAL:
+    if (
+        weight_total
+        != EXPECTED_WEIGHT_TOTAL
+    ):
         raise RuntimeError(
             "PCE weight total does not match "
             f"{EXPECTED_WEIGHT_TOTAL}. "
@@ -957,8 +1148,8 @@ def main():
 
     if len(rows) != 18:
         raise RuntimeError(
-            "Expected 18 PPI rows, but generated "
-            f"{len(rows)} rows."
+            "Expected 18 PPI rows, "
+            f"but generated {len(rows)} rows."
         )
 
     if missing_series:
@@ -968,8 +1159,9 @@ def main():
         )
 
         raise RuntimeError(
-            "One or more PPI series returned no "
-            f"usable data: {missing_text}"
+            "One or more PPI series returned "
+            "no usable data: "
+            f"{missing_text}"
         )
 
     periods = collect_common_periods(
@@ -991,8 +1183,12 @@ def main():
     save_json(
         periods=periods,
         rows=aligned_rows,
-        pce_impact_row=pce_impact_row,
-        missing_series=missing_series,
+        pce_impact_row=(
+            pce_impact_row
+        ),
+        missing_series=(
+            missing_series
+        ),
     )
 
 
