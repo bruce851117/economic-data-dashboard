@@ -158,7 +158,7 @@ EMPLOYMENT_SERIES = [
     {
         "name": "Not in Labor Force to Unemployed",
         "display_name": "退出勞動力 → 失業",
-        "series_id": "LNS17300000",
+        "series_id": "LNS17600000",
         "section": "flows",
         "source": "CPS",
         "unit": "thousand",
