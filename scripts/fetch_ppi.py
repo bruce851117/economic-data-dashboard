@@ -47,7 +47,7 @@ PPI_SERIES = [
             "Portfolio Management "
             "and Investment Advice"
         ),
-        "bls_series_id": "PCU5239452394",
+        "bls_series_id": "PCU523940523940",
         "seasonality": "NSA",
         "pce_weight": 1.780,
     },
@@ -1026,7 +1026,7 @@ def save_json(
         },
         "portfolio_management_method": {
             "series_id": (
-                "PCU5239452394"
+                "PCU523940523940"
             ),
             "series_name": (
                 "Portfolio Management and "
