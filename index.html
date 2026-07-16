@@ -104,7 +104,33 @@
     function employmentUnit(row){if(row.unit==='percent')return '%';if(row.unit==='week')return '週';if(row.transform==='change')return '月變動／千人';return '千人'}
     function employmentDigits(row){if(row.unit==='percent')return 2;if(row.unit==='week')return 1;if(row.section==='payroll'&&(Number(row.level)||0)>=4)return 1;return 0}
     function formatEmploymentValue(value,row){if(!valid(value))return '—';const digits=employmentDigits(row);const numberText=new Intl.NumberFormat('en-US',{minimumFractionDigits:digits,maximumFractionDigits:digits,useGrouping:true}).format(Number(value));return row.unit==='percent'?numberText+'%':numberText}
-    function employmentCells(displayed,all,row){const s=scale(all);return displayed.map(value=>`<td class="value ${valid(value)?'':'missing'}" style="background:${color(value,s)}">${formatEmploymentValue(value,row)}</td>`).join('')}
+    const PAYROLL_HEATMAP_ROWS=new Set([
+      'Goods-producing Sector',
+      'Mining and Logging',
+      'Construction',
+      'Manufacturing',
+      'Private Service-Providing',
+      'Trade, Transportation, and Utilities',
+      'Wholesale Trade',
+      'Retail Trade',
+      'Transportation and Warehousing',
+      'Utilities',
+      'Information',
+      'Financial Activities',
+      'Professional and Business Services',
+      'Temporary Help Services',
+      'Education and Health Services',
+      'Health Care and Social Assistance',
+      'Health Care',
+      'Ambulatory Health Care Services',
+      'Hospitals',
+      'Nursing and Residential Care Facilities',
+      'Social Assistance',
+      'Leisure and Hospitality',
+      'Other Services'
+    ]);
+    function shouldColorEmploymentRow(row){return row.section!=='payroll'||PAYROLL_HEATMAP_ROWS.has(row.name)}
+    function employmentCells(displayed,all,row){const useHeatmap=shouldColorEmploymentRow(row),s=useHeatmap?scale(all):null;return displayed.map(value=>`<td class="value ${valid(value)?'':'missing'}" style="background:${useHeatmap?color(value,s):'#ffffff'}">${formatEmploymentValue(value,row)}</td>`).join('')}
     function employmentSectionRows(rows,contentId,cellClass,markerClass){const x=employmentInfo();let h=tableOpen(x.periods);(rows||[]).forEach(row=>{const all=row.values||[],shown=all.slice(x.start).reverse(),level=Math.max(0,Math.min(6,Number(row.level)||0)),sourceClass=row.source==='CES'?'b-ces':row.source==='CPS'?'b-cps':'b-derived-employment';h+=`<tr class="employment-level-${level}"><td class="item-cell ${cellClass}" style="padding-left:${13+level*23}px" title="${esc(row.series_title||'')}${row.series_id?'｜'+esc(row.series_id):''}"><div class="item-wrap"><span class="marker ${markerClass}"></span><span class="employment-name">${esc(row.name)}<span class="badge ${sourceClass}">${esc(row.source)}</span><span class="badge b-unit">${esc(employmentUnit(row))}</span></span></div></td>${employmentCells(shown,all,row)}</tr>`});$(contentId).className='';$(contentId).innerHTML=h+'</tbody></table></div>'}
     function renderEmployment(){if(!employmentData)return;const sections=employmentData.sections||{};employmentSectionRows(sections.payroll,'employment-payroll-content','employment-payroll-cell','employment-marker-payroll');employmentSectionRows(sections.household,'employment-household-content','employment-household-cell','employment-marker-household');employmentSectionRows(sections.flows,'employment-flows-content','employment-flow-cell','employment-marker-flow');employmentSectionRows(sections.reasons,'employment-reasons-content','employment-reason-cell','employment-marker-reason');const summary=[...(sections.summary||[]),...(sections.duration||[])];employmentSectionRows(summary,'employment-summary-content','employment-summary-cell','employment-marker-summary');const x=employmentInfo(),newest=x.periods[0],oldest=x.periods.at(-1);if(newest)$('employment-range').textContent=`就業資料：${newest.period} ～ ${oldest.period}`;if(employmentData.updated_at_utc)$('employment-update-text').textContent='更新：'+new Intl.DateTimeFormat('zh-TW',{dateStyle:'short',timeStyle:'short',timeZone:'Asia/Taipei'}).format(new Date(employmentData.updated_at_utc))}
     function render(){renderCpi();renderDerived();renderPpi();renderEmployment()}
