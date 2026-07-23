@@ -1,29 +1,23 @@
-name: Validate UK Macro Sources V2
-
+name: Validate UK Macro Sources V3
 on:
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install PDF parser
-        run: python -m pip install --disable-pip-version-check pypdf
-      - name: Run validation
-        run: python validate_uk_macro_sources.py
-      - name: Upload output
-        if: always()
+      - run: python -m pip install --disable-pip-version-check pypdf
+      - run: python validate_uk_macro_sources.py
+      - if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: uk-macro-validation-v2-${{ github.run_number }}
+          name: uk-macro-validation-v3-${{ github.run_number }}
           path: uk_validation_output/
           if-no-files-found: warn
           retention-days: 14

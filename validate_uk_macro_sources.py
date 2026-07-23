@@ -54,14 +54,19 @@ TARGETS = {
         'include': ['vacancies', 'thousands', 'total'],
         'benchmark': {'2026-04': 710.0, '2026-05': 712.0},
     },
+    'unemployed_per_vacancy': {
+        'dataset': 'UNEM', 'frequency': 'M', 'cdid': 'JPC5',
+        'include': ['number of unemployed people per vacancy'],
+        'benchmark': {'2026-04': 2.5},
+    },
     'monthly_gdp_mom': {
-        'dataset': 'MGDP', 'frequency': 'M',
+        'dataset': 'MGDP', 'frequency': 'M', 'cdid': 'ECYX',
         'include': ['gross domestic product', 'month on month', 'growth'],
         'exclude': ['three months', 'year on year'],
         'benchmark': {'2026-05': 0.1},
     },
     'quarterly_gdp_yoy': {
-        'dataset': 'PN2', 'frequency': 'Q', 'cdid': 'IHYP',
+        'dataset': 'QNA', 'frequency': 'Q', 'cdid': 'IHYP',
         'include': ['gross domestic product', 'year on year growth', 'cvm sa'],
         'benchmark': {'2025-Q4': 0.9, '2026-Q1': 0.9},
     },
@@ -73,7 +78,7 @@ TARGETS = {
         'derive_yoy_from_level': True,
     },
     'gfcf_yoy': {
-        'dataset': 'PN2', 'frequency': 'Q', 'cdid': 'KG7N',
+        'dataset': 'QNA', 'frequency': 'Q', 'cdid': 'KG7N',
         'include': ['total fixed capital formation', 'annual growth rate', 'yoy', 'cvm sa'],
         'benchmark': {'2025-Q4': 3.86, '2026-Q1': 1.61},
     },
@@ -155,6 +160,7 @@ ONS_PATHS = {
     'UNEM': 'employmentandlabourmarket/peoplenotinwork/outofworkbenefits',
     'MGDP': 'economy/grossdomesticproductgdp',
     'PN2': 'economy/grossdomesticproductgdp',
+    'QNA': 'economy/grossdomesticproductgdp',
 }
 
 
@@ -290,12 +296,51 @@ def parse_sp_release(name: str, url: str) -> dict[str, Any]:
             value = float(m.group(1)); break
     return {'url': url, 'value': value, 'is_flash': 'flash uk pmi' in text[:2000].lower(), 'preview': ' '.join(text.split())[:800]}
 
+
+def find_core_cpi_from_mm23() -> dict[str, Any]:
+    """Download official MM23 CSV and locate the annual-rate core CPI row by exact semantic rules."""
+    url = 'https://www.ons.gov.uk/file?uri=/economy/inflationandpriceindices/datasets/consumerpriceindices/current/mm23.csv'
+    text = fetch_text(url)
+    import csv, io
+    rows = list(csv.reader(io.StringIO(text)))
+    # MM23 is a wide dataset. Find a row containing the precise title and CDID nearby.
+    target_row = None
+    target_cdid = None
+    for i, row in enumerate(rows):
+        joined = ' '.join(row).lower()
+        if ('cpi annual rate' in joined and 'excluding energy' in joined and
+            'food' in joined and 'alcohol' in joined and 'tobacco' in joined and
+            'cpih' not in joined and 'weight' not in joined and 'wts' not in joined):
+            target_row = i
+            # Search current and adjacent rows for an ONS-style 4-char CDID.
+            for rr in rows[max(0, i-3):i+4]:
+                for cell in rr:
+                    c = cell.strip().upper()
+                    if re.fullmatch(r'[A-Z0-9]{4}', c):
+                        target_cdid = c
+                        break
+                if target_cdid:
+                    break
+            break
+    if not target_cdid:
+        raise RuntimeError('Core CPI annual-rate CDID not found in official MM23 CSV')
+    return get_ons_direct_series('MM23', target_cdid)
+
+
+def choose_pmi(final_record: dict[str, Any] | None, flash_record: dict[str, Any] | None) -> dict[str, Any] | None:
+    """Final always wins; flash is used only while final is unavailable."""
+    if final_record and final_record.get('value') is not None:
+        return {**final_record, 'release_type': 'final'}
+    if flash_record and flash_record.get('value') is not None:
+        return {**flash_record, 'release_type': 'flash'}
+    return None
+
 def main() -> None:
     report: dict[str, Any] = {
         'generated_at': datetime.now(timezone.utc).isoformat(),
         'purpose': 'Validate UK macro sources against Bloomberg reference values supplied by user.',
         'indicators': {},
-        'pmi': {},
+        'pmi': {'selection_rule': 'Use final when available; otherwise use flash. A later final release replaces flash for the same reference month.'},
         'unverified': {
             'one_year_inflation_expectations': {
                 'bloomberg_ticker': 'UKBFFTIN Index',
@@ -323,6 +368,20 @@ def main() -> None:
     for key, spec in TARGETS.items():
         entry: dict[str, Any] = {'status': 'ERROR'}
         try:
+            if key == 'core_cpi_yoy':
+                series = find_core_cpi_from_mm23()
+                entry.update({
+                    'status': 'OK',
+                    'resolved_cdid': series['source_series'].split('/timeseries/')[-1].split('/')[0].upper() if '/timeseries/' in series['source_series'] else '',
+                    'title': series['title'],
+                    'source_series': series['source_series'],
+                    'latest': last_n(series, 13),
+                    'benchmark_check': compare(series, spec['benchmark'], 0.06),
+                })
+                if any(x['status'] == 'MISMATCH' for x in entry['benchmark_check']):
+                    entry['status'] = 'MISMATCH'
+                report['indicators'][key] = entry
+                continue
             cdid = spec.get('cdid')
             if not cdid and not spec.get('level_cdid'):
                 candidate = find_candidate(spec['dataset'], spec['include'], spec.get('exclude'), spec['frequency'])
