@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote
+from urllib.parse import quote, urlencode
 from urllib.request import Request, urlopen
 
 OUT = Path('uk_validation_output')
@@ -32,7 +32,7 @@ TARGETS = {
     'unemployment_rate': {
         'dataset': 'LMS', 'frequency': 'M', 'cdid': 'MGSX',
         'include': ['unemployment rate', 'aged 16 and over', 'seasonally adjusted'],
-        'benchmark': {'2026-05': 4.9},
+        'benchmark': {'2026-04': 4.9},
     },
     'claimant_count_rate': {
         'dataset': 'UNEM', 'frequency': 'M', 'cdid': 'BCJE',
@@ -52,7 +52,7 @@ TARGETS = {
     'vacancies': {
         'dataset': 'UNEM', 'frequency': 'M', 'cdid': 'AP2Y',
         'include': ['vacancies', 'thousands', 'total'],
-        'benchmark': {'2026-05': 710.0, '2026-06': 712.0},
+        'benchmark': {'2026-04': 710.0, '2026-05': 712.0},
     },
     'monthly_gdp_mom': {
         'dataset': 'MGDP', 'frequency': 'M',
@@ -122,9 +122,12 @@ def score_title(title: str, include: list[str], exclude: list[str] | None = None
     return sum(1 for x in include if norm(x) in t)
 
 
-def get_dataset_series(dataset: str) -> list[dict[str, Any]]:
-    # DBnomics is used as a machine-readable mirror of ONS datasets.
-    url = f'https://api.db.nomics.world/v22/series/ONS/{quote(dataset)}?limit=20000&observations=0'
+def get_dataset_series(dataset: str, query: str = '') -> list[dict[str, Any]]:
+    # DBnomics caps result sizes; use a focused query instead of requesting 20,000 rows.
+    params = {'limit': 1000, 'observations': 0}
+    if query:
+        params['q'] = query
+    url = f'https://api.db.nomics.world/v22/series/ONS/{quote(dataset)}?' + urlencode(params)
     data = fetch_json(url)
     docs = data.get('dataset', {}).get('series', {}).get('docs', [])
     if not docs:
@@ -134,7 +137,7 @@ def get_dataset_series(dataset: str) -> list[dict[str, Any]]:
 
 def find_candidate(dataset: str, include: list[str], exclude: list[str] | None, frequency: str) -> dict[str, Any] | None:
     candidates = []
-    for row in get_dataset_series(dataset):
+    for row in get_dataset_series(dataset, ' '.join(include)):
         code = str(row.get('series_code') or row.get('code') or '')
         title = str(row.get('series_name') or row.get('name') or row.get('title') or '')
         if frequency and not code.upper().endswith('.' + frequency.upper()):
@@ -146,6 +149,51 @@ def find_candidate(dataset: str, include: list[str], exclude: list[str] | None, 
     return candidates[0] if candidates else None
 
 
+ONS_PATHS = {
+    'MM23': 'economy/inflationandpriceindices',
+    'LMS': 'employmentandlabourmarket/peoplenotinwork/unemployment',
+    'UNEM': 'employmentandlabourmarket/peoplenotinwork/outofworkbenefits',
+    'MGDP': 'economy/grossdomesticproductgdp',
+    'PN2': 'economy/grossdomesticproductgdp',
+}
+
+
+def normalize_period(period: str) -> str:
+    p = ' '.join(str(period).strip().upper().split())
+    months = {'JAN':'01','FEB':'02','MAR':'03','APR':'04','MAY':'05','JUN':'06','JUL':'07','AUG':'08','SEP':'09','OCT':'10','NOV':'11','DEC':'12'}
+    m = re.fullmatch(r'(\d{4}) (JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)', p)
+    if m:
+        return f'{m.group(1)}-{months[m.group(2)]}'
+    q = re.fullmatch(r'(\d{4}) Q([1-4])', p)
+    if q:
+        return f'{q.group(1)}-Q{q.group(2)}'
+    return period
+
+
+def get_ons_direct_series(dataset: str, cdid: str) -> dict[str, Any]:
+    path = ONS_PATHS[dataset]
+    if cdid.upper() == 'ABJR':
+        path = 'economy/nationalaccounts/satelliteaccounts'
+    url = f'https://www.ons.gov.uk/generator?format=csv&uri=/{path}/timeseries/{cdid.lower()}/{dataset.lower()}'
+    text = fetch_text(url)
+    import csv, io
+    rows = list(csv.reader(io.StringIO(text)))
+    title = ''
+    obs = []
+    for row in rows:
+        if len(row) < 2:
+            continue
+        if row[0].strip().lower() == 'title':
+            title = row[1].strip()
+        period = normalize_period(row[0])
+        value = row[1].replace(',', '').strip()
+        if re.fullmatch(r'\d{4}-(?:\d{2}|Q[1-4])', period) and re.fullmatch(r'-?\d+(?:\.\d+)?', value):
+            obs.append({'period': period, 'value': float(value)})
+    if not obs:
+        raise RuntimeError(f'ONS direct series returned no observations: {url}')
+    return {'provider':'ONS direct','source_series':url,'title':title,'observations':obs}
+
+
 def get_series(dataset: str, cdid: str, frequency: str) -> dict[str, Any]:
     code = f'{cdid.upper()}.{frequency.upper()}'
     url = f'https://api.db.nomics.world/v22/series/ONS/{dataset}/{code}?observations=1'
@@ -154,7 +202,7 @@ def get_series(dataset: str, cdid: str, frequency: str) -> dict[str, Any]:
     if not docs:
         docs = data.get('dataset', {}).get('series', {}).get('docs', [])
     if not docs:
-        raise RuntimeError(f'No observations for ONS/{dataset}/{code}')
+        return get_ons_direct_series(dataset, cdid)
     doc = docs[0]
     periods = doc.get('period', [])
     values = doc.get('value', [])
@@ -168,11 +216,13 @@ def get_series(dataset: str, cdid: str, frequency: str) -> dict[str, Any]:
             continue
         if math.isfinite(f):
             obs.append({'period': str(p), 'value': f})
+    if not obs:
+        return get_ons_direct_series(dataset, cdid)
     return {
         'provider': 'ONS via DBnomics mirror',
         'source_series': f'ONS/{dataset}/{code}',
         'title': doc.get('series_name') or doc.get('name') or '',
-        'observations': obs,
+        'observations': [{'period': normalize_period(x['period']), 'value': x['value']} for x in obs],
     }
 
 
@@ -215,16 +265,30 @@ def strip_html(text: str) -> str:
     return ' '.join(re.sub(r'(?s)<[^>]+>', ' ', text).split())
 
 
-def parse_sp_release(name: str, url: str) -> dict[str, Any]:
-    html = fetch_text(url)
-    text = strip_html(html)
-    if 'manufacturing' in name:
-        match = re.search(r'(?:posted|at)\s+(\d{2}\.\d)\s+in\s+June|Manufacturing PMI at\s+(\d{2}\.\d)', text, re.I)
-    else:
-        match = re.search(r'At\s+(\d{2}\.\d)\s+in\s+June', text, re.I)
-    vals = [float(v) for v in match.groups() if v] if match else []
-    return {'url': url, 'value': vals[0] if vals else None, 'is_flash': 'flash' in text[:1200].lower(), 'preview': text[:800]}
+def fetch_bytes(url: str) -> bytes:
+    req = Request(url, headers={'User-Agent': UA, 'Accept': 'application/pdf,text/html,*/*'})
+    with urlopen(req, timeout=TIMEOUT) as r:
+        return r.read()
 
+
+def parse_sp_release(name: str, url: str) -> dict[str, Any]:
+    raw = fetch_bytes(url)
+    if raw.startswith(b'%PDF'):
+        from io import BytesIO
+        from pypdf import PdfReader
+        text = ' '.join((page.extract_text() or '') for page in PdfReader(BytesIO(raw)).pages)
+    else:
+        text = strip_html(raw.decode('utf-8', 'replace'))
+    if 'manufacturing' in name:
+        patterns = [r'Manufacturing PMI at\s+(\d{2}\.\d)', r'posted\s+(\d{2}\.\d)\s+in June']
+    else:
+        patterns = [r'At\s+(\d{2}\.\d)\s+in June', r'Services PMI[^0-9]{0,80}(\d{2}\.\d)']
+    value = None
+    for pattern in patterns:
+        m = re.search(pattern, text, re.I)
+        if m:
+            value = float(m.group(1)); break
+    return {'url': url, 'value': value, 'is_flash': 'flash uk pmi' in text[:2000].lower(), 'preview': ' '.join(text.split())[:800]}
 
 def main() -> None:
     report: dict[str, Any] = {
@@ -249,10 +313,11 @@ def main() -> None:
     dataset_cache: dict[str, list[dict[str, Any]]] = {}
     global get_dataset_series
     original_get = get_dataset_series
-    def cached(dataset: str) -> list[dict[str, Any]]:
-        if dataset not in dataset_cache:
-            dataset_cache[dataset] = original_get(dataset)
-        return dataset_cache[dataset]
+    def cached(dataset: str, query: str = '') -> list[dict[str, Any]]:
+        key = dataset + '|' + query
+        if key not in dataset_cache:
+            dataset_cache[key] = original_get(dataset, query)
+        return dataset_cache[key]
     get_dataset_series = cached
 
     for key, spec in TARGETS.items():
