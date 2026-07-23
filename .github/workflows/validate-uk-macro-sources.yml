@@ -1,4 +1,4 @@
-name: Validate UK Macro Sources V3
+name: Validate UK Macro Sources V4
 on:
   workflow_dispatch:
 permissions:
@@ -6,7 +6,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -17,7 +17,7 @@ jobs:
       - if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: uk-macro-validation-v3-${{ github.run_number }}
+          name: uk-macro-validation-v4-${{ github.run_number }}
           path: uk_validation_output/
           if-no-files-found: warn
           retention-days: 14

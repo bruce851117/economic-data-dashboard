@@ -66,9 +66,10 @@ TARGETS = {
         'benchmark': {'2026-05': 0.1},
     },
     'quarterly_gdp_yoy': {
-        'dataset': 'QNA', 'frequency': 'Q', 'cdid': 'IHYP',
+        'dataset': 'PN2', 'frequency': 'Q', 'level_cdid': 'ABMI',
         'include': ['gross domestic product', 'year on year growth', 'cvm sa'],
         'benchmark': {'2025-Q4': 0.9, '2026-Q1': 0.9},
+        'derive_yoy_from_level': True,
     },
     'hfce_yoy': {
         'dataset': 'PN2', 'frequency': 'Q',
@@ -78,9 +79,10 @@ TARGETS = {
         'derive_yoy_from_level': True,
     },
     'gfcf_yoy': {
-        'dataset': 'QNA', 'frequency': 'Q', 'cdid': 'KG7N',
+        'dataset': 'UKEA', 'frequency': 'Q', 'level_cdid': 'NPQT',
         'include': ['total fixed capital formation', 'annual growth rate', 'yoy', 'cvm sa'],
         'benchmark': {'2025-Q4': 3.86, '2026-Q1': 1.61},
+        'derive_yoy_from_level': True,
     },
 }
 
@@ -161,6 +163,7 @@ ONS_PATHS = {
     'MGDP': 'economy/grossdomesticproductgdp',
     'PN2': 'economy/grossdomesticproductgdp',
     'QNA': 'economy/grossdomesticproductgdp',
+    'UKEA': 'economy/grossdomesticproductgdp',
 }
 
 
@@ -180,7 +183,12 @@ def get_ons_direct_series(dataset: str, cdid: str) -> dict[str, Any]:
     path = ONS_PATHS[dataset]
     if cdid.upper() == 'ABJR':
         path = 'economy/nationalaccounts/satelliteaccounts'
-    url = f'https://www.ons.gov.uk/generator?format=csv&uri=/{path}/timeseries/{cdid.lower()}/{dataset.lower()}'
+    edition = dataset.lower()
+    if cdid.upper() == 'NPQT':
+        edition = 'ukea'
+    elif cdid.upper() == 'ABMI':
+        edition = 'pn2'
+    url = f'https://www.ons.gov.uk/generator?format=csv&uri=/{path}/timeseries/{cdid.lower()}/{edition}'
     text = fetch_text(url)
     import csv, io
     rows = list(csv.reader(io.StringIO(text)))
@@ -298,33 +306,24 @@ def parse_sp_release(name: str, url: str) -> dict[str, Any]:
 
 
 def find_core_cpi_from_mm23() -> dict[str, Any]:
-    """Download official MM23 CSV and locate the annual-rate core CPI row by exact semantic rules."""
-    url = 'https://www.ons.gov.uk/file?uri=/economy/inflationandpriceindices/datasets/consumerpriceindices/current/mm23.csv'
-    text = fetch_text(url)
-    import csv, io
-    rows = list(csv.reader(io.StringIO(text)))
-    # MM23 is a wide dataset. Find a row containing the precise title and CDID nearby.
-    target_row = None
-    target_cdid = None
-    for i, row in enumerate(rows):
-        joined = ' '.join(row).lower()
-        if ('cpi annual rate' in joined and 'excluding energy' in joined and
-            'food' in joined and 'alcohol' in joined and 'tobacco' in joined and
-            'cpih' not in joined and 'weight' not in joined and 'wts' not in joined):
-            target_row = i
-            # Search current and adjacent rows for an ONS-style 4-char CDID.
-            for rr in rows[max(0, i-3):i+4]:
-                for cell in rr:
-                    c = cell.strip().upper()
-                    if re.fullmatch(r'[A-Z0-9]{4}', c):
-                        target_cdid = c
-                        break
-                if target_cdid:
-                    break
-            break
-    if not target_cdid:
-        raise RuntimeError('Core CPI annual-rate CDID not found in official MM23 CSV')
-    return get_ons_direct_series('MM23', target_cdid)
+    """Read official ONS monthly CPI bulletins and extract Core CPI YoY."""
+    months = [
+        ('2025-06','june2025'),('2025-07','july2025'),('2025-08','august2025'),
+        ('2025-09','september2025'),('2025-10','october2025'),('2025-11','november2025'),
+        ('2025-12','december2025'),('2026-01','january2026'),('2026-02','february2026'),
+        ('2026-03','march2026'),('2026-04','april2026'),('2026-05','may2026'),('2026-06','june2026'),
+    ]
+    obs=[]
+    urls=[]
+    for period, slug in months:
+        url=f'https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/{slug}'
+        text=strip_html(fetch_text(url))
+        m=re.search(r'Core CPI \(CPI excluding energy, food, alcohol and tobacco\) rose by\s+([0-9.]+)%', text, re.I)
+        if not m:
+            raise RuntimeError(f'Core CPI not found in ONS bulletin: {url}')
+        obs.append({'period':period,'value':float(m.group(1))})
+        urls.append(url)
+    return {'provider':'ONS official bulletins','source_series':'ONS Consumer price inflation monthly bulletins','title':'Core CPI YoY','observations':obs,'urls':urls}
 
 
 def choose_pmi(final_record: dict[str, Any] | None, flash_record: dict[str, Any] | None) -> dict[str, Any] | None:
