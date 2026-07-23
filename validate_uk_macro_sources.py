@@ -66,7 +66,7 @@ TARGETS = {
         'benchmark': {'2026-05': 0.1},
     },
     'quarterly_gdp_yoy': {
-        'dataset': 'PN2', 'frequency': 'Q', 'level_cdid': 'ABMI',
+        'dataset': 'QNA', 'frequency': 'Q', 'level_cdid': 'ABMI',
         'include': ['gross domestic product', 'year on year growth', 'cvm sa'],
         'benchmark': {'2025-Q4': 0.9, '2026-Q1': 0.9},
         'derive_yoy_from_level': True,
@@ -187,7 +187,7 @@ def get_ons_direct_series(dataset: str, cdid: str) -> dict[str, Any]:
     if cdid.upper() == 'NPQT':
         edition = 'ukea'
     elif cdid.upper() == 'ABMI':
-        edition = 'pn2'
+        edition = 'qna'
     url = f'https://www.ons.gov.uk/generator?format=csv&uri=/{path}/timeseries/{cdid.lower()}/{edition}'
     text = fetch_text(url)
     import csv, io
@@ -318,7 +318,7 @@ def find_core_cpi_from_mm23() -> dict[str, Any]:
     for period, slug in months:
         url=f'https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/{slug}'
         text=strip_html(fetch_text(url))
-        m=re.search(r'Core CPI \(CPI excluding energy, food, alcohol and tobacco\) rose by\s+([0-9.]+)%', text, re.I)
+        m=re.search(r'Core CPI \(CPI excluding energy, food, alcohol,? and tobacco\) rose by\s+([0-9.]+)%', text, re.I)
         if not m:
             raise RuntimeError(f'Core CPI not found in ONS bulletin: {url}')
         obs.append({'period':period,'value':float(m.group(1))})
@@ -389,7 +389,10 @@ def main() -> None:
                     raise RuntimeError('No matching series candidate')
                 cdid = candidate['code'].split('.')[0]
             if spec.get('level_cdid'):
-                series = get_series(spec['dataset'], spec['level_cdid'], spec['frequency'])
+                if key in {'quarterly_gdp_yoy', 'gfcf_yoy'}:
+                    series = get_ons_direct_series(spec['dataset'], spec['level_cdid'])
+                else:
+                    series = get_series(spec['dataset'], spec['level_cdid'], spec['frequency'])
             else:
                 series = get_series(spec['dataset'], cdid, spec['frequency'])
             if spec.get('derive_yoy_from_level'):
