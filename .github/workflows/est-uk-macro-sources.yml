@@ -1,0 +1,64 @@
+name: Test UK Macro Data Sources
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-uk-macro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run UK macro source test
+        id: run_test
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          python test_uk_macro_sources.py 2>&1 | tee uk_macro_test.log
+
+      - name: Show summary
+        if: always()
+        shell: bash
+        run: |
+          echo "===== Generated files ====="
+          find uk_macro_test_output -type f -printf "%p (%s bytes)\n" 2>/dev/null | sort || true
+          echo "===== Report preview ====="
+          if [ -f uk_macro_test_output/report.json ]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("uk_macro_test_output/report.json")
+          data = json.loads(p.read_text(encoding="utf-8"))
+          print("generated_at:", data.get("generated_at"))
+          for section in ("ons_series", "ons_datasets", "boe", "private_surveys", "dbnomics"):
+              block = data.get(section, {})
+              print(section, "items:", len(block) if hasattr(block, "__len__") else 0)
+          print("test_errors:", data.get("test_errors", []))
+          PY
+          fi
+
+      - name: Upload test artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uk-macro-test-${{ github.run_number }}
+          path: |
+            uk_macro_test_output/
+            uk_macro_test.log
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Mark failed if script failed
+        if: steps.run_test.outcome == 'failure'
+        run: exit 1
