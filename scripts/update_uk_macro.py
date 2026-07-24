@@ -99,55 +99,140 @@ def merge(db,id,pts,release_type=None):
 def latest_missing_start(s):
  dates=[p['date'] for p in s.get('data',[])]; return max(dates) if dates else '2020-01-01'
 
-def parse_te_calendar(url, label_regex):
- text=BeautifulSoup(get(url).text,'html.parser').get_text(' ',strip=True)
- pts=[]
- for m in re.finditer(r'(20\d{2})-(\d{2})-\d{2}\s+\d{1,2}:\d{2}\s+(?:AM|PM)\s+'+label_regex+r'\s+([+-]?\d+(?:\.\d+)?)',text,re.I):
-  pts.append({'date':f'{m[1]}-{m[2]}-01','value':float(m[3]),'source_url':url})
- return pts
+def point(year, month_name, value, url):
+    month = MONTHS[month_name.lower()]
+    return {
+        'date': f'{int(year):04d}-{month:02d}-01',
+        'value': float(value),
+        'source_url': url,
+    }
+
+
+def previous_month_point(year, month_name, value, url):
+    month = MONTHS[month_name.lower()]
+    serial = int(year) * 12 + month - 2
+    return {
+        'date': f'{serial // 12:04d}-{serial % 12 + 1:02d}-01',
+        'value': float(value),
+        'source_url': url,
+    }
+
+
+def reject_future_points(points):
+    """Do not treat scheduled releases or forecasts as actual observations."""
+    current_month = datetime.now(timezone.utc).strftime('%Y-%m')
+    return [p for p in points if month_key(p.get('date')) <= current_month]
+
 
 def update_gfk(db):
- url='https://tradingeconomics.com/united-kingdom/consumer-confidence'
- pts=parse_te_calendar(url,r'GfK Consumer Confidence(?:\s+[A-Z][a-z]{2})?')
- if not pts:
-  text=BeautifulSoup(get(url).text,'html.parser').get_text(' ',strip=True)
-  m=re.search(r'increased to\s+(-?\d+(?:\.\d+)?)\s+points in\s+([A-Za-z]+)\s+from\s+(-?\d+(?:\.\d+)?)\s+points in\s+([A-Za-z]+)\s+of\s+(20\d{2})',text,re.I)
-  if m:pts=[{'date':f'{m[5]}-{MONTHS[m[2].lower()]:02d}-01','value':float(m[1]),'source_url':url},{'date':f'{m[5]}-{MONTHS[m[4].lower()]:02d}-01','value':float(m[3]),'source_url':url}]
- return merge(db,'ukcci',pts)
+    url = 'https://tradingeconomics.com/united-kingdom/consumer-confidence'
+    text = BeautifulSoup(get(url).text, 'html.parser').get_text(' ', strip=True)
 
-def update_te_pmi(db,id,url,kind):
- text=BeautifulSoup(get(url).text,'html.parser').get_text(' ',strip=True); pts=[]
- # Final/current value and previous month from the official-source summary mirrored by TE.
- pats=[
-  rf'{kind} PMI (?:posted|was revised[^.]*?to)\s+([0-9]+(?:\.[0-9]+)?)\s+in\s+([A-Za-z]+)\s+(20\d{{2}})',
-  rf'{kind} PMI[^.]*?\s(?:increased|decreased) to\s+([0-9]+(?:\.[0-9]+)?)\s+points in\s+([A-Za-z]+)\s+from\s+([0-9]+(?:\.[0-9]+)?)\s+points in\s+([A-Za-z]+)\s+of\s+(20\d{{2}})'
- ]
- m=re.search(pats[1],text,re.I)
- if m:
-  pts=[{'date':f'{m[5]}-{MONTHS[m[2].lower()]:02d}-01','value':float(m[1]),'source_url':url},{'date':f'{m[5]}-{MONTHS[m[4].lower()]:02d}-01','value':float(m[3]),'source_url':url}]
- else:
-  m=re.search(pats[0],text,re.I)
-  if m:pts=[{'date':f'{m[3]}-{MONTHS[m[2].lower()]:02d}-01','value':float(m[1]),'source_url':url}]
- return merge(db,id,pts,'final')
+    # Only accept the page summary where current value, current reference month,
+    # previous value and previous reference month appear in the same sentence.
+    # Do not parse the calendar table: future rows contain forecasts/previous values.
+    patterns = [
+        r'Consumer Confidence in the United Kingdom (?:increased|decreased|rose|fell|was unchanged) to\s+'
+        r'(-?\d+(?:\.\d+)?)\s+points in\s+([A-Za-z]+)\s+from\s+'
+        r'(-?\d+(?:\.\d+)?)\s+points in\s+([A-Za-z]+)\s+of\s+(20\d{2})',
+        r'GfK Consumer Confidence Index (?:increased|decreased|rose|fell|held steady|was unchanged)'
+        r'(?:\s+at|\s+to)?\s+(-?\d+(?:\.\d+)?)\s+in\s+([A-Za-z]+)\s+(20\d{2})'
+        r'.{0,180}?(?:from|unchanged from)\s+(-?\d+(?:\.\d+)?)\s+in\s+([A-Za-z]+)',
+    ]
+
+    pts = []
+    m = re.search(patterns[0], text, re.I)
+    if m:
+        pts = [
+            point(m[5], m[2], m[1], url),
+            point(m[5], m[4], m[3], url),
+        ]
+    else:
+        m = re.search(patterns[1], text, re.I)
+        if m:
+            pts = [
+                point(m[3], m[2], m[1], url),
+                point(m[3], m[5], m[4], url),
+            ]
+
+    pts = reject_future_points(pts)
+    if not pts:
+        raise RuntimeError('GfK current and previous actual values not found')
+    return merge(db, 'ukcci', pts)
+
+
+def update_te_pmi(db, id, url, kind):
+    text = BeautifulSoup(get(url).text, 'html.parser').get_text(' ', strip=True)
+
+    # Only accept an explicit current/previous summary sentence.
+    # Never read the economic-calendar rows, because a future row may show the
+    # previous value even though the new actual has not been released.
+    patterns = [
+        rf'{kind} PMI[^.]*?(?:increased|decreased|rose|fell|was unchanged|held steady) to\s+'
+        r'([0-9]+(?:\.[0-9]+)?)\s+points in\s+([A-Za-z]+)\s+from\s+'
+        r'([0-9]+(?:\.[0-9]+)?)\s+points in\s+([A-Za-z]+)\s+of\s+(20\d{2})',
+        rf'{kind} PMI[^.]*?(?:posted|was revised to|came in at)\s+'
+        r'([0-9]+(?:\.[0-9]+)?)\s+in\s+([A-Za-z]+)\s+(20\d{2})',
+    ]
+
+    pts = []
+    m = re.search(patterns[0], text, re.I)
+    if m:
+        pts = [
+            point(m[5], m[2], m[1], url),
+            point(m[5], m[4], m[3], url),
+        ]
+    else:
+        m = re.search(patterns[1], text, re.I)
+        if m:
+            pts = [point(m[3], m[2], m[1], url)]
+
+    pts = reject_future_points(pts)
+    if not pts:
+        raise RuntimeError(f'{kind} PMI current actual value not found')
+
+    # Trading Economics page summary is treated as the currently reported value.
+    # Existing final values still cannot be overwritten by flash in merge().
+    return merge(db, id, pts, 'final')
+
 
 def update_retail(db):
- url='https://tradingeconomics.com/united-kingdom/retail-sales-ex-fuel'
- text=BeautifulSoup(get(url).text,'html.parser').get_text(' ',strip=True)
- pts=[]
- # Calendar records, e.g. "Retail Sales ex Fuel YoY May 4.6% 1.1%".
- for m in re.finditer(r'(20\d{2})-(\d{2})-\d{2}\s+\d{1,2}:\d{2}\s+(?:AM|PM)\s+Retail Sales ex Fuel YoY\s+[A-Z][a-z]{2}\s+([+-]?\d+(?:\.\d+)?)%',text,re.I):
-  pts.append({'date':f'{m[1]}-{m[2]}-01','value':float(m[3]),'source_url':url})
- # Current/previous fallback from page summary.
- m=re.search(r'On an annual basis, retail sales excluding fuel (?:accelerated|rose|increased|fell|declined) to\s+([+-]?\d+(?:\.\d+)?)%\s+from\s+([+-]?\d+(?:\.\d+)?)%',text,re.I)
- date_m=re.search(r'in\s+([A-Za-z]+)\s+(20\d{2})',text,re.I)
- if m and date_m and date_m[1].lower() in MONTHS:
-  y=int(date_m[2]); mo=MONTHS[date_m[1].lower()]
-  pts.append({'date':f'{y}-{mo:02d}-01','value':float(m[1]),'source_url':url})
-  z=y*12+mo-2
-  pts.append({'date':f'{z//12}-{z%12+1:02d}-01','value':float(m[2]),'source_url':url})
- if not pts:raise RuntimeError('Retail Sales ex Fuel YoY not found')
- return merge(db,'ukrvayoy',pts)
+    url = 'https://tradingeconomics.com/united-kingdom/retail-sales-ex-fuel'
+    text = BeautifulSoup(get(url).text, 'html.parser').get_text(' ', strip=True)
 
+    # The month/year must be in the same sentence as both the current and previous
+    # actual values. The old code searched the entire page for any "in Month Year"
+    # and could attach the value to an unrelated or future month.
+    patterns = [
+        r'(?:Retail Sales Ex Fuel YoY|retail sales excluding fuel)[^.]*?'
+        r'(?:increased|decreased|accelerated|slowed|rose|fell|declined|was unchanged)'
+        r'(?:\s+to|\s+at)?\s+([+-]?\d+(?:\.\d+)?)%\s+in\s+([A-Za-z]+)\s+(20\d{2})'
+        r'[^.]*?from\s+([+-]?\d+(?:\.\d+)?)%\s+in\s+([A-Za-z]+)',
+        r'On an annual basis, retail sales excluding fuel '
+        r'(?:accelerated|rose|increased|fell|declined|was unchanged) to\s+'
+        r'([+-]?\d+(?:\.\d+)?)%\s+from\s+([+-]?\d+(?:\.\d+)?)%[^.]*?'
+        r'in\s+([A-Za-z]+)\s+(20\d{2})',
+    ]
+
+    pts = []
+    m = re.search(patterns[0], text, re.I)
+    if m:
+        pts = [
+            point(m[3], m[2], m[1], url),
+            point(m[3], m[5], m[4], url),
+        ]
+    else:
+        m = re.search(patterns[1], text, re.I)
+        if m:
+            pts = [
+                point(m[4], m[3], m[1], url),
+                previous_month_point(m[4], m[3], m[2], url),
+            ]
+
+    pts = reject_future_points(pts)
+    if not pts:
+        raise RuntimeError('Retail Sales ex Fuel YoY current and previous actual values not found')
+    return merge(db, 'ukrvayoy', pts)
 
 def main():
  db=json.loads(DATA_FILE.read_text(encoding='utf-8')); logs=[]
