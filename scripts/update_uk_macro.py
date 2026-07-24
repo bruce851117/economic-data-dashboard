@@ -478,10 +478,18 @@ def update_dmp_inflation(database: dict[str, Any]) -> tuple[int, int]:
             contexts.append(text[max(0, match.start() - 180): match.end() + 300])
 
         value = None
+        # Prefer the single-month DMP value. Example:
+        # "In the single-month data year-ahead CPI inflation expectations
+        # fell from 3.7% to 3.3%."  The required value is the final 3.3%,
+        # not the three-month average of 3.7% mentioned earlier.
         patterns = [
-            r"single-month data[^.]{0,220}?year-ahead CPI inflation expectations[^.]{0,160}?(?:to|at)\s+(\d+(?:\.\d+)?)%",
-            r"year-ahead CPI inflation expectations[^.]{0,220}?single-month[^.]{0,160}?(?:to|at)\s+(\d+(?:\.\d+)?)%",
-            r"Expectations for year-ahead CPI inflation[^.]{0,180}?(?:to|at|were)\s+(\d+(?:\.\d+)?)%",
+            r"single-month data[^.]{0,220}?year-ahead CPI inflation expectations[^.]{0,160}?"
+            r"(?:fell|rose|increased|decreased|moved|changed)\s+from\s+\d+(?:\.\d+)?%\s+to\s+"
+            r"(\d+(?:\.\d+)?)%",
+            r"single-month data[^.]{0,220}?year-ahead CPI inflation expectations[^.]{0,160}?"
+            r"(?:were|was|stood at|remained at)\s+(\d+(?:\.\d+)?)%",
+            r"single-month[^.]{0,220}?year-ahead CPI inflation expectations[^.]{0,160}?"
+            r"(?:to|at)\s+(\d+(?:\.\d+)?)%",
         ]
         for pattern_value in patterns:
             match = re.search(pattern_value, text, re.I)
