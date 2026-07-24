@@ -16,9 +16,9 @@ ONS={
  'ukhpsery':('MM23','D7NN','economy/inflationandpriceindices',False),
  'ukueilor':('LMS','MGSX','employmentandlabourmarket/peoplenotinwork/unemployment',True),
  'ukuer':('UNEM','BCJE','employmentandlabourmarket/peoplenotinwork/outofworkbenefits',False),
- 'ukawmwho':('LMS','KAC3','employmentandlabourmarket/peoplenotinwork/unemployment',False),
- 'ukawxprm':('LMS','KAJ4','employmentandlabourmarket/peoplenotinwork/unemployment',False),
- 'ukvaap2y':('UNEM','AP2Y','employmentandlabourmarket/peoplenotinwork/outofworkbenefits',True),
+ 'ukawmwho':('LMS','KAC3','employmentandlabourmarket/peopleinwork/earningsandworkinghours',False),
+ 'ukawxprm':('LMS','KAJ4','employmentandlabourmarket/peopleinwork/earningsandworkinghours',False),
+ 'ukvaap2y':('UNEM','AP2Y','employmentandlabourmarket/peopleinwork/employmentandemployeetypes',True),
  'uklfjpc5':('UNEM','JPC5','employmentandlabourmarket/peoplenotinwork/unemployment',True),
  'ukgdm3m':('MGDP','ECYX','economy/grossdomesticproductgdp',False),
 }
@@ -68,19 +68,33 @@ def yoy(levels):
  return out
 
 def by_id(db,id):return next((x for x in db['series'] if x['id']==id),None)
+def month_key(value):
+ value=str(value or '').strip()
+ m=re.match(r'^(\d{4})-(\d{2})',value)
+ return f'{m.group(1)}-{m.group(2)}' if m else value
+
 def merge(db,id,pts,release_type=None):
  s=by_id(db,id)
  if not s:raise KeyError(id)
- old={p['date']:p for p in s.get('data',[])}; add=rev=0
+ # Compare by YYYY-MM, regardless of whether old JSON used month-end or day 01.
+ old={month_key(p.get('date')):{**p,'date':month_key(p.get('date'))+'-01'} for p in s.get('data',[]) if month_key(p.get('date'))}
+ add=rev=0
+ if old:
+  latest_existing=max(old)
+  pts=[p for p in pts if month_key(p.get('date'))>=latest_existing]
  for p in pts:
-  p={**p};
+  key=month_key(p.get('date'))
+  if not key:continue
+  p={**p,'date':key+'-01'}
   if release_type:p['release_type']=release_type
-  cur=old.get(p['date'])
-  if cur is None:old[p['date']]=p;add+=1
+  cur=old.get(key)
+  if cur is None:old[key]=p;add+=1
   elif cur.get('release_type')=='final' and p.get('release_type')=='flash':continue
   elif cur.get('value')!=p.get('value') or (p.get('release_type')=='final' and cur.get('release_type')!='final'):
-   old[p['date']]={**cur,**p};rev+=1
- s['data']=sorted(old.values(),key=lambda x:x['date']);return add,rev
+   old[key]={**cur,**p};rev+=1
+ s['data']=sorted(old.values(),key=lambda x:x['date'])
+ return add,rev
+
 
 def latest_missing_start(s):
  dates=[p['date'] for p in s.get('data',[])]; return max(dates) if dates else '2020-01-01'
@@ -117,25 +131,23 @@ def update_te_pmi(db,id,url,kind):
  return merge(db,id,pts,'final')
 
 def update_retail(db):
- # ONS Beta API full CSV. Labels are used rather than unstable option IDs.
- meta_url='https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index/editions/time-series/versions/latest'
- meta=get(meta_url).json(); links=meta.get('downloads',{})
- csv_url=(links.get('csv') or {}).get('href')
- if not csv_url:raise RuntimeError('ONS Retail API did not return CSV download')
- raw=get(csv_url).content.decode('utf-8-sig','replace'); rows=list(csv.DictReader(io.StringIO(raw)))
+ url='https://tradingeconomics.com/united-kingdom/retail-sales-ex-fuel'
+ text=BeautifulSoup(get(url).text,'html.parser').get_text(' ',strip=True)
  pts=[]
- for row in rows:
-  norm={re.sub(r'[^a-z0-9]','',k.lower()):str(v).strip() for k,v in row.items() if k}
-  joined=' | '.join(norm.values()).lower()
-  if 'all retailing excluding automotive fuel' not in joined:continue
-  if 'chained volume' not in joined or 'same month a year earlier' not in joined or 'seasonally adjusted' not in joined:continue
-  val=next((v for k,v in norm.items() if k in ('observation','value') and re.fullmatch(r'-?\d+(?:\.\d+)?',v)),None)
-  t=next((v for k,v in norm.items() if k in ('time','month','dates') or k.startswith('time')),None)
-  if val and t:
-   m=re.search(r'(20\d{2})[- ](?:M)?(\d{1,2})',t)
-   if m:pts.append({'date':f'{m[1]}-{int(m[2]):02d}-01','value':float(val),'source_url':csv_url})
- if not pts:raise RuntimeError('Retail CSV filter returned no observations')
+ # Calendar records, e.g. "Retail Sales ex Fuel YoY May 4.6% 1.1%".
+ for m in re.finditer(r'(20\d{2})-(\d{2})-\d{2}\s+\d{1,2}:\d{2}\s+(?:AM|PM)\s+Retail Sales ex Fuel YoY\s+[A-Z][a-z]{2}\s+([+-]?\d+(?:\.\d+)?)%',text,re.I):
+  pts.append({'date':f'{m[1]}-{m[2]}-01','value':float(m[3]),'source_url':url})
+ # Current/previous fallback from page summary.
+ m=re.search(r'On an annual basis, retail sales excluding fuel (?:accelerated|rose|increased|fell|declined) to\s+([+-]?\d+(?:\.\d+)?)%\s+from\s+([+-]?\d+(?:\.\d+)?)%',text,re.I)
+ date_m=re.search(r'in\s+([A-Za-z]+)\s+(20\d{2})',text,re.I)
+ if m and date_m and date_m[1].lower() in MONTHS:
+  y=int(date_m[2]); mo=MONTHS[date_m[1].lower()]
+  pts.append({'date':f'{y}-{mo:02d}-01','value':float(m[1]),'source_url':url})
+  z=y*12+mo-2
+  pts.append({'date':f'{z//12}-{z%12+1:02d}-01','value':float(m[2]),'source_url':url})
+ if not pts:raise RuntimeError('Retail Sales ex Fuel YoY not found')
  return merge(db,'ukrvayoy',pts)
+
 
 def main():
  db=json.loads(DATA_FILE.read_text(encoding='utf-8')); logs=[]
