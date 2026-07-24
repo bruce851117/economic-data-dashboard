@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-24T07:18:12.520228+00:00",
+  "generated_at": "2026-07-24T07:48:03.244947+00:00",
   "source": "uk econ.xlsx",
   "blocks": [
     {
@@ -1262,7 +1262,7 @@
         },
         {
           "date": "2026-06-01",
-          "value": 3.7,
+          "value": 3.3,
           "source_url": "https://www.bankofengland.co.uk/decision-maker-panel/2026/june-2026",
           "measure": "DMP year-ahead CPI inflation expectations"
         }
