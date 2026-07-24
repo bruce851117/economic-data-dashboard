@@ -235,24 +235,166 @@ def update_retail(db):
     return merge(db, 'ukrvayoy', pts)
 
 def main():
- db=json.loads(DATA_FILE.read_text(encoding='utf-8')); logs=[]
- for id,(dataset,cdid,path,rolling) in ONS.items():
-  try:
-   pts=ons_series(dataset,cdid,path)
-   if rolling:pts=[{**p,'date':shift_month(p['date'])} for p in pts]
-   logs.append((id,*merge(db,id,pts)))
-  except Exception as e:logs.append((id,'ERROR',str(e)))
- for id,(dataset,cdid,path) in LEVELS.items():
-  try:logs.append((id,*merge(db,id,yoy(ons_series(dataset,cdid,path)))))
-  except Exception as e:logs.append((id,'ERROR',str(e)))
- for name,fn in [
-  ('ukrvayoy',lambda:update_retail(db)),
-  ('ukcci',lambda:update_gfk(db)),
-  ('mpmigbma',lambda:update_te_pmi(db,'mpmigbma','https://tradingeconomics.com/united-kingdom/manufacturing-pmi','Manufacturing')),
-  ('mpmigbsa',lambda:update_te_pmi(db,'mpmigbsa','https://tradingeconomics.com/united-kingdom/services-pmi','Services')),
- ]:
-  try:logs.append((name,*fn()))
-  except Exception as e:logs.append((name,'ERROR',str(e)))
- db['generated_at']=datetime.now(timezone.utc).isoformat(); DATA_FILE.write_text(json.dumps(db,ensure_ascii=False,indent=2),encoding='utf-8')
- for x in logs:print(*x)
-if __name__=='__main__':main()
+    db = json.loads(
+        DATA_FILE.read_text(encoding="utf-8")
+    )
+    logs = []
+
+    for id, (dataset, cdid, path, rolling) in ONS.items():
+        try:
+            pts = ons_series(dataset, cdid, path)
+
+            if id == "ukvaap2y":
+                # AP2Y原始月份是滾動三個月期間的中間月。
+                #
+                # 例如：
+                # ONS Raw 2026-05
+                # = 統計期間2026年4月至6月
+                # = 2026年7月發布
+                #
+                # Dashboard使用發布月份，因此往後移兩個月。
+                pts = [
+                    {
+                        **p,
+                        "date": shift_month(
+                            p["date"],
+                            2,
+                        ),
+               **   }
+                    for p in**ts
+                ]
+
+           **lif rolling:
+                # 其他**三個月資料維持往後移一個月。
+                #
+**              # 例如失業率：
+          **    # ONS Raw 2026-04
+           **   # = 統計期間2026年3月至5月
+           **   # = Dashboard顯示2026年5月。
+      **        pts = [
+                    {
+                        **p,
+                        "date": shift_month(
+                            p["date"],
+                            1,
+                        ),
+                    }
+                    for p in pts
+                ]
+
+            logs.append(
+                (
+                    id,
+                    *merge(
+                        db,
+                        id,
+                        pts,
+                    ),
+                )
+            )
+
+        except Exception as e:
+            logs.append(
+                (
+                    id,
+                    "ERROR",
+                    str(e),
+                )
+            )
+
+    for id, (dataset, cdid, path) in LEVELS.items():
+        try:
+            pts = ons_series(
+                dataset,
+                cdid,
+                path,
+            )
+
+            calculated_yoy = yoy(pts)
+
+            logs.append(
+                (
+                    id,
+                    *merge(
+                        db,
+                        id,
+                        calculated_yoy,
+                    ),
+                )
+            )
+
+        except Exception as e:
+            logs.append(
+                (
+                    id,
+                    "ERROR",
+                    str(e),
+                )
+            )
+
+    additional_updates = [
+        (
+            "ukrvayoy",
+            lambda: update_retail(db),
+        ),
+        (
+            "ukcci",
+            lambda: update_gfk(db),
+        ),
+        (
+            "mpmigbma",
+            lambda: update_te_pmi(
+                db,
+                "mpmigbma",
+                "https://tradingeconomics.com/united-kingdom/manufacturing-pmi",
+                "Manufacturing",
+            ),
+        ),
+        (
+            "mpmigbsa",
+            lambda: update_te_pmi(
+                db,
+                "mpmigbsa",
+                "https://tradingeconomics.com/united-kingdom/services-pmi",
+                "Services",
+            ),
+        ),
+    ]
+
+    for name, update_function in additional_updates:
+        try:
+            logs.append(
+                (
+                    name,
+                    *update_function(),
+                )
+            )
+
+        except Exception as e:
+            logs.append(
+                (
+                    name,
+                    "ERROR",
+                    str(e),
+                )
+            )
+
+    db["generated_at"] = (
+        datetime.now(timezone.utc).isoformat()
+    )
+
+    DATA_FILE.write_text(
+        json.dumps(
+            db,
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    for log_entry in logs:
+        print(*log_entry)
+
+
+if __name__ == "__main__":
+    main()
