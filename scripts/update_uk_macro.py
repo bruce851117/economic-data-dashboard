@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import io
+from io import BytesIO
 import json
 import re
 import time
@@ -10,7 +11,8 @@ from pathlib import Path
 from typing import Any
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
+from pypdf import PdfReader
 
 DATA_FILE = Path("data/uk_macro.json")
 DEBUG_DIR = Path("debug/uk_macro_sources")
@@ -341,111 +343,201 @@ def update_gfk(database: dict[str, Any]) -> tuple[int, int]:
     )
 
 
-def parse_investing_release_date(value: str) -> tuple[datetime, int] | None:
-    match = re.search(
-        r"([A-Za-z]{3})\s+(\d{1,2}),\s*(20\d{2})\s*\(([A-Za-z]{3})\)",
-        value,
-    )
-    if not match:
-        return None
-    release_date = datetime.strptime(
-        f"{match.group(1)} {match.group(2)} {match.group(3)}",
-        "%b %d %Y",
-    )
-    reference_month = MONTH_ABBR.get(match.group(4).lower())
-    if not reference_month:
-        return None
-    return release_date, reference_month
+SP_RELEASES_URL = "https://www.pmi.spglobal.com/Public/Release/PressReleases"
 
 
-def update_investing_pmi(
-    database: dict[str, Any],
-    series_id: str,
-    url: str,
-    debug_name: str,
-) -> tuple[int, int]:
-    response = get(url)
-    tables = extract_tables(response.text)
-    parsed_rows = []
-    candidates: dict[str, list[dict[str, Any]]] = {}
+def response_to_text(response: requests.Response) -> str:
+    content_type = (response.headers.get("content-type") or "").lower()
+    if response.content.startswith(b"%PDF") or "application/pdf" in content_type:
+        reader = PdfReader(BytesIO(response.content))
+        return "\n".join(page.extract_text() or "" for page in reader.pages)
+    return BeautifulSoup(response.text, "html.parser").get_text("\n", strip=True)
 
-    for table_no, table in enumerate(tables, 1):
-        for row_no, cells in enumerate(table, 1):
-            if len(cells) < 5:
-                continue
-            parsed_date = parse_investing_release_date(cells[0])
-            if not parsed_date:
-                continue
-            release_date, reference_month = parsed_date
-            actual_value = number_or_none(cells[2])
-            row_debug = {
-                "table_no": table_no,
-                "row_no": row_no,
-                "cells": cells,
-                "release_date": release_date.date().isoformat(),
-                "reference_month": reference_month,
-                "actual": actual_value,
-            }
-            parsed_rows.append(row_debug)
-            if actual_value is None:
-                continue
 
-            reference_year = release_date.year
-            if reference_month > release_date.month + 1:
-                reference_year -= 1
-            key = f"{reference_year:04d}-{reference_month:02d}"
+def preceding_release_context(anchor: Any) -> str:
+    parts = []
+    for element in anchor.previous_elements:
+        if isinstance(element, NavigableString):
+            text = clean_cell(str(element))
+            if text:
+                parts.append(text)
+        if len(" ".join(parts)) >= 280:
+            break
+    return " ".join(reversed(parts[-20:]))
 
-            # 同一參考月份：參考月內發布的是Flash；次月發布的是Final。
-            release_type = (
-                "final"
-                if (release_date.year, release_date.month)
-                > (reference_year, reference_month)
-                else "flash"
-            )
-            candidates.setdefault(key, []).append({
-                "date": key + "-01",
-                "value": actual_value,
-                "release_type": release_type,
-                "release_date": release_date.date().isoformat(),
-                "source_url": url,
-            })
 
-    selected = []
-    for key, rows in candidates.items():
-        rows.sort(
-            key=lambda row: (
-                1 if row["release_type"] == "final" else 0,
-                row["release_date"],
-            ),
-            reverse=True,
+def discover_sp_pmi_releases() -> list[dict[str, str]]:
+    response = get(SP_RELEASES_URL)
+    soup = BeautifulSoup(response.text, "html.parser")
+    candidates = []
+    seen = set()
+
+    for anchor in soup.find_all("a", href=True):
+        href = anchor.get("href", "")
+        if "/Public/Home/PressRelease/" not in href:
+            continue
+        url = requests.compat.urljoin(SP_RELEASES_URL, href)
+        if url in seen:
+            continue
+        context = preceding_release_context(anchor)
+        title_match = re.search(
+            r"(S&P Global (?:Flash )?UK (?:Manufacturing|Services)?\s*PMI)",
+            context,
+            re.I,
         )
-        selected.append(rows[0])
+        if not title_match:
+            continue
+        title = clean_cell(title_match.group(1))
+        release_date_match = re.search(
+            r"([A-Za-z]+\s+\d{1,2}\s+20\d{2})\s+\d{2}:\d{2}\s+UTC",
+            context,
+            re.I,
+        )
+        candidates.append({
+            "title": title,
+            "url": url,
+            "release_date": release_date_match.group(1) if release_date_match else "",
+            "index_context": context,
+        })
+        seen.add(url)
 
-    save_debug(f"{debug_name}_raw.html", response.text)
-    save_debug(f"{debug_name}_tables.json", tables)
-    save_debug(f"{debug_name}_parsed_rows.json", parsed_rows)
-    save_debug(f"{debug_name}_selected.json", selected)
-    debug_print(debug_name + "_parsed_rows", parsed_rows)
-    debug_print(debug_name + "_selected", selected)
+    save_debug("sp_global_release_index_raw.html", response.text)
+    save_debug("sp_global_release_candidates.json", candidates)
+    debug_print("sp_global_release_candidates", candidates)
+    return candidates
 
-    if not selected:
-        raise RuntimeError(f"No PMI actual rows found from {url}")
 
-    # Process months in chronological order. This matters when the newest month
-    # is Flash but the preceding month has a Final: adding the Flash first would
-    # otherwise make the older Final look older than the latest stored month.
-    added = revised = 0
-    for row in sorted(selected, key=lambda item: item["date"]):
-        release_type = row["release_type"]
-        point = {
-            key: value
-            for key, value in row.items()
-            if key != "release_type"
+def extract_reference_month(text: str) -> str | None:
+    head = clean_cell(text[:5000])
+    matches = list(re.finditer(
+        r"\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})\b",
+        head,
+        re.I,
+    ))
+    if not matches:
+        return None
+    # The report heading normally contains the reference month near the start.
+    match = matches[0]
+    month = MONTHS[match.group(1).lower()]
+    return f"{int(match.group(2)):04d}-{month:02d}"
+
+
+def extract_pmi_value(text: str, sector: str, release_type: str) -> float | None:
+    compact = clean_cell(text)
+    if sector == "manufacturing":
+        patterns = [
+            r"Manufacturing PMI(?:®|™)?\s+(?:at|posted|rose to|fell to)\s*([0-9]+(?:\.[0-9]+)?)",
+            r"Manufacturing Purchasing Managers(?:’|') Index[^.]{0,180}?posted\s+([0-9]+(?:\.[0-9]+)?)",
+            r"Manufacturing PMI[^.]{0,120}?([0-9]+(?:\.[0-9]+)?)\s+in\s+[A-Za-z]+",
+        ]
+    else:
+        patterns = [
+            r"Services PMI(?:®|™)?(?: Business Activity Index)?\s+(?:at|posted|rose to|fell to)\s*([0-9]+(?:\.[0-9]+)?)",
+            r"UK Services PMI Business Activity Index[^.]{0,180}?posted\s+([0-9]+(?:\.[0-9]+)?)",
+            r"Services Business Activity Index[^.]{0,180}?(?:at|posted)\s+([0-9]+(?:\.[0-9]+)?)",
+        ]
+
+    # Flash releases sometimes show a compact key-metrics line.
+    if release_type == "flash":
+        if sector == "manufacturing":
+            patterns.insert(0, r"Flash UK Manufacturing PMI[^0-9]{0,80}([0-9]+(?:\.[0-9]+)?)")
+        else:
+            patterns.insert(0, r"Flash UK Services PMI[^0-9]{0,80}([0-9]+(?:\.[0-9]+)?)")
+
+    for pattern in patterns:
+        match = re.search(pattern, compact, re.I)
+        if match:
+            return float(match.group(1))
+    return None
+
+
+def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]:
+    candidates = discover_sp_pmi_releases()
+    observations = {"manufacturing": [], "services": []}
+    release_debug = []
+
+    for candidate in candidates:
+        title_lower = candidate["title"].lower()
+        release_type = "flash" if "flash" in title_lower else "final"
+        sectors = []
+        if "manufacturing" in title_lower:
+            sectors.append("manufacturing")
+        elif "services" in title_lower:
+            sectors.append("services")
+        elif "flash uk" in title_lower:
+            sectors.extend(["manufacturing", "services"])
+        else:
+            continue
+
+        try:
+            response = get(candidate["url"])
+            text = response_to_text(response)
+        except Exception as error:
+            release_debug.append({**candidate, "error": str(error)})
+            continue
+
+        reference_month = extract_reference_month(text)
+        parsed = {
+            **candidate,
+            "release_type": release_type,
+            "reference_month": reference_month,
+            "content_type": response.headers.get("content-type"),
+            "content_bytes": len(response.content),
+            "values": {},
         }
-        result = merge(database, series_id, [point], release_type)
-        added += result[0]
-        revised += result[1]
-    return added, revised
+
+        safe_name = candidate["url"].rstrip("/").split("/")[-1]
+        save_debug(f"sp_release_{safe_name}.txt", text)
+
+        if reference_month:
+            for sector in sectors:
+                value = extract_pmi_value(text, sector, release_type)
+                parsed["values"][sector] = value
+                if value is not None:
+                    observations[sector].append({
+                        "date": reference_month + "-01",
+                        "value": value,
+                        "release_type": release_type,
+                        "source_url": candidate["url"],
+                    })
+        release_debug.append(parsed)
+
+    selected = {}
+    for sector, rows in observations.items():
+        by_month: dict[str, list[dict[str, Any]]] = {}
+        for row in rows:
+            by_month.setdefault(month_key(row["date"]), []).append(row)
+        selected[sector] = []
+        for month, month_rows in by_month.items():
+            month_rows.sort(
+                key=lambda row: 1 if row["release_type"] == "final" else 0,
+                reverse=True,
+            )
+            selected[sector].append(month_rows[0])
+        selected[sector].sort(key=lambda row: row["date"])
+
+    save_debug("sp_global_release_parsed.json", release_debug)
+    save_debug("sp_global_pmi_selected.json", selected)
+    debug_print("sp_global_release_parsed", release_debug)
+    debug_print("sp_global_pmi_selected", selected)
+
+    results = {}
+    mapping = {
+        "manufacturing": "mpmigbma",
+        "services": "mpmigbsa",
+    }
+    for sector, series_id in mapping.items():
+        if not selected[sector]:
+            raise RuntimeError(f"No official S&P Global {sector} PMI observation found")
+        added = revised = 0
+        for row in selected[sector]:
+            release_type = row["release_type"]
+            point = {key: value for key, value in row.items() if key != "release_type"}
+            a, r = merge(database, series_id, [point], release_type)
+            added += a
+            revised += r
+        results[series_id] = (added, revised)
+    return results
 
 
 def dmp_page_candidates() -> list[tuple[str, str]]:
@@ -544,27 +636,16 @@ def main() -> None:
         except Exception as error:
             logs.append((series_id, "ERROR", str(error)))
 
+    try:
+        pmi_results = update_sp_global_pmi(database)
+        for pmi_id, result in pmi_results.items():
+            logs.append((pmi_id, *result))
+    except Exception as error:
+        logs.append(("sp_global_pmi", "ERROR", str(error)))
+
     updates = [
         ("ukrvayoy", lambda: update_retail(database)),
         ("ukcci", lambda: update_gfk(database)),
-        (
-            "mpmigbma",
-            lambda: update_investing_pmi(
-                database,
-                "mpmigbma",
-                MANUFACTURING_PMI_URL,
-                "manufacturing_pmi_investing",
-            ),
-        ),
-        (
-            "mpmigbsa",
-            lambda: update_investing_pmi(
-                database,
-                "mpmigbsa",
-                SERVICES_PMI_URL,
-                "services_pmi_investing",
-            ),
-        ),
         ("ukbfftin", lambda: update_dmp_inflation(database)),
     ]
 

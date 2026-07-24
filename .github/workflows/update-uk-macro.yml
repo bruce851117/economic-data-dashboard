@@ -23,6 +23,14 @@ jobs:
         run: python -m pip install --disable-pip-version-check requests beautifulsoup4 pypdf
       - name: Update all available UK data
         run: python scripts/update_uk_macro.py
+      - name: Upload UK source debug files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uk-macro-source-debug-${{ github.run_number }}
+          path: debug/uk_macro_sources/
+          retention-days: 7
+          if-no-files-found: warn
       - name: Commit changes
         run: |
           if git diff --quiet -- data/uk_macro.json; then
