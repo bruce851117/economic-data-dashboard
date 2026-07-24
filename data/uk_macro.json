@@ -6654,6 +6654,10 @@
           "value": 53.9
         },
         {
+          "date": "2026-06-01",
+          "value": 52.5
+        },
+        {
           "date": "2026-07-01",
           "value": 52.8,
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/fd28c2e1ee4341e48b884345408f18b2",
@@ -6808,6 +6812,10 @@
         {
           "date": "2026-05-01",
           "value": 49.3
+        },
+        {
+          "date": "2026-06-01",
+          "value": 48.8
         },
         {
           "date": "2026-07-01",
