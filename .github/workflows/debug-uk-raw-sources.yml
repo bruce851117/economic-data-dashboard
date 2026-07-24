@@ -1,0 +1,45 @@
+name: Debug UK Raw Data Sources
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Fetch and inspect raw source responses
+        run: python debug_uk_raw_sources.py
+
+      - name: Show report
+        if: always()
+        run: |
+          if [ -f uk_raw_source_debug/00_report.json ]; then
+            cat uk_raw_source_debug/00_report.json
+          fi
+
+      - name: Upload raw source debug files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uk-raw-source-debug-${{ github.run_number }}
+          path: uk_raw_source_debug/
+          retention-days: 7
+          if-no-files-found: warn
