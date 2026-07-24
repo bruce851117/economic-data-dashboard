@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-24T03:17:44.272110+00:00",
+  "generated_at": "2026-07-24T03:54:41.901785+00:00",
   "source": "uk econ.xlsx",
   "blocks": [
     {
@@ -559,6 +559,16 @@
         {
           "date": "2026-04-01",
           "value": 2.5
+        },
+        {
+          "date": "2026-05-01",
+          "value": 2.6,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/inflationandpriceindices/timeseries/dko8/mm23"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 2.6,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/inflationandpriceindices/timeseries/dko8/mm23"
         }
       ]
     },
@@ -1065,6 +1075,16 @@
         {
           "date": "2026-04-01",
           "value": 3.2
+        },
+        {
+          "date": "2026-05-01",
+          "value": 3.7,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/inflationandpriceindices/timeseries/d7nn/mm23"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 3.6,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/inflationandpriceindices/timeseries/d7nn/mm23"
         }
       ]
     },
@@ -1744,7 +1764,13 @@
         },
         {
           "date": "2026-04-01",
-          "value": 4.9
+          "value": 4.9,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsx/lms"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 4.9,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsx/lms"
         }
       ]
     },
@@ -2251,6 +2277,16 @@
         {
           "date": "2026-04-01",
           "value": 4.4
+        },
+        {
+          "date": "2026-05-01",
+          "value": 4.4,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peoplenotinwork/outofworkbenefits/timeseries/bcje/unem"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 4.4,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peoplenotinwork/outofworkbenefits/timeseries/bcje/unem"
         }
       ]
     },
@@ -2757,6 +2793,11 @@
         {
           "date": "2026-04-01",
           "value": 4.4
+        },
+        {
+          "date": "2026-05-01",
+          "value": 4.3,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms"
         }
       ]
     },
@@ -3263,6 +3304,11 @@
         {
           "date": "2026-04-01",
           "value": 3.0
+        },
+        {
+          "date": "2026-05-01",
+          "value": 2.9,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms"
         }
       ]
     },
@@ -3768,7 +3814,23 @@
         },
         {
           "date": "2026-04-01",
-          "value": 713.0
+          "value": 713.0,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 710.0,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 712.0,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 712.0,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem"
         }
       ]
     },
@@ -4275,6 +4337,11 @@
         {
           "date": "2026-04-01",
           "value": 2.5
+        },
+        {
+          "date": "2026-05-01",
+          "value": 2.5,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/jpc5/unem"
         }
       ]
     },
@@ -4781,6 +4848,11 @@
         {
           "date": "2026-04-01",
           "value": -0.1
+        },
+        {
+          "date": "2026-05-01",
+          "value": 0.1,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/ecyx/mgdp"
         }
       ]
     },
@@ -5287,6 +5359,16 @@
         {
           "date": "2026-04-01",
           "value": 1.1
+        },
+        {
+          "date": "2026-05-01",
+          "value": 4.6,
+          "source_url": "https://tradingeconomics.com/united-kingdom/retail-sales-ex-fuel"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 4.6,
+          "source_url": "https://tradingeconomics.com/united-kingdom/retail-sales-ex-fuel"
         }
       ]
     },
@@ -5793,6 +5875,21 @@
         {
           "date": "2026-04-01",
           "value": -25.0
+        },
+        {
+          "date": "2026-06-01",
+          "value": -23.0,
+          "source_url": "https://tradingeconomics.com/united-kingdom/consumer-confidence"
+        },
+        {
+          "date": "2026-07-01",
+          "value": -17.0,
+          "source_url": "https://tradingeconomics.com/united-kingdom/consumer-confidence"
+        },
+        {
+          "date": "2026-08-01",
+          "value": -17.0,
+          "source_url": "https://tradingeconomics.com/united-kingdom/consumer-confidence"
         }
       ]
     },
@@ -5939,6 +6036,18 @@
         {
           "date": "2026-04-01",
           "value": 53.7
+        },
+        {
+          "date": "2026-05-01",
+          "value": 53.9,
+          "source_url": "https://tradingeconomics.com/united-kingdom/manufacturing-pmi",
+          "release_type": "final"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 52.5,
+          "source_url": "https://tradingeconomics.com/united-kingdom/manufacturing-pmi",
+          "release_type": "final"
         }
       ]
     },
@@ -6085,6 +6194,18 @@
         {
           "date": "2026-04-01",
           "value": 52.7
+        },
+        {
+          "date": "2026-05-01",
+          "value": 49.3,
+          "source_url": "https://tradingeconomics.com/united-kingdom/services-pmi",
+          "release_type": "final"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 48.8,
+          "source_url": "https://tradingeconomics.com/united-kingdom/services-pmi",
+          "release_type": "final"
         }
       ]
     },
@@ -6262,7 +6383,23 @@
         },
         {
           "date": "2025-06-01",
-          "value": 1.3
+          "value": 1.3475126275344973,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 1.242253869115162,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 0.8568743751510732,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 0.9129978469178512,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         }
       ]
     },
@@ -6440,7 +6577,23 @@
         },
         {
           "date": "2025-06-01",
-          "value": 1.25884
+          "value": 1.1949068586047273,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 0.627119914321006,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 0.49216419620012886,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 0.9453953515252467,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
         }
       ]
     },
@@ -6618,7 +6771,23 @@
         },
         {
           "date": "2025-06-01",
-          "value": 4.08672
+          "value": 4.0867211968254935,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 4.142274192699924,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 3.863784708415552,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 1.6108040127518874,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         }
       ]
     }
