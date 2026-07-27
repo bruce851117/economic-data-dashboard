@@ -184,6 +184,9 @@ def ons_series(dataset: str, cdid: str, path: str) -> list[dict[str, Any]]:
             })
     if not output:
         raise RuntimeError(f"ONS {cdid} returned no data")
+
+    # ONS rate-limits rapid consecutive Generator requests.
+    time.sleep(1.5)
     return output
 
 
@@ -417,79 +420,92 @@ def discover_kpsa1_sheet(workbook: Any) -> Any:
     )
 
 
-def extract_kpsa1_retail_ex_fuel(sheet: Any) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def extract_kpsa1_retail_ex_fuel(
+    sheet: Any,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     target_phrase = "all retailing excluding automotive fuel"
-    target_cells = []
 
-    for row in sheet.iter_rows():
-        for cell in row:
-            label = normalize_excel_label(cell.value)
-            if target_phrase in label:
-                target_cells.append(cell)
+    # Read the worksheet once. In read-only mode, repeated sheet.cell() calls
+    # re-scan the XLSX stream and can take many minutes.
+    rows = list(sheet.iter_rows(values_only=True))
+    if not rows:
+        raise RuntimeError("KPSA 1 worksheet is empty")
 
-    if not target_cells:
+    target_locations: list[tuple[int, int]] = []
+    for row_index, row in enumerate(rows):
+        for column_index, value in enumerate(row):
+            if target_phrase in normalize_excel_label(value):
+                target_locations.append((row_index, column_index))
+
+    if not target_locations:
         raise RuntimeError(
             "KPSA 1 does not contain 'All retailing excluding automotive fuel'"
         )
 
     candidates: list[dict[str, Any]] = []
 
-    # Standard ONS layout: categories are columns and monthly dates run down rows.
-    for target in target_cells:
-        for row_no in range(target.row + 1, sheet.max_row + 1):
+    # Typical ONS layout: category names are columns and dates run down rows.
+    for target_row, target_column in target_locations:
+        for row_index in range(target_row + 1, len(rows)):
+            row = rows[row_index]
+            if target_column >= len(row):
+                continue
+
             date_value = None
             date_column = None
-            for column_no in range(1, target.column):
-                parsed_date = excel_month(sheet.cell(row_no, column_no).value)
+            for column_index in range(0, min(target_column, len(row))):
+                parsed_date = excel_month(row[column_index])
                 if parsed_date:
                     date_value = parsed_date
-                    date_column = column_no
+                    date_column = column_index
                     break
 
-            raw_value = sheet.cell(row_no, target.column).value
-            numeric_value = number_or_none(str(raw_value or ""))
+            numeric_value = number_or_none(str(row[target_column] or ""))
             if date_value and numeric_value is not None:
                 candidates.append({
                     "orientation": "dates_down_rows",
-                    "target_cell": target.coordinate,
-                    "date_cell": sheet.cell(row_no, date_column).coordinate,
-                    "value_cell": sheet.cell(row_no, target.column).coordinate,
+                    "target_cell": f"R{target_row + 1}C{target_column + 1}",
+                    "date_cell": f"R{row_index + 1}C{date_column + 1}",
+                    "value_cell": f"R{row_index + 1}C{target_column + 1}",
                     "date": date_value,
                     "value": numeric_value,
                 })
 
-    # Fallback layout: categories are rows and monthly dates run across columns.
+    # Fallback: category names are rows and dates run across columns.
     if not candidates:
-        for target in target_cells:
-            for column_no in range(target.column + 1, sheet.max_column + 1):
+        for target_row, target_column in target_locations:
+            target_values = rows[target_row]
+            for column_index in range(target_column + 1, len(target_values)):
                 date_value = None
                 date_row = None
-                for row_no in range(1, target.row):
-                    parsed_date = excel_month(sheet.cell(row_no, column_no).value)
+                for row_index in range(0, target_row):
+                    if column_index >= len(rows[row_index]):
+                        continue
+                    parsed_date = excel_month(rows[row_index][column_index])
                     if parsed_date:
                         date_value = parsed_date
-                        date_row = row_no
+                        date_row = row_index
                         break
 
-                raw_value = sheet.cell(target.row, column_no).value
-                numeric_value = number_or_none(str(raw_value or ""))
+                numeric_value = number_or_none(
+                    str(target_values[column_index] or "")
+                )
                 if date_value and numeric_value is not None:
                     candidates.append({
                         "orientation": "dates_across_columns",
-                        "target_cell": target.coordinate,
-                        "date_cell": sheet.cell(date_row, column_no).coordinate,
-                        "value_cell": sheet.cell(target.row, column_no).coordinate,
+                        "target_cell": f"R{target_row + 1}C{target_column + 1}",
+                        "date_cell": f"R{date_row + 1}C{column_index + 1}",
+                        "value_cell": f"R{target_row + 1}C{column_index + 1}",
                         "date": date_value,
                         "value": numeric_value,
                     })
 
     if not candidates:
         raise RuntimeError(
-            "Found the ex-fuel category in KPSA 1, but could not pair dates with numeric values"
+            "Found the ex-fuel category in KPSA 1, but could not pair "
+            "dates with numeric values"
         )
 
-    # Deduplicate by month. If the sheet contains multiple matching tables, retain
-    # the last value found for the month and expose all raw candidates in debug.
     by_month: dict[str, dict[str, Any]] = {}
     for row in candidates:
         by_month[row["date"]] = {
@@ -500,7 +516,8 @@ def extract_kpsa1_retail_ex_fuel(sheet: Any) -> tuple[list[dict[str, Any]], list
             "source_cell": row["value_cell"],
             "measure": (
                 "KPSA 1 - volume seasonally adjusted percentage change "
-                "on same month a year earlier; all retailing excluding automotive fuel"
+                "on same month a year earlier; all retailing excluding "
+                "automotive fuel"
             ),
         }
 
@@ -701,6 +718,20 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
     observations = {"manufacturing": [], "services": []}
     release_debug = []
 
+    existing_release_types: dict[str, dict[str, str]] = {}
+    for sector, series_id in {
+        "manufacturing": "mpmigbma",
+        "services": "mpmigbsa",
+    }.items():
+        series = by_id(database, series_id) or {}
+        existing_release_types[sector] = {
+            month_key(row.get("date")): str(row.get("release_type", ""))
+            for row in series.get("data", [])
+            if month_key(row.get("date"))
+        }
+
+    successful_keys: set[tuple[str, str, str]] = set()
+
     for candidate in candidates:
         title_lower = candidate["title"].lower()
         release_type = "flash" if "flash" in title_lower else "final"
@@ -713,6 +744,40 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
             sectors.extend(["manufacturing", "services"])
         else:
             continue
+
+        release_dt = parse_sp_release_date(candidate.get("release_date", ""))
+        expected_month = ""
+        if release_dt is not None:
+            if release_type == "flash":
+                expected_month = f"{release_dt.year:04d}-{release_dt.month:02d}"
+            else:
+                previous_month = shift_month(
+                    f"{release_dt.year:04d}-{release_dt.month:02d}-01",
+                    -1,
+                )
+                expected_month = month_key(previous_month)
+
+        sectors_to_fetch = []
+        for sector in sectors:
+            key = (sector, release_type, expected_month)
+            existing_type = existing_release_types[sector].get(expected_month, "")
+            if key in successful_keys:
+                continue
+            if existing_type == "final":
+                continue
+            if release_type == "flash" and existing_type == "flash":
+                continue
+            sectors_to_fetch.append(sector)
+
+        if not sectors_to_fetch:
+            print(
+                f"[S&P PMI] skip {candidate['title']} "
+                f"{candidate.get('release_date', '')}: already covered",
+                flush=True,
+            )
+            continue
+
+        sectors = sectors_to_fetch
 
         try:
             response = get(candidate["url"])
@@ -745,6 +810,9 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
                         "release_type": release_type,
                         "source_url": candidate["url"],
                     })
+                    successful_keys.add(
+                        (sector, release_type, month_key(reference_month))
+                    )
         release_debug.append(parsed)
 
     selected = {}
