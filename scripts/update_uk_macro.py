@@ -222,6 +222,7 @@ def merge(
     series_id: str,
     points: list[dict[str, Any]],
     release_type: str | None = None,
+    replace_source_range: bool = False,
 ) -> tuple[int, int]:
     series = by_id(database, series_id)
     if not series:
@@ -236,15 +237,7 @@ def merge(
         if month_key(point.get("date"))
     }
 
-    added = revised = 0
-    if old:
-        latest_existing = max(old)
-        points = [
-            point
-            for point in points
-            if month_key(point.get("date")) >= latest_existing
-        ]
-
+    normalized_points: dict[str, dict[str, Any]] = {}
     for point in points:
         key = month_key(point.get("date"))
         if not key:
@@ -252,25 +245,64 @@ def merge(
         candidate = {**point, "date": key + "-01"}
         if release_type:
             candidate["release_type"] = release_type
+        normalized_points[key] = candidate
 
+    if not normalized_points:
+        return 0, 0
+
+    added = revised = 0
+
+    if replace_source_range:
+        # Official ONS sources are authoritative over every overlapping period.
+        # Preserve user history before the first date already stored in JSON,
+        # overwrite all overlapping dates, and append newer official periods.
+        # This prevents an ONS series beginning in 1985 from unexpectedly
+        # extending a user file whose intended history begins in 2015.
+        earliest_existing = min(old) if old else min(normalized_points)
+        keys_to_apply = [
+            key for key in normalized_points
+            if key >= earliest_existing
+        ]
+    else:
+        # Non-official/scraped sources only add new periods or revise the latest
+        # available period, avoiding backfilling unrelated old history.
+        if old:
+            latest_existing = max(old)
+            keys_to_apply = [
+                key for key in normalized_points
+                if key >= latest_existing
+            ]
+        else:
+            keys_to_apply = list(normalized_points)
+
+    for key in sorted(keys_to_apply):
+        candidate = normalized_points[key]
         current = old.get(key)
+
         if current is None:
             old[key] = candidate
             added += 1
-        elif (
+            continue
+
+        if (
             current.get("release_type") == "final"
             and candidate.get("release_type") == "flash"
         ):
             continue
-        elif (
+
+        changed = (
             current.get("value") != candidate.get("value")
             or (
                 candidate.get("release_type") == "final"
                 and current.get("release_type") != "final"
             )
-        ):
+        )
+        if changed:
             old[key] = {**current, **candidate}
             revised += 1
+        elif replace_source_range:
+            # Refresh source metadata even when the official value is unchanged.
+            old[key] = {**current, **candidate}
 
     series["data"] = sorted(old.values(), key=lambda item: item["date"])
     return added, revised
@@ -556,7 +588,9 @@ def update_retail(database: dict[str, Any]) -> tuple[int, int]:
     save_debug("retail_ons_kpsa1_debug.json", debug_payload)
     debug_print("retail_ons_kpsa1", debug_payload)
 
-    return merge(database, "ukrvayoy", points)
+    return merge(
+        database, "ukrvayoy", points, replace_source_range=True
+    )
 
 
 def update_gfk(database: dict[str, Any]) -> tuple[int, int]:
@@ -686,99 +720,136 @@ def extract_reference_month(text: str) -> str | None:
 
 def extract_pmi_value(text: str, sector: str, release_type: str) -> float | None:
     compact = clean_cell(text)
+
     if sector == "manufacturing":
-        patterns = [
-            r"Manufacturing PMI(?:®|™)?\s+(?:at|posted|rose to|fell to)\s*([0-9]+(?:\.[0-9]+)?)",
-            r"Manufacturing Purchasing Managers(?:’|') Index[^.]{0,180}?posted\s+([0-9]+(?:\.[0-9]+)?)",
-            r"Manufacturing PMI[^.]{0,120}?([0-9]+(?:\.[0-9]+)?)\s+in\s+[A-Za-z]+",
+        labels = [
+            r"S&P Global UK Manufacturing PMI",
+            r"UK Manufacturing PMI",
+            r"Manufacturing PMI",
+            r"Manufacturing Purchasing Managers(?:’|') Index",
         ]
     else:
-        patterns = [
-            r"Services PMI(?:®|™)?(?: Business Activity Index)?\s+(?:at|posted|rose to|fell to)\s*([0-9]+(?:\.[0-9]+)?)",
-            r"UK Services PMI Business Activity Index[^.]{0,180}?posted\s+([0-9]+(?:\.[0-9]+)?)",
-            r"Services Business Activity Index[^.]{0,180}?(?:at|posted)\s+([0-9]+(?:\.[0-9]+)?)",
+        labels = [
+            r"S&P Global UK Services PMI Business Activity Index",
+            r"UK Services PMI Business Activity Index",
+            r"Services PMI Business Activity Index",
+            r"Services Business Activity Index",
+            r"UK Services PMI",
+            r"Services PMI",
         ]
 
-    # Flash releases sometimes show a compact key-metrics line.
-    if release_type == "flash":
-        if sector == "manufacturing":
-            patterns.insert(0, r"Flash UK Manufacturing PMI[^0-9]{0,80}([0-9]+(?:\.[0-9]+)?)")
-        else:
-            patterns.insert(0, r"Flash UK Services PMI[^0-9]{0,80}([0-9]+(?:\.[0-9]+)?)")
+    verbs = r"(?:at|posted|registered|rose to|fell to|increased to|decreased to|unchanged at|=|:)"
+    patterns = []
+    for label in labels:
+        patterns.extend([
+            rf"{label}[^0-9]{{0,100}}{verbs}\s*([0-9]{{2}}(?:\.[0-9]+)?)",
+            rf"{label}[^0-9]{{0,50}}([0-9]{{2}}(?:\.[0-9]+)?)",
+        ])
 
-    for pattern in patterns:
-        match = re.search(pattern, compact, re.I)
+    if release_type == "flash":
+        flash_label = (
+            r"Flash UK Manufacturing PMI"
+            if sector == "manufacturing"
+            else r"Flash UK Services PMI"
+        )
+        patterns.insert(0, rf"{flash_label}[^0-9]{{0,100}}([0-9]{{2}}(?:\.[0-9]+)?)")
+
+    for pattern_value in patterns:
+        match = re.search(pattern_value, compact, re.I)
         if match:
-            return float(match.group(1))
+            value = float(match.group(1))
+            if 20.0 <= value <= 80.0:
+                return value
     return None
+
+
+def month_range(start_month: str, end_month: str) -> list[str]:
+    if not start_month or not end_month or start_month > end_month:
+        return []
+    output = []
+    current = start_month + "-01"
+    while month_key(current) <= end_month:
+        output.append(month_key(current))
+        current = shift_month(current, 1)
+    return output
 
 
 def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]:
     candidates = discover_sp_pmi_releases()
-    observations = {"manufacturing": [], "services": []}
-    release_debug = []
-
-    existing_release_types: dict[str, dict[str, str]] = {}
-    for sector, series_id in {
+    mapping = {
         "manufacturing": "mpmigbma",
         "services": "mpmigbsa",
-    }.items():
+    }
+    now_month = datetime.now(timezone.utc).strftime("%Y-%m")
+
+    existing: dict[str, dict[str, dict[str, Any]]] = {}
+    needed: dict[str, set[str]] = {}
+    for sector, series_id in mapping.items():
         series = by_id(database, series_id) or {}
-        existing_release_types[sector] = {
-            month_key(row.get("date")): str(row.get("release_type", ""))
+        rows = {
+            month_key(row.get("date")): row
             for row in series.get("data", [])
             if month_key(row.get("date"))
         }
+        existing[sector] = rows
 
-    successful_keys: set[tuple[str, str, str]] = set()
+        missing: set[str] = set()
+        if rows:
+            latest_month = max(rows)
+            missing.update(month_range(month_key(shift_month(latest_month + "-01", 1)), now_month))
+            for month, row in rows.items():
+                if row.get("release_type") == "flash":
+                    missing.add(month)
+        else:
+            missing.add(now_month)
+        needed[sector] = missing
+
+    print(f"[S&P PMI] needed_months={needed}", flush=True)
+
+    observations = {"manufacturing": [], "services": []}
+    release_debug = []
+    resolved: set[tuple[str, str]] = set()
 
     for candidate in candidates:
         title_lower = candidate["title"].lower()
         release_type = "flash" if "flash" in title_lower else "final"
-        sectors = []
         if "manufacturing" in title_lower:
-            sectors.append("manufacturing")
+            candidate_sectors = ["manufacturing"]
         elif "services" in title_lower:
-            sectors.append("services")
+            candidate_sectors = ["services"]
         elif "flash uk" in title_lower:
-            sectors.extend(["manufacturing", "services"])
+            candidate_sectors = ["manufacturing", "services"]
         else:
             continue
 
         release_dt = parse_sp_release_date(candidate.get("release_date", ""))
-        expected_month = ""
-        if release_dt is not None:
-            if release_type == "flash":
-                expected_month = f"{release_dt.year:04d}-{release_dt.month:02d}"
-            else:
-                previous_month = shift_month(
-                    f"{release_dt.year:04d}-{release_dt.month:02d}-01",
-                    -1,
-                )
-                expected_month = month_key(previous_month)
-
-        sectors_to_fetch = []
-        for sector in sectors:
-            key = (sector, release_type, expected_month)
-            existing_type = existing_release_types[sector].get(expected_month, "")
-            if key in successful_keys:
-                continue
-            if existing_type == "final":
-                continue
-            if release_type == "flash" and existing_type == "flash":
-                continue
-            sectors_to_fetch.append(sector)
-
-        if not sectors_to_fetch:
-            print(
-                f"[S&P PMI] skip {candidate['title']} "
-                f"{candidate.get('release_date', '')}: already covered",
-                flush=True,
-            )
+        if release_dt is None:
             continue
 
-        sectors = sectors_to_fetch
+        if release_type == "flash":
+            expected_month = f"{release_dt.year:04d}-{release_dt.month:02d}"
+        else:
+            expected_month = month_key(shift_month(
+                f"{release_dt.year:04d}-{release_dt.month:02d}-01", -1
+            ))
 
+        sectors_to_fetch = [
+            sector for sector in candidate_sectors
+            if expected_month in needed[sector]
+            and (sector, expected_month) not in resolved
+            and not (
+                release_type == "flash"
+                and existing[sector].get(expected_month, {}).get("release_type") == "final"
+            )
+        ]
+        if not sectors_to_fetch:
+            continue
+
+        print(
+            f"[S&P PMI] fetching {candidate['title']} "
+            f"for {expected_month}: {sectors_to_fetch}",
+            flush=True,
+        )
         try:
             response = get(candidate["url"])
             text = response_to_text(response)
@@ -786,48 +857,51 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
             release_debug.append({**candidate, "error": str(error)})
             continue
 
-        reference_month = extract_reference_month(text)
         parsed = {
             **candidate,
             "release_type": release_type,
-            "reference_month": reference_month,
+            "reference_month": expected_month,
             "content_type": response.headers.get("content-type"),
             "content_bytes": len(response.content),
             "values": {},
         }
-
         safe_name = candidate["url"].rstrip("/").split("/")[-1]
         save_debug(f"sp_release_{safe_name}.txt", text)
 
-        if reference_month:
-            for sector in sectors:
-                value = extract_pmi_value(text, sector, release_type)
-                parsed["values"][sector] = value
-                if value is not None:
-                    observations[sector].append({
-                        "date": reference_month + "-01",
-                        "value": value,
-                        "release_type": release_type,
-                        "source_url": candidate["url"],
-                    })
-                    successful_keys.add(
-                        (sector, release_type, month_key(reference_month))
-                    )
+        for sector in sectors_to_fetch:
+            value = extract_pmi_value(text, sector, release_type)
+            parsed["values"][sector] = value
+            if value is None:
+                continue
+            observations[sector].append({
+                "date": expected_month + "-01",
+                "value": value,
+                "release_type": release_type,
+                "source_url": candidate["url"],
+            })
+            resolved.add((sector, expected_month))
+
         release_debug.append(parsed)
 
-    selected = {}
+        if all(
+            all((sector, month) in resolved or month not in needed[sector]
+                for month in needed[sector])
+            for sector in mapping
+        ):
+            break
+
+    selected: dict[str, list[dict[str, Any]]] = {}
     for sector, rows in observations.items():
-        by_month: dict[str, list[dict[str, Any]]] = {}
+        best: dict[str, dict[str, Any]] = {}
         for row in rows:
-            by_month.setdefault(month_key(row["date"]), []).append(row)
-        selected[sector] = []
-        for month, month_rows in by_month.items():
-            month_rows.sort(
-                key=lambda row: 1 if row["release_type"] == "final" else 0,
-                reverse=True,
-            )
-            selected[sector].append(month_rows[0])
-        selected[sector].sort(key=lambda row: row["date"])
+            month = month_key(row["date"])
+            current = best.get(month)
+            if current is None or (
+                row["release_type"] == "final"
+                and current.get("release_type") != "final"
+            ):
+                best[month] = row
+        selected[sector] = sorted(best.values(), key=lambda row: row["date"])
 
     save_debug("sp_global_release_parsed.json", release_debug)
     save_debug("sp_global_pmi_selected.json", selected)
@@ -835,20 +909,17 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
     debug_print("sp_global_pmi_selected", selected)
 
     results = {}
-    mapping = {
-        "manufacturing": "mpmigbma",
-        "services": "mpmigbsa",
-    }
     for sector, series_id in mapping.items():
-        if not selected[sector]:
-            raise RuntimeError(f"No official S&P Global {sector} PMI observation found")
         added = revised = 0
         for row in selected[sector]:
             release_type = row["release_type"]
-            point = {key: value for key, value in row.items() if key != "release_type"}
+            point = {k: v for k, v in row.items() if k != "release_type"}
             a, r = merge(database, series_id, [point], release_type)
             added += a
             revised += r
+        unresolved = sorted(needed[sector] - {month_key(row["date"]) for row in selected[sector]})
+        if unresolved:
+            print(f"[S&P PMI] unresolved {sector}: {unresolved}", flush=True)
         results[series_id] = (added, revised)
     return results
 
@@ -941,7 +1012,9 @@ def main() -> None:
                     {**point, "date": shift_month(point["date"], month_shift)}
                     for point in points
                 ]
-            logs.append((series_id, *merge(database, series_id, points)))
+            logs.append((series_id, *merge(
+                database, series_id, points, replace_source_range=True
+            )))
         except Exception as error:
             logs.append((series_id, "ERROR", str(error)))
 
@@ -949,7 +1022,9 @@ def main() -> None:
         print(f"[ONS LEVEL] updating {series_id} ({cdid})", flush=True)
         try:
             points = year_over_year(ons_series(dataset, cdid, path))
-            logs.append((series_id, *merge(database, series_id, points)))
+            logs.append((series_id, *merge(
+                database, series_id, points, replace_source_range=True
+            )))
         except Exception as error:
             logs.append((series_id, "ERROR", str(error)))
 
