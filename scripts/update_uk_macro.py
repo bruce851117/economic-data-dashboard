@@ -13,6 +13,7 @@ from typing import Any
 import requests
 from bs4 import BeautifulSoup, NavigableString
 from pypdf import PdfReader
+from openpyxl import load_workbook
 
 DATA_FILE = Path("data/uk_macro.json")
 DEBUG_DIR = Path("debug/uk_macro_sources")
@@ -55,7 +56,10 @@ MONTHS = {
 }
 MONTH_ABBR = {name[:3]: number for name, number in MONTHS.items()}
 
-RETAIL_URL = "https://tradingeconomics.com/united-kingdom/retail-sales-ex-fuel"
+RETAIL_XLSX_URL = (
+    "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/"
+    "datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx"
+)
 GFK_URL = "https://tradingeconomics.com/united-kingdom/consumer-confidence"
 MANUFACTURING_PMI_URL = (
     "https://www.investing.com/economic-calendar/"
@@ -323,14 +327,188 @@ def update_te_table(
     return merge(database, series_id, points)
 
 
-def update_retail(database: dict[str, Any]) -> tuple[int, int]:
-    return update_te_table(
-        database,
-        "ukrvayoy",
-        RETAIL_URL,
-        "Retail Sales ex Fuel YoY",
-        "retail_ex_fuel",
+def normalize_excel_label(value: Any) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
+
+
+def excel_month(value: Any) -> str | None:
+    if isinstance(value, datetime):
+        return f"{value.year:04d}-{value.month:02d}-01"
+
+    text = clean_cell(str(value or ""))
+    if not text:
+        return None
+
+    patterns = [
+        r"^(20\d{2})[-/ ](0?[1-9]|1[0-2])(?:[-/ ]\d{1,2})?$",
+        r"^(20\d{2})\s*M(0?[1-9]|1[0-2])$",
+    ]
+    for pattern_value in patterns:
+        match = re.fullmatch(pattern_value, text, re.I)
+        if match:
+            return f"{int(match.group(1)):04d}-{int(match.group(2)):02d}-01"
+
+    month_year = re.fullmatch(
+        r"(January|February|March|April|May|June|July|August|September|October|November|December)"
+        r"\s+(20\d{2})",
+        text,
+        re.I,
     )
+    if month_year:
+        month = MONTHS[month_year.group(1).lower()]
+        return f"{int(month_year.group(2)):04d}-{month:02d}-01"
+
+    year_month = re.fullmatch(
+        r"(20\d{2})\s+"
+        r"(January|February|March|April|May|June|July|August|September|October|November|December|"
+        r"Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)",
+        text,
+        re.I,
+    )
+    if year_month:
+        month = MONTH_ABBR[year_month.group(2).lower()[:3]]
+        return f"{int(year_month.group(1)):04d}-{month:02d}-01"
+
+    return None
+
+
+def discover_kpsa1_sheet(workbook: Any) -> Any:
+    for sheet_name in workbook.sheetnames:
+        normalized = re.sub(r"[^a-z0-9]", "", sheet_name.lower())
+        if normalized == "kpsa1":
+            return workbook[sheet_name]
+    raise RuntimeError(
+        "ONS retail workbook does not contain the KPSA 1 worksheet; "
+        f"available sheets: {workbook.sheetnames}"
+    )
+
+
+def extract_kpsa1_retail_ex_fuel(sheet: Any) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    target_phrase = "all retailing excluding automotive fuel"
+    target_cells = []
+
+    for row in sheet.iter_rows():
+        for cell in row:
+            label = normalize_excel_label(cell.value)
+            if target_phrase in label:
+                target_cells.append(cell)
+
+    if not target_cells:
+        raise RuntimeError(
+            "KPSA 1 does not contain 'All retailing excluding automotive fuel'"
+        )
+
+    candidates: list[dict[str, Any]] = []
+
+    # Standard ONS layout: categories are columns and monthly dates run down rows.
+    for target in target_cells:
+        for row_no in range(target.row + 1, sheet.max_row + 1):
+            date_value = None
+            date_column = None
+            for column_no in range(1, target.column):
+                parsed_date = excel_month(sheet.cell(row_no, column_no).value)
+                if parsed_date:
+                    date_value = parsed_date
+                    date_column = column_no
+                    break
+
+            raw_value = sheet.cell(row_no, target.column).value
+            numeric_value = number_or_none(str(raw_value or ""))
+            if date_value and numeric_value is not None:
+                candidates.append({
+                    "orientation": "dates_down_rows",
+                    "target_cell": target.coordinate,
+                    "date_cell": sheet.cell(row_no, date_column).coordinate,
+                    "value_cell": sheet.cell(row_no, target.column).coordinate,
+                    "date": date_value,
+                    "value": numeric_value,
+                })
+
+    # Fallback layout: categories are rows and monthly dates run across columns.
+    if not candidates:
+        for target in target_cells:
+            for column_no in range(target.column + 1, sheet.max_column + 1):
+                date_value = None
+                date_row = None
+                for row_no in range(1, target.row):
+                    parsed_date = excel_month(sheet.cell(row_no, column_no).value)
+                    if parsed_date:
+                        date_value = parsed_date
+                        date_row = row_no
+                        break
+
+                raw_value = sheet.cell(target.row, column_no).value
+                numeric_value = number_or_none(str(raw_value or ""))
+                if date_value and numeric_value is not None:
+                    candidates.append({
+                        "orientation": "dates_across_columns",
+                        "target_cell": target.coordinate,
+                        "date_cell": sheet.cell(date_row, column_no).coordinate,
+                        "value_cell": sheet.cell(target.row, column_no).coordinate,
+                        "date": date_value,
+                        "value": numeric_value,
+                    })
+
+    if not candidates:
+        raise RuntimeError(
+            "Found the ex-fuel category in KPSA 1, but could not pair dates with numeric values"
+        )
+
+    # Deduplicate by month. If the sheet contains multiple matching tables, retain
+    # the last value found for the month and expose all raw candidates in debug.
+    by_month: dict[str, dict[str, Any]] = {}
+    for row in candidates:
+        by_month[row["date"]] = {
+            "date": row["date"],
+            "value": row["value"],
+            "source_url": RETAIL_XLSX_URL,
+            "source_sheet": sheet.title,
+            "source_cell": row["value_cell"],
+            "measure": (
+                "KPSA 1 - volume seasonally adjusted percentage change "
+                "on same month a year earlier; all retailing excluding automotive fuel"
+            ),
+        }
+
+    points = sorted(by_month.values(), key=lambda item: item["date"])
+    return points, candidates
+
+
+def update_retail(database: dict[str, Any]) -> tuple[int, int]:
+    response = get(RETAIL_XLSX_URL)
+    if not response.content.startswith(b"PK"):
+        raise RuntimeError(
+            "ONS retail download did not return an XLSX file "
+            f"(content-type={response.headers.get('content-type')!r}, "
+            f"bytes={len(response.content)})"
+        )
+
+    DEBUG_DIR.mkdir(parents=True, exist_ok=True)
+    (DEBUG_DIR / "retail_ons_mainreferencetables.xlsx").write_bytes(response.content)
+
+    workbook = load_workbook(
+        BytesIO(response.content),
+        read_only=True,
+        data_only=True,
+    )
+    sheet = discover_kpsa1_sheet(workbook)
+    points, candidates = extract_kpsa1_retail_ex_fuel(sheet)
+
+    debug_payload = {
+        "source_url": RETAIL_XLSX_URL,
+        "content_type": response.headers.get("content-type"),
+        "content_bytes": len(response.content),
+        "sheet_names": workbook.sheetnames,
+        "selected_sheet": sheet.title,
+        "candidate_count": len(candidates),
+        "candidate_preview": candidates[-24:],
+        "observation_count": len(points),
+        "latest_observations": points[-24:],
+    }
+    save_debug("retail_ons_kpsa1_debug.json", debug_payload)
+    debug_print("retail_ons_kpsa1", debug_payload)
+
+    return merge(database, "ukrvayoy", points)
 
 
 def update_gfk(database: dict[str, Any]) -> tuple[int, int]:
