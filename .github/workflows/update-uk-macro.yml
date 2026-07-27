@@ -15,7 +15,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
@@ -34,7 +34,9 @@ jobs:
           python -m pip install --disable-pip-version-check requests beautifulsoup4 pypdf openpyxl
 
       - name: Update all available UK data
-        run: python scripts/update_uk_macro.py
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: python -u scripts/update_uk_macro.py
 
       - name: Upload UK source debug files
         if: always()

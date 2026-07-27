@@ -6,7 +6,7 @@ from io import BytesIO
 import json
 import re
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -73,14 +73,45 @@ SERVICES_PMI_URL = (
 
 def get(url: str, **kwargs: Any) -> requests.Response:
     last_response: requests.Response | None = None
-    for attempt in range(4):
-        response = SESSION.get(url, timeout=60, **kwargs)
+    timeout = kwargs.pop("timeout", 25)
+
+    for attempt in range(3):
+        print(
+            f"[HTTP] attempt {attempt + 1}/3: {url}",
+            flush=True,
+        )
+        try:
+            response = SESSION.get(
+                url,
+                timeout=timeout,
+                **kwargs,
+            )
+        except requests.RequestException as error:
+            print(
+                f"[HTTP] request error: {type(error).__name__}: {error}",
+                flush=True,
+            )
+            if attempt == 2:
+                raise
+            time.sleep(2 * (2**attempt))
+            continue
+
         last_response = response
+        print(
+            f"[HTTP] status={response.status_code} "
+            f"bytes={len(response.content)}",
+            flush=True,
+        )
+
         if response.status_code < 400:
             return response
+
         if response.status_code not in {429, 500, 502, 503, 504}:
             response.raise_for_status()
-        time.sleep(3 * (2**attempt))
+
+        if attempt < 2:
+            time.sleep(2 * (2**attempt))
+
     assert last_response is not None
     last_response.raise_for_status()
     return last_response
@@ -99,8 +130,11 @@ def save_debug(name: str, payload: Any) -> None:
 
 
 def debug_print(label: str, payload: Any) -> None:
-    print(f"\n[DEBUG {label}]")
-    print(json.dumps(payload, ensure_ascii=False, indent=2))
+    print(f"\n[DEBUG {label}]", flush=True)
+    print(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        flush=True,
+    )
 
 
 def period(value: str) -> str | None:
@@ -483,9 +517,6 @@ def update_retail(database: dict[str, Any]) -> tuple[int, int]:
             f"bytes={len(response.content)})"
         )
 
-    DEBUG_DIR.mkdir(parents=True, exist_ok=True)
-    (DEBUG_DIR / "retail_ons_mainreferencetables.xlsx").write_bytes(response.content)
-
     workbook = load_workbook(
         BytesIO(response.content),
         read_only=True,
@@ -544,6 +575,20 @@ def preceding_release_context(anchor: Any) -> str:
     return " ".join(reversed(parts[-20:]))
 
 
+def parse_sp_release_date(value: str) -> datetime | None:
+    text = clean_cell(value)
+    if not text:
+        return None
+    for format_value in ("%B %d %Y", "%b %d %Y"):
+        try:
+            return datetime.strptime(text, format_value).replace(
+                tzinfo=timezone.utc,
+            )
+        except ValueError:
+            continue
+    return None
+
+
 def discover_sp_pmi_releases() -> list[dict[str, str]]:
     response = get(SP_RELEASES_URL)
     soup = BeautifulSoup(response.text, "html.parser")
@@ -579,10 +624,32 @@ def discover_sp_pmi_releases() -> list[dict[str, str]]:
         })
         seen.add(url)
 
-    save_debug("sp_global_release_index_raw.html", response.text)
-    save_debug("sp_global_release_candidates.json", candidates)
-    debug_print("sp_global_release_candidates", candidates)
-    return candidates
+    cutoff = datetime.now(timezone.utc) - timedelta(days=120)
+    recent_candidates = []
+    for candidate in candidates:
+        release_date = parse_sp_release_date(candidate.get("release_date", ""))
+        if release_date is not None and release_date >= cutoff:
+            recent_candidates.append(candidate)
+
+    # If S&P changes the date text format, avoid processing the entire archive.
+    # Keep only the first 18 relevant UK release links as a safe fallback.
+    if not recent_candidates:
+        recent_candidates = candidates[:18]
+
+    recent_candidates.sort(
+        key=lambda item: parse_sp_release_date(item.get("release_date", ""))
+        or datetime.min.replace(tzinfo=timezone.utc),
+        reverse=True,
+    )
+
+    print(
+        f"[S&P PMI] discovered={len(candidates)} "
+        f"recent_to_process={len(recent_candidates)}",
+        flush=True,
+    )
+    save_debug("sp_global_release_candidates.json", recent_candidates)
+    debug_print("sp_global_release_candidates", recent_candidates)
+    return recent_candidates
 
 
 def extract_reference_month(text: str) -> str | None:
@@ -792,10 +859,13 @@ def update_dmp_inflation(database: dict[str, Any]) -> tuple[int, int]:
 
 
 def main() -> None:
+    started_at = time.monotonic()
+    print("[START] Update UK macro data", flush=True)
     database = json.loads(DATA_FILE.read_text(encoding="utf-8"))
     logs = []
 
     for series_id, (dataset, cdid, path, month_shift) in ONS.items():
+        print(f"[ONS] updating {series_id} ({cdid})", flush=True)
         try:
             points = ons_series(dataset, cdid, path)
             if month_shift:
@@ -808,12 +878,14 @@ def main() -> None:
             logs.append((series_id, "ERROR", str(error)))
 
     for series_id, (dataset, cdid, path) in LEVELS.items():
+        print(f"[ONS LEVEL] updating {series_id} ({cdid})", flush=True)
         try:
             points = year_over_year(ons_series(dataset, cdid, path))
             logs.append((series_id, *merge(database, series_id, points)))
         except Exception as error:
             logs.append((series_id, "ERROR", str(error)))
 
+    print("[S&P PMI] update started", flush=True)
     try:
         pmi_results = update_sp_global_pmi(database)
         for pmi_id, result in pmi_results.items():
@@ -828,6 +900,7 @@ def main() -> None:
     ]
 
     for name, update_function in updates:
+        print(f"[EXTRA] updating {name}", flush=True)
         try:
             logs.append((name, *update_function()))
         except Exception as error:
@@ -839,10 +912,12 @@ def main() -> None:
         encoding="utf-8",
     )
 
-    print("\n[UPDATE SUMMARY]")
+    print("\n[UPDATE SUMMARY]", flush=True)
     for entry in logs:
-        print(*entry)
-    print(f"\nDebug files saved under: {DEBUG_DIR}")
+        print(*entry, flush=True)
+    elapsed = time.monotonic() - started_at
+    print(f"\n[DONE] elapsed_seconds={elapsed:.1f}", flush=True)
+    print(f"Debug files saved under: {DEBUG_DIR}", flush=True)
 
 
 if __name__ == "__main__":
