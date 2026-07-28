@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-28T01:50:59.866660+00:00",
+  "generated_at": "2026-07-28T01:58:19.065197+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -1350,199 +1350,411 @@
       "data": [
         {
           "date": "2022-05-01",
-          "value": 6.916
+          "value": 6.916,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R5C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2022-06-01",
-          "value": 7.398
+          "value": 7.398,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R6C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2022-07-01",
-          "value": 7.406
+          "value": 7.406,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R7C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2022-08-01",
-          "value": 8.345
+          "value": 8.345,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R8C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2022-09-01",
-          "value": 9.474
+          "value": 9.474,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R9C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2022-10-01",
-          "value": 7.602
+          "value": 7.602,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R10C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2022-11-01",
-          "value": 7.17
+          "value": 7.17,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R11C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2022-12-01",
-          "value": 7.394
+          "value": 7.394,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R12C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2023-01-01",
-          "value": 6.395
+          "value": 6.395,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R13C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2023-02-01",
-          "value": 5.875
+          "value": 5.875,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R14C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2023-03-01",
-          "value": 5.84
+          "value": 5.84,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R15C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2023-04-01",
-          "value": 5.596
+          "value": 5.596,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R16C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2023-05-01",
-          "value": 5.906
+          "value": 5.906,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R17C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2023-06-01",
-          "value": 5.677
+          "value": 5.677,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R18C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2023-07-01",
-          "value": 5.383
+          "value": 5.383,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R19C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2023-08-01",
-          "value": 4.833
+          "value": 4.833,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R20C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2023-09-01",
-          "value": 4.85
+          "value": 4.85,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R21C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2023-10-01",
-          "value": 4.633
+          "value": 4.633,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R22C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2023-11-01",
-          "value": 4.386
+          "value": 4.386,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R23C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2023-12-01",
-          "value": 3.99
+          "value": 3.99,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R24C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2024-01-01",
-          "value": 3.436
+          "value": 3.436,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R25C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2024-02-01",
-          "value": 3.285
+          "value": 3.285,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R26C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2024-03-01",
-          "value": 3.146
+          "value": 3.146,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R27C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2024-04-01",
-          "value": 2.935
+          "value": 2.935,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R28C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2024-05-01",
-          "value": 2.877
+          "value": 2.877,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R29C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2024-06-01",
-          "value": 2.78
+          "value": 2.78,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R30C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2024-07-01",
-          "value": 2.545
+          "value": 2.545,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R31C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2024-08-01",
-          "value": 2.634
+          "value": 2.634,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R32C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2024-09-01",
-          "value": 2.681
+          "value": 2.681,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R33C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2024-10-01",
-          "value": 2.538
+          "value": 2.538,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R34C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2024-11-01",
-          "value": 2.852
+          "value": 2.852,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R35C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2024-12-01",
-          "value": 3.037
+          "value": 3.037,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R36C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2025-01-01",
-          "value": 3.048
+          "value": 3.048,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R37C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2025-02-01",
-          "value": 3.076
+          "value": 3.076,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R38C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2025-03-01",
-          "value": 3.42
+          "value": 3.42,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R39C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2025-04-01",
-          "value": 3.166
+          "value": 3.166,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R40C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2025-05-01",
-          "value": 3.036
+          "value": 3.036,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R41C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2025-06-01",
-          "value": 3.27
+          "value": 3.27,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R42C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2025-07-01",
-          "value": 3.186
+          "value": 3.186,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R43C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2025-08-01",
-          "value": 3.438
+          "value": 3.438,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R44C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2025-09-01",
-          "value": 3.433
+          "value": 3.433,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R45C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2025-10-01",
-          "value": 3.436
+          "value": 3.436,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R46C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2025-11-01",
-          "value": 3.387
+          "value": 3.387,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R47C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2025-12-01",
-          "value": 3.242
+          "value": 3.242,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R48C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2026-01-01",
-          "value": 2.945
+          "value": 2.945,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R49C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2026-02-01",
-          "value": 2.985
+          "value": 2.982,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R50C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2026-03-01",
-          "value": 3.504
+          "value": 3.504,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R51C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2026-04-01",
-          "value": 3.961
+          "value": 3.961,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R52C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         },
         {
           "date": "2026-05-01",
-          "value": 3.738
+          "value": 3.738,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R53C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 3.345,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R54C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 2.992,
+          "source_url": "https://www.bankofengland.co.uk/-/media/boe/files/decision-maker-panel-survey/2026/monthly-dmp-data-july-2026.xlsx",
+          "source_sheet": "CPI expectations",
+          "source_cell": "R55C4",
+          "measure": "DMP 1-year ahead CPI inflation expectations - Single month"
         }
       ]
     },
