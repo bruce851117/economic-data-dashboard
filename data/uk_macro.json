@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-28T02:41:16.483813+00:00",
+  "generated_at": "2026-07-28T02:46:14.512962+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -9009,7 +9009,7 @@
         },
         {
           "date": "2026-06-01",
-          "value": 50.0,
+          "value": 48.8,
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/48614ce701c74b2facc9abf435f3a00b",
           "release_type": "final"
         },
