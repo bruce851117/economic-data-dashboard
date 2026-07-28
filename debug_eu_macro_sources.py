@@ -271,6 +271,27 @@ def fetch_source_group(group_id: str, config: dict[str, Any]) -> dict[str, dict[
     results: dict[str, dict[str, Any]] = {}
     if is_json:
         records = payload if isinstance(payload, list) else []
+    elif group_id == "sp_global_pmi":
+        contextual_records: list[dict[str, str]] = []
+        for match in re.finditer(
+            r'href=["\']([^"\']*/Public/Home/PressRelease/[^"\']+)["\']',
+            response.text,
+            re.I,
+        ):
+            context_start = max(0, match.start() - 900)
+            context_end = min(len(response.text), match.end() + 220)
+            context_html = response.text[context_start:context_end]
+            context_parser = _TextExtractor()
+            context_parser.feed(context_html)
+            context_text = " ".join(context_parser.parts)
+            contextual_records.append({
+                "href": requests.compat.urljoin(response.url, match.group(1)),
+                "text": context_text,
+            })
+        records = contextual_records
+        (OUTPUT_DIR / "raw_sp_global_contextual_links.json").write_text(
+            json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
     for series_id, keywords in config["series"].items():
         hits = [keyword for keyword in keywords if keyword.lower() in searchable]
         candidate_records = []
@@ -280,11 +301,24 @@ def fetch_source_group(group_id: str, config: dict[str, Any]) -> dict[str, dict[
                 href = str(record.get("href", "")) if isinstance(record, dict) else ""
                 same_record_match = all(keyword.lower() in record_text for keyword in keywords)
                 if same_record_match and "/Public/Home/PressRelease/" in href:
-                    candidate_records.append(record)
+                    candidate = dict(record)
+                    candidate["match_score"] = sum(
+                        record_text.rfind(keyword.lower()) for keyword in keywords
+                    )
+                    candidate_records.append(candidate)
             elif any(token.lower() in record_text for keyword in keywords for token in keyword.split()):
                 candidate_records.append(record)
             if len(candidate_records) >= 15:
                 break
+        if group_id == "sp_global_pmi" and candidate_records:
+            deduped: dict[str, dict[str, Any]] = {}
+            for candidate in sorted(
+                candidate_records,
+                key=lambda item: item.get("match_score", -1),
+                reverse=True,
+            ):
+                deduped.setdefault(candidate.get("href", ""), candidate)
+            candidate_records = list(deduped.values())[:15]
         numbers = re.findall(r"(?<!\d)-?\d+(?:[.,]\d+)?(?!\d)", searchable)
         results[series_id] = {
             "status": (
