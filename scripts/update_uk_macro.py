@@ -645,7 +645,6 @@ def discover_sp_pmi_releases() -> list[dict[str, str]]:
     soup = BeautifulSoup(response.text, "html.parser")
     candidates = []
     seen = set()
-
     for anchor in soup.find_all("a", href=True):
         href = anchor.get("href", "")
         if "/Public/Home/PressRelease/" not in href:
@@ -653,46 +652,65 @@ def discover_sp_pmi_releases() -> list[dict[str, str]]:
         url = requests.compat.urljoin(SP_RELEASES_URL, href)
         if url in seen:
             continue
-        context = preceding_release_context(anchor)
+
+        # S&P sometimes places the release title inside the link itself and
+        # sometimes in the surrounding card. Read both, rather than only the
+        # text before the anchor; otherwise the latest Flash PMI can be missed.
+        anchor_text = clean_cell(anchor.get_text(" ", strip=True))
+        parent_text = clean_cell(
+            anchor.parent.get_text(" ", strip=True) if anchor.parent else ""
+        )
+        previous_text = preceding_release_context(anchor)
+        context = clean_cell(" ".join(
+            part for part in (anchor_text, parent_text, previous_text) if part
+        ))
+
         title_match = re.search(
-            r"(S&P Global (?:Flash )?UK (?:Manufacturing|Services)?\s*PMI)",
+            r"(S&P Global\s+(?:Flash\s+)?UK(?:\s+(?:Manufacturing|Services))?\s+PMI(?:[^|]{0,80})?)",
             context,
             re.I,
         )
         if not title_match:
+            # Keep a broader fallback for minor S&P title-format changes.
+            title_match = re.search(
+                r"((?:Flash\s+)?UK(?:\s+(?:Manufacturing|Services))?\s+PMI(?:[^|]{0,80})?)",
+                context,
+                re.I,
+            )
+        if not title_match:
             continue
         title = clean_cell(title_match.group(1))
+
         release_date_match = re.search(
-            r"([A-Za-z]+\s+\d{1,2}\s+20\d{2})\s+\d{2}:\d{2}\s+UTC",
+            r"([A-Za-z]+\s+\d{1,2},?\s+20\d{2})\s+\d{2}:\d{2}\s+UTC",
             context,
             re.I,
         )
+        release_date = release_date_match.group(1).replace(",", "") if release_date_match else ""
         candidates.append({
             "title": title,
             "url": url,
-            "release_date": release_date_match.group(1) if release_date_match else "",
+            "release_date": release_date,
             "index_context": context,
         })
         seen.add(url)
 
-    cutoff = datetime.now(timezone.utc) - timedelta(days=120)
+    cutoff = datetime.now(timezone.utc) - timedelta(days=150)
     recent_candidates = []
     for candidate in candidates:
         release_date = parse_sp_release_date(candidate.get("release_date", ""))
         if release_date is not None and release_date >= cutoff:
             recent_candidates.append(candidate)
 
-    # If S&P changes the date text format, avoid processing the entire archive.
-    # Keep only the first 18 relevant UK release links as a safe fallback.
+    # If S&P changes its date text format, process a bounded set of the newest
+    # visible UK releases instead of silently returning nothing.
     if not recent_candidates:
-        recent_candidates = candidates[:18]
-
+        recent_candidates = candidates[:30]
     recent_candidates.sort(
         key=lambda item: parse_sp_release_date(item.get("release_date", ""))
         or datetime.min.replace(tzinfo=timezone.utc),
         reverse=True,
     )
-
     print(
         f"[S&P PMI] discovered={len(candidates)} "
         f"recent_to_process={len(recent_candidates)}",
@@ -701,7 +719,6 @@ def discover_sp_pmi_releases() -> list[dict[str, str]]:
     save_debug("sp_global_release_candidates.json", recent_candidates)
     debug_print("sp_global_release_candidates", recent_candidates)
     return recent_candidates
-
 
 def extract_reference_month(text: str) -> str | None:
     head = clean_cell(text[:5000])
@@ -780,10 +797,15 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
         "manufacturing": "mpmigbma",
         "services": "mpmigbsa",
     }
-    now_month = datetime.now(timezone.utc).strftime("%Y-%m")
 
+    # The current calendar month is the latest month that may already have a
+    # Flash PMI release. Missing months are attempted one by one; a month with
+    # no published/parsable release is logged and skipped without failing the run.
+    now_month = datetime.now(timezone.utc).strftime("%Y-%m")
     existing: dict[str, dict[str, dict[str, Any]]] = {}
     needed: dict[str, set[str]] = {}
+    ordered_needed: dict[str, list[str]] = {}
+
     for sector, series_id in mapping.items():
         series = by_id(database, series_id) or {}
         rows = {
@@ -793,18 +815,27 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
         }
         existing[sector] = rows
 
-        missing: set[str] = set()
+        months_to_try: list[str] = []
         if rows:
             latest_month = max(rows)
-            missing.update(month_range(month_key(shift_month(latest_month + "-01", 1)), now_month))
-            for month, row in rows.items():
-                if row.get("release_type") == "flash":
-                    missing.add(month)
+            first_missing = month_key(shift_month(latest_month + "-01", 1))
+            months_to_try.extend(month_range(first_missing, now_month))
+            # Revisit Flash observations because a later final release may now exist.
+            months_to_try.extend(
+                month for month, row in rows.items()
+                if row.get("release_type") == "flash" and month <= now_month
+            )
         else:
-            missing.add(now_month)
-        needed[sector] = missing
+            months_to_try.append(now_month)
 
-    print(f"[S&P PMI] needed_months={needed}", flush=True)
+        ordered_needed[sector] = sorted(set(months_to_try))
+        needed[sector] = set(ordered_needed[sector])
+        latest_display = max(rows) if rows else "none"
+        print(
+            f"[S&P PMI] {sector}: latest_existing={latest_display}; "
+            f"trying_through={now_month}; months={ordered_needed[sector]}",
+            flush=True,
+        )
 
     observations = {"manufacturing": [], "services": []}
     release_debug = []
@@ -817,13 +848,17 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
             candidate_sectors = ["manufacturing"]
         elif "services" in title_lower:
             candidate_sectors = ["services"]
-        elif "flash uk" in title_lower:
+        elif "flash" in title_lower and "uk" in title_lower and "pmi" in title_lower:
             candidate_sectors = ["manufacturing", "services"]
         else:
             continue
 
         release_dt = parse_sp_release_date(candidate.get("release_date", ""))
         if release_dt is None:
+            release_debug.append({
+                **candidate,
+                "skipped": "release date could not be parsed",
+            })
             continue
 
         if release_type == "flash":
@@ -846,15 +881,19 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
             continue
 
         print(
-            f"[S&P PMI] fetching {candidate['title']} "
-            f"for {expected_month}: {sectors_to_fetch}",
+            f"[S&P PMI] attempting {expected_month} {release_type}: "
+            f"{candidate['title']} -> {sectors_to_fetch}",
             flush=True,
         )
         try:
             response = get(candidate["url"])
-            text = response_to_text(response)
+            text_value = response_to_text(response)
         except Exception as error:
             release_debug.append({**candidate, "error": str(error)})
+            print(
+                f"[S&P PMI] skipped {expected_month}; download failed: {error}",
+                flush=True,
+            )
             continue
 
         parsed = {
@@ -866,12 +905,17 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
             "values": {},
         }
         safe_name = candidate["url"].rstrip("/").split("/")[-1]
-        save_debug(f"sp_release_{safe_name}.txt", text)
+        save_debug(f"sp_release_{safe_name}.txt", text_value)
 
         for sector in sectors_to_fetch:
-            value = extract_pmi_value(text, sector, release_type)
+            value = extract_pmi_value(text_value, sector, release_type)
             parsed["values"][sector] = value
             if value is None:
+                print(
+                    f"[S&P PMI] {expected_month} {sector}: release found "
+                    "but value could not be parsed; skipping",
+                    flush=True,
+                )
                 continue
             observations[sector].append({
                 "date": expected_month + "-01",
@@ -880,15 +924,12 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
                 "source_url": candidate["url"],
             })
             resolved.add((sector, expected_month))
-
+            print(
+                f"[S&P PMI] resolved {expected_month} {sector}={value} "
+                f"({release_type})",
+                flush=True,
+            )
         release_debug.append(parsed)
-
-        if all(
-            all((sector, month) in resolved or month not in needed[sector]
-                for month in needed[sector])
-            for sector in mapping
-        ):
-            break
 
     selected: dict[str, list[dict[str, Any]]] = {}
     for sector, rows in observations.items():
@@ -911,18 +952,26 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
     results = {}
     for sector, series_id in mapping.items():
         added = revised = 0
+        selected_months = set()
         for row in selected[sector]:
+            selected_months.add(month_key(row["date"]))
             release_type = row["release_type"]
             point = {k: v for k, v in row.items() if k != "release_type"}
             a, r = merge(database, series_id, [point], release_type)
             added += a
             revised += r
-        unresolved = sorted(needed[sector] - {month_key(row["date"]) for row in selected[sector]})
-        if unresolved:
-            print(f"[S&P PMI] unresolved {sector}: {unresolved}", flush=True)
+
+        unresolved = [
+            month for month in ordered_needed[sector]
+            if month not in selected_months
+        ]
+        for month in unresolved:
+            print(
+                f"[S&P PMI] {sector} {month}: no available release/value; skipped",
+                flush=True,
+            )
         results[series_id] = (added, revised)
     return results
-
 
 def dmp_page_candidates() -> list[tuple[str, str]]:
     now = datetime.now(timezone.utc)
