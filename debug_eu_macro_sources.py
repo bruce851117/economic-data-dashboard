@@ -113,35 +113,35 @@ SOURCE_GROUPS = {
     "ine": {
         "url": "https://servicios.ine.es/wstempus/js/EN/OPERACIONES_DISPONIBLES",
         "series": {
-            "spain_core_cpi_yoy": ["consumer price", "underlying"],
-            "spain_unemployment_rate": ["labour force survey"],
-            "spain_real_retail_yoy": ["retail trade"],
-            "spain_gdp_yoy": ["quarterly national accounts"],
+            "spain_core_cpi_yoy": ["ipc", "subyacente"],
+            "spain_unemployment_rate": ["encuesta de poblacion activa"],
+            "spain_real_retail_yoy": ["comercio minorista"],
+            "spain_gdp_yoy": ["contabilidad nacional trimestral"],
         },
     },
     "insee": {
         "url": "https://api.insee.fr/melodi/catalog/all",
         "series": {
-            "france_cpi_ex_energy_yoy": ["consumer price"],
-            "france_unemployment_rate_ilo": ["unemployment"],
-            "france_consumer_confidence": ["consumer confidence"],
-            "france_manufacturing_confidence": ["business climate"],
-            "france_business_confidence": ["business climate"],
-            "france_gdp_yoy": ["gross domestic product"],
+            "france_cpi_ex_energy_yoy": ["prix a la consommation"],
+            "france_unemployment_rate_ilo": ["chomage"],
+            "france_consumer_confidence": ["confiance des menages"],
+            "france_manufacturing_confidence": ["climat des affaires"],
+            "france_business_confidence": ["climat des affaires"],
+            "france_gdp_yoy": ["produit interieur brut"],
         },
     },
     "destatis": {
         "url": "https://www-genesis.destatis.de/genesisWS/rest/2020/find/find",
         "base_params": {"username": "GAST", "password": "GAST", "language": "en", "category": "all"},
         "series": {
-            "germany_core_cpi_yoy": ["consumer price index excluding"],
-            "germany_real_retail_mom": ["retail trade price adjusted"],
-            "germany_industrial_production_yoy": ["production index industry"],
-            "germany_gdp_yoy": ["gross domestic product price adjusted"],
+            "germany_core_cpi_yoy": ["verbraucherpreisindex", "ohne"],
+            "germany_real_retail_mom": ["einzelhandel", "preisbereinigt"],
+            "germany_industrial_production_yoy": ["produktionsindex", "industrie"],
+            "germany_gdp_yoy": ["bruttoinlandsprodukt", "preisbereinigt"],
         },
     },
     "bundesbank_catalogue": {
-        "url": "https://api.statistiken.bundesbank.de/rest/dataflow/BBK/BBDL1/1.0?references=all",
+        "url": "https://api.statistiken.bundesbank.de/rest/dataflow/BBK/BBDL1/latest?references=all",
         "series": {
             "germany_unemployment_change_swda": ["unemployment", "change"],
         },
@@ -159,13 +159,13 @@ SOURCE_GROUPS = {
     "zew": {
         "url": "https://www.zew.de/en/publications/zew-expertises-research-reports/research-reports/business-cycle/zew-financial-market-survey",
         "series": {
-            "germany_zew_current": ["economic situation germany"],
-            "germany_zew_expectations": ["economic sentiment germany"],
+            "germany_zew_current": ["current situation", "germany"],
+            "germany_zew_expectations": ["economic sentiment", "germany"],
         },
     },
     "ifo": {
         "url": "https://www.ifo.de/en/ifo-time-series",
-        "series": {"germany_ifo_business_climate": ["business climate"]},
+        "series": {"germany_ifo_business_climate": ["climat des affaires"]},
     },
     "sp_global_pmi": {
         "url": "https://www.pmi.spglobal.com/Public/Release/PressReleases",
@@ -228,8 +228,16 @@ def fetch_source_group(group_id: str, config: dict[str, Any]) -> dict[str, dict[
         raw_path.write_text(response.text, encoding="utf-8")
 
     results: dict[str, dict[str, Any]] = {}
+    records = payload if isinstance(payload, list) else []
     for series_id, keywords in config["series"].items():
         hits = [keyword for keyword in keywords if keyword.lower() in searchable]
+        candidate_records = []
+        for record in records:
+            record_text = " ".join(_flatten_strings(record)).lower()
+            if any(token.lower() in record_text for keyword in keywords for token in keyword.split()):
+                candidate_records.append(record)
+            if len(candidate_records) >= 15:
+                break
         numbers = re.findall(r"(?<!\d)-?\d+(?:[.,]\d+)?(?!\d)", searchable)
         results[series_id] = {
             "status": "source_reachable" if hits else "source_reachable_no_keyword_match",
@@ -238,6 +246,7 @@ def fetch_source_group(group_id: str, config: dict[str, Any]) -> dict[str, dict[
             "http_status": response.status_code,
             "matched_keywords": hits,
             "required_keywords": keywords,
+            "candidate_records": candidate_records,
             "candidate_numbers_tail": numbers[-20:],
             "raw_file": str(raw_path),
             "data": [],
