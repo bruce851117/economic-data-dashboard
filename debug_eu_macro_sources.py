@@ -30,9 +30,11 @@ EUROSTAT_SERIES = {
     "euro_unemployment_rate": {
         "label": "歐元區失業率",
         "dataset": "une_rt_m",
-        "params": {"geo": "EA20", "sex": "T", "age": "Y15-74", "unit": "PC_ACT", "s_adj": "SA"},
+        "params": {"geo": "EA20", "sex": "T", "age": "TOTAL", "unit": "PC_ACT", "s_adj": "SA"},
         "frequency": "monthly",
         "expected_name": "Eurostat Unemployment Eurozone",
+        "discovery_filters": {"geo": "EA20"},
+        "preferred": {"freq": "M", "sex": "T", "age": "TOTAL", "unit": "PC_ACT", "s_adj": "SA"},
     },
     "euro_core_hicp_yoy": {
         "label": "歐元區 Core HICP YoY",
@@ -40,6 +42,9 @@ EUROSTAT_SERIES = {
         "params": {"geo": "EA20", "coicop": "TOT_X_NRG_FOOD", "unit": "RCH_A"},
         "frequency": "monthly",
         "expected_name": "Eurostat Eurozone Core MUICP YoY",
+        "discovery_filters": {"geo": "EA20", "unit": "RCH_A"},
+        "preferred": {"freq": "M", "unit": "RCH_A"},
+        "dimension_label_keywords": {"coicop": ["excluding energy", "food", "alcohol", "tobacco"]},
     },
     "euro_real_retail_yoy": {
         "label": "歐元區實質零售 YoY",
@@ -47,6 +52,8 @@ EUROSTAT_SERIES = {
         "params": {"geo": "EA20", "nace_r2": "G47", "indic_bt": "VOL_SLS", "s_adj": "SCA", "unit": "PCH_SM"},
         "frequency": "monthly",
         "expected_name": "Eurostat Retail Sales Eurozone YoY",
+        "discovery_filters": {"geo": "EA20", "nace_r2": "G47"},
+        "preferred": {"freq": "M", "indic_bt": "VOL_SLS", "nace_r2": "G47", "s_adj": "SCA", "unit": "PCH_SM"},
     },
     "euro_gdp_yoy": {
         "label": "歐元區 GDP YoY",
@@ -54,6 +61,8 @@ EUROSTAT_SERIES = {
         "params": {"geo": "EA20", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"},
         "frequency": "quarterly",
         "expected_name": "Euro Area Gross Domestic Product YoY",
+        "discovery_filters": {"geo": "EA20", "na_item": "B1GQ"},
+        "preferred": {"freq": "Q", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"},
     },
 }
 
@@ -113,29 +122,38 @@ def request(url: str, *, params: dict[str, str] | None = None) -> requests.Respo
     return response
 
 
+def _ordered_codes(payload: dict[str, Any], dim_id: str) -> list[str]:
+    index = payload["dimension"][dim_id]["category"]["index"]
+    if isinstance(index, dict):
+        return [key for key, _ in sorted(index.items(), key=lambda item: item[1])]
+    return list(index)
+
+
 def jsonstat_points(payload: dict[str, Any]) -> list[dict[str, Any]]:
     ids = payload.get("id") or []
     sizes = payload.get("size") or []
     dimensions = payload.get("dimension") or {}
-    values = payload.get("value") or {}
+    values = payload.get("value")
     if "time" not in ids:
         raise RuntimeError(f"Eurostat response has no time dimension: {ids}")
 
-    categories: list[list[str]] = []
-    for dim_id in ids:
-        index = dimensions[dim_id]["category"]["index"]
-        if isinstance(index, dict):
-            ordered = [k for k, _ in sorted(index.items(), key=lambda item: item[1])]
-        else:
-            ordered = list(index)
-        categories.append(ordered)
-
-    points: list[dict[str, Any]] = []
+    categories = [_ordered_codes(payload, dim_id) for dim_id in ids]
+    labels = {
+        dim_id: dimensions[dim_id].get("category", {}).get("label", {})
+        for dim_id in ids
+    }
     total = 1
     for size in sizes:
         total *= size
+
+    points: list[dict[str, Any]] = []
     for flat_index in range(total):
-        raw_value = values.get(str(flat_index), values.get(flat_index))
+        if isinstance(values, list):
+            raw_value = values[flat_index] if flat_index < len(values) else None
+        elif isinstance(values, dict):
+            raw_value = values.get(str(flat_index), values.get(flat_index))
+        else:
+            raw_value = None
         if raw_value is None:
             continue
         remainder = flat_index
@@ -143,32 +161,104 @@ def jsonstat_points(payload: dict[str, Any]) -> list[dict[str, Any]]:
         for i in range(len(sizes) - 1, -1, -1):
             coordinates[i] = remainder % sizes[i]
             remainder //= sizes[i]
-        labels = {ids[i]: categories[i][coordinates[i]] for i in range(len(ids))}
-        points.append({"period": labels["time"], "value": float(raw_value), "dimensions": labels})
+        codes = {ids[i]: categories[i][coordinates[i]] for i in range(len(ids))}
+        point_labels = {
+            dim_id: labels[dim_id].get(code, code)
+            for dim_id, code in codes.items()
+        }
+        points.append({
+            "period": codes["time"],
+            "value": float(raw_value),
+            "dimensions": codes,
+            "dimension_labels": point_labels,
+        })
     points.sort(key=lambda point: point["period"])
     return points
 
 
+def dimension_options(payload: dict[str, Any]) -> dict[str, list[dict[str, str]]]:
+    output: dict[str, list[dict[str, str]]] = {}
+    for dim_id in payload.get("id") or []:
+        codes = _ordered_codes(payload, dim_id)
+        label_map = payload["dimension"][dim_id].get("category", {}).get("label", {})
+        output[dim_id] = [{"code": code, "label": label_map.get(code, code)} for code in codes]
+    return output
+
+
+def _matches_preferred(point: dict[str, Any], preferred: dict[str, str]) -> bool:
+    dimensions = point.get("dimensions", {})
+    return all(dimensions.get(key) == value for key, value in preferred.items())
+
+
+def _matches_keywords(point: dict[str, Any], rules: dict[str, list[str]]) -> bool:
+    labels = point.get("dimension_labels", {})
+    for dim_id, keywords in rules.items():
+        text = str(labels.get(dim_id, "")).lower()
+        if not all(keyword.lower() in text for keyword in keywords):
+            return False
+    return True
+
 def fetch_eurostat(config: dict[str, Any]) -> dict[str, Any]:
     url = f"{EUROSTAT_BASE}/{config['dataset']}"
-    response = request(url, params={**config["params"], "lang": "EN"})
-    payload = response.json()
-    raw_name = f"raw_eurostat_{config['dataset']}.json"
-    (OUTPUT_DIR / raw_name).write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+
+    # First attempt: exact filters supplied in the specification.
+    exact_params = {**config["params"], "lang": "EN", "lastTimePeriod": "12"}
+    exact_response = request(url, params=exact_params)
+    exact_payload = exact_response.json()
+    (OUTPUT_DIR / f"raw_eurostat_{config['dataset']}_exact.json").write_text(
+        json.dumps(exact_payload, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    if payload.get("error"):
-        raise RuntimeError(str(payload["error"]))
-    points = jsonstat_points(payload)[-6:]
+    exact_points = jsonstat_points(exact_payload) if not exact_payload.get("error") else []
+
+    selected_points = exact_points
+    selected_url = exact_response.url
+    selection_mode = "exact_filters"
+    discovery_payload = None
+
+    # Eurostat occasionally changes classification codes (notably HICP in 2026).
+    # If the exact slice is empty or stale, request a small broad slice and select
+    # the series from actual dimension codes/labels rather than guessing.
+    newest_exact = max((point["period"] for point in exact_points), default="")
+    current_year = datetime.now(timezone.utc).year
+    stale = bool(newest_exact and not newest_exact.startswith(str(current_year)))
+    if not exact_points or stale:
+        discovery_params = {
+            **config.get("discovery_filters", {"geo": config["params"].get("geo", "EA20")}),
+            "lang": "EN",
+            "lastTimePeriod": "18",
+        }
+        discovery_response = request(url, params=discovery_params)
+        discovery_payload = discovery_response.json()
+        (OUTPUT_DIR / f"raw_eurostat_{config['dataset']}_discovery.json").write_text(
+            json.dumps(discovery_payload, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        all_points = jsonstat_points(discovery_payload) if not discovery_payload.get("error") else []
+        preferred = config.get("preferred", {})
+        candidates = [point for point in all_points if _matches_preferred(point, preferred)]
+        keyword_rules = config.get("dimension_label_keywords", {})
+        if keyword_rules:
+            candidates = [point for point in candidates if _matches_keywords(point, keyword_rules)]
+        selected_points = candidates
+        selected_url = discovery_response.url
+        selection_mode = "dimension_discovery"
+
+    # Deduplicate periods and return the newest six actual observations.
+    by_period = {point["period"]: point for point in selected_points}
+    points = [by_period[key] for key in sorted(by_period)][-6:]
+    options = dimension_options(discovery_payload or exact_payload)
+    status = "ok" if points else "no_data"
     return {
-        "status": "ok",
+        "status": status,
         "source": "Eurostat Statistics API",
-        "source_url": response.url,
+        "source_url": selected_url,
         "dataset": config["dataset"],
         "filters": config["params"],
+        "selection_mode": selection_mode,
+        "selected_dimensions": points[-1]["dimensions"] if points else None,
+        "available_dimension_options": options,
         "data": points,
+        **({"diagnostic": "HTTP succeeded but no observations matched the required definition"} if not points else {}),
     }
-
 
 def parse_bundesbank_csv(text: str) -> list[dict[str, Any]]:
     # Bundesbank下載檔是metadata列加上period/value列；分隔符可能是逗號或分號。
