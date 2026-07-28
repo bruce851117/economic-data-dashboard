@@ -5,6 +5,8 @@ import io
 import json
 import re
 import time
+import hashlib
+from urllib.parse import urljoin
 from html.parser import HTMLParser
 from datetime import datetime, timezone
 from pathlib import Path
@@ -14,7 +16,11 @@ import requests
 
 OUTPUT_DIR = Path("debug/eu_macro_sources")
 OUTPUT_JSON = OUTPUT_DIR / "eu_last_6_periods.json"
+SOURCE_BUNDLE_JSON = OUTPUT_DIR / "eu_source_bundle.json"
+COMPARISON_JSON = OUTPUT_DIR / "eu_comparison_report.json"
 TIMEOUT = 40
+MAX_RAW_CHARS = 250_000
+RAW_BUNDLE: dict[str, Any] = {"requests": [], "candidate_fetches": {}}
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 
 SESSION = requests.Session()
@@ -249,6 +255,15 @@ def fetch_source_group(group_id: str, config: dict[str, Any]) -> dict[str, dict[
         response = SESSION.post(
             config["url"], data=params or None, headers=request_headers, timeout=TIMEOUT
         )
+        RAW_BUNDLE["requests"].append({
+            "method": "POST", "url": response.url, "request_data": params,
+            "status": response.status_code,
+            "content_type": response.headers.get("Content-Type", ""),
+            "bytes": len(response.content),
+            "sha256": hashlib.sha256(response.content).hexdigest(),
+            "body": response.text[:MAX_RAW_CHARS],
+            "truncated": len(response.text) > MAX_RAW_CHARS,
+        })
         response.raise_for_status()
     else:
         response = request(config["url"], params=params or None, headers=request_headers)
@@ -352,6 +367,14 @@ def request(
         print(f"[HTTP] {attempt}/3 {url} params={params}", flush=True)
         response = SESSION.get(url, params=params, headers=headers, timeout=TIMEOUT)
         print(f"[HTTP] status={response.status_code} bytes={len(response.content)}", flush=True)
+        RAW_BUNDLE["requests"].append({
+            "method": "GET", "url": response.url, "status": response.status_code,
+            "content_type": response.headers.get("Content-Type", ""),
+            "bytes": len(response.content),
+            "sha256": hashlib.sha256(response.content).hexdigest(),
+            "body": response.text[:MAX_RAW_CHARS],
+            "truncated": len(response.text) > MAX_RAW_CHARS,
+        })
         if response.ok:
             return response
         if response.status_code not in {429, 500, 502, 503, 504}:
@@ -588,6 +611,194 @@ def fetch_bundesbank(config: dict[str, Any]) -> dict[str, Any]:
 
 
 
+
+def candidate_urls(item: dict[str, Any]) -> list[str]:
+    urls: list[str] = []
+    for record in item.get("candidate_records") or []:
+        if not isinstance(record, dict):
+            continue
+        for key in ("href", "accessURL", "downloadURL", "url", "Url"):
+            value = record.get(key)
+            if isinstance(value, str) and value.startswith(("http://", "https://")):
+                urls.append(value)
+        products = record.get("products") or record.get("produits") or []
+        if isinstance(products, list):
+            for product in products:
+                if isinstance(product, dict):
+                    for key in ("accessURL", "downloadURL", "url"):
+                        value = product.get(key)
+                        if isinstance(value, str) and value.startswith(("http://", "https://")):
+                            urls.append(value)
+    return list(dict.fromkeys(urls))[:20]
+
+
+def parse_period_value_pairs(text: str) -> list[dict[str, Any]]:
+    pairs: list[dict[str, Any]] = []
+    patterns = [
+        r"(?P<period>20\\d{2}[-/]?(?:0[1-9]|1[0-2]))[^\\d-]{0,30}(?P<value>-?\\d{1,4}(?:[.,]\\d+)?)",
+        r"(?P<period>20\\d{2}[- ]?Q[1-4])[^\\d-]{0,30}(?P<value>-?\\d{1,4}(?:[.,]\\d+)?)",
+    ]
+    for pattern in patterns:
+        for match in re.finditer(pattern, text, re.I):
+            try:
+                value = float(match.group("value").replace(",", "."))
+            except ValueError:
+                continue
+            period = match.group("period").replace("/", "-").replace(" ", "-")
+            pairs.append({"period": period, "value": value})
+    unique = {(row["period"], row["value"]): row for row in pairs}
+    return sorted(unique.values(), key=lambda row: row["period"])[-12:]
+
+
+def parse_pmi_page(text: str, series_id: str) -> list[dict[str, Any]]:
+    country = series_id.split("_", 1)[0].title()
+    sector = "manufacturing" if "manufacturing" in series_id else "services"
+    clean = " ".join(text.split())
+    month_match = re.search(
+        r"\\b(January|February|March|April|May|June|July|August|September|October|November|December)\\s+(20\\d{2})\\b",
+        clean, re.I,
+    )
+    if not month_match:
+        return []
+    month_num = datetime.strptime(month_match.group(1), "%B").month
+    period = f"{month_match.group(2)}-{month_num:02d}"
+    if sector == "manufacturing":
+        patterns = [
+            rf"(?:{country}\\s+)?Manufacturing PMI(?:®|™)?\\s*(?:at|:|posted)?\\s*(\\d{{2}}\\.\\d)",
+            r"Manufacturing Purchasing Managers[’']? Index(?:\\s*\\(PMI\\))?\\s*(?:posted|at|:)\\s*(\\d{2}\\.\\d)",
+        ]
+    else:
+        patterns = [
+            rf"(?:{country}\\s+)?Services PMI Business Activity Index(?:®|™)?\\s*(?:at|:|posted)?\\s*(\\d{{2}}\\.\\d)",
+            r"Services PMI(?:®|™)?(?: Business Activity Index)?\\s*(?:posted|at|:)\\s*(\\d{2}\\.\\d)",
+            r"At\\s+(\\d{2}\\.\\d)\\s+in\\s+(?:January|February|March|April|May|June|July|August|September|October|November|December).{0,350}?Services PMI Business Activity Index",
+        ]
+    for pattern in patterns:
+        match = re.search(pattern, clean, re.I)
+        if match:
+            value = float(match.group(1))
+            if value != 50.0:
+                return [{"period": period, "value": value}]
+    return []
+
+
+def deep_fetch_candidates(result: dict[str, Any]) -> None:
+    for series_id, item in result.get("series", {}).items():
+        if item.get("data"):
+            continue
+        urls = candidate_urls(item)
+        if not urls:
+            item["final_status"] = "parse_error"
+            item["final_error"] = "No candidate download/release URL discovered"
+            continue
+        fetched: list[dict[str, Any]] = []
+        observations: list[dict[str, Any]] = []
+        for url in urls:
+            try:
+                response = request(url)
+                body = response.text
+                record = {
+                    "url": response.url,
+                    "status": response.status_code,
+                    "content_type": response.headers.get("Content-Type", ""),
+                    "bytes": len(response.content),
+                    "sha256": hashlib.sha256(response.content).hexdigest(),
+                    "body": body[:MAX_RAW_CHARS],
+                    "truncated": len(body) > MAX_RAW_CHARS,
+                }
+                fetched.append(record)
+                if "_pmi" in series_id:
+                    observations.extend(parse_pmi_page(body, series_id))
+                else:
+                    observations.extend(parse_period_value_pairs(body))
+            except Exception as error:
+                fetched.append({"url": url, "error": str(error)})
+        RAW_BUNDLE["candidate_fetches"][series_id] = fetched
+        unique = {(row["period"], row["value"]): row for row in observations}
+        parsed = sorted(unique.values(), key=lambda row: row["period"])[-6:]
+        if parsed:
+            item["data"] = parsed
+            item["status"] = "ok_unverified_generic_parser"
+            item["final_status"] = "needs_reference_validation"
+        else:
+            item["final_status"] = "parse_error"
+            item["final_error"] = "Candidate sources downloaded but no conservative period/value pairs parsed"
+
+
+def normalize_reference(payload: Any) -> dict[str, dict[str, float]]:
+    output: dict[str, dict[str, float]] = {}
+    if isinstance(payload, dict) and isinstance(payload.get("series"), dict):
+        payload = payload["series"]
+    if not isinstance(payload, dict):
+        return output
+    for series_id, item in payload.items():
+        rows = item.get("data", item) if isinstance(item, dict) else item
+        if not isinstance(rows, list):
+            continue
+        values: dict[str, float] = {}
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            period = row.get("period") or row.get("date")
+            value = row.get("value")
+            try:
+                if period is not None and value is not None:
+                    values[str(period)[:7]] = float(value)
+            except (TypeError, ValueError):
+                pass
+        if values:
+            output[str(series_id)] = values
+    return output
+
+
+def build_comparison(result: dict[str, Any]) -> dict[str, Any]:
+    reference_candidates = [
+        Path("eu_reference.json"), Path("data/eu_reference.json"),
+        Path("data/eu_macro.json"), Path("eu_macro.json"),
+    ]
+    reference_path = next((path for path in reference_candidates if path.exists()), None)
+    report: dict[str, Any] = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "reference_file": str(reference_path) if reference_path else None,
+        "series": {},
+    }
+    reference = {}
+    if reference_path:
+        reference = normalize_reference(json.loads(reference_path.read_text(encoding="utf-8")))
+    for series_id, item in result.get("series", {}).items():
+        official = {str(row.get("period"))[:7]: row.get("value") for row in item.get("data") or []}
+        expected = reference.get(series_id, {})
+        comparisons = []
+        for period in sorted(set(official) & set(expected)):
+            try:
+                official_value = float(official[period])
+                expected_value = float(expected[period])
+                difference = round(official_value - expected_value, 6)
+                comparisons.append({
+                    "period": period, "official": official_value,
+                    "reference": expected_value, "difference": difference,
+                    "match": abs(difference) <= 0.05,
+                })
+            except (TypeError, ValueError):
+                continue
+        if not reference_path:
+            status = "missing_reference_file"
+        elif not expected:
+            status = "series_missing_in_reference"
+        elif not comparisons:
+            status = "no_overlapping_period"
+        elif all(row["match"] for row in comparisons):
+            status = "match"
+        else:
+            status = "mismatch"
+        report["series"][series_id] = {
+            "status": status,
+            "official_observations": len(official),
+            "reference_observations": len(expected),
+            "comparisons": comparisons[-6:],
+        }
+    return report
+
 def write_all_series_summary(result: dict[str, Any]) -> None:
     rows: list[dict[str, Any]] = []
     for series_id, item in result.get("series", {}).items():
@@ -611,17 +822,6 @@ def write_all_series_summary(result: dict[str, Any]) -> None:
     missing = sorted(expected - actual)
     if missing:
         raise RuntimeError(f"Series missing from debug output: {missing}")
-
-    (OUTPUT_DIR / "eu_all_series_debug_summary.json").write_text(
-        json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-    with (OUTPUT_DIR / "eu_all_series_debug_summary.csv").open(
-        "w", encoding="utf-8-sig", newline=""
-    ) as handle:
-        fieldnames = list(rows[0]) if rows else []
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(rows)
 
     print("\n[ALL SERIES DEBUG SUMMARY]", flush=True)
     for row in rows:
@@ -686,9 +886,13 @@ def main() -> None:
                 "data": [],
             }
 
+    deep_fetch_candidates(result)
+    comparison = build_comparison(result)
     write_all_series_summary(result)
 
     OUTPUT_JSON.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    SOURCE_BUNDLE_JSON.write_text(json.dumps(RAW_BUNDLE, ensure_ascii=False, indent=2), encoding="utf-8")
+    COMPARISON_JSON.write_text(json.dumps(comparison, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print("\n[SUMMARY]", flush=True)
     for series_id, item in result["series"].items():
