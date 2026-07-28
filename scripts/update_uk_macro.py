@@ -32,8 +32,8 @@ ONS = {
     "ukuer": ("UNEM", "BCJE", "employmentandlabourmarket/peoplenotinwork/outofworkbenefits", 0),
     "ukawmwho": ("LMS", "KAC3", "employmentandlabourmarket/peopleinwork/earningsandworkinghours", 0),
     "ukawxprm": ("LMS", "KAJ4", "employmentandlabourmarket/peopleinwork/earningsandworkinghours", 0),
-    # AP2Y Raw月份是3個月統計期間的中間月；Dashboard採發布月份，所以+2個月。
-    "ukvaap2y": ("UNEM", "AP2Y", "employmentandlabourmarket/peopleinwork/employmentandemployeetypes", 2),
+    # AP2Y Raw月份是3個月統計期間的中間月；Dashboard採發布月份，所以+1個月。
+    "ukvaap2y": ("UNEM", "AP2Y", "employmentandlabourmarket/peopleinwork/employmentandemployeetypes", 1),
     "uklfjpc5": ("UNEM", "JPC5", "employmentandlabourmarket/peoplenotinwork/unemployment", 1),
     "ukgdm3m": ("MGDP", "ECYX", "economy/grossdomesticproductgdp", 0),
 }
@@ -755,59 +755,145 @@ def extract_reference_month(text: str) -> str | None:
     return f"{int(match.group(2)):04d}-{month:02d}"
 
 
-def extract_pmi_value(text: str, sector: str, release_type: str) -> float | None:
-    """Extract only the headline PMI value, never the neutral threshold 50."""
+def extract_pmi_value(
+    text: str,
+    sector: str,
+    release_type: str,
+) -> float | None:
+    """Extract only an explicitly labelled headline PMI observation.
+
+    This intentionally has no generic fallback. Values such as the chart legend
+    ``Index, sa, >50 = improvement m/m`` must never be interpreted as the
+    observation. A value is accepted only when it is attached to an explicit
+    Manufacturing PMI or Services PMI Business Activity Index label/sentence.
+    """
     compact = clean_cell(text).replace("™", "").replace("®", "")
+    number = r"([0-9]{1,2}(?:\.[0-9]+)?)"
 
     if sector == "manufacturing":
-        # Highest-confidence patterns first. Final manufacturing releases often
-        # say "Manufacturing PMI at 52.5" or "PMI posted 52.5".  The previous
-        # generic fallback captured the chart legend ">50 = improvement m/m".
         patterns = [
-            r"Manufacturing\s+PMI\s+(?:at|=|:)\s*([2-7]\d(?:\.\d+)?)",
-            r"S&P Global UK Manufacturing Purchasing Managers(?:’|')? Index\s*\(PMI\)\s+(?:posted|registered|stood at|rose to|fell to|was|at)\s+([2-7]\d(?:\.\d+)?)",
-            r"headline(?: seasonally adjusted)?(?: S&P Global UK)? Manufacturing PMI[^.]{0,120}?(?:posted|registered|stood at|rose to|fell to|was|at)\s+([2-7]\d(?:\.\d+)?)",
-            r"(?:seasonally adjusted )?S&P Global UK Manufacturing PMI[^.]{0,120}?(?:posted|registered|stood at|rose to|fell to|was|at|:)\s+([2-7]\d(?:\.\d+)?)",
+            # Headline/key-metrics formats used by final and flash releases.
+            rf"\bFlash UK Manufacturing PMI\s*:\s*{number}\b",
+            rf"\bManufacturing PMI\s+at\s+{number}\s+in\s+"
+            r"(?:January|February|March|April|May|June|July|August|September|October|November|December)\b",
+            # Narrative sentence in the official final release.
+            r"\bS&P Global UK Manufacturing Purchasing Managers['’]? Index\s*"
+            rf"\(PMI\)\s+(?:posted|registered|stood at)\s+{number}\b",
+            r"\bseasonally adjusted S&P Global UK Manufacturing PMI\s+"
+            rf"(?:posted|registered|stood at)\s+{number}\b",
         ]
-        if release_type == "flash":
-            patterns.insert(0, r"Flash UK Manufacturing PMI\s*[:=]\s*([2-7]\d(?:\.\d+)?)")
+    elif sector == "services":
+        patterns = [
+            rf"\bFlash UK Services PMI Business Activity Index\s*:\s*{number}\b",
+            rf"\bServices PMI Business Activity Index\s*:\s*{number}\b",
+            r"\bS&P Global UK Services PMI Business Activity Index\s+"
+            rf"(?:posted|registered|stood at)\s+{number}\b",
+            r"\bseasonally adjusted S&P Global UK Services PMI Business Activity Index\s+"
+            rf"(?:posted|registered|stood at)\s+{number}\b",
+            r"\bUK Services PMI Business Activity Index\s+"
+            rf"(?:posted|registered|stood at|rose to|fell to)\s+{number}\b",
+        ]
     else:
-        patterns = [
-            r"Services PMI Business Activity Index\s*[:=]\s*([2-7]\d(?:\.\d+)?)",
-            r"S&P Global UK Services PMI Business Activity Index[^.]{0,120}?(?:posted|registered|stood at|rose to|fell to|was|at|:)\s+([2-7]\d(?:\.\d+)?)",
-            r"headline(?: seasonally adjusted)?(?: S&P Global UK)? Services PMI Business Activity Index[^.]{0,120}?(?:posted|registered|stood at|rose to|fell to|was|at)\s+([2-7]\d(?:\.\d+)?)",
-        ]
-        if release_type == "flash":
-            patterns.insert(0, r"Flash UK Services PMI Business Activity Index\s*[:=]\s*([2-7]\d(?:\.\d+)?)")
+        raise ValueError(f"Unknown PMI sector: {sector}")
 
-    matches = []
-    for pattern_value in patterns:
+    debug_candidates = []
+    for priority, pattern_value in enumerate(patterns, 1):
         for match in re.finditer(pattern_value, compact, re.I):
             value = float(match.group(1))
-            context = compact[max(0, match.start() - 80):match.end() + 120]
-            # 50.0 can be a real observation, but S&P pages repeatedly contain
-            # the methodological/chart threshold ">50 = growth/improvement".
-            # Reject only when the nearby context proves it is that threshold.
+            context = compact[max(0, match.start() - 120):match.end() + 150]
+            debug_candidates.append({
+                "priority": priority,
+                "value": value,
+                "context": context,
+            })
+
+            # PMI is bounded 0-100. The narrower guard catches years and other
+            # unrelated numbers even if S&P changes punctuation unexpectedly.
+            if not 20.0 <= value <= 80.0:
+                continue
+
+            # High-confidence patterns above allow a genuine 50.0 observation;
+            # however reject it if the same local text proves it is a threshold.
             if value == 50.0 and re.search(
-                r">\s*50\s*=|above\s+50|below\s+50|index[^.]{0,30}50\s*=",
+                r">\s*50(?:\.0)?\s*=|above\s+50|below\s+50|"
+                r"50\s*=\s*(?:growth|improvement|expansion)",
                 context,
                 re.I,
             ):
                 continue
-            matches.append({
-                "value": value,
-                "pattern": pattern_value,
-                "context": context,
-            })
-        if matches:
-            break
 
-    if not matches:
-        return None
-    value = matches[0]["value"]
-    if not 20.0 <= value <= 80.0:
-        return None
-    return value
+            print(
+                f"[S&P PMI PARSER] sector={sector} type={release_type} "
+                f"value={value} priority={priority} context={context!r}",
+                flush=True,
+            )
+            return value
+
+    print(
+        f"[S&P PMI PARSER] sector={sector} type={release_type} "
+        f"no_match candidates={debug_candidates}",
+        flush=True,
+    )
+    return None
+
+
+def validate_pmi_parser() -> None:
+    """Fail fast if the parser regresses to the neutral threshold value 50."""
+    cases = [
+        (
+            "manufacturing",
+            "final",
+            "Manufacturing PMI at 52.5 in June "
+            "Index, sa, >50 = improvement m/m",
+            52.5,
+        ),
+        (
+            "manufacturing",
+            "final",
+            "The seasonally adjusted S&P Global UK Manufacturing Purchasing "
+            "Managers’ Index (PMI) posted 52.5 in June. "
+            "Index, sa, >50 = improvement m/m",
+            52.5,
+        ),
+        (
+            "manufacturing",
+            "flash",
+            "Flash UK Manufacturing Output Index: 53.6. "
+            "Flash UK Manufacturing PMI: 52.8.",
+            52.8,
+        ),
+        (
+            "services",
+            "flash",
+            "Flash UK Services PMI Business Activity Index: 51.8.",
+            51.8,
+        ),
+        (
+            "services",
+            "final",
+            "The seasonally adjusted S&P Global UK Services PMI Business "
+            "Activity Index posted 48.8 in June.",
+            48.8,
+        ),
+        (
+            "manufacturing",
+            "final",
+            "S&P Global UK Manufacturing PMI Index, sa, >50 = improvement m/m",
+            None,
+        ),
+    ]
+
+    for sector, release_type, sample, expected in cases:
+        actual = extract_pmi_value(sample, sector, release_type)
+        if actual != expected:
+            raise RuntimeError(
+                "PMI parser self-test failed: "
+                f"sector={sector}, type={release_type}, "
+                f"expected={expected}, actual={actual}"
+            )
+
+    print("[S&P PMI PARSER] self-tests passed", flush=True)
+
 
 def month_range(start_month: str, end_month: str) -> list[str]:
     if not start_month or not end_month or start_month > end_month:
@@ -1268,6 +1354,7 @@ def update_dmp_inflation(database: dict[str, Any]) -> tuple[int, int]:
     )
 
 def main() -> None:
+    validate_pmi_parser()
     started_at = time.monotonic()
     print("[START] Update UK macro data", flush=True)
     database = json.loads(DATA_FILE.read_text(encoding="utf-8"))
