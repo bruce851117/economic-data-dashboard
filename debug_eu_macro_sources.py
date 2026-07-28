@@ -30,38 +30,38 @@ EUROSTAT_SERIES = {
     "euro_unemployment_rate": {
         "label": "歐元區失業率",
         "dataset": "une_rt_m",
-        "params": {"geo": "EA20", "sex": "T", "age": "TOTAL", "unit": "PC_ACT", "s_adj": "SA"},
+        "params": {"geo": "EA", "sex": "T", "age": "TOTAL", "unit": "PC_ACT", "s_adj": "SA"},
         "frequency": "monthly",
         "expected_name": "Eurostat Unemployment Eurozone",
-        "discovery_filters": {"geo": "EA20"},
+        "discovery_filters": {"geo": "EA"},
         "preferred": {"freq": "M", "sex": "T", "age": "TOTAL", "unit": "PC_ACT", "s_adj": "SA"},
     },
     "euro_core_hicp_yoy": {
         "label": "歐元區 Core HICP YoY",
         "dataset": "prc_hicp_manr",
-        "params": {"geo": "EA20", "coicop": "TOT_X_NRG_FOOD", "unit": "RCH_A"},
+        "params": {"geo": "EA", "coicop": "TOT_X_NRG_FOOD", "unit": "RCH_A"},
         "frequency": "monthly",
         "expected_name": "Eurostat Eurozone Core MUICP YoY",
-        "discovery_filters": {"geo": "EA20", "unit": "RCH_A"},
+        "discovery_filters": {"geo": "EA", "unit": "RCH_A"},
         "preferred": {"freq": "M", "unit": "RCH_A"},
         "dimension_label_keywords": {"coicop": ["excluding energy", "food", "alcohol", "tobacco"]},
     },
     "euro_real_retail_yoy": {
         "label": "歐元區實質零售 YoY",
         "dataset": "sts_trtu_m",
-        "params": {"geo": "EA20", "nace_r2": "G47", "indic_bt": "VOL_SLS", "s_adj": "SCA", "unit": "PCH_SM"},
+        "params": {"geo": "EA", "nace_r2": "G47", "indic_bt": "VOL_SLS", "s_adj": "SCA", "unit": "PCH_SM"},
         "frequency": "monthly",
         "expected_name": "Eurostat Retail Sales Eurozone YoY",
-        "discovery_filters": {"geo": "EA20", "nace_r2": "G47"},
+        "discovery_filters": {"geo": "EA", "nace_r2": "G47"},
         "preferred": {"freq": "M", "indic_bt": "VOL_SLS", "nace_r2": "G47", "s_adj": "SCA", "unit": "PCH_SM"},
     },
     "euro_gdp_yoy": {
         "label": "歐元區 GDP YoY",
         "dataset": "namq_10_gdp",
-        "params": {"geo": "EA20", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"},
+        "params": {"geo": "EA", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"},
         "frequency": "quarterly",
         "expected_name": "Euro Area Gross Domestic Product YoY",
-        "discovery_filters": {"geo": "EA20", "na_item": "B1GQ"},
+        "discovery_filters": {"geo": "EA", "na_item": "B1GQ"},
         "preferred": {"freq": "Q", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"},
     },
 }
@@ -208,7 +208,12 @@ def fetch_eurostat(config: dict[str, Any]) -> dict[str, Any]:
     (OUTPUT_DIR / f"raw_eurostat_{config['dataset']}_exact.json").write_text(
         json.dumps(exact_payload, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    exact_points = jsonstat_points(exact_payload) if not exact_payload.get("error") else []
+    exact_has_empty_dimension = any(size == 0 for size in exact_payload.get("size", []))
+    exact_points = (
+        jsonstat_points(exact_payload)
+        if not exact_payload.get("error") and not exact_has_empty_dimension
+        else []
+    )
 
     selected_points = exact_points
     selected_url = exact_response.url
@@ -220,10 +225,14 @@ def fetch_eurostat(config: dict[str, Any]) -> dict[str, Any]:
     # the series from actual dimension codes/labels rather than guessing.
     newest_exact = max((point["period"] for point in exact_points), default="")
     current_year = datetime.now(timezone.utc).year
-    stale = bool(newest_exact and not newest_exact.startswith(str(current_year)))
+    stale = bool(
+        newest_exact
+        and config.get("frequency") == "monthly"
+        and not newest_exact.startswith(str(current_year))
+    )
     if not exact_points or stale:
         discovery_params = {
-            **config.get("discovery_filters", {"geo": config["params"].get("geo", "EA20")}),
+            **config.get("discovery_filters", {"geo": config["params"].get("geo", "EA")}),
             "lang": "EN",
             "lastTimePeriod": "18",
         }
@@ -298,7 +307,7 @@ def main() -> None:
     result: dict[str, Any] = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "scope": "official-source diagnostic; latest 6 available periods",
-        "important_note": "Spain, France and Germany CPI must use national CPI, not HICP. Pending series are intentionally not substituted.",
+        "important_note": "Spain, France and Germany CPI must use national CPI, not HICP. Euro-area series use Eurostat changing-composition geo=EA (EA20 through 2025; EA21 from 2026). Pending series are intentionally not substituted.",
         "series": {},
     }
 
