@@ -5,6 +5,7 @@ import io
 import json
 import re
 import time
+from html.parser import HTMLParser
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -38,22 +39,22 @@ EUROSTAT_SERIES = {
     },
     "euro_core_hicp_yoy": {
         "label": "歐元區 Core HICP YoY",
-        "dataset": "prc_hicp_manr",
-        "params": {"geo": "EA21", "coicop": "TOT_X_NRG_FOOD", "unit": "RCH_A"},
+        "dataset": "prc_hicp_minr",
+        "params": {"geo": "EA21", "coicop18": "TOT_X_NRG_FOOD", "unit": "RCH_A"},
         "frequency": "monthly",
         "expected_name": "Eurostat Eurozone Core MUICP YoY",
         "discovery_filters": {"geo": "EA21", "unit": "RCH_A"},
         "preferred": {"freq": "M", "unit": "RCH_A"},
-        "dimension_label_keywords": {"coicop": ["excluding energy", "food", "alcohol", "tobacco"]},
+        "dimension_label_keywords": {"coicop18": ["excluding energy", "food", "alcohol", "tobacco"]},
     },
     "euro_real_retail_yoy": {
         "label": "歐元區實質零售 YoY",
         "dataset": "sts_trtu_m",
-        "params": {"geo": "EA21", "nace_r2": "G47", "indic_bt": "VOL_SLS", "s_adj": "SCA", "unit": "PCH_SM"},
+        "params": {"geo": "EA21", "nace_r2": "G47", "indic_bt": "VOL_SLS", "s_adj": "CA", "unit": "PCH_SM"},
         "frequency": "monthly",
         "expected_name": "Eurostat Retail Sales Eurozone YoY",
         "discovery_filters": {"geo": "EA21", "nace_r2": "G47"},
-        "preferred": {"freq": "M", "indic_bt": "VOL_SLS", "nace_r2": "G47", "s_adj": "SCA", "unit": "PCH_SM"},
+        "preferred": {"freq": "M", "indic_bt": "VOL_SLS", "nace_r2": "G47", "s_adj": "CA", "unit": "PCH_SM"},
     },
     "euro_gdp_yoy": {
         "label": "歐元區 GDP YoY",
@@ -77,7 +78,7 @@ BUNDESBANK_SERIES = {
 }
 
 # 尚待精確確認官方序列 ID 的項目。程式會把這些項目列入結果，避免誤用近似指標。
-PENDING = {
+ALL_REMAINING = {
     "spain_core_cpi_yoy": "INE 國內 CPI：Underlying inflation（排除未加工食品及能源）",
     "france_cpi_ex_energy_yoy": "INSEE 國內 CPI：All items excluding energy YoY",
     "germany_core_cpi_yoy": "Destatis 國內 CPI：Overall index excluding specified components YoY",
@@ -106,6 +107,147 @@ PENDING = {
     "france_gdp_yoy": "INSEE France real GDP YoY",
 }
 
+
+
+SOURCE_GROUPS = {
+    "ine": {
+        "url": "https://servicios.ine.es/wstempus/js/EN/OPERACIONES_DISPONIBLES",
+        "series": {
+            "spain_core_cpi_yoy": ["consumer price", "underlying"],
+            "spain_unemployment_rate": ["labour force survey"],
+            "spain_real_retail_yoy": ["retail trade"],
+            "spain_gdp_yoy": ["quarterly national accounts"],
+        },
+    },
+    "insee": {
+        "url": "https://api.insee.fr/melodi/catalog/all",
+        "series": {
+            "france_cpi_ex_energy_yoy": ["consumer price"],
+            "france_unemployment_rate_ilo": ["unemployment"],
+            "france_consumer_confidence": ["consumer confidence"],
+            "france_manufacturing_confidence": ["business climate"],
+            "france_business_confidence": ["business climate"],
+            "france_gdp_yoy": ["gross domestic product"],
+        },
+    },
+    "destatis": {
+        "url": "https://www-genesis.destatis.de/genesisWS/rest/2020/find/find",
+        "base_params": {"username": "GAST", "password": "GAST", "language": "en", "category": "all"},
+        "series": {
+            "germany_core_cpi_yoy": ["consumer price index excluding"],
+            "germany_real_retail_mom": ["retail trade price adjusted"],
+            "germany_industrial_production_yoy": ["production index industry"],
+            "germany_gdp_yoy": ["gross domestic product price adjusted"],
+        },
+    },
+    "bundesbank_catalogue": {
+        "url": "https://api.statistiken.bundesbank.de/rest/dataflow/BBK/BBDL1/1.0?references=all",
+        "series": {
+            "germany_unemployment_change_swda": ["unemployment", "change"],
+        },
+    },
+    "spain_social_security": {
+        "url": "https://www.seg-social.es/wps/portal/wss/internet/EstadisticasPresupuestosEstudios/Estadisticas",
+        "series": {
+            "spain_registered_employed_total_change": ["affiliation"],
+        },
+    },
+    "nim_gfk": {
+        "url": "https://www.nim.org/en/consumer-climate/all-releases",
+        "series": {"germany_gfk_consumer_confidence": ["consumer climate"]},
+    },
+    "zew": {
+        "url": "https://www.zew.de/en/publications/zew-expertises-research-reports/research-reports/business-cycle/zew-financial-market-survey",
+        "series": {
+            "germany_zew_current": ["economic situation germany"],
+            "germany_zew_expectations": ["economic sentiment germany"],
+        },
+    },
+    "ifo": {
+        "url": "https://www.ifo.de/en/ifo-time-series",
+        "series": {"germany_ifo_business_climate": ["business climate"]},
+    },
+    "sp_global_pmi": {
+        "url": "https://www.pmi.spglobal.com/Public/Release/PressReleases",
+        "series": {
+            "germany_manufacturing_pmi": ["germany", "manufacturing"],
+            "france_manufacturing_pmi": ["france", "manufacturing"],
+            "spain_manufacturing_pmi": ["spain", "manufacturing"],
+            "germany_services_pmi": ["germany", "services"],
+            "france_services_pmi": ["france", "services"],
+            "spain_services_pmi": ["spain", "services"],
+        },
+    },
+}
+
+
+class _TextExtractor(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.parts: list[str] = []
+
+    def handle_data(self, data: str) -> None:
+        clean = " ".join(data.split())
+        if clean:
+            self.parts.append(clean)
+
+
+def html_text(text: str) -> str:
+    parser = _TextExtractor()
+    parser.feed(text)
+    return " ".join(parser.parts)
+
+
+def _flatten_strings(value: Any) -> list[str]:
+    output: list[str] = []
+    if isinstance(value, dict):
+        for child in value.values():
+            output.extend(_flatten_strings(child))
+    elif isinstance(value, list):
+        for child in value:
+            output.extend(_flatten_strings(child))
+    elif isinstance(value, (str, int, float)):
+        output.append(str(value))
+    return output
+
+
+def fetch_source_group(group_id: str, config: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    params = dict(config.get("base_params", {}))
+    response = request(config["url"], params=params or None)
+    content_type = response.headers.get("Content-Type", "")
+    is_json = "json" in content_type.lower() or response.text.lstrip().startswith(("{", "["))
+    if is_json:
+        payload: Any = response.json()
+        searchable = " ".join(_flatten_strings(payload)).lower()
+        raw_path = OUTPUT_DIR / f"raw_source_{group_id}.json"
+        raw_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    else:
+        payload = None
+        searchable = html_text(response.text).lower()
+        raw_path = OUTPUT_DIR / f"raw_source_{group_id}.html"
+        raw_path.write_text(response.text, encoding="utf-8")
+
+    results: dict[str, dict[str, Any]] = {}
+    for series_id, keywords in config["series"].items():
+        hits = [keyword for keyword in keywords if keyword.lower() in searchable]
+        numbers = re.findall(r"(?<!\d)-?\d+(?:[.,]\d+)?(?!\d)", searchable)
+        results[series_id] = {
+            "status": "source_reachable" if hits else "source_reachable_no_keyword_match",
+            "source_group": group_id,
+            "source_url": response.url,
+            "http_status": response.status_code,
+            "matched_keywords": hits,
+            "required_keywords": keywords,
+            "candidate_numbers_tail": numbers[-20:],
+            "raw_file": str(raw_path),
+            "data": [],
+            "diagnostic": (
+                "Official source reached; exact series/table and observation parser still required"
+                if hits else
+                "Official source reached, but expected keywords were not found in this response"
+            ),
+        }
+    return results
 
 def request(url: str, *, params: dict[str, str] | None = None) -> requests.Response:
     for attempt in range(1, 4):
@@ -370,12 +512,36 @@ def main() -> None:
         except Exception as error:
             result["series"][series_id] = {**config, "status": "error", "error": str(error)}
 
-    for series_id, definition in PENDING.items():
-        result["series"][series_id] = {
-            "status": "pending_exact_official_series_id",
-            "definition": definition,
-            "data": [],
-        }
+    probed_ids: set[str] = set()
+    for group_id, config in SOURCE_GROUPS.items():
+        print(f"[SOURCE PROBE] {group_id}", flush=True)
+        try:
+            group_results = fetch_source_group(group_id, config)
+            for series_id, item in group_results.items():
+                result["series"][series_id] = {
+                    "definition": ALL_REMAINING[series_id],
+                    **item,
+                }
+                probed_ids.add(series_id)
+        except Exception as error:
+            for series_id in config["series"]:
+                result["series"][series_id] = {
+                    "definition": ALL_REMAINING[series_id],
+                    "status": "source_error",
+                    "source_group": group_id,
+                    "source_url": config["url"],
+                    "error": str(error),
+                    "data": [],
+                }
+                probed_ids.add(series_id)
+
+    for series_id, definition in ALL_REMAINING.items():
+        if series_id not in probed_ids:
+            result["series"][series_id] = {
+                "status": "source_not_configured",
+                "definition": definition,
+                "data": [],
+            }
 
     OUTPUT_JSON.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
 
