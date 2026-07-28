@@ -1406,13 +1406,13 @@ def normalize_ap2y_points(points: list[dict[str, Any]]) -> list[dict[str, Any]]:
         for point in points
     ]
     normalized.sort(key=lambda point: point["date"])
-    print(
-        "[AP2Y DEBUG] latest_raw="
-        + json.dumps(points[-6:], ensure_ascii=False)
-        + " latest_dashboard="
-        + json.dumps(normalized[-6:], ensure_ascii=False),
-        flush=True,
-    )
+    print("[AP2Y DEBUG] raw -> dashboard", flush=True)
+    for raw_point, dashboard_point in zip(points[-6:], normalized[-6:]):
+        print(
+            f"[AP2Y DEBUG] {raw_point['date'][:7]} {raw_point['value']} "
+            f"-> {dashboard_point['date'][:7]} {dashboard_point['value']}",
+            flush=True,
+        )
     return normalized
 
 def main() -> None:
@@ -1483,6 +1483,19 @@ def main() -> None:
         json.dumps(database, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
+
+    ap2y_series = by_id(database, "ukvaap2y") or {}
+    ap2y_latest = sorted(
+        ap2y_series.get("data", []),
+        key=lambda item: item.get("date", ""),
+    )[-6:]
+    print("\n[AP2Y FINAL RESULT]", flush=True)
+    for point in ap2y_latest:
+        print(
+            f"[AP2Y FINAL RESULT] {month_key(point.get('date'))} "
+            f"{point.get('value')}",
+            flush=True,
+        )
 
     print("\n[UPDATE SUMMARY]", flush=True)
     for entry in logs:
