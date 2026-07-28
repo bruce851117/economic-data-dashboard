@@ -126,6 +126,7 @@ SOURCE_GROUPS = {
     },
     "insee": {
         "url": "https://api.insee.fr/melodi/catalog/all",
+        "accept_json": True,
         "series": {
             "france_cpi_ex_energy_yoy": ["prix a la consommation"],
             "france_unemployment_rate_ilo": ["chomage"],
@@ -137,7 +138,8 @@ SOURCE_GROUPS = {
     },
     "destatis": {
         "url": "https://www-genesis.destatis.de/genesisWS/rest/2020/find/find",
-        "base_params": {"username": "GAST", "password": "GAST", "language": "en", "category": "all"},
+        "method": "POST",
+        "base_params": {"username": "GAST", "password": "GAST", "language": "de", "category": "all", "pagelength": 100},
         "series": {
             "germany_core_cpi_yoy": ["verbraucherpreisindex", "ohne"],
             "germany_real_retail_mom": ["einzelhandel", "preisbereinigt"],
@@ -146,7 +148,7 @@ SOURCE_GROUPS = {
         },
     },
     "bundesbank_catalogue": {
-        "url": "https://api.statistiken.bundesbank.de/rest/dataflow/BBK/BBDL1/latest?references=all",
+        "url": "https://api.statistiken.bundesbank.de/rest/metadata/dataflow/BBK/BBDL1?references=all",
         "series": {
             "germany_unemployment_change_swda": ["unemployment", "change"],
         },
@@ -170,7 +172,7 @@ SOURCE_GROUPS = {
     },
     "ifo": {
         "url": "https://www.ifo.de/en/ifo-time-series",
-        "series": {"germany_ifo_business_climate": ["climat des affaires"]},
+        "series": {"germany_ifo_business_climate": ["business climate"]},
     },
     "sp_global_pmi": {
         "url": "https://www.pmi.spglobal.com/Public/Release/PressReleases?language=en",
@@ -223,7 +225,14 @@ def fetch_source_group(group_id: str, config: dict[str, Any]) -> dict[str, dict[
         # Directly calling the release index with the debug bot UA was returning 403.
         request("https://www.pmi.spglobal.com/Public?language=en")
         time.sleep(1.0)
-    response = request(config["url"], params=params or None)
+    request_headers = {"Accept": "application/json"} if config.get("accept_json") else None
+    if config.get("method") == "POST":
+        response = SESSION.post(
+            config["url"], data=params or None, headers=request_headers, timeout=TIMEOUT
+        )
+        response.raise_for_status()
+    else:
+        response = request(config["url"], params=params or None, headers=request_headers)
     content_type = response.headers.get("Content-Type", "")
     is_json = "json" in content_type.lower() or response.text.lstrip().startswith(("{", "["))
     if is_json:
@@ -268,10 +277,15 @@ def fetch_source_group(group_id: str, config: dict[str, Any]) -> dict[str, dict[
         }
     return results
 
-def request(url: str, *, params: dict[str, str] | None = None) -> requests.Response:
+def request(
+    url: str,
+    *,
+    params: dict[str, str] | None = None,
+    headers: dict[str, str] | None = None,
+) -> requests.Response:
     for attempt in range(1, 4):
         print(f"[HTTP] {attempt}/3 {url} params={params}", flush=True)
-        response = SESSION.get(url, params=params, timeout=TIMEOUT)
+        response = SESSION.get(url, params=params, headers=headers, timeout=TIMEOUT)
         print(f"[HTTP] status={response.status_code} bytes={len(response.content)}", flush=True)
         if response.ok:
             return response
@@ -558,7 +572,7 @@ def main() -> None:
     result: dict[str, Any] = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "scope": "official-source diagnostic; latest 6 available periods",
-        "important_note": "Spain, France and Germany CPI must use national CPI, not HICP. Euro-area latest data use geo=EA21 from 2026; fallback queries also test EA and EA20 for continuity. Pending series are intentionally not substituted.",
+        "important_note": "Spain, France and Germany CPI must use national CPI, not HICP. Euro-area latest data use geo=EA21 from 2026; fallback queries also test EA and EA20 for continuity. All 31 series are actively diagnosed; national CPI definitions are not substituted with HICP.",
         "series": {},
     }
 
