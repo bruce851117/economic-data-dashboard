@@ -192,11 +192,30 @@ class _TextExtractor(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
         self.parts: list[str] = []
+        self.links: list[dict[str, str]] = []
+        self._current_href = ""
+        self._current_text: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() == "a":
+            self._current_href = dict(attrs).get("href") or ""
+            self._current_text = []
 
     def handle_data(self, data: str) -> None:
         clean = " ".join(data.split())
         if clean:
             self.parts.append(clean)
+            if self._current_href:
+                self._current_text.append(clean)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() == "a" and self._current_href:
+            self.links.append({
+                "href": self._current_href,
+                "text": " ".join(self._current_text),
+            })
+            self._current_href = ""
+            self._current_text = []
 
 
 def html_text(text: str) -> str:
@@ -242,24 +261,36 @@ def fetch_source_group(group_id: str, config: dict[str, Any]) -> dict[str, dict[
         raw_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     else:
         payload = None
-        searchable = html_text(response.text).lower()
+        parser = _TextExtractor()
+        parser.feed(response.text)
+        searchable = " ".join(parser.parts).lower()
+        records = parser.links
         raw_path = OUTPUT_DIR / f"raw_source_{group_id}.html"
         raw_path.write_text(response.text, encoding="utf-8")
 
     results: dict[str, dict[str, Any]] = {}
-    records = payload if isinstance(payload, list) else []
+    if is_json:
+        records = payload if isinstance(payload, list) else []
     for series_id, keywords in config["series"].items():
         hits = [keyword for keyword in keywords if keyword.lower() in searchable]
         candidate_records = []
         for record in records:
             record_text = " ".join(_flatten_strings(record)).lower()
-            if any(token.lower() in record_text for keyword in keywords for token in keyword.split()):
+            if group_id == "sp_global_pmi":
+                href = str(record.get("href", "")) if isinstance(record, dict) else ""
+                same_record_match = all(keyword.lower() in record_text for keyword in keywords)
+                if same_record_match and "/Public/Home/PressRelease/" in href:
+                    candidate_records.append(record)
+            elif any(token.lower() in record_text for keyword in keywords for token in keyword.split()):
                 candidate_records.append(record)
             if len(candidate_records) >= 15:
                 break
         numbers = re.findall(r"(?<!\d)-?\d+(?:[.,]\d+)?(?!\d)", searchable)
         results[series_id] = {
-            "status": "source_reachable" if hits else "source_reachable_no_keyword_match",
+            "status": (
+                "candidate_links_found" if candidate_records else
+                ("source_reachable" if hits else "source_reachable_no_keyword_match")
+            ),
             "source_group": group_id,
             "source_url": response.url,
             "http_status": response.status_code,
