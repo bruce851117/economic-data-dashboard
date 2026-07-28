@@ -30,38 +30,38 @@ EUROSTAT_SERIES = {
     "euro_unemployment_rate": {
         "label": "歐元區失業率",
         "dataset": "une_rt_m",
-        "params": {"geo": "EA", "sex": "T", "age": "TOTAL", "unit": "PC_ACT", "s_adj": "SA"},
+        "params": {"geo": "EA21", "sex": "T", "age": "TOTAL", "unit": "PC_ACT", "s_adj": "SA"},
         "frequency": "monthly",
         "expected_name": "Eurostat Unemployment Eurozone",
-        "discovery_filters": {"geo": "EA"},
+        "discovery_filters": {"geo": "EA21"},
         "preferred": {"freq": "M", "sex": "T", "age": "TOTAL", "unit": "PC_ACT", "s_adj": "SA"},
     },
     "euro_core_hicp_yoy": {
         "label": "歐元區 Core HICP YoY",
         "dataset": "prc_hicp_manr",
-        "params": {"geo": "EA", "coicop": "TOT_X_NRG_FOOD", "unit": "RCH_A"},
+        "params": {"geo": "EA21", "coicop": "TOT_X_NRG_FOOD", "unit": "RCH_A"},
         "frequency": "monthly",
         "expected_name": "Eurostat Eurozone Core MUICP YoY",
-        "discovery_filters": {"geo": "EA", "unit": "RCH_A"},
+        "discovery_filters": {"geo": "EA21", "unit": "RCH_A"},
         "preferred": {"freq": "M", "unit": "RCH_A"},
         "dimension_label_keywords": {"coicop": ["excluding energy", "food", "alcohol", "tobacco"]},
     },
     "euro_real_retail_yoy": {
         "label": "歐元區實質零售 YoY",
         "dataset": "sts_trtu_m",
-        "params": {"geo": "EA", "nace_r2": "G47", "indic_bt": "VOL_SLS", "s_adj": "SCA", "unit": "PCH_SM"},
+        "params": {"geo": "EA21", "nace_r2": "G47", "indic_bt": "VOL_SLS", "s_adj": "SCA", "unit": "PCH_SM"},
         "frequency": "monthly",
         "expected_name": "Eurostat Retail Sales Eurozone YoY",
-        "discovery_filters": {"geo": "EA", "nace_r2": "G47"},
+        "discovery_filters": {"geo": "EA21", "nace_r2": "G47"},
         "preferred": {"freq": "M", "indic_bt": "VOL_SLS", "nace_r2": "G47", "s_adj": "SCA", "unit": "PCH_SM"},
     },
     "euro_gdp_yoy": {
         "label": "歐元區 GDP YoY",
         "dataset": "namq_10_gdp",
-        "params": {"geo": "EA", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"},
+        "params": {"geo": "EA21", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"},
         "frequency": "quarterly",
         "expected_name": "Euro Area Gross Domestic Product YoY",
-        "discovery_filters": {"geo": "EA", "na_item": "B1GQ"},
+        "discovery_filters": {"geo": "EA21", "na_item": "B1GQ"},
         "preferred": {"freq": "Q", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"},
     },
 }
@@ -200,73 +200,118 @@ def _matches_keywords(point: dict[str, Any], rules: dict[str, list[str]]) -> boo
 
 def fetch_eurostat(config: dict[str, Any]) -> dict[str, Any]:
     url = f"{EUROSTAT_BASE}/{config['dataset']}"
-
-    # First attempt: exact filters supplied in the specification.
-    exact_params = {**config["params"], "lang": "EN", "lastTimePeriod": "12"}
-    exact_response = request(url, params=exact_params)
-    exact_payload = exact_response.json()
-    (OUTPUT_DIR / f"raw_eurostat_{config['dataset']}_exact.json").write_text(
-        json.dumps(exact_payload, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-    exact_has_empty_dimension = any(size == 0 for size in exact_payload.get("size", []))
-    exact_points = (
-        jsonstat_points(exact_payload)
-        if not exact_payload.get("error") and not exact_has_empty_dimension
-        else []
-    )
-
-    selected_points = exact_points
-    selected_url = exact_response.url
-    selection_mode = "exact_filters"
-    discovery_payload = None
-
-    # Eurostat occasionally changes classification codes (notably HICP in 2026).
-    # If the exact slice is empty or stale, request a small broad slice and select
-    # the series from actual dimension codes/labels rather than guessing.
-    newest_exact = max((point["period"] for point in exact_points), default="")
     current_year = datetime.now(timezone.utc).year
-    stale = bool(
-        newest_exact
-        and config.get("frequency") == "monthly"
-        and not newest_exact.startswith(str(current_year))
-    )
-    if not exact_points or stale:
-        discovery_params = {
-            **config.get("discovery_filters", {"geo": config["params"].get("geo", "EA")}),
+    geo_candidates = ["EA21", "EA", "EA20"]
+    query_attempts: list[dict[str, Any]] = []
+    combined_points: list[dict[str, Any]] = []
+    payloads: list[dict[str, Any]] = []
+
+    # Query each official euro-area composition separately. Eurostat does not
+    # expose geo=EA consistently across all datasets, while 2026 observations
+    # are published under EA21 and older observations may remain under EA20.
+    for geo in geo_candidates:
+        params = {**config["params"], "geo": geo, "lang": "EN", "lastTimePeriod": "18"}
+        response = request(url, params=params)
+        payload = response.json()
+        raw_name = f"raw_eurostat_{config['dataset']}_{geo}_exact.json"
+        (OUTPUT_DIR / raw_name).write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        has_empty_dimension = any(size == 0 for size in payload.get("size", []))
+        points = (
+            jsonstat_points(payload)
+            if not payload.get("error") and not has_empty_dimension
+            else []
+        )
+        query_attempts.append({
+            "geo": geo,
+            "url": response.url,
+            "observation_count": len(points),
+            "newest_period": max((point["period"] for point in points), default=None),
+            "empty_dimension": has_empty_dimension,
+        })
+        if points:
+            combined_points.extend(points)
+            payloads.append(payload)
+
+    preferred_without_geo = {
+        key: value for key, value in config.get("preferred", {}).items()
+        if key != "geo"
+    }
+    candidates = [
+        point for point in combined_points
+        if _matches_preferred(point, preferred_without_geo)
+    ]
+    keyword_rules = config.get("dimension_label_keywords", {})
+    if keyword_rules:
+        candidates = [point for point in candidates if _matches_keywords(point, keyword_rules)]
+
+    # If the exact slices still fail, run one broader EA21 discovery request.
+    selection_mode = "geo_composition_fallback"
+    if not candidates:
+        discovery_filters = {
+            **config.get("discovery_filters", {}),
+            "geo": "EA21",
             "lang": "EN",
             "lastTimePeriod": "18",
         }
-        discovery_response = request(url, params=discovery_params)
-        discovery_payload = discovery_response.json()
-        (OUTPUT_DIR / f"raw_eurostat_{config['dataset']}_discovery.json").write_text(
-            json.dumps(discovery_payload, ensure_ascii=False, indent=2), encoding="utf-8"
+        response = request(url, params=discovery_filters)
+        payload = response.json()
+        (OUTPUT_DIR / f"raw_eurostat_{config['dataset']}_EA21_discovery.json").write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
         )
-        all_points = jsonstat_points(discovery_payload) if not discovery_payload.get("error") else []
-        preferred = config.get("preferred", {})
-        candidates = [point for point in all_points if _matches_preferred(point, preferred)]
-        keyword_rules = config.get("dimension_label_keywords", {})
+        has_empty_dimension = any(size == 0 for size in payload.get("size", []))
+        all_points = (
+            jsonstat_points(payload)
+            if not payload.get("error") and not has_empty_dimension
+            else []
+        )
+        candidates = [
+            point for point in all_points
+            if _matches_preferred(point, preferred_without_geo)
+        ]
         if keyword_rules:
             candidates = [point for point in candidates if _matches_keywords(point, keyword_rules)]
-        selected_points = candidates
-        selected_url = discovery_response.url
-        selection_mode = "dimension_discovery"
+        query_attempts.append({
+            "geo": "EA21-discovery",
+            "url": response.url,
+            "observation_count": len(all_points),
+            "matched_count": len(candidates),
+            "empty_dimension": has_empty_dimension,
+        })
+        payloads.append(payload)
+        selection_mode = "EA21_dimension_discovery"
 
-    # Deduplicate periods and return the newest six actual observations.
-    by_period = {point["period"]: point for point in selected_points}
-    points = [by_period[key] for key in sorted(by_period)][-6:]
-    options = dimension_options(discovery_payload or exact_payload)
-    status = "ok" if points else "no_data"
+    # For duplicate periods, prefer the composition applicable to that year:
+    # EA21 from 2026, EA20 before 2026, then changing-composition EA.
+    geo_priority = {"EA21": 3, "EA20": 2, "EA": 1}
+    by_period: dict[str, dict[str, Any]] = {}
+    for point in candidates:
+        period = point["period"]
+        point_geo = point.get("dimensions", {}).get("geo", "")
+        preferred_geo = "EA21" if period.startswith(str(current_year)) else "EA20"
+        score = 10 if point_geo == preferred_geo else geo_priority.get(point_geo, 0)
+        current = by_period.get(period)
+        if current is None or score > current["_score"]:
+            by_period[period] = {**point, "_score": score}
+    points = []
+    for period in sorted(by_period)[-6:]:
+        clean = {key: value for key, value in by_period[period].items() if key != "_score"}
+        points.append(clean)
+
+    options = dimension_options(payloads[-1]) if payloads else {}
     return {
-        "status": status,
+        "status": "ok" if points else "no_data",
         "source": "Eurostat Statistics API",
-        "source_url": selected_url,
+        "source_url": query_attempts[-1]["url"] if query_attempts else url,
         "dataset": config["dataset"],
         "filters": config["params"],
         "selection_mode": selection_mode,
+        "query_attempts": query_attempts,
         "selected_dimensions": points[-1]["dimensions"] if points else None,
         "available_dimension_options": options,
         "data": points,
-        **({"diagnostic": "HTTP succeeded but no observations matched the required definition"} if not points else {}),
+        **({"diagnostic": "No observations matched across EA21, EA and EA20"} if not points else {}),
     }
 
 def parse_bundesbank_csv(text: str) -> list[dict[str, Any]]:
@@ -307,7 +352,7 @@ def main() -> None:
     result: dict[str, Any] = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "scope": "official-source diagnostic; latest 6 available periods",
-        "important_note": "Spain, France and Germany CPI must use national CPI, not HICP. Euro-area series use Eurostat changing-composition geo=EA (EA20 through 2025; EA21 from 2026). Pending series are intentionally not substituted.",
+        "important_note": "Spain, France and Germany CPI must use national CPI, not HICP. Euro-area latest data use geo=EA21 from 2026; fallback queries also test EA and EA20 for continuity. Pending series are intentionally not substituted.",
         "series": {},
     }
 
