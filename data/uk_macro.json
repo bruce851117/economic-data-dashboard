@@ -4925,26 +4925,6 @@
           "date": "2026-03-01",
           "value": 718.0,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem"
-        },
-        {
-          "date": "2026-04-01",
-          "value": 713.0,
-          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem"
-        },
-        {
-          "date": "2026-05-01",
-          "value": 710.0,
-          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem"
-        },
-        {
-          "date": "2026-06-01",
-          "value": 712.0,
-          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem"
-        },
-        {
-          "date": "2026-07-01",
-          "value": 712.0,
-          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem"
         }
       ]
     },

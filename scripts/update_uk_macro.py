@@ -17,7 +17,7 @@ from openpyxl import load_workbook
 
 DATA_FILE = Path("data/uk_macro.json")
 DEBUG_DIR = Path("debug/uk_macro_sources")
-SCRIPT_VERSION = "2026-07-28-ap2y-fix-v2"
+SCRIPT_VERSION = "2026-07-28-ap2y-monthly-only-v3"
 USER_AGENT = "Mozilla/5.0 (compatible; UKMacroDashboard/1.0)"
 
 SESSION = requests.Session()
@@ -138,7 +138,7 @@ def debug_print(label: str, payload: Any) -> None:
     )
 
 
-def period(value: str) -> str | None:
+def period_with_frequency(value: str) -> tuple[str | None, str | None]:
     value = " ".join(str(value).upper().split())
     aliases = {
         "JAN": "01", "FEB": "02", "MAR": "03", "APR": "04",
@@ -147,12 +147,18 @@ def period(value: str) -> str | None:
     }
     month_match = re.fullmatch(r"(\d{4}) (" + "|".join(aliases) + r")", value)
     if month_match:
-        return f"{month_match[1]}-{aliases[month_match[2]]}-01"
+        return f"{month_match[1]}-{aliases[month_match[2]]}-01", "monthly"
     quarter_match = re.fullmatch(r"(\d{4}) Q([1-4])", value)
     if quarter_match:
-        return f"{quarter_match[1]}-{int(quarter_match[2]) * 3:02d}-01"
-    return None
+        return f"{quarter_match[1]}-{int(quarter_match[2]) * 3:02d}-01", "quarterly"
+    year_match = re.fullmatch(r"(\d{4})", value)
+    if year_match:
+        return f"{year_match[1]}-12-01", "annual"
+    return None, None
 
+
+def period(value: str) -> str | None:
+    return period_with_frequency(value)[0]
 
 def shift_month(date_value: str, offset: int = 1) -> str:
     year, month = map(int, date_value[:7].split("-"))
@@ -175,13 +181,22 @@ def ons_series(dataset: str, cdid: str, path: str) -> list[dict[str, Any]]:
     for row in rows:
         if len(row) < 2:
             continue
-        date_value = period(row[0])
+        date_value, frequency = period_with_frequency(row[0])
+        expected_frequency = (
+            "quarterly" if cdid.upper() in {"ABMI", "ABJR", "NPQT"}
+            else "monthly"
+        )
         raw_value = row[1].replace(",", "").strip()
-        if date_value and re.fullmatch(r"-?\d+(?:\.\d+)?", raw_value):
+        if (
+            date_value
+            and frequency == expected_frequency
+            and re.fullmatch(r"-?\d+(?:\.\d+)?", raw_value)
+        ):
             output.append({
                 "date": date_value,
                 "value": float(raw_value),
                 "source_url": url,
+                "source_frequency": frequency,
             })
     if not output:
         raise RuntimeError(f"ONS {cdid} returned no data")
@@ -1396,18 +1411,22 @@ def update_dmp_inflation(database: dict[str, Any]) -> tuple[int, int]:
 
 
 def normalize_ap2y_points(points: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Map ONS AP2Y midpoint labels to the dashboard end month exactly once.
+    """Convert AP2Y monthly midpoint labels to period-end month exactly once.
 
-    ONS raw 2026-04 = Mar-May rolling period -> dashboard 2026-05.
-    ONS raw 2026-05 = Apr-Jun rolling period -> dashboard 2026-06.
+    Only monthly observations are accepted. This prevents quarterly rows such as
+    2026 Q2 from being converted into a false 2026-07 observation.
     """
+    monthly_points = [
+        point for point in points
+        if point.get("source_frequency") in {None, "monthly"}
+    ]
+    monthly_points.sort(key=lambda point: point["date"])
     normalized = [
         {**point, "date": shift_month(point["date"], 1)}
-        for point in points
+        for point in monthly_points
     ]
-    normalized.sort(key=lambda point: point["date"])
-    print("[AP2Y DEBUG] raw -> dashboard", flush=True)
-    for raw_point, dashboard_point in zip(points[-6:], normalized[-6:]):
+    print("[AP2Y DEBUG] monthly raw -> dashboard", flush=True)
+    for raw_point, dashboard_point in zip(monthly_points[-6:], normalized[-6:]):
         print(
             f"[AP2Y DEBUG] {raw_point['date'][:7]} {raw_point['value']} "
             f"-> {dashboard_point['date'][:7]} {dashboard_point['value']}",
