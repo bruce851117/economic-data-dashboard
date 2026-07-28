@@ -1008,63 +1008,189 @@ def dmp_page_candidates() -> list[tuple[str, str]]:
     return output
 
 
-def update_dmp_inflation(database: dict[str, Any]) -> tuple[int, int]:
+def discover_dmp_monthly_excel() -> tuple[str, str, str]:
+    """Return reference month, release page URL and monthly DMP XLSX URL."""
     debug_pages = []
-    for reference_month, url in dmp_page_candidates():
+    for reference_month, page_url in dmp_page_candidates():
         try:
-            response = get(url)
+            response = get(page_url)
         except Exception as error:
-            debug_pages.append({"url": url, "error": str(error)})
+            debug_pages.append({"page_url": page_url, "error": str(error)})
             continue
-
-        text = clean_cell(BeautifulSoup(response.text, "html.parser").get_text(" ", strip=True))
-        contexts = []
-        for match in re.finditer(r"year-ahead CPI inflation", text, re.I):
-            contexts.append(text[max(0, match.start() - 180): match.end() + 300])
-
-        value = None
-        # Prefer the single-month DMP value. Example:
-        # "In the single-month data year-ahead CPI inflation expectations
-        # fell from 3.7% to 3.3%."  The required value is the final 3.3%,
-        # not the three-month average of 3.7% mentioned earlier.
-        patterns = [
-            r"single-month data[^.]{0,220}?year-ahead CPI inflation expectations[^.]{0,160}?"
-            r"(?:fell|rose|increased|decreased|moved|changed)\s+from\s+\d+(?:\.\d+)?%\s+to\s+"
-            r"(\d+(?:\.\d+)?)%",
-            r"single-month data[^.]{0,220}?year-ahead CPI inflation expectations[^.]{0,160}?"
-            r"(?:were|was|stood at|remained at)\s+(\d+(?:\.\d+)?)%",
-            r"single-month[^.]{0,220}?year-ahead CPI inflation expectations[^.]{0,160}?"
-            r"(?:to|at)\s+(\d+(?:\.\d+)?)%",
-        ]
-        for pattern_value in patterns:
-            match = re.search(pattern_value, text, re.I)
-            if match:
-                value = float(match.group(1))
-                break
-
+        soup = BeautifulSoup(response.text, "html.parser")
+        links = []
+        for anchor in soup.find_all("a", href=True):
+            label = clean_cell(anchor.get_text(" ", strip=True))
+            href = requests.compat.urljoin(page_url, anchor["href"])
+            if (
+                ".xlsx" in href.lower()
+                and "monthly" in label.lower()
+                and "dmp" in href.lower()
+            ):
+                links.append({"label": label, "url": href})
         debug_pages.append({
-            "url": url,
             "reference_month": reference_month,
+            "page_url": page_url,
             "status": response.status_code,
-            "contexts": contexts,
-            "parsed_value": value,
+            "monthly_excel_links": links,
         })
-        save_debug("boe_dmp_latest_page.html", response.text)
+        if links:
+            save_debug("boe_dmp_excel_discovery.json", debug_pages)
+            debug_print("boe_dmp_excel_discovery", debug_pages)
+            return reference_month, page_url, links[0]["url"]
+    save_debug("boe_dmp_excel_discovery.json", debug_pages)
+    raise RuntimeError("Could not find the latest BoE monthly DMP Excel link")
 
-        if value is not None:
-            save_debug("boe_dmp_debug.json", debug_pages)
-            debug_print("boe_dmp", debug_pages)
-            return merge(database, "ukbfftin", [{
-                "date": reference_month + "-01",
-                "value": value,
-                "source_url": url,
-                "measure": "DMP year-ahead CPI inflation expectations",
-            }])
 
-    save_debug("boe_dmp_debug.json", debug_pages)
-    debug_print("boe_dmp", debug_pages)
-    raise RuntimeError("BoE DMP year-ahead CPI expectation not found")
+def extract_dmp_single_month_cpi(
+    workbook: Any,
+    source_url: str,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    sheet = next(
+        (
+            workbook[name] for name in workbook.sheetnames
+            if "cpi" in normalize_excel_label(name)
+            and "expect" in normalize_excel_label(name)
+        ),
+        None,
+    )
+    if sheet is None:
+        raise RuntimeError(
+            "DMP workbook does not contain a CPI expectations worksheet; "
+            f"available sheets: {workbook.sheetnames}"
+        )
+    rows = list(sheet.iter_rows(values_only=True))
+    if not rows:
+        raise RuntimeError("DMP CPI expectations worksheet is empty")
 
+    # Determine each column's meaning from all header text above the first data
+    # row. The required series must contain all three concepts: one-year ahead,
+    # expectations and single month. This prevents accidental use of the
+    # three-month average, current CPI or three-year-ahead series.
+    first_data_row = None
+    for row_index, row in enumerate(rows):
+        if any(excel_month(value) for value in row):
+            first_data_row = row_index
+            break
+    if first_data_row is None:
+        raise RuntimeError("No monthly dates found in DMP CPI expectations sheet")
+
+    max_columns = max(len(row) for row in rows)
+    header_by_column = {}
+    scores = {}
+    for column_index in range(max_columns):
+        header = normalize_excel_label(" ".join(
+            str(rows[row_index][column_index])
+            for row_index in range(first_data_row)
+            if column_index < len(rows[row_index])
+            and rows[row_index][column_index] is not None
+        ))
+        header_by_column[column_index] = header
+        score = 0
+        if re.search(r"(?:1|one) year ahead", header):
+            score += 5
+        if "expect" in header:
+            score += 3
+        if "single month" in header:
+            score += 5
+        if "3 month" in header or "three month" in header:
+            score -= 10
+        if "current cpi" in header or "3 year ahead" in header:
+            score -= 10
+        scores[column_index] = score
+
+    target_column = max(scores, key=scores.get)
+    if scores[target_column] < 10:
+        raise RuntimeError(
+            "Could not uniquely identify '1-year ahead expectations - single month' "
+            f"in DMP CPI sheet. Headers: {header_by_column}"
+        )
+
+    points = []
+    extracted_rows = []
+    for row_index in range(first_data_row, len(rows)):
+        row = rows[row_index]
+        date_value = None
+        date_column = None
+        for column_index, value in enumerate(row):
+            parsed_date = excel_month(value)
+            if parsed_date:
+                date_value = parsed_date
+                date_column = column_index
+                break
+        if not date_value or target_column >= len(row):
+            continue
+        numeric_value = number_or_none(str(row[target_column] or ""))
+        if numeric_value is None:
+            continue
+        extracted_rows.append({
+            "date": date_value,
+            "value": numeric_value,
+            "date_cell": f"R{row_index + 1}C{date_column + 1}",
+            "value_cell": f"R{row_index + 1}C{target_column + 1}",
+        })
+        points.append({
+            "date": date_value,
+            "value": numeric_value,
+            "source_url": source_url,
+            "source_sheet": sheet.title,
+            "source_cell": f"R{row_index + 1}C{target_column + 1}",
+            "measure": "DMP 1-year ahead CPI inflation expectations - single month",
+        })
+
+    if not points:
+        raise RuntimeError(
+            "Identified the DMP single-month one-year-ahead CPI column, "
+            "but extracted no observations"
+        )
+    debug_payload = {
+        "source_url": source_url,
+        "sheet": sheet.title,
+        "selected_column": target_column + 1,
+        "selected_header": header_by_column[target_column],
+        "column_scores": {str(k + 1): v for k, v in scores.items()},
+        "observation_count": len(points),
+        "latest_observations": extracted_rows[-24:],
+    }
+    return points, debug_payload
+
+
+def update_dmp_inflation(database: dict[str, Any]) -> tuple[int, int]:
+    reference_month, page_url, xlsx_url = discover_dmp_monthly_excel()
+    print(
+        f"[BoE DMP] latest_page={page_url} reference_month={reference_month}",
+        flush=True,
+    )
+    print(f"[BoE DMP] downloading monthly Excel: {xlsx_url}", flush=True)
+    response = get(xlsx_url)
+    if not response.content.startswith(b"PK"):
+        raise RuntimeError(
+            "BoE DMP download did not return an XLSX file "
+            f"(content-type={response.headers.get('content-type')!r}, "
+            f"bytes={len(response.content)})"
+        )
+    workbook = load_workbook(
+        BytesIO(response.content), read_only=True, data_only=True
+    )
+    points, debug_payload = extract_dmp_single_month_cpi(workbook, xlsx_url)
+    debug_payload.update({
+        "release_page_url": page_url,
+        "reference_month": reference_month,
+        "content_type": response.headers.get("content-type"),
+        "content_bytes": len(response.content),
+        "workbook_sheets": workbook.sheetnames,
+    })
+    save_debug("boe_dmp_single_month_excel_debug.json", debug_payload)
+    debug_print("boe_dmp_single_month_excel", debug_payload)
+
+    # The official workbook is authoritative for every month it contains:
+    # overwrite all overlapping JSON months and append newer observations.
+    return merge(
+        database,
+        "ukbfftin",
+        points,
+        replace_source_range=True,
+    )
 
 def main() -> None:
     started_at = time.monotonic()
