@@ -797,6 +797,12 @@ def extract_pmi_value(
         ]
     elif sector == "services":
         patterns = [
+            # Final releases often put the value before the official index name:
+            # "At 48.8 in June, ... the headline seasonally adjusted
+            #  S&P Global UK Services PMI Business Activity Index ..."
+            rf"\bAt\s+{number}\s+in\s+"
+            r"(?:January|February|March|April|May|June|July|August|September|October|November|December)"
+            r".{0,400}?\bS&P Global UK Services PMI Business Activity Index\b",
             rf"\bFlash UK Services PMI Business Activity Index\s*:\s*{number}\b",
             rf"\bServices PMI Business Activity Index\s*:\s*{number}\b",
             r"\bS&P Global UK Services PMI Business Activity Index\s+"
@@ -886,6 +892,14 @@ def validate_pmi_parser() -> None:
             "final",
             "The seasonally adjusted S&P Global UK Services PMI Business "
             "Activity Index posted 48.8 in June.",
+            48.8,
+        ),
+        (
+            "services",
+            "final",
+            "At 48.8 in June, down from 49.3 in May, the headline seasonally "
+            "adjusted S&P Global UK Services PMI Business Activity Index "
+            "remained below the 50.0 no-change mark.",
             48.8,
         ),
         (
