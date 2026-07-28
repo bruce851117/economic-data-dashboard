@@ -6,6 +6,8 @@ import json
 import re
 import time
 import hashlib
+import zipfile
+from io import BytesIO
 from urllib.parse import urljoin
 from html.parser import HTMLParser
 from datetime import datetime, timezone
@@ -13,6 +15,8 @@ from pathlib import Path
 from typing import Any
 
 import requests
+from openpyxl import load_workbook
+from pypdf import PdfReader
 
 OUTPUT_DIR = Path("debug/eu_macro_sources")
 OUTPUT_JSON = OUTPUT_DIR / "eu_last_6_periods.json"
@@ -612,31 +616,72 @@ def fetch_bundesbank(config: dict[str, Any]) -> dict[str, Any]:
 
 
 
-def candidate_urls(item: dict[str, Any]) -> list[str]:
+def _walk_urls(value: Any, base_url: str = "") -> list[str]:
     urls: list[str] = []
-    for record in item.get("candidate_records") or []:
-        if not isinstance(record, dict):
-            continue
-        for key in ("href", "accessURL", "downloadURL", "url", "Url"):
-            value = record.get(key)
-            if isinstance(value, str) and value.startswith(("http://", "https://")):
-                urls.append(value)
-        products = record.get("products") or record.get("produits") or []
-        if isinstance(products, list):
-            for product in products:
-                if isinstance(product, dict):
-                    for key in ("accessURL", "downloadURL", "url"):
-                        value = product.get(key)
-                        if isinstance(value, str) and value.startswith(("http://", "https://")):
-                            urls.append(value)
-    return list(dict.fromkeys(urls))[:20]
+    if isinstance(value, dict):
+        for key, child in value.items():
+            if isinstance(child, str) and key.lower() in {
+                "href", "url", "accessurl", "downloadurl", "contenturl"
+            }:
+                if child.startswith(("http://", "https://", "/")):
+                    urls.append(urljoin(base_url, child))
+            else:
+                urls.extend(_walk_urls(child, base_url))
+    elif isinstance(value, list):
+        for child in value:
+            urls.extend(_walk_urls(child, base_url))
+    return urls
+
+
+def candidate_urls(series_id: str, item: dict[str, Any]) -> list[str]:
+    base_url = item.get("source_url", "")
+    urls = _walk_urls(item.get("candidate_records") or [], base_url)
+    # INE Tempus exposes tables/series through IDs rather than absolute links.
+    if series_id.startswith("spain_"):
+        for record in item.get("candidate_records") or []:
+            if isinstance(record, dict) and record.get("Id") is not None:
+                operation_id = record["Id"]
+                urls.append(
+                    f"https://servicios.ine.es/wstempus/js/EN/TABLAS_OPERACION/{operation_id}"
+                )
+    return list(dict.fromkeys(urls))[:30]
+
+
+def response_text(response: requests.Response) -> str:
+    content_type = (response.headers.get("Content-Type") or "").lower()
+    content = response.content
+    if content.startswith(b"%PDF") or "pdf" in content_type:
+        reader = PdfReader(BytesIO(content))
+        return "\n".join(page.extract_text() or "" for page in reader.pages)
+    if content.startswith(b"PK") or "spreadsheet" in content_type or response.url.lower().endswith((".xlsx", ".xlsm")):
+        try:
+            workbook = load_workbook(BytesIO(content), read_only=True, data_only=True)
+            lines: list[str] = []
+            for worksheet in workbook.worksheets:
+                lines.append(f"[SHEET] {worksheet.title}")
+                for row in worksheet.iter_rows(values_only=True):
+                    values = [str(cell) for cell in row if cell is not None]
+                    if values:
+                        lines.append("\t".join(values))
+            return "\n".join(lines)
+        except Exception:
+            pass
+    encoding = response.encoding or "utf-8"
+    return content.decode(encoding, errors="replace")
 
 
 def parse_period_value_pairs(text: str) -> list[dict[str, Any]]:
     pairs: list[dict[str, Any]] = []
+    month_names = {
+        name.lower(): index for index, name in enumerate(
+            ["January", "February", "March", "April", "May", "June", "July",
+             "August", "September", "October", "November", "December"], 1
+        )
+    }
     patterns = [
-        r"(?P<period>20\\d{2}[-/]?(?:0[1-9]|1[0-2]))[^\\d-]{0,30}(?P<value>-?\\d{1,4}(?:[.,]\\d+)?)",
-        r"(?P<period>20\\d{2}[- ]?Q[1-4])[^\\d-]{0,30}(?P<value>-?\\d{1,4}(?:[.,]\\d+)?)",
+        r"(?P<period>20\d{2}[-/](?:0?[1-9]|1[0-2]))[^\d-]{0,40}(?P<value>-?\d{1,6}(?:[.,]\d+)?)",
+        r"(?P<period>20\d{2}[- ]?Q[1-4])[^\d-]{0,40}(?P<value>-?\d{1,6}(?:[.,]\d+)?)",
+        r"(?P<month>January|February|March|April|May|June|July|August|September|October|November|December)\s+(?P<year>20\d{2})[^\d-]{0,40}(?P<value>-?\d{1,6}(?:[.,]\d+)?)",
     ]
     for pattern in patterns:
         for match in re.finditer(pattern, text, re.I):
@@ -644,10 +689,15 @@ def parse_period_value_pairs(text: str) -> list[dict[str, Any]]:
                 value = float(match.group("value").replace(",", "."))
             except ValueError:
                 continue
-            period = match.group("period").replace("/", "-").replace(" ", "-")
+            if match.groupdict().get("month"):
+                period = f"{match.group('year')}-{month_names[match.group('month').lower()]:02d}"
+            else:
+                raw = match.group("period").replace("/", "-").replace(" ", "-")
+                parts = raw.split("-")
+                period = f"{parts[0]}-{int(parts[1]):02d}" if len(parts) == 2 and parts[1].isdigit() else raw
             pairs.append({"period": period, "value": value})
     unique = {(row["period"], row["value"]): row for row in pairs}
-    return sorted(unique.values(), key=lambda row: row["period"])[-12:]
+    return sorted(unique.values(), key=lambda row: row["period"])[-20:]
 
 
 def parse_pmi_page(text: str, series_id: str) -> list[dict[str, Any]]:
@@ -655,62 +705,104 @@ def parse_pmi_page(text: str, series_id: str) -> list[dict[str, Any]]:
     sector = "manufacturing" if "manufacturing" in series_id else "services"
     clean = " ".join(text.split())
     month_match = re.search(
-        r"\\b(January|February|March|April|May|June|July|August|September|October|November|December)\\s+(20\\d{2})\\b",
+        r"\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})\b",
         clean, re.I,
     )
     if not month_match:
         return []
-    month_num = datetime.strptime(month_match.group(1), "%B").month
+    month_num = datetime.strptime(month_match.group(1).title(), "%B").month
     period = f"{month_match.group(2)}-{month_num:02d}"
     if sector == "manufacturing":
         patterns = [
-            rf"(?:{country}\\s+)?Manufacturing PMI(?:®|™)?\\s*(?:at|:|posted)?\\s*(\\d{{2}}\\.\\d)",
-            r"Manufacturing Purchasing Managers[’']? Index(?:\\s*\\(PMI\\))?\\s*(?:posted|at|:)\\s*(\\d{2}\\.\\d)",
+            r"Manufacturing PMI(?:®|™)?\s+(?:at|posted|rose to|fell to|:)?\s*(\d{2}\.\d)",
+            r"Manufacturing Purchasing Managers[’']? Index.{0,160}?(?:posted|at)\s+(\d{2}\.\d)",
+            r"headline.{0,120}?Manufacturing PMI.{0,80}?(\d{2}\.\d)",
         ]
     else:
         patterns = [
-            rf"(?:{country}\\s+)?Services PMI Business Activity Index(?:®|™)?\\s*(?:at|:|posted)?\\s*(\\d{{2}}\\.\\d)",
-            r"Services PMI(?:®|™)?(?: Business Activity Index)?\\s*(?:posted|at|:)\\s*(\\d{2}\\.\\d)",
-            r"At\\s+(\\d{2}\\.\\d)\\s+in\\s+(?:January|February|March|April|May|June|July|August|September|October|November|December).{0,350}?Services PMI Business Activity Index",
+            r"Services PMI Business Activity Index(?:®|™)?.{0,120}?(?:posted|at|:)\s*(\d{2}\.\d)",
+            r"Services PMI(?:®|™)?.{0,80}?(?:posted|at|rose to|fell to|:)\s*(\d{2}\.\d)",
+            r"At\s+(\d{2}\.\d)\s+in\s+(?:January|February|March|April|May|June|July|August|September|October|November|December).{0,450}?Services PMI Business Activity Index",
         ]
     for pattern in patterns:
-        match = re.search(pattern, clean, re.I)
-        if match:
+        for match in re.finditer(pattern, clean, re.I):
             value = float(match.group(1))
-            if value != 50.0:
-                return [{"period": period, "value": value}]
+            context = clean[max(0, match.start()-120):match.end()+120].lower()
+            if value == 50.0 or "50 = no change" in context or ">50" in context:
+                continue
+            return [{"period": period, "value": value}]
     return []
+
+
+def expand_ine_urls(url: str, response: requests.Response) -> list[str]:
+    if "/TABLAS_OPERACION/" not in url:
+        return []
+    try:
+        payload = response.json()
+    except Exception:
+        return []
+    output: list[str] = []
+    if isinstance(payload, list):
+        for table in payload:
+            if isinstance(table, dict) and table.get("Id") is not None:
+                output.append(
+                    f"https://servicios.ine.es/wstempus/js/EN/SERIES_TABLA/{table['Id']}"
+                )
+    return output[:25]
 
 
 def deep_fetch_candidates(result: dict[str, Any]) -> None:
     for series_id, item in result.get("series", {}).items():
         if item.get("data"):
             continue
-        urls = candidate_urls(item)
-        if not urls:
-            item["final_status"] = "parse_error"
-            item["final_error"] = "No candidate download/release URL discovered"
-            continue
+        queue = candidate_urls(series_id, item)
+        seen: set[str] = set()
         fetched: list[dict[str, Any]] = []
         observations: list[dict[str, Any]] = []
-        for url in urls:
+        while queue and len(seen) < 60:
+            url = queue.pop(0)
+            if not url or url in seen:
+                continue
+            seen.add(url)
             try:
                 response = request(url)
-                body = response.text
+                text = response_text(response)
                 record = {
                     "url": response.url,
                     "status": response.status_code,
                     "content_type": response.headers.get("Content-Type", ""),
                     "bytes": len(response.content),
                     "sha256": hashlib.sha256(response.content).hexdigest(),
-                    "body": body[:MAX_RAW_CHARS],
-                    "truncated": len(body) > MAX_RAW_CHARS,
+                    "extracted_text": text[:MAX_RAW_CHARS],
+                    "truncated": len(text) > MAX_RAW_CHARS,
                 }
                 fetched.append(record)
+                queue.extend(expand_ine_urls(url, response))
+                # Follow downloadable links discovered on candidate HTML pages.
+                parser = _TextExtractor()
+                parser.feed(text if "html" in record["content_type"].lower() else "")
+                for link in parser.links:
+                    href = link.get("href", "")
+                    label = link.get("text", "").lower()
+                    if href and any(token in (href + " " + label).lower() for token in (
+                        ".csv", ".xlsx", ".pdf", "download", "descarga", "series", "datos"
+                    )):
+                        queue.append(urljoin(response.url, href))
                 if "_pmi" in series_id:
-                    observations.extend(parse_pmi_page(body, series_id))
+                    observations.extend(parse_pmi_page(text, series_id))
                 else:
-                    observations.extend(parse_period_value_pairs(body))
+                    observations.extend(parse_period_value_pairs(text))
+                # INE SERIES_TABLA response contains series IDs; request each last six values.
+                if "/SERIES_TABLA/" in url:
+                    try:
+                        payload = response.json()
+                        if isinstance(payload, list):
+                            for row in payload[:30]:
+                                code = row.get("COD") or row.get("Id") if isinstance(row, dict) else None
+                                if code:
+                                    queue.append(f"https://servicios.ine.es/wstempus/js/EN/DATOS_SERIE/{code}?nult=8")
+                    except Exception:
+                        pass
             except Exception as error:
                 fetched.append({"url": url, "error": str(error)})
         RAW_BUNDLE["candidate_fetches"][series_id] = fetched
@@ -718,12 +810,14 @@ def deep_fetch_candidates(result: dict[str, Any]) -> None:
         parsed = sorted(unique.values(), key=lambda row: row["period"])[-6:]
         if parsed:
             item["data"] = parsed
-            item["status"] = "ok_unverified_generic_parser"
+            item["status"] = "ok_unverified_parser"
             item["final_status"] = "needs_reference_validation"
         else:
             item["final_status"] = "parse_error"
-            item["final_error"] = "Candidate sources downloaded but no conservative period/value pairs parsed"
-
+            item["final_error"] = (
+                f"Fetched {len(fetched)} candidate resources but no conservative observations parsed"
+                if fetched else "No candidate source URL discovered"
+            )
 
 def normalize_reference(payload: Any) -> dict[str, dict[str, float]]:
     output: dict[str, dict[str, float]] = {}

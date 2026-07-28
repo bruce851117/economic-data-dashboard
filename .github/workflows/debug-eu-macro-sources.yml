@@ -13,7 +13,7 @@ concurrency:
 jobs:
   debug:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
@@ -25,18 +25,21 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: python -m pip install --disable-pip-version-check requests
+        run: python -m pip install --disable-pip-version-check requests openpyxl pypdf
 
-      - name: Fetch latest six official observations
+      - name: Fetch all official sources and compare reference data
         env:
           PYTHONUNBUFFERED: "1"
         run: python -u debug_eu_macro_sources.py
 
-      - name: Upload EU source debug files
+      - name: Upload exactly three JSON debug files
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: eu-macro-official-source-debug-${{ github.run_number }}
-          path: debug/eu_macro_sources/
+          name: eu-macro-three-json-${{ github.run_number }}
+          path: |
+            debug/eu_macro_sources/eu_last_6_periods.json
+            debug/eu_macro_sources/eu_source_bundle.json
+            debug/eu_macro_sources/eu_comparison_report.json
           retention-days: 14
           if-no-files-found: error
