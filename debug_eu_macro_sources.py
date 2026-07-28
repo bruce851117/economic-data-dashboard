@@ -15,12 +15,17 @@ import requests
 OUTPUT_DIR = Path("debug/eu_macro_sources")
 OUTPUT_JSON = OUTPUT_DIR / "eu_last_6_periods.json"
 TIMEOUT = 40
-USER_AGENT = "EU-Macro-Dashboard-Debug/0.1 (+https://github.com/bruce851117/economic-data-dashboard)"
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 
 SESSION = requests.Session()
 SESSION.headers.update({
     "User-Agent": USER_AGENT,
-    "Accept-Language": "en,en-GB;q=0.9",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,application/json;q=0.8,*/*;q=0.7",
+    "Accept-Language": "en-GB,en;q=0.9",
+    "Cache-Control": "no-cache",
+    "Pragma": "no-cache",
+    "DNT": "1",
+    "Upgrade-Insecure-Requests": "1",
 })
 
 EUROSTAT_BASE = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data"
@@ -168,7 +173,7 @@ SOURCE_GROUPS = {
         "series": {"germany_ifo_business_climate": ["climat des affaires"]},
     },
     "sp_global_pmi": {
-        "url": "https://www.pmi.spglobal.com/Public/Release/PressReleases",
+        "url": "https://www.pmi.spglobal.com/Public/Release/PressReleases?language=en",
         "series": {
             "germany_manufacturing_pmi": ["germany", "manufacturing"],
             "france_manufacturing_pmi": ["france", "manufacturing"],
@@ -213,6 +218,11 @@ def _flatten_strings(value: Any) -> list[str]:
 
 def fetch_source_group(group_id: str, config: dict[str, Any]) -> dict[str, dict[str, Any]]:
     params = dict(config.get("base_params", {}))
+    if group_id == "sp_global_pmi":
+        # Use the same browser-style session warm-up as the working UK pipeline.
+        # Directly calling the release index with the debug bot UA was returning 403.
+        request("https://www.pmi.spglobal.com/Public?language=en")
+        time.sleep(1.0)
     response = request(config["url"], params=params or None)
     content_type = response.headers.get("Content-Type", "")
     is_json = "json" in content_type.lower() or response.text.lstrip().startswith(("{", "["))
