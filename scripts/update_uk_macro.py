@@ -17,6 +17,7 @@ from openpyxl import load_workbook
 
 DATA_FILE = Path("data/uk_macro.json")
 DEBUG_DIR = Path("debug/uk_macro_sources")
+SCRIPT_VERSION = "2026-07-28-ap2y-fix-v2"
 USER_AGENT = "Mozilla/5.0 (compatible; UKMacroDashboard/1.0)"
 
 SESSION = requests.Session()
@@ -1393,10 +1394,31 @@ def update_dmp_inflation(database: dict[str, Any]) -> tuple[int, int]:
         replace_source_range=True,
     )
 
+
+def normalize_ap2y_points(points: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Map ONS AP2Y midpoint labels to the dashboard end month exactly once.
+
+    ONS raw 2026-04 = Mar-May rolling period -> dashboard 2026-05.
+    ONS raw 2026-05 = Apr-Jun rolling period -> dashboard 2026-06.
+    """
+    normalized = [
+        {**point, "date": shift_month(point["date"], 1)}
+        for point in points
+    ]
+    normalized.sort(key=lambda point: point["date"])
+    print(
+        "[AP2Y DEBUG] latest_raw="
+        + json.dumps(points[-6:], ensure_ascii=False)
+        + " latest_dashboard="
+        + json.dumps(normalized[-6:], ensure_ascii=False),
+        flush=True,
+    )
+    return normalized
+
 def main() -> None:
     validate_pmi_parser()
     started_at = time.monotonic()
-    print("[START] Update UK macro data", flush=True)
+    print(f"[START] Update UK macro data version={SCRIPT_VERSION}", flush=True)
     database = json.loads(DATA_FILE.read_text(encoding="utf-8"))
     logs = []
 
@@ -1404,7 +1426,9 @@ def main() -> None:
         print(f"[ONS] updating {series_id} ({cdid})", flush=True)
         try:
             points = ons_series(dataset, cdid, path)
-            if month_shift:
+            if series_id == "ukvaap2y":
+                points = normalize_ap2y_points(points)
+            elif month_shift:
                 points = [
                     {**point, "date": shift_month(point["date"], month_shift)}
                     for point in points
