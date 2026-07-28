@@ -223,6 +223,7 @@ def merge(
     points: list[dict[str, Any]],
     release_type: str | None = None,
     replace_source_range: bool = False,
+    prune_after_source_end: bool = False,
 ) -> tuple[int, int]:
     series = by_id(database, series_id)
     if not series:
@@ -251,6 +252,18 @@ def merge(
         return 0, 0
 
     added = revised = 0
+
+    if prune_after_source_end:
+        source_end = max(normalized_points)
+        stale_keys = [key for key in old if key > source_end]
+        for key in stale_keys:
+            print(
+                f"[MERGE] removing stale {series_id} {key}: "
+                f"{old[key].get('value')}",
+                flush=True,
+            )
+            del old[key]
+            revised += 1
 
     if replace_source_range:
         # Official ONS sources are authoritative over every overlapping period.
@@ -940,6 +953,13 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
                 month for month, row in rows.items()
                 if row.get("release_type") == "flash" and month <= now_month
             )
+            # Re-validate historical 50 values. Previous parser versions could
+            # mistake S&P's neutral threshold ">50 = growth/improvement" for
+            # the actual observation, so these rows must be fetched again.
+            months_to_try.extend(
+                month for month, row in rows.items()
+                if float(row.get("value", -999)) == 50.0 and month <= now_month
+            )
         else:
             months_to_try.append(now_month)
 
@@ -1072,7 +1092,13 @@ def update_sp_global_pmi(database: dict[str, Any]) -> dict[str, tuple[int, int]]
             selected_months.add(month_key(row["date"]))
             release_type = row["release_type"]
             point = {k: v for k, v in row.items() if k != "release_type"}
-            a, r = merge(database, series_id, [point], release_type)
+            a, r = merge(
+                database,
+                series_id,
+                [point],
+                release_type,
+                replace_source_range=True,
+            )
             added += a
             revised += r
 
@@ -1370,7 +1396,11 @@ def main() -> None:
                     for point in points
                 ]
             logs.append((series_id, *merge(
-                database, series_id, points, replace_source_range=True
+                database,
+                series_id,
+                points,
+                replace_source_range=True,
+                prune_after_source_end=True,
             )))
         except Exception as error:
             logs.append((series_id, "ERROR", str(error)))
@@ -1380,7 +1410,11 @@ def main() -> None:
         try:
             points = year_over_year(ons_series(dataset, cdid, path))
             logs.append((series_id, *merge(
-                database, series_id, points, replace_source_range=True
+                database,
+                series_id,
+                points,
+                replace_source_range=True,
+                prune_after_source_end=True,
             )))
         except Exception as error:
             logs.append((series_id, "ERROR", str(error)))
