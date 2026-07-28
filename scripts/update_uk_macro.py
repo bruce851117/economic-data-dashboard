@@ -756,49 +756,58 @@ def extract_reference_month(text: str) -> str | None:
 
 
 def extract_pmi_value(text: str, sector: str, release_type: str) -> float | None:
-    compact = clean_cell(text)
+    """Extract only the headline PMI value, never the neutral threshold 50."""
+    compact = clean_cell(text).replace("™", "").replace("®", "")
 
     if sector == "manufacturing":
-        labels = [
-            r"S&P Global UK Manufacturing PMI",
-            r"UK Manufacturing PMI",
-            r"Manufacturing PMI",
-            r"Manufacturing Purchasing Managers(?:’|') Index",
+        # Highest-confidence patterns first. Final manufacturing releases often
+        # say "Manufacturing PMI at 52.5" or "PMI posted 52.5".  The previous
+        # generic fallback captured the chart legend ">50 = improvement m/m".
+        patterns = [
+            r"Manufacturing\s+PMI\s+(?:at|=|:)\s*([2-7]\d(?:\.\d+)?)",
+            r"S&P Global UK Manufacturing Purchasing Managers(?:’|')? Index\s*\(PMI\)\s+(?:posted|registered|stood at|rose to|fell to|was|at)\s+([2-7]\d(?:\.\d+)?)",
+            r"headline(?: seasonally adjusted)?(?: S&P Global UK)? Manufacturing PMI[^.]{0,120}?(?:posted|registered|stood at|rose to|fell to|was|at)\s+([2-7]\d(?:\.\d+)?)",
+            r"(?:seasonally adjusted )?S&P Global UK Manufacturing PMI[^.]{0,120}?(?:posted|registered|stood at|rose to|fell to|was|at|:)\s+([2-7]\d(?:\.\d+)?)",
         ]
+        if release_type == "flash":
+            patterns.insert(0, r"Flash UK Manufacturing PMI\s*[:=]\s*([2-7]\d(?:\.\d+)?)")
     else:
-        labels = [
-            r"S&P Global UK Services PMI Business Activity Index",
-            r"UK Services PMI Business Activity Index",
-            r"Services PMI Business Activity Index",
-            r"Services Business Activity Index",
-            r"UK Services PMI",
-            r"Services PMI",
+        patterns = [
+            r"Services PMI Business Activity Index\s*[:=]\s*([2-7]\d(?:\.\d+)?)",
+            r"S&P Global UK Services PMI Business Activity Index[^.]{0,120}?(?:posted|registered|stood at|rose to|fell to|was|at|:)\s+([2-7]\d(?:\.\d+)?)",
+            r"headline(?: seasonally adjusted)?(?: S&P Global UK)? Services PMI Business Activity Index[^.]{0,120}?(?:posted|registered|stood at|rose to|fell to|was|at)\s+([2-7]\d(?:\.\d+)?)",
         ]
+        if release_type == "flash":
+            patterns.insert(0, r"Flash UK Services PMI Business Activity Index\s*[:=]\s*([2-7]\d(?:\.\d+)?)")
 
-    verbs = r"(?:at|posted|registered|rose to|fell to|increased to|decreased to|unchanged at|=|:)"
-    patterns = []
-    for label in labels:
-        patterns.extend([
-            rf"{label}[^0-9]{{0,100}}{verbs}\s*([0-9]{{2}}(?:\.[0-9]+)?)",
-            rf"{label}[^0-9]{{0,50}}([0-9]{{2}}(?:\.[0-9]+)?)",
-        ])
-
-    if release_type == "flash":
-        flash_label = (
-            r"Flash UK Manufacturing PMI"
-            if sector == "manufacturing"
-            else r"Flash UK Services PMI"
-        )
-        patterns.insert(0, rf"{flash_label}[^0-9]{{0,100}}([0-9]{{2}}(?:\.[0-9]+)?)")
-
+    matches = []
     for pattern_value in patterns:
-        match = re.search(pattern_value, compact, re.I)
-        if match:
+        for match in re.finditer(pattern_value, compact, re.I):
             value = float(match.group(1))
-            if 20.0 <= value <= 80.0:
-                return value
-    return None
+            context = compact[max(0, match.start() - 80):match.end() + 120]
+            # 50.0 can be a real observation, but S&P pages repeatedly contain
+            # the methodological/chart threshold ">50 = growth/improvement".
+            # Reject only when the nearby context proves it is that threshold.
+            if value == 50.0 and re.search(
+                r">\s*50\s*=|above\s+50|below\s+50|index[^.]{0,30}50\s*=",
+                context,
+                re.I,
+            ):
+                continue
+            matches.append({
+                "value": value,
+                "pattern": pattern_value,
+                "context": context,
+            })
+        if matches:
+            break
 
+    if not matches:
+        return None
+    value = matches[0]["value"]
+    if not 20.0 <= value <= 80.0:
+        return None
+    return value
 
 def month_range(start_month: str, end_month: str) -> list[str]:
     if not start_month or not end_month or start_month > end_month:
