@@ -508,6 +508,51 @@ def fetch_bundesbank(config: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+
+def write_all_series_summary(result: dict[str, Any]) -> None:
+    rows: list[dict[str, Any]] = []
+    for series_id, item in result.get("series", {}).items():
+        data = item.get("data") or []
+        latest = data[-1] if data else {}
+        rows.append({
+            "series_id": series_id,
+            "definition": item.get("definition") or item.get("label") or "",
+            "status": item.get("status", "unknown"),
+            "source": item.get("source") or item.get("source_group") or "",
+            "observation_count": len(data),
+            "latest_period": latest.get("period"),
+            "latest_value": latest.get("value"),
+            "error": item.get("error", ""),
+            "diagnostic": item.get("diagnostic", ""),
+            "candidate_record_count": len(item.get("candidate_records") or []),
+        })
+
+    expected = set(EUROSTAT_SERIES) | set(BUNDESBANK_SERIES) | set(ALL_REMAINING)
+    actual = {row["series_id"] for row in rows}
+    missing = sorted(expected - actual)
+    if missing:
+        raise RuntimeError(f"Series missing from debug output: {missing}")
+
+    (OUTPUT_DIR / "eu_all_series_debug_summary.json").write_text(
+        json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    with (OUTPUT_DIR / "eu_all_series_debug_summary.csv").open(
+        "w", encoding="utf-8-sig", newline=""
+    ) as handle:
+        fieldnames = list(rows[0]) if rows else []
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    print("\n[ALL SERIES DEBUG SUMMARY]", flush=True)
+    for row in rows:
+        print(
+            f"{row['series_id']} | {row['status']} | obs={row['observation_count']} | "
+            f"latest={row['latest_period']} {row['latest_value']} | source={row['source']}",
+            flush=True,
+        )
+    print(f"[ALL SERIES DEBUG SUMMARY] total={len(rows)} missing=0", flush=True)
+
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     result: dict[str, Any] = {
@@ -561,6 +606,8 @@ def main() -> None:
                 "definition": definition,
                 "data": [],
             }
+
+    write_all_series_summary(result)
 
     OUTPUT_JSON.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
 
