@@ -455,87 +455,107 @@ def discover_kpsa1_sheet(workbook: Any) -> Any:
 def extract_kpsa1_retail_ex_fuel(
     sheet: Any,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    target_phrase = "all retailing excluding automotive fuel"
+    """Extract KPSA 1 year-on-year retail sales excluding automotive fuel.
 
-    # Read the worksheet once. In read-only mode, repeated sheet.cell() calls
-    # re-scan the XLSX stream and can take many minutes.
+    KPSA 1 contains more than one table with the same category headings.  The
+    required series is specifically the upper table headed
+    "Percentage change on same month a year earlier" and dataset code J45U.
+    The lower "Revision to index numbers" table must never be treated as the
+    level of the year-on-year series.
+    """
     rows = list(sheet.iter_rows(values_only=True))
     if not rows:
         raise RuntimeError("KPSA 1 worksheet is empty")
 
-    target_locations: list[tuple[int, int]] = []
-    for row_index, row in enumerate(rows):
-        for column_index, value in enumerate(row):
-            if target_phrase in normalize_excel_label(value):
-                target_locations.append((row_index, column_index))
+    wanted_section = "percentage change on same month a year earlier"
+    stop_section = "revision to index numbers"
+    wanted_label = "all retailing excluding automotive fuel"
+    wanted_code = "j45u"
 
-    if not target_locations:
+    section_start = None
+    section_end = len(rows)
+    for row_index, row in enumerate(rows):
+        row_text = " | ".join(normalize_excel_label(value) for value in row if value is not None)
+        if section_start is None and wanted_section in row_text:
+            section_start = row_index
+            continue
+        if section_start is not None and stop_section in row_text:
+            section_end = row_index
+            break
+
+    if section_start is None:
         raise RuntimeError(
-            "KPSA 1 does not contain 'All retailing excluding automotive fuel'"
+            "KPSA 1 does not contain the section "
+            "'Percentage change on same month a year earlier'"
+        )
+
+    # Identify the required column inside the selected upper block. Prefer the
+    # stable ONS dataset identifier J45U; verify that the same column carries
+    # the expected category label.
+    target_column = None
+    code_row = None
+    label_matches: set[int] = set()
+    for row_index in range(section_start, section_end):
+        row = rows[row_index]
+        for column_index, value in enumerate(row):
+            normalized = normalize_excel_label(value)
+            if wanted_label in normalized:
+                label_matches.add(column_index)
+            if normalized == wanted_code:
+                target_column = column_index
+                code_row = row_index
+                break
+        if target_column is not None:
+            break
+
+    if target_column is None:
+        if len(label_matches) == 1:
+            target_column = next(iter(label_matches))
+        else:
+            raise RuntimeError(
+                "Could not uniquely locate J45U / All retailing excluding "
+                "automotive fuel in the required KPSA 1 section"
+            )
+
+    if label_matches and target_column not in label_matches:
+        raise RuntimeError(
+            "KPSA 1 J45U column does not align with the expected "
+            "All retailing excluding automotive fuel heading"
         )
 
     candidates: list[dict[str, Any]] = []
+    for row_index in range((code_row + 1) if code_row is not None else section_start + 1, section_end):
+        row = rows[row_index]
+        if target_column >= len(row):
+            continue
 
-    # Typical ONS layout: category names are columns and dates run down rows.
-    for target_row, target_column in target_locations:
-        for row_index in range(target_row + 1, len(rows)):
-            row = rows[row_index]
-            if target_column >= len(row):
-                continue
+        date_value = None
+        date_column = None
+        # The time period is normally in the first column, but scan only the
+        # columns to the left of J45U to tolerate minor ONS layout changes.
+        for column_index in range(0, min(target_column, len(row))):
+            parsed_date = excel_month(row[column_index])
+            if parsed_date:
+                date_value = parsed_date
+                date_column = column_index
+                break
 
-            date_value = None
-            date_column = None
-            for column_index in range(0, min(target_column, len(row))):
-                parsed_date = excel_month(row[column_index])
-                if parsed_date:
-                    date_value = parsed_date
-                    date_column = column_index
-                    break
-
-            numeric_value = number_or_none(str(row[target_column] or ""))
-            if date_value and numeric_value is not None:
-                candidates.append({
-                    "orientation": "dates_down_rows",
-                    "target_cell": f"R{target_row + 1}C{target_column + 1}",
-                    "date_cell": f"R{row_index + 1}C{date_column + 1}",
-                    "value_cell": f"R{row_index + 1}C{target_column + 1}",
-                    "date": date_value,
-                    "value": numeric_value,
-                })
-
-    # Fallback: category names are rows and dates run across columns.
-    if not candidates:
-        for target_row, target_column in target_locations:
-            target_values = rows[target_row]
-            for column_index in range(target_column + 1, len(target_values)):
-                date_value = None
-                date_row = None
-                for row_index in range(0, target_row):
-                    if column_index >= len(rows[row_index]):
-                        continue
-                    parsed_date = excel_month(rows[row_index][column_index])
-                    if parsed_date:
-                        date_value = parsed_date
-                        date_row = row_index
-                        break
-
-                numeric_value = number_or_none(
-                    str(target_values[column_index] or "")
-                )
-                if date_value and numeric_value is not None:
-                    candidates.append({
-                        "orientation": "dates_across_columns",
-                        "target_cell": f"R{target_row + 1}C{target_column + 1}",
-                        "date_cell": f"R{date_row + 1}C{column_index + 1}",
-                        "value_cell": f"R{target_row + 1}C{column_index + 1}",
-                        "date": date_value,
-                        "value": numeric_value,
-                    })
+        numeric_value = number_or_none(str(row[target_column] or ""))
+        if date_value and numeric_value is not None:
+            candidates.append({
+                "section": "Percentage change on same month a year earlier",
+                "dataset_code": "J45U",
+                "orientation": "dates_down_rows",
+                "date_cell": f"R{row_index + 1}C{date_column + 1}",
+                "value_cell": f"R{row_index + 1}C{target_column + 1}",
+                "date": date_value,
+                "value": numeric_value,
+            })
 
     if not candidates:
         raise RuntimeError(
-            "Found the ex-fuel category in KPSA 1, but could not pair "
-            "dates with numeric values"
+            "Found the required KPSA 1 upper section and J45U column, "
+            "but no dated numeric observations were extracted"
         )
 
     by_month: dict[str, dict[str, Any]] = {}
@@ -546,16 +566,16 @@ def extract_kpsa1_retail_ex_fuel(
             "source_url": RETAIL_XLSX_URL,
             "source_sheet": sheet.title,
             "source_cell": row["value_cell"],
+            "source_section": row["section"],
+            "dataset_code": row["dataset_code"],
             "measure": (
-                "KPSA 1 - volume seasonally adjusted percentage change "
-                "on same month a year earlier; all retailing excluding "
-                "automotive fuel"
+                "KPSA 1 - Percentage change on same month a year earlier; "
+                "All retailing excluding automotive fuel (J45U)"
             ),
         }
 
     points = sorted(by_month.values(), key=lambda item: item["date"])
     return points, candidates
-
 
 def update_retail(database: dict[str, Any]) -> tuple[int, int]:
     response = get(RETAIL_XLSX_URL)
