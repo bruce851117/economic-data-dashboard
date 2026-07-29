@@ -124,6 +124,36 @@ ALL_REMAINING = {
 
 
 
+SERIES_VALIDATION = {
+    "spain_core_cpi_yoy": {"frequency": "monthly", "min": -10, "max": 20},
+    "spain_unemployment_rate": {"frequency": "quarterly", "min": 0, "max": 40},
+    "spain_real_retail_yoy": {"frequency": "monthly", "min": -50, "max": 50},
+    "spain_gdp_yoy": {"frequency": "quarterly", "min": -30, "max": 30},
+    "france_cpi_ex_energy_yoy": {"frequency": "monthly", "min": -10, "max": 20},
+    "france_unemployment_rate_ilo": {"frequency": "quarterly", "min": 0, "max": 30},
+    "france_consumer_confidence": {"frequency": "monthly", "min": 40, "max": 160},
+    "france_manufacturing_confidence": {"frequency": "monthly", "min": 40, "max": 160},
+    "france_business_confidence": {"frequency": "monthly", "min": 40, "max": 160},
+    "france_gdp_yoy": {"frequency": "quarterly", "min": -30, "max": 30},
+    "germany_core_cpi_yoy": {"frequency": "monthly", "min": -10, "max": 20},
+    "germany_real_retail_mom": {"frequency": "monthly", "min": -30, "max": 30},
+    "germany_industrial_production_yoy": {"frequency": "monthly", "min": -40, "max": 40},
+    "germany_gdp_yoy": {"frequency": "quarterly", "min": -30, "max": 30},
+    "germany_unemployment_change_swda": {"frequency": "monthly", "min": -1000, "max": 1000},
+    "spain_registered_employed_total_change": {"frequency": "monthly", "min": -2000, "max": 2000},
+    "germany_gfk_consumer_confidence": {"frequency": "monthly", "min": -100, "max": 100},
+    "germany_zew_current": {"frequency": "monthly", "min": -100, "max": 100},
+    "germany_zew_expectations": {"frequency": "monthly", "min": -100, "max": 100},
+    "germany_ifo_business_climate": {"frequency": "monthly", "min": 40, "max": 140},
+    "germany_manufacturing_pmi": {"frequency": "monthly", "min": 20, "max": 80},
+    "france_manufacturing_pmi": {"frequency": "monthly", "min": 20, "max": 80},
+    "spain_manufacturing_pmi": {"frequency": "monthly", "min": 20, "max": 80},
+    "germany_services_pmi": {"frequency": "monthly", "min": 20, "max": 80},
+    "france_services_pmi": {"frequency": "monthly", "min": 20, "max": 80},
+    "spain_services_pmi": {"frequency": "monthly", "min": 20, "max": 80},
+}
+
+
 SOURCE_GROUPS = {
     "ine": {
         "url": "https://servicios.ine.es/wstempus/js/EN/OPERACIONES_DISPONIBLES",
@@ -751,6 +781,32 @@ def expand_ine_urls(url: str, response: requests.Response) -> list[str]:
     return output[:25]
 
 
+def strict_validate_observations(series_id: str, rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[str]]:
+    config = SERIES_VALIDATION.get(series_id, {})
+    minimum = config.get("min", float("-inf"))
+    maximum = config.get("max", float("inf"))
+    current_year = datetime.now(timezone.utc).year
+    accepted: list[dict[str, Any]] = []
+    reasons: list[str] = []
+    for row in rows:
+        period = str(row.get("period", ""))
+        try:
+            value = float(row.get("value"))
+            year = int(period[:4])
+        except (TypeError, ValueError):
+            reasons.append(f"invalid={row}")
+            continue
+        if year < current_year - 2 or year > current_year:
+            reasons.append(f"out_of_window={period}:{value}")
+            continue
+        if not minimum <= value <= maximum:
+            reasons.append(f"out_of_range={period}:{value}")
+            continue
+        accepted.append({"period": period, "value": value})
+    unique = {(row["period"], row["value"]): row for row in accepted}
+    return sorted(unique.values(), key=lambda row: row["period"])[-6:], reasons[-30:]
+
+
 def deep_fetch_candidates(result: dict[str, Any]) -> None:
     for series_id, item in result.get("series", {}).items():
         if item.get("data"):
@@ -791,6 +847,8 @@ def deep_fetch_candidates(result: dict[str, Any]) -> None:
                 if "_pmi" in series_id:
                     observations.extend(parse_pmi_page(text, series_id))
                 else:
+                    # Generic date/number extraction is diagnostic only. It must never
+                    # become an official observation without a series-specific parser.
                     observations.extend(parse_period_value_pairs(text))
                 # INE SERIES_TABLA response contains series IDs; request each last six values.
                 if "/SERIES_TABLA/" in url:
@@ -806,16 +864,21 @@ def deep_fetch_candidates(result: dict[str, Any]) -> None:
             except Exception as error:
                 fetched.append({"url": url, "error": str(error)})
         RAW_BUNDLE["candidate_fetches"][series_id] = fetched
-        unique = {(row["period"], row["value"]): row for row in observations}
-        parsed = sorted(unique.values(), key=lambda row: row["period"])[-6:]
-        if parsed:
-            item["data"] = parsed
-            item["status"] = "ok_unverified_parser"
+        candidate_pairs, rejection_reasons = strict_validate_observations(series_id, observations)
+        item["candidate_pairs"] = candidate_pairs
+        item["candidate_rejections"] = rejection_reasons
+        if "_pmi" in series_id and candidate_pairs:
+            item["data"] = candidate_pairs
+            item["status"] = "ok_pmi_text_parser"
             item["final_status"] = "needs_reference_validation"
         else:
+            # Never label generic metadata matches as successful data. The previous
+            # version incorrectly promoted years, table IDs and footnote numbers.
+            item["data"] = []
+            item["status"] = "parse_error"
             item["final_status"] = "parse_error"
             item["final_error"] = (
-                f"Fetched {len(fetched)} candidate resources but no conservative observations parsed"
+                "Candidate resources fetched; exact series-specific parser still required"
                 if fetched else "No candidate source URL discovered"
             )
 
@@ -875,7 +938,9 @@ def build_comparison(result: dict[str, Any]) -> dict[str, Any]:
                 })
             except (TypeError, ValueError):
                 continue
-        if not reference_path:
+        if item.get("status") == "parse_error":
+            status = "official_value_not_extracted"
+        elif not reference_path:
             status = "missing_reference_file"
         elif not expected:
             status = "series_missing_in_reference"
