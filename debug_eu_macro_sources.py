@@ -31,7 +31,7 @@ import requests
 from bs4 import BeautifulSoup, NavigableString
 from pypdf import PdfReader
 
-VERSION = "2026-07-29-v12-france-direct-spain-indicator-ifo-index"
+VERSION = "2026-07-29-v13-france-pmi-flash-fallback"
 DEFAULT_OUT = Path("debug/eu_macro_sources")
 SESSION = requests.Session()
 SESSION.headers.update({
@@ -781,35 +781,44 @@ def fetch_sp_country_pmi(country: str) -> dict[str,list[Point]]:
     return result
 
 
-def spain_pmi_public_indicator(sector: str) -> list[Point]:
-    """Fallback for Spain when S&P blocks release discovery in CI.
+def country_pmi_public_indicator(country: str,sector: str) -> list[Point]:
+    """Country-specific PMI fallback when S&P blocks release content in CI.
 
-    Trading Economics republishes the current observation and explicitly labels
-    S&P Global as the source. Values are parsed from the page; nothing is hardcoded.
+    The page is parsed dynamically and explicitly identifies S&P Global as the
+    underlying source. France observations are Flash; Spain observations are Final.
     """
+    if country not in {"France","Spain"}:
+        raise ValueError(country)
     slug="manufacturing-pmi" if sector=="manufacturing" else "services-pmi"
-    url=f"https://tradingeconomics.com/spain/{slug}"
+    url=f"https://tradingeconomics.com/{country.lower()}/{slug}"
     response=get(url)
     text=clean(response_text(response))
+    c=re.escape(country)
     if sector=="manufacturing":
         patterns=[
-            r"Spain Manufacturing PMI.{0,300}?(?:fell|decreased|eased|rose|increased)\s+to\s*([0-9]+(?:[.]\d+)?)\s+in\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})",
-            r"Manufacturing PMI in Spain\s+(?:decreased|increased)\s+to\s*([0-9]+(?:[.]\d+)?)\s+points\s+in\s+(January|February|March|April|May|June|July|August|September|October|November|December)",
+            rf"{c}(?:'s)?\s+(?:S&P Global\s+)?(?:Flash\s+)?Manufacturing PMI.{{0,300}}?(?:fell|decreased|eased|rose|increased)\s+to\s*([0-9]+(?:[.]\d+)?)\s+in\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{{2}})",
+            rf"Manufacturing PMI in {c}\s+(?:decreased|increased)\s+to\s*([0-9]+(?:[.]\d+)?)\s+points\s+in\s+(January|February|March|April|May|June|July|August|September|October|November|December)(?:\s+of\s+(20\d{{2}}))?",
         ]
     else:
         patterns=[
-            r"Spain Services PMI.{0,300}?(?:accelerated|rose|increased|fell|decreased)\s+to\s*([0-9]+(?:[.]\d+)?)\s+in\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})",
-            r"Spain Services PMI.{0,500}?([0-9]+(?:[.]\d+)?)\s+in\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})",
+            rf"{c}(?:'s)?\s+(?:S&P Global\s+)?(?:Flash\s+)?Services PMI.{{0,300}}?(?:accelerated|rose|increased|fell|decreased)\s+to\s*([0-9]+(?:[.]\d+)?)\s+in\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{{2}})",
+            rf"Services PMI in {c}\s+(?:decreased|increased)\s+to\s*([0-9]+(?:[.]\d+)?)\s+points\s+in\s+(January|February|March|April|May|June|July|August|September|October|November|December)(?:\s+of\s+(20\d{{2}}))?",
         ]
     months={name:i for i,name in enumerate(("January","February","March","April","May","June","July","August","September","October","November","December"),1)}
     for pattern in patterns:
         match=re.search(pattern,text,re.I|re.S)
-        if match:
-            value=float(match.group(1)); month=months[match.group(2).title()]
-            year=int(match.group(3)) if match.lastindex and match.lastindex>=3 else 2026
-            if 20<=value<=80:
-                return [Point(f"{year:04d}-{month:02d}",value,response.url,"final",note="public indicator page; underlying source explicitly S&P Global")]
-    raise RuntimeError(f"Spain {sector} PMI public indicator value not parsed")
+        if not match:
+            continue
+        value=float(match.group(1)); month=months[match.group(2).title()]
+        year=int(match.group(3)) if match.lastindex and match.lastindex>=3 and match.group(3) else 2026
+        if 20<=value<=80:
+            release_type="flash" if country=="France" else "final"
+            return [Point(
+                f"{year:04d}-{month:02d}",value,response.url,release_type,
+                note=f"public indicator page; underlying source explicitly S&P Global; {release_type}",
+            )]
+    raise RuntimeError(f"{country} {sector} PMI public indicator value not parsed")
+
 
 
 def sp_pmi(country: str,sector: str) -> list[Point]:
@@ -819,11 +828,11 @@ def sp_pmi(country: str,sector: str) -> list[Point]:
         if points:
             return points
     except Exception as primary_error:
-        if country != "Spain":
+        if country not in {"France","Spain"}:
             raise
-        log(f"[S&P PMI/Spain] official release discovery unavailable: {primary_error}")
-    if country == "Spain":
-        return spain_pmi_public_indicator(sector)
+        log(f"[S&P PMI/{country}] official release unavailable in CI: {primary_error}")
+    if country in {"France","Spain"}:
+        return country_pmi_public_indicator(country,sector)
     raise RuntimeError(f"{country} {sector} PMI not parsed in country-only pipeline")
 
 def latest_press_series(url: str, specs: list[tuple[str,str]], period: str) -> list[Point]:
