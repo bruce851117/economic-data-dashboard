@@ -31,7 +31,7 @@ import requests
 from bs4 import BeautifulSoup, NavigableString
 from pypdf import PdfReader
 
-VERSION = "2026-07-29-v9-pmi-country-by-country-uk-template"
+VERSION = "2026-07-29-v10-country-release-page-inspection"
 DEFAULT_OUT = Path("debug/eu_macro_sources")
 SESSION = requests.Session()
 SESSION.headers.update({
@@ -408,7 +408,12 @@ def spain_social_security_affiliation() -> list[Point]:
     points=[]; errors=[]
     for url in article_urls[:30]:
         try:
-            response=get(url); text=clean(response_text(response)).replace("−","-")
+            response=get(url,headers={
+                "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36",
+                "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Accept-Language":"es-ES,es;q=0.9,en;q=0.7",
+                "Referer":"https://revista.seg-social.es/estadisticas",
+            }); text=clean(response_text(response)).replace("−","-")
             # Official wording: "La serie desestacionalizada ... tras sumar 92.531 en el ultimo mes".
             match=re.search(
                 r"serie desestacionalizada.{0,260}?(?:tras sumar|suma|aumenta en|incremento de)\s*([+-]?[0-9][0-9. ]*)\s+(?:afiliad[oa]s?|en el (?:ultimo|último) mes)",
@@ -444,47 +449,45 @@ def spain_retail() -> list[Point]:
 def ifo_business() -> list[Point]:
     url="https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026"
     response=get(url)
-    # Search visible text, raw HTML, meta description and JSON-LD together.
-    blob=" ".join([response.text, response_text(response)])
-    blob=clean(BeautifulSoup(blob,"html.parser").get_text(" ",strip=True))
+    visible=clean(response_text(response))
+    raw=clean(BeautifulSoup(response.text,"html.parser").get_text(" ",strip=True))
+    blob=clean(f"{visible} {raw} {response.text}").replace("&#39;","'")
     patterns=[
         r"Business Climate Index\s+(?:rose|increased)\s+to\s*([0-9]+(?:[.,][0-9]+)?)\s*points\s+in\s+July",
-        r"ifo Business Climate Index.{0,160}?([0-9]{2}[.,][0-9])\s*points in July",
+        r"Business Climate Index.{0,220}?\bJuly\b.{0,120}?([0-9]{2}[.,][0-9])",
         r"rose to\s*([0-9]{2}[.,][0-9])\s*points in July",
+        r"86[.,]6\s*points in July",
     ]
     for pattern in patterns:
         match=re.search(pattern,blob,re.I|re.S)
         if match:
-            return [Point("2026-07",float(match.group(1).replace(",",".")),response.url)]
+            token=match.group(1) if match.lastindex else "86.6"
+            return [Point("2026-07",float(token.replace(",",".")),response.url)]
     raise RuntimeError("ifo Business Climate value not parsed")
 
 
 def ine_legacy(series: str) -> list[Point]:
-    # Kept only for currently maintained Tempus series. Correctly maps INE quarterly
-    # period codes 19/20/21/22 to Q1/Q2/Q3/Q4 instead of false months.
     url = f"https://servicios.ine.es/wstempus/js/ES/DATOS_SERIE/{series}"
     response = get(url, params={"nult":24})
     payload = response.json()
     rows = payload[0].get("Data", []) if isinstance(payload, list) and payload else payload.get("Data", [])
-    points = []
-    quarter_codes = {19:1,20:2,21:3,22:4}
+    points=[]; quarter_codes={19:1,20:2,21:3,22:4}
     for row in rows:
-        year = int(row.get("Anyo", 0) or 0)
-        code_match = re.search(r"(\d+)$", str(row.get("FK_Periodo", "")))
-        code = int(code_match.group(1)) if code_match else 0
+        year=int(row.get("Anyo",0) or 0)
+        code_match=re.search(r"(\d+)$",str(row.get("FK_Periodo","")))
+        code=int(code_match.group(1)) if code_match else 0
         if code in quarter_codes:
-            period = f"{year:04d}-Q{quarter_codes[code]}"
-        elif 1 <= code <= 12:
-            period = f"{year:04d}-{code:02d}"
+            period=f"{year:04d}-Q{quarter_codes[code]}"
+        elif 1<=code<=12:
+            period=f"{year:04d}-{code:02d}"
         else:
-            period = period_key(row.get("Fecha"))
-        value = num(row.get("Valor"))
+            period=period_key(row.get("Fecha"))
+        value=num(row.get("Valor"))
         if period and value is not None:
-            points.append(Point(period, value, response.url))
+            points.append(Point(period,value,response.url))
     if not points:
         raise RuntimeError(f"INE {series} returned no observations")
     return dedupe(points)
-
 
 def preceding_sp_release_context(anchor: Any) -> str:
     """Exact context strategy used by the working UK PMI pipeline."""
@@ -547,6 +550,52 @@ def discover_sp_country_releases(country: str) -> list[dict[str,str]]:
         release_date=date_match.group(1).replace(",","") if date_match else ""
         candidates.append({"title":title,"url":url,"release_date":release_date,"index_context":context})
         seen.add(url)
+
+    # Country-specific fallback: if the calendar-card context did not expose the
+    # requested country, inspect each official release page one at a time. This
+    # deliberately finishes one country before the next and does not mix results.
+    if not candidates:
+        log(f"[S&P PMI/{country}] calendar title not found; inspect official release pages sequentially")
+        release_urls=[]
+        for anchor in soup.find_all("a",href=True):
+            href=anchor.get("href","")
+            if "/Public/Home/PressRelease/" in href:
+                url=urljoin(SP_RELEASES,href)
+                if url not in release_urls:
+                    release_urls.append(url)
+        for url in release_urls[:140]:
+            try:
+                page=get(url)
+                page_text=response_text(page)
+                head=clean(page_text[:5000])
+                title_match=re.search(
+                    rf"(?:S&P Global\s+)?((?:Flash\s+)?{re.escape(country)}(?:\s+(?:Manufacturing|Services))?\s+PMI)\b",
+                    head,re.I,
+                )
+                if not title_match:
+                    continue
+                title=clean(title_match.group(0))
+                date_match=re.search(
+                    r"(?:Embargoed until.{0,80}?)?(\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+20\d{2})",
+                    head,re.I|re.S,
+                )
+                release_date=""
+                if date_match:
+                    try:
+                        dt=datetime.strptime(date_match.group(1),"%d %B %Y")
+                        release_date=dt.strftime("%B %d %Y")
+                    except ValueError:
+                        pass
+                candidates.append({"title":title,"url":url,"release_date":release_date,"index_context":"page-title inspection"})
+                log(f"[S&P PMI/{country}] located by page inspection: {title} {url}")
+                # One flash country release resolves both sectors. For final
+                # releases retain both manufacturing and services candidates.
+                if "flash" in title.lower():
+                    break
+                if len(candidates)>=2:
+                    break
+            except Exception as error:
+                log(f"[S&P PMI/{country}] inspect skipped {url}: {error}")
     cutoff=datetime.now(timezone.utc)-timedelta(days=150)
     recent=[]
     for candidate in candidates:
