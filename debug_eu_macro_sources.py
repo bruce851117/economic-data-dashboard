@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Debug official sources for the indicators listed in EU_ECON.xlsx.
+"""Discover and validate official EU macro sources against EU_ECON reference values.
 
-This script is intentionally read-only: it downloads recent observations, compares
-up to four populated spreadsheet cells, and writes machine-readable diagnostics to
-``debug/eu_macro_sources``. It does not update production JSON.
-
-Designed for GitHub Actions. Required packages: requests, openpyxl.
-Optional secrets are not required for Eurostat, INE, INSEE, or Bundesbank.
-``GENESIS_TOKEN`` can be supplied later for Destatis GENESIS requests.
+Version 2026-07-29-v2
+- GDP reference dates are quarterly (2026-Q1, 2025-Q4, 2025-Q3, 2025-Q2).
+- Comparison is based on the latest populated EU_ECON period and the same official period.
+- Replaces discontinued Eurostat HICP v1, INE legacy series and wrong German labour concepts.
+- Reuses the proven S&P Global press-release discovery/parser design from update_uk_macro.py,
+  generalised for Germany, France and Spain manufacturing/services PMI.
+- The script is read-only and always writes diagnostics, even when individual sources fail.
 """
 from __future__ import annotations
 
@@ -16,30 +16,32 @@ import csv
 import io
 import json
 import math
-import os
 import re
 import sys
 import time
 import xml.etree.ElementTree as ET
 from dataclasses import asdict, dataclass
-from datetime import date, datetime, timezone
+from datetime import datetime, timedelta, timezone
+from io import BytesIO
 from pathlib import Path
 from typing import Any, Callable
+from urllib.parse import urljoin
 
 import requests
-from openpyxl import load_workbook
+from bs4 import BeautifulSoup, NavigableString
+from pypdf import PdfReader
 
-VERSION = "2026-07-29-v1"
-DEFAULT_XLSX = Path("EU_ECON.xlsx")
+VERSION = "2026-07-29-v2-latest-period-correct-ids-pmi"
 DEFAULT_OUT = Path("debug/eu_macro_sources")
-USER_AGENT = "Mozilla/5.0 (compatible; EUMacroSourceDebugger/1.0; GitHub-Actions)"
 SESSION = requests.Session()
-SESSION.headers.update({"User-Agent": USER_AGENT, "Accept-Language": "en,en-US;q=0.9"})
-
+SESSION.headers.update({
+    "User-Agent": "Mozilla/5.0 (compatible; EUMacroSourceDebugger/2.0; GitHub-Actions)",
+    "Accept-Language": "en,en-US;q=0.9,de;q=0.7,fr;q=0.6,es;q=0.5",
+})
 EUROSTAT = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data"
-INE = "https://servicios.ine.es/wstempus/js/ES/DATOS_SERIE"
 INSEE = "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM"
 BUNDESBANK = "https://api.statistiken.bundesbank.de/rest/data"
+SP_RELEASES = "https://www.pmi.spglobal.com/Public/Release/PressReleases"
 
 
 @dataclass
@@ -48,893 +50,132 @@ class Point:
     value: float
     source_url: str
     status: str = ""
+    note: str = ""
 
 
 @dataclass
-class Candidate:
+class Source:
     name: str
     provider: str
-    official: bool
     fetcher: str
     args: dict[str, Any]
-    definition_note: str = ""
+    definition: str
+    source_id: str
 
 
 def log(message: str) -> None:
     print(message, flush=True)
 
 
-def get(url: str, *, params: dict[str, Any] | None = None, headers: dict[str, str] | None = None) -> requests.Response:
-    last: Exception | None = None
+def get(url: str, **kwargs: Any) -> requests.Response:
+    timeout = kwargs.pop("timeout", 45)
+    last_response: requests.Response | None = None
+    last_error: Exception | None = None
     for attempt in range(3):
         try:
-            response = SESSION.get(url, params=params, headers=headers, timeout=45)
+            response = SESSION.get(url, timeout=timeout, **kwargs)
+            last_response = response
             log(f"[HTTP] {response.status_code} {response.url} bytes={len(response.content)}")
             if response.status_code < 400:
                 return response
             if response.status_code not in {429, 500, 502, 503, 504}:
                 response.raise_for_status()
-        except requests.RequestException as exc:
-            last = exc
+        except requests.RequestException as error:
+            last_error = error
         if attempt < 2:
-            time.sleep(2 ** attempt * 2)
-    if last:
-        raise last
-    response.raise_for_status()
-    return response
+            time.sleep(2 * (2 ** attempt))
+    if last_response is not None:
+        last_response.raise_for_status()
+    assert last_error is not None
+    raise last_error
 
 
-def number(value: Any) -> float | None:
+def clean(text: Any) -> str:
+    return re.sub(r"\s+", " ", str(text or "")).strip()
+
+
+def num(value: Any) -> float | None:
     if value is None or isinstance(value, bool):
         return None
     if isinstance(value, (int, float)):
-        return float(value) if math.isfinite(float(value)) else None
-    text = str(value).strip().replace("%", "").replace(" ", "").replace(",", ".")
-    if not text or text in {"-", "..", ":", "NA", "N/A"}:
-        return None
-    match = re.fullmatch(r"[+-]?\d+(?:\.\d+)?", text)
-    return float(text) if match else None
+        value = float(value)
+        return value if math.isfinite(value) else None
+    text = clean(value).replace("%", "").replace("\u2212", "-")
+    text = re.sub(r"(?<=\d)[,](?=\d)", ".", text)
+    text = text.replace(" ", "")
+    return float(text) if re.fullmatch(r"[+-]?\d+(?:\.\d+)?", text) else None
 
 
-def month_key(value: Any) -> str | None:
-    if isinstance(value, (datetime, date)):
-        return f"{value.year:04d}-{value.month:02d}"
-    text = str(value or "").strip()
-    match = re.match(r"^(20\d{2})[-/]?(0[1-9]|1[0-2])", text)
-    if match:
-        return f"{match.group(1)}-{match.group(2)}"
-    q = re.match(r"^(20\d{2})[- ]?Q([1-4])$", text, re.I)
+def period_key(value: Any) -> str | None:
+    text = clean(value)
+    m = re.match(r"^(20\d{2})[-/](0[1-9]|1[0-2])(?:[-/]\d{1,2})?$", text)
+    if m:
+        return f"{m[1]}-{m[2]}"
+    q = re.match(r"^(20\d{2})[- ]?[QT]([1-4])$", text, re.I)
     if q:
-        return f"{q.group(1)}-Q{q.group(2)}"
+        return f"{q[1]}-Q{q[2]}"
     return None
 
 
-EMBEDDED_TARGETS: list[dict[str, Any]] = [
-    {
-        "row": 2,
-        "section": "通膨",
-        "label": "西Core CPI",
-        "description": "Spain CPI Core YoY",
-        "declared_source": "INE",
-        "possible_code": "IPC208611",
-        "expected": [
-            {
-                "period": "2026-06",
-                "value": 2.9,
-                "cell": "R2C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 3.0,
-                "cell": "R2C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 2.8,
-                "cell": "R2C9"
-            }
-        ]
-    },
-    {
-        "row": 3,
-        "section": "通膨",
-        "label": "法 Core CPI",
-        "description": "France CPI All Ex Energy YoY",
-        "declared_source": "INSEE National Statistics Offi",
-        "possible_code": "001768579",
-        "expected": [
-            {
-                "period": "2026-06",
-                "value": 1.00498,
-                "cell": "R3C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 1.25824,
-                "cell": "R3C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 1.15814,
-                "cell": "R3C9"
-            }
-        ]
-    },
-    {
-        "row": 4,
-        "section": "通膨",
-        "label": "德 Core CPI",
-        "description": "Germany CPI Overall Index excl",
-        "declared_source": "German Federal Statistical Off",
-        "possible_code": "DE CPI ex Food&Energy Y",
-        "expected": [
-            {
-                "period": "2026-06",
-                "value": 2.45139,
-                "cell": "R4C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 2.54022,
-                "cell": "R4C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 2.29007,
-                "cell": "R4C9"
-            }
-        ]
-    },
-    {
-        "row": 5,
-        "section": "通膨",
-        "label": "歐 Core CPI",
-        "description": "Eurostat Eurozone Core MUICP Y",
-        "declared_source": "Eurostat",
-        "possible_code": "YoY",
-        "expected": [
-            {
-                "period": "2026-06",
-                "value": 2.4,
-                "cell": "R5C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 2.6,
-                "cell": "R5C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 2.2,
-                "cell": "R5C9"
-            }
-        ]
-    },
-    {
-        "row": 6,
-        "section": "失業率",
-        "label": "法 失業率",
-        "description": "France Unemployment Rate ILO M",
-        "declared_source": "INSEE National Statistics Offi",
-        "possible_code": "001688527",
-        "expected": []
-    },
-    {
-        "row": 7,
-        "section": "失業率",
-        "label": "西 失業率",
-        "description": "Spain Unemployment Rate",
-        "declared_source": "INE",
-        "possible_code": "EPA815",
-        "expected": []
-    },
-    {
-        "row": 8,
-        "section": "失業率",
-        "label": "德 Unemployment Rate SWDA",
-        "description": "Germany Unemployment Rate SWDA",
-        "declared_source": "Deutsche Bundesbank",
-        "possible_code": "DE Unemployment Rate SWDA",
-        "expected": [
-            {
-                "period": "2026-06",
-                "value": 6.3,
-                "cell": "R8C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 6.3,
-                "cell": "R8C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 6.4,
-                "cell": "R8C9"
-            }
-        ]
-    },
-    {
-        "row": 9,
-        "section": "失業率",
-        "label": "歐 失業率",
-        "description": "Eurostat Unemployment Eurozone",
-        "declared_source": "Eurostat",
-        "possible_code": "Eurozone",
-        "expected": [
-            {
-                "period": "2026-05",
-                "value": 6.2,
-                "cell": "R9C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 6.2,
-                "cell": "R9C9"
-            }
-        ]
-    },
-    {
-        "row": 10,
-        "section": "其他就業",
-        "label": "西 就業",
-        "description": "Spain Registered Employed Tota",
-        "declared_source": "Spanish Labour Ministry",
-        "possible_code": "Employed Tot Net change MoM SA",
-        "expected": [
-            {
-                "period": "2026-06",
-                "value": 92.5299999999988,
-                "cell": "R10C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 63.7400000000016,
-                "cell": "R10C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 41.75,
-                "cell": "R10C9"
-            }
-        ]
-    },
-    {
-        "row": 11,
-        "section": "其他就業",
-        "label": "德 失業人口",
-        "description": "Germany Unemployment Change SW",
-        "declared_source": "Deutsche Bundesbank",
-        "possible_code": "Unemploy. change",
-        "expected": [
-            {
-                "period": "2026-06",
-                "value": -1.0,
-                "cell": "R11C7"
-            },
-            {
-                "period": "2026-05",
-                "value": -12.0,
-                "cell": "R11C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 18.0,
-                "cell": "R11C9"
-            }
-        ]
-    },
-    {
-        "row": 12,
-        "section": "零售",
-        "label": "西 零售",
-        "description": "Spain Retail Sales Constant Pr",
-        "declared_source": "INE",
-        "possible_code": "ICM2522",
-        "expected": [
-            {
-                "period": "2026-05",
-                "value": -0.4,
-                "cell": "R12C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 0.2,
-                "cell": "R12C9"
-            }
-        ]
-    },
-    {
-        "row": 13,
-        "section": "零售",
-        "label": "德 零售",
-        "description": "Germany Retail Sales Constant",
-        "declared_source": "German Federal Statistical Off",
-        "possible_code": "DE Rtl Sls Real SWDA MoM",
-        "expected": [
-            {
-                "period": "2026-05",
-                "value": 1.0,
-                "cell": "R13C8"
-            },
-            {
-                "period": "2026-04",
-                "value": -0.2,
-                "cell": "R13C9"
-            }
-        ]
-    },
-    {
-        "row": 14,
-        "section": "零售",
-        "label": "歐 Real零售",
-        "description": "Eurostat Retail Sales Eurozone",
-        "declared_source": "Eurostat",
-        "possible_code": "WDA YoY %",
-        "expected": [
-            {
-                "period": "2026-05",
-                "value": 1.6,
-                "cell": "R14C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 0.9,
-                "cell": "R14C9"
-            }
-        ]
-    },
-    {
-        "row": 15,
-        "section": "工業",
-        "label": "德 工業",
-        "description": "Germany Industrial Production",
-        "declared_source": "Bundesministerium fur Wirtscha",
-        "possible_code": "Ind Prod YoY NSA WDA",
-        "expected": [
-            {
-                "period": "2026-05",
-                "value": 0.0,
-                "cell": "R15C8"
-            },
-            {
-                "period": "2026-04",
-                "value": -0.8762322015334,
-                "cell": "R15C9"
-            }
-        ]
-    },
-    {
-        "row": 16,
-        "section": "消費者信心",
-        "label": "法 信心",
-        "description": "France Consumer Confidence Ove",
-        "declared_source": "INSEE National Statistics Offi",
-        "possible_code": "001587668",
-        "expected": [
-            {
-                "period": "2026-06",
-                "value": 84.0,
-                "cell": "R16C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 82.0,
-                "cell": "R16C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 84.0,
-                "cell": "R16C9"
-            }
-        ]
-    },
-    {
-        "row": 17,
-        "section": "消費者信心",
-        "label": "德 GfK Consumer Confidence",
-        "description": "GfK Consumer Confidence",
-        "declared_source": "GfK SE",
-        "possible_code": "GfK Confidence (No History) Co",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": -29.3,
-                "cell": "R17C6"
-            },
-            {
-                "period": "2026-06",
-                "value": -29.7,
-                "cell": "R17C7"
-            },
-            {
-                "period": "2026-05",
-                "value": -33.1,
-                "cell": "R17C8"
-            },
-            {
-                "period": "2026-04",
-                "value": -28.1,
-                "cell": "R17C9"
-            }
-        ]
-    },
-    {
-        "row": 18,
-        "section": "消費者信心",
-        "label": "德信心 Current",
-        "description": "ZEW Germany Assessment of Curr",
-        "declared_source": "ZEW Zentrum fuer Europaeische",
-        "possible_code": "Current Situation",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": -77.6,
-                "cell": "R18C6"
-            },
-            {
-                "period": "2026-06",
-                "value": -81.0,
-                "cell": "R18C7"
-            },
-            {
-                "period": "2026-05",
-                "value": -77.8,
-                "cell": "R18C8"
-            },
-            {
-                "period": "2026-04",
-                "value": -73.7,
-                "cell": "R18C9"
-            }
-        ]
-    },
-    {
-        "row": 19,
-        "section": "消費者信心",
-        "label": "德信心 expect",
-        "description": "ZEW Germany Expectation of Eco",
-        "declared_source": "ZEW Zentrum fuer Europaeische",
-        "possible_code": "Expectations",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": 26.3,
-                "cell": "R19C6"
-            },
-            {
-                "period": "2026-06",
-                "value": 10.5,
-                "cell": "R19C7"
-            },
-            {
-                "period": "2026-05",
-                "value": -10.2,
-                "cell": "R19C8"
-            },
-            {
-                "period": "2026-04",
-                "value": -17.2,
-                "cell": "R19C9"
-            }
-        ]
-    },
-    {
-        "row": 20,
-        "section": "製造業",
-        "label": "德 製造業PMI",
-        "description": "S&P Global/BME Germany Manufac",
-        "declared_source": "S&P Global",
-        "possible_code": "",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": 52.2,
-                "cell": "R20C6"
-            },
-            {
-                "period": "2026-06",
-                "value": 50.3,
-                "cell": "R20C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 50.1,
-                "cell": "R20C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 51.4,
-                "cell": "R20C9"
-            }
-        ]
-    },
-    {
-        "row": 21,
-        "section": "製造業",
-        "label": "法 製造業PMI",
-        "description": "France Manufacturing PMI SA",
-        "declared_source": "S&P Global",
-        "possible_code": "",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": 50.0,
-                "cell": "R21C6"
-            },
-            {
-                "period": "2026-06",
-                "value": 51.2,
-                "cell": "R21C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 49.7,
-                "cell": "R21C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 52.8,
-                "cell": "R21C9"
-            }
-        ]
-    },
-    {
-        "row": 22,
-        "section": "製造業",
-        "label": "法 製造業信心",
-        "description": "France Business Confidence Man",
-        "declared_source": "INSEE National Statistics Offi",
-        "possible_code": "001585934",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": 101.3,
-                "cell": "R22C6"
-            },
-            {
-                "period": "2026-06",
-                "value": 100.2,
-                "cell": "R22C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 102.2,
-                "cell": "R22C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 100.2,
-                "cell": "R22C9"
-            }
-        ]
-    },
-    {
-        "row": 23,
-        "section": "製造業",
-        "label": "西 製造業PMI",
-        "description": "Spain Manufacturing PMI SA",
-        "declared_source": "S&P Global",
-        "possible_code": "",
-        "expected": [
-            {
-                "period": "2026-06",
-                "value": 49.7,
-                "cell": "R23C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 51.2,
-                "cell": "R23C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 51.7,
-                "cell": "R23C9"
-            }
-        ]
-    },
-    {
-        "row": 24,
-        "section": "服務業",
-        "label": "德 服務業PMI",
-        "description": "Germany Services PMI Business",
-        "declared_source": "S&P Global",
-        "possible_code": "",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": 49.6,
-                "cell": "R24C6"
-            },
-            {
-                "period": "2026-06",
-                "value": 48.6,
-                "cell": "R24C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 48.1,
-                "cell": "R24C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 46.9,
-                "cell": "R24C9"
-            }
-        ]
-    },
-    {
-        "row": 25,
-        "section": "服務業",
-        "label": "法 服務業PMI",
-        "description": "France Services PMI SA",
-        "declared_source": "S&P Global",
-        "possible_code": "",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": 49.8,
-                "cell": "R25C6"
-            },
-            {
-                "period": "2026-06",
-                "value": 46.8,
-                "cell": "R25C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 44.3,
-                "cell": "R25C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 46.5,
-                "cell": "R25C9"
-            }
-        ]
-    },
-    {
-        "row": 26,
-        "section": "服務業",
-        "label": "西 服務業PMI",
-        "description": "Spain Services PMI Business Ac",
-        "declared_source": "S&P Global",
-        "possible_code": "",
-        "expected": [
-            {
-                "period": "2026-06",
-                "value": 54.2,
-                "cell": "R26C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 50.1,
-                "cell": "R26C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 47.9,
-                "cell": "R26C9"
-            }
-        ]
-    },
-    {
-        "row": 27,
-        "section": "企業信心",
-        "label": "法 企業信心",
-        "description": "France Business Confidence Com",
-        "declared_source": "INSEE National Statistics Offi",
-        "possible_code": "001565530",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": 97.2,
-                "cell": "R27C6"
-            },
-            {
-                "period": "2026-06",
-                "value": 95.0,
-                "cell": "R27C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 93.9,
-                "cell": "R27C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 94.1,
-                "cell": "R27C9"
-            }
-        ]
-    },
-    {
-        "row": 28,
-        "section": "企業信心",
-        "label": "德 企業信心",
-        "description": "Ifo Pan Germany Business Clima",
-        "declared_source": "IFO Institute - Institut fuer",
-        "possible_code": "Business Climate",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": 86.59582,
-                "cell": "R28C6"
-            },
-            {
-                "period": "2026-06",
-                "value": 85.7,
-                "cell": "R28C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 85.0,
-                "cell": "R28C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 84.5,
-                "cell": "R28C9"
-            }
-        ]
-    },
-    {
-        "row": 31,
-        "section": "GDP",
-        "label": "德 GDP",
-        "description": "Germany GDP Chain Linked Pan G",
-        "declared_source": "German Federal Statistical Off",
-        "possible_code": "YoY",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": 0.5,
-                "cell": "R31C6"
-            },
-            {
-                "period": "2026-06",
-                "value": 0.5,
-                "cell": "R31C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 0.3,
-                "cell": "R31C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 0.0,
-                "cell": "R31C9"
-            }
-        ]
-    },
-    {
-        "row": 32,
-        "section": "GDP",
-        "label": "西 GDP",
-        "description": "Spain GDP SA Chained Linked at",
-        "declared_source": "INE",
-        "possible_code": "CNTR4892",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": 2.7126,
-                "cell": "R32C6"
-            },
-            {
-                "period": "2026-06",
-                "value": 2.6461,
-                "cell": "R32C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 2.703,
-                "cell": "R32C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 2.8792,
-                "cell": "R32C9"
-            }
-        ]
-    },
-    {
-        "row": 33,
-        "section": "GDP",
-        "label": "法GDP",
-        "description": "France GDP Chain Linked Prices",
-        "declared_source": "INSEE National Statistics Offi",
-        "possible_code": "GDP YoY",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": 0.87354,
-                "cell": "R33C6"
-            },
-            {
-                "period": "2026-06",
-                "value": 1.1,
-                "cell": "R33C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 0.8,
-                "cell": "R33C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 0.8,
-                "cell": "R33C9"
-            }
-        ]
-    },
-    {
-        "row": 34,
-        "section": "GDP",
-        "label": "歐GDP",
-        "description": "Euro Area Gross Domestic Produ",
-        "declared_source": "Eurostat",
-        "possible_code": "EA GDP YoY",
-        "expected": [
-            {
-                "period": "2026-07",
-                "value": 0.5,
-                "cell": "R34C6"
-            },
-            {
-                "period": "2026-06",
-                "value": 1.1,
-                "cell": "R34C7"
-            },
-            {
-                "period": "2026-05",
-                "value": 1.2,
-                "cell": "R34C8"
-            },
-            {
-                "period": "2026-04",
-                "value": 1.4,
-                "cell": "R34C9"
-            }
-        ]
-    }
+def dedupe(points: list[Point]) -> list[Point]:
+    by_period = {point.period: point for point in points}
+    return [by_period[key] for key in sorted(by_period)]
+
+
+def response_text(response: requests.Response) -> str:
+    ctype = (response.headers.get("content-type") or "").lower()
+    if response.content.startswith(b"%PDF") or "application/pdf" in ctype:
+        reader = PdfReader(BytesIO(response.content))
+        return "\n".join(page.extract_text() or "" for page in reader.pages)
+    return BeautifulSoup(response.text, "html.parser").get_text("\n", strip=True)
+
+
+def month_name_period(text: str) -> str | None:
+    months = {name.lower(): i for i, name in enumerate([
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December",
+    ], 1)}
+    m = re.search(r"\b(" + "|".join(months) + r")\s+(20\d{2})\b", text, re.I)
+    return f"{m[2]}-{months[m[1].lower()]:02d}" if m else None
+
+
+# EU_ECON values supplied by the user. GDP dates are deliberately quarterly.
+TARGETS: list[dict[str, Any]] = [
+    {"label":"西Core CPI","frequency":"M","expected":{"2026-06":2.9,"2026-05":3.0,"2026-04":2.8}},
+    {"label":"法 Core CPI","frequency":"M","expected":{"2026-06":1.00498,"2026-05":1.25824,"2026-04":1.15814}},
+    {"label":"德 Core CPI","frequency":"M","expected":{"2026-06":2.45139,"2026-05":2.54022,"2026-04":2.29007}},
+    {"label":"歐 Core CPI","frequency":"M","expected":{"2026-06":2.4,"2026-05":2.6,"2026-04":2.2}},
+    {"label":"法 失業率","frequency":"Q","expected":{}},
+    {"label":"西 失業率","frequency":"Q","expected":{}},
+    {"label":"德 Unemployment Rate SWDA","frequency":"M","expected":{"2026-06":6.3,"2026-05":6.3,"2026-04":6.4}},
+    {"label":"歐 失業率","frequency":"M","expected":{"2026-05":6.2,"2026-04":6.2}},
+    {"label":"西 就業","frequency":"M","expected":{"2026-06":92.53,"2026-05":63.74,"2026-04":41.75}},
+    {"label":"德 失業人口","frequency":"M","expected":{"2026-06":-1.0,"2026-05":-12.0,"2026-04":18.0}},
+    {"label":"西 零售","frequency":"M","expected":{"2026-05":-0.4,"2026-04":0.2}},
+    {"label":"德 零售","frequency":"M","expected":{"2026-05":1.0,"2026-04":-0.2}},
+    {"label":"歐 Real零售","frequency":"M","expected":{"2026-05":1.6,"2026-04":0.9}},
+    {"label":"德 工業","frequency":"M","expected":{"2026-05":0.0,"2026-04":-0.8762322015334}},
+    {"label":"法 信心","frequency":"M","expected":{"2026-06":84.0,"2026-05":82.0,"2026-04":84.0}},
+    {"label":"德 GfK Consumer Confidence","frequency":"M","expected":{"2026-07":-29.3,"2026-06":-29.7,"2026-05":-33.1,"2026-04":-28.1}},
+    {"label":"德信心 Current","frequency":"M","expected":{"2026-07":-77.6,"2026-06":-81.0,"2026-05":-77.8,"2026-04":-73.7}},
+    {"label":"德信心 expect","frequency":"M","expected":{"2026-07":26.3,"2026-06":10.5,"2026-05":-10.2,"2026-04":-17.2}},
+    {"label":"德 製造業PMI","frequency":"M","expected":{"2026-07":52.2,"2026-06":50.3,"2026-05":50.1,"2026-04":51.4}},
+    {"label":"法 製造業PMI","frequency":"M","expected":{"2026-07":50.0,"2026-06":51.2,"2026-05":49.7,"2026-04":52.8}},
+    {"label":"法 製造業信心","frequency":"M","expected":{"2026-07":101.3,"2026-06":100.2,"2026-05":102.2,"2026-04":100.2}},
+    {"label":"西 製造業PMI","frequency":"M","expected":{"2026-06":49.7,"2026-05":51.2,"2026-04":51.7}},
+    {"label":"德 服務業PMI","frequency":"M","expected":{"2026-07":49.6,"2026-06":48.6,"2026-05":48.1,"2026-04":46.9}},
+    {"label":"法 服務業PMI","frequency":"M","expected":{"2026-07":49.8,"2026-06":46.8,"2026-05":44.3,"2026-04":46.5}},
+    {"label":"西 服務業PMI","frequency":"M","expected":{"2026-06":54.2,"2026-05":50.1,"2026-04":47.9}},
+    {"label":"法 企業信心","frequency":"M","expected":{"2026-07":97.2,"2026-06":95.0,"2026-05":93.9,"2026-04":94.1}},
+    {"label":"德 企業信心","frequency":"M","expected":{"2026-07":86.59582,"2026-06":85.7,"2026-05":85.0,"2026-04":84.5}},
+    {"label":"德 GDP","frequency":"Q","expected":{"2026-Q1":0.5,"2025-Q4":0.5,"2025-Q3":0.3,"2025-Q2":0.0}},
+    {"label":"西 GDP","frequency":"Q","expected":{"2026-Q1":2.7126,"2025-Q4":2.6461,"2025-Q3":2.703,"2025-Q2":2.8792}},
+    {"label":"法GDP","frequency":"Q","expected":{"2026-Q1":0.87354,"2025-Q4":1.1,"2025-Q3":0.8,"2025-Q2":0.8}},
+    {"label":"歐GDP","frequency":"Q","expected":{"2026-Q1":0.5,"2025-Q4":1.1,"2025-Q3":1.2,"2025-Q2":1.4}},
 ]
 
 
-def read_targets(path: Path) -> list[dict[str, Any]]:
-    wb = load_workbook(path, read_only=True, data_only=True)
-    ws = wb[wb.sheetnames[0]]
-    rows = list(ws.iter_rows(values_only=True))
-    if not rows:
-        raise RuntimeError("EU_ECON workbook is empty")
-    header = rows[0]
-    date_columns = [(index, month_key(value)) for index, value in enumerate(header) if index >= 5 and month_key(value)]
-    output: list[dict[str, Any]] = []
-    section = ""
-    for row_no, row in enumerate(rows[1:], 2):
-        if row and row[0]:
-            section = str(row[0]).strip()
-        label = str(row[1] or "").strip() if len(row) > 1 else ""
-        if not label:
-            continue
-        expected = []
-        for col, period in date_columns:
-            value = number(row[col] if col < len(row) else None)
-            if value is not None:
-                expected.append({"period": period, "value": value, "cell": f"R{row_no}C{col+1}"})
-        output.append({
-            "row": row_no,
-            "section": section,
-            "label": label,
-            "description": str(row[2] or "").strip(),
-            "declared_source": str(row[3] or "").strip(),
-            "possible_code": str(row[4] or "").strip(),
-            "expected": expected[:4],
-        })
-    return output
-
-
-def flatten_index(position: int, sizes: list[int]) -> list[int]:
+def flatten(position: int, sizes: list[int]) -> list[int]:
     coords = [0] * len(sizes)
     for i in range(len(sizes) - 1, -1, -1):
         coords[i] = position % sizes[i]
@@ -943,251 +184,380 @@ def flatten_index(position: int, sizes: list[int]) -> list[int]:
 
 
 def eurostat(dataset: str, filters: dict[str, str]) -> list[Point]:
-    params = {"lang": "EN", "format": "JSON", **filters}
-    response = get(f"{EUROSTAT}/{dataset}", params=params)
+    response = get(f"{EUROSTAT}/{dataset}", params={"format":"JSON","lang":"EN",**filters})
     payload = response.json()
-    ids = payload.get("id", [])
-    sizes = payload.get("size", [])
-    values = payload.get("value", {})
-    if not ids or not sizes or "time" not in ids:
-        raise RuntimeError(f"Unexpected Eurostat JSON-stat structure for {dataset}")
+    ids, sizes = payload.get("id", []), payload.get("size", [])
+    if "time" not in ids or not payload.get("value"):
+        raise RuntimeError(f"Eurostat {dataset} returned no observations; filters={filters}")
     categories: dict[str, list[str]] = {}
     for dim in ids:
         index = payload["dimension"][dim]["category"]["index"]
         if isinstance(index, dict):
-            ordered = [None] * len(index)
+            ordered = [""] * len(index)
             for code, pos in index.items():
                 ordered[int(pos)] = code
             categories[dim] = ordered
         else:
             categories[dim] = list(index)
     points = []
-    for raw_pos, raw_value in values.items():
-        coords = flatten_index(int(raw_pos), sizes)
-        record = {dim: categories[dim][coords[i]] for i, dim in enumerate(ids)}
-        period = month_key(record.get("time"))
-        value = number(raw_value)
+    for raw_pos, raw_value in payload["value"].items():
+        coords = flatten(int(raw_pos), sizes)
+        row = {dim: categories[dim][coords[i]] for i, dim in enumerate(ids)}
+        period = period_key(row["time"])
+        value = num(raw_value)
         if period and value is not None:
-            points.append(Point(period, value, response.url, str(payload.get("status", {}).get(raw_pos, ""))))
-    return dedupe(points)
-
-
-def ine_series(code: str) -> list[Point]:
-    response = get(f"{INE}/{code}", params={"nult": 18})
-    payload = response.json()
-    rows = payload[0].get("Data", []) if isinstance(payload, list) and payload else payload.get("Data", [])
-    points = []
-    for row in rows:
-        period = month_key(row.get("Fecha"))
-        if not period and row.get("Anyo") and row.get("FK_Periodo"):
-            match = re.search(r"(\d{1,2})$", str(row.get("FK_Periodo")))
-            if match:
-                period = f"{int(row['Anyo']):04d}-{int(match.group(1)):02d}"
-        value = number(row.get("Valor"))
-        if period and value is not None:
-            points.append(Point(period, value, response.url, str(row.get("T3_TipoDato", ""))))
+            points.append(Point(period, value, response.url, clean(payload.get("status", {}).get(raw_pos))))
     if not points:
-        raise RuntimeError(f"INE {code} returned no observations")
+        raise RuntimeError(f"Eurostat {dataset} parsed zero observations")
     return dedupe(points)
 
 
-def insee_series(idbank: str) -> list[Point]:
-    response = get(f"{INSEE}/{idbank}", params={"lastNObservations": 18})
+def insee(idbank: str) -> list[Point]:
+    response = get(f"{INSEE}/{idbank}", params={"lastNObservations":24})
     root = ET.fromstring(response.content)
     points = []
     for obs in root.iter():
-        if not obs.tag.endswith("Obs"):
-            continue
-        period = month_key(obs.attrib.get("TIME_PERIOD") or obs.attrib.get("timePeriod"))
-        value = number(obs.attrib.get("OBS_VALUE") or obs.attrib.get("obsValue"))
-        if period and value is not None:
-            points.append(Point(period, value, response.url, obs.attrib.get("OBS_STATUS", "")))
+        if obs.tag.endswith("Obs"):
+            period = period_key(obs.attrib.get("TIME_PERIOD") or obs.attrib.get("timePeriod"))
+            value = num(obs.attrib.get("OBS_VALUE") or obs.attrib.get("obsValue"))
+            if period and value is not None:
+                points.append(Point(period, value, response.url, obs.attrib.get("OBS_STATUS", "")))
     if not points:
-        raise RuntimeError(f"INSEE idbank {idbank} returned no observations")
+        raise RuntimeError(f"INSEE {idbank} returned no observations")
     return dedupe(points)
 
 
-def bundesbank(flow: str, key: str) -> list[Point]:
-    response = get(
-        f"{BUNDESBANK}/{flow}/{key}",
-        params={"format": "sdmx_csv", "lang": "en", "startPeriod": "2025-01"},
-        headers={"Accept": "text/csv"},
-    )
-    text = response.content.decode("utf-8-sig", "replace")
-    reader = csv.DictReader(io.StringIO(text))
-    points = []
-    for row in reader:
-        period = month_key(row.get("TIME_PERIOD"))
-        value = number(row.get("OBS_VALUE"))
+def bundesbank(flow: str, key: str, transform: str = "level") -> list[Point]:
+    response = get(f"{BUNDESBANK}/{flow}/{key}", params={"format":"sdmx_csv","lang":"en","startPeriod":"2025-01"}, headers={"Accept":"text/csv"})
+    rows = list(csv.DictReader(io.StringIO(response.content.decode("utf-8-sig", "replace"))))
+    levels = []
+    for row in rows:
+        period = period_key(row.get("TIME_PERIOD"))
+        value = num(row.get("OBS_VALUE"))
         if period and value is not None:
-            points.append(Point(period, value, response.url, row.get("OBS_STATUS", "")))
-    if not points:
+            levels.append(Point(period, value, response.url, clean(row.get("OBS_STATUS"))))
+    levels = dedupe(levels)
+    if not levels:
         raise RuntimeError(f"Bundesbank {flow}/{key} returned no observations")
+    if transform == "mom_change_thousands":
+        output = []
+        for previous, current in zip(levels, levels[1:]):
+            output.append(Point(current.period, current.value - previous.value, current.source_url, current.status, "computed MoM change"))
+        return output
+    return levels
+
+
+def html_release(url: str, patterns: list[str], fixed_period: str | None = None) -> list[Point]:
+    response = get(url)
+    text = clean(response_text(response)).replace("−", "-")
+    period = fixed_period or month_name_period(text)
+    if not period:
+        raise RuntimeError("Could not identify reference period")
+    for pattern in patterns:
+        match = re.search(pattern, text, re.I | re.S)
+        if match:
+            value = num(match.group(1))
+            if value is not None:
+                return [Point(period, value, response.url)]
+    raise RuntimeError(f"No value matched official release; patterns={len(patterns)}")
+
+
+def destatis_core_cpi(url: str) -> list[Point]:
+    response = get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+    text = clean(soup.get_text(" ", strip=True))
+    # The official table is stable but HTML structure can vary. Extract year/month and
+    # second numeric column: Overall index excluding food and energy.
+    pattern = re.compile(r"(20\d{2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+([0-9.]+)\s+([0-9.]+)", re.I)
+    months = {m.lower(): i for i,m in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(),1)}
+    levels: dict[str,float] = {}
+    for year, month, _overall, core in pattern.findall(text):
+        levels[f"{year}-{months[month.lower()]:02d}"] = float(core)
+    if not levels:
+        raise RuntimeError("Destatis core CPI table structure not recognised")
+    points = []
+    for period, index_value in levels.items():
+        prev = f"{int(period[:4])-1}{period[4:]}"
+        if prev in levels and levels[prev] != 0:
+            points.append(Point(period, (index_value / levels[prev] - 1) * 100, response.url, note="YoY calculated from official levels"))
     return dedupe(points)
 
 
-def dedupe(points: list[Point]) -> list[Point]:
-    by_period = {point.period: point for point in points}
-    return [by_period[key] for key in sorted(by_period)]
+def ine_legacy(series: str) -> list[Point]:
+    # Kept only for currently maintained Tempus series. Correctly maps INE quarterly
+    # period codes 19/20/21/22 to Q1/Q2/Q3/Q4 instead of false months.
+    url = f"https://servicios.ine.es/wstempus/js/ES/DATOS_SERIE/{series}"
+    response = get(url, params={"nult":24})
+    payload = response.json()
+    rows = payload[0].get("Data", []) if isinstance(payload, list) and payload else payload.get("Data", [])
+    points = []
+    quarter_codes = {19:1,20:2,21:3,22:4}
+    for row in rows:
+        year = int(row.get("Anyo", 0) or 0)
+        code_match = re.search(r"(\d+)$", str(row.get("FK_Periodo", "")))
+        code = int(code_match.group(1)) if code_match else 0
+        if code in quarter_codes:
+            period = f"{year:04d}-Q{quarter_codes[code]}"
+        elif 1 <= code <= 12:
+            period = f"{year:04d}-{code:02d}"
+        else:
+            period = period_key(row.get("Fecha"))
+        value = num(row.get("Valor"))
+        if period and value is not None:
+            points.append(Point(period, value, response.url))
+    if not points:
+        raise RuntimeError(f"INE {series} returned no observations")
+    return dedupe(points)
 
 
-# Candidate definitions. Multiple official candidates are deliberately retained for
-# ambiguous vendor labels; the report ranks them by overlap and error instead of
-# silently selecting a similar but definitionally different series.
-C: dict[str, list[Candidate]] = {
-    "西Core CPI": [Candidate("INE IPC208611", "INE", True, "ine", {"code": "IPC208611"}, "National CPI core, year-on-year")],
-    "法 Core CPI": [Candidate("INSEE 001768579", "INSEE", True, "insee", {"idbank": "001768579"}, "French national CPI excluding energy, year-on-year")],
-    "歐 Core CPI": [Candidate("Euro area HICP excluding energy and food", "Eurostat", True, "eurostat", {"dataset": "prc_hicp_manr", "filters": {"geo": "EA20", "unit": "RCH_A", "coicop": "TOT_X_NRG_FOOD"}}, "HICP, not national CPI")],
-    "法 失業率": [Candidate("INSEE 001688527", "INSEE", True, "insee", {"idbank": "001688527"}, "ILO unemployment rate; verify monthly-vs-quarterly vintage")],
-    "西 失業率": [Candidate("INE EPA815", "INE", True, "ine", {"code": "EPA815"}, "Spanish Labour Force Survey unemployment rate")],
-    "歐 失業率": [Candidate("Euro area unemployment rate", "Eurostat", True, "eurostat", {"dataset": "une_rt_m", "filters": {"geo": "EA20", "age": "Y15-74", "sex": "T", "s_adj": "SA", "unit": "PC_ACT"}}, "Seasonally adjusted, ages 15-74")],
-    "西 零售": [Candidate("INE ICM2522", "INE", True, "ine", {"code": "ICM2522"}, "Retail trade constant-price series")],
-    "法 信心": [Candidate("INSEE 001587668", "INSEE", True, "insee", {"idbank": "001587668"}, "Household confidence synthetic index")],
-    "法 製造業信心": [Candidate("INSEE 001585934", "INSEE", True, "insee", {"idbank": "001585934"}, "Manufacturing business climate")],
-    "法 企業信心": [Candidate("INSEE 001565530", "INSEE", True, "insee", {"idbank": "001565530"}, "All-sector business climate")],
-    "德 GDP": [Candidate("Germany real GDP YoY", "Eurostat", True, "eurostat", {"dataset": "namq_10_gdp", "filters": {"geo": "DE", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"}}, "Quarterly real GDP change from same quarter previous year")],
-    "西 GDP": [Candidate("INE CNTR4892", "INE", True, "ine", {"code": "CNTR4892"}, "Quarterly chained-volume GDP year-on-year")],
-    "法GDP": [Candidate("France real GDP YoY", "Eurostat", True, "eurostat", {"dataset": "namq_10_gdp", "filters": {"geo": "FR", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"}}, "Quarterly real GDP change from same quarter previous year")],
-    "歐GDP": [Candidate("Euro area real GDP YoY", "Eurostat", True, "eurostat", {"dataset": "namq_10_gdp", "filters": {"geo": "EA20", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"}}, "Quarterly real GDP change from same quarter previous year")],
-    "德 Unemployment Rate SWDA": [Candidate("Germany unemployment rate", "Eurostat", True, "eurostat", {"dataset": "une_rt_m", "filters": {"geo": "DE", "age": "Y15-74", "sex": "T", "s_adj": "SA", "unit": "PC_ACT"}}, "ILO concept; may differ from German registered-unemployment rate")],
-    "德 零售": [Candidate("Germany retail volume MoM", "Eurostat", True, "eurostat", {"dataset": "sts_trtu_m", "filters": {"geo": "DE", "unit": "PCH_PRE", "s_adj": "SCA", "nace_r2": "G47"}}, "Retail volume, seasonally/calendar adjusted, month-on-month")],
-    "歐 Real零售": [Candidate("Euro area retail volume YoY", "Eurostat", True, "eurostat", {"dataset": "sts_trtu_m", "filters": {"geo": "EA20", "unit": "PCH_SM", "s_adj": "CA", "nace_r2": "G47"}}, "Retail volume, calendar adjusted, year-on-year")],
-    "德 工業": [Candidate("Germany industrial production YoY", "Eurostat", True, "eurostat", {"dataset": "sts_inpr_m", "filters": {"geo": "DE", "unit": "PCH_SM", "s_adj": "CA", "nace_r2": "B-D"}}, "Production index, calendar adjusted, year-on-year")],
+def sp_release_candidates(country: str) -> list[dict[str,str]]:
+    response = get(SP_RELEASES)
+    soup = BeautifulSoup(response.text, "html.parser")
+    candidates, seen = [], set()
+    country_lower = country.lower()
+    for anchor in soup.find_all("a", href=True):
+        href = anchor.get("href", "")
+        if "/Public/Home/PressRelease/" not in href:
+            continue
+        url = urljoin(SP_RELEASES, href)
+        if url in seen:
+            continue
+        surrounding = clean(" ".join([
+            anchor.get_text(" ", strip=True),
+            anchor.parent.get_text(" ", strip=True) if anchor.parent else "",
+            anchor.find_previous(string=True) or "",
+        ]))
+        if country_lower not in surrounding.lower() or "pmi" not in surrounding.lower():
+            continue
+        date_match = re.search(r"([A-Za-z]+\s+\d{1,2},?\s+20\d{2})", surrounding)
+        candidates.append({"title":surrounding[:300],"url":url,"release_date":date_match.group(1).replace(",","") if date_match else ""})
+        seen.add(url)
+    if not candidates:
+        raise RuntimeError(f"No S&P Global {country} PMI releases discovered")
+    return candidates[:50]
+
+
+def extract_pmi_value(text: str, country: str, sector: str) -> float | None:
+    compact = clean(text).replace("™", "").replace("®", "")
+    c = re.escape(country)
+    number = r"([0-9]{1,2}(?:\.[0-9]+)?)"
+    if sector == "manufacturing":
+        patterns = [
+            rf"Flash\s+{c}\s+Manufacturing\s+PMI\s*:\s*{number}",
+            rf"{c}\s+Manufacturing\s+PMI\s*(?:at|rose to|fell to|posted|registered|stood at|:)\s*{number}",
+            rf"(?:HCOB|S&P Global)(?:/BME)?\s+{c}\s+Manufacturing\s+PMI.{0,120}?(?:posted|registered|stood at|rose to|fell to)\s*{number}",
+            rf"Manufacturing\s+PMI\s*(?:at|:)\s*{number}",
+        ]
+    else:
+        patterns = [
+            rf"Flash\s+{c}\s+Services\s+PMI\s+Business\s+Activity\s+Index\s*:\s*{number}",
+            rf"{c}\s+Services\s+PMI(?:\s+Business\s+Activity\s+Index)?.{0,100}?(?:posted|registered|stood at|rose to|fell to|:)\s*{number}",
+            rf"(?:HCOB|S&P Global)\s+{c}\s+Services\s+PMI\s+Business\s+Activity\s+Index.{0,120}?(?:posted|registered|stood at|rose to|fell to)\s*{number}",
+            rf"Services\s+PMI\s+Business\s+Activity\s+Index\s*(?:at|:)\s*{number}",
+        ]
+    for pattern in patterns:
+        for match in re.finditer(pattern, compact, re.I):
+            value = float(match.group(1))
+            context = compact[max(0,match.start()-100):match.end()+120]
+            if 20 <= value <= 80 and not (value == 50 and re.search(r">\s*50|50\s*=\s*(growth|improvement|expansion)", context, re.I)):
+                return value
+    return None
+
+
+def sp_pmi(country: str, sector: str) -> list[Point]:
+    candidates = sp_release_candidates(country)
+    expected_months = {period for target in TARGETS if target["label"].startswith(country_zh(country)) for period in target["expected"]}
+    observations: dict[str,Point] = {}
+    for candidate in candidates:
+        title = candidate["title"].lower()
+        if sector not in title and "flash" not in title:
+            continue
+        try:
+            release_dt = None
+            for fmt in ("%B %d %Y","%b %d %Y"):
+                try:
+                    release_dt = datetime.strptime(candidate["release_date"], fmt)
+                    break
+                except ValueError:
+                    pass
+            response = get(candidate["url"])
+            text = response_text(response)
+            period = month_name_period(text)
+            if not period and release_dt:
+                # Flash = same month; final release generally refers to prior month.
+                if "flash" in title:
+                    period = release_dt.strftime("%Y-%m")
+                else:
+                    serial = release_dt.year * 12 + release_dt.month - 2
+                    period = f"{serial//12:04d}-{serial%12+1:02d}"
+            if not period:
+                continue
+            value = extract_pmi_value(text, country, sector)
+            if value is None:
+                continue
+            release_type = "flash" if "flash" in title else "final"
+            current = observations.get(period)
+            if current is None or (release_type == "final" and current.status != "final"):
+                observations[period] = Point(period, value, response.url, release_type)
+            if expected_months and expected_months.issubset(observations):
+                break
+        except Exception as error:
+            log(f"[S&P] skip {candidate['url']}: {error}")
+    if not observations:
+        raise RuntimeError(f"No parsable S&P Global {country} {sector} PMI observations")
+    return [observations[key] for key in sorted(observations)]
+
+
+def country_zh(country: str) -> str:
+    return {"Germany":"德","France":"法","Spain":"西"}[country]
+
+
+def latest_press_series(url: str, specs: list[tuple[str,str]], period: str) -> list[Point]:
+    response = get(url)
+    text = clean(response_text(response)).replace("−", "-")
+    points = []
+    for label, pattern in specs:
+        match = re.search(pattern, text, re.I | re.S)
+        if match:
+            value = num(match.group(1))
+            if value is not None:
+                points.append(Point(period, value, response.url, note=label))
+    if not points:
+        raise RuntimeError("No official press-release values parsed")
+    return points
+
+
+SOURCES: dict[str,list[Source]] = {
+    "西Core CPI":[Source("Spain national core CPI", "INE", "html_release", {"url":"https://ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736176802&menu=ultiDatos&idp=1254735976607","patterns":[r"core inflation(?: increased| decreased| stood)?[^0-9-]{0,80}([+-]?\d+(?:[.,]\d+)?)%"]}, "CPI excluding unprocessed food and energy, YoY", "INE CPI Base 2025 / Special Groups")],
+    "法 Core CPI":[Source("France core inflation", "INSEE", "html_release", {"url":"https://www.insee.fr/en/statistiques/9021810","patterns":[r"core inflation.{0,100}?stood at\s*\+?([+-]?\d+(?:[.,]\d+)?)%"]}, "National core CPI, YoY", "INSEE CPI final release / core inflation")],
+    "德 Core CPI":[Source("Germany CPI ex food & energy", "Destatis", "destatis_core_cpi", {"url":"https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html"}, "YoY calculated from official monthly index levels", "Destatis CPI special breakdown: overall excluding food and energy")],
+    "歐 Core CPI":[Source("Euro-area core HICP", "Eurostat", "eurostat", {"dataset":"prc_hicp_minr","filters":{"geo":"EA21","unit":"RCH_A","coicop":"TOT_X_NRG_FOOD"}}, "HICP excluding energy, food, alcohol and tobacco, YoY", "prc_hicp_minr / EA21 / RCH_A / TOT_X_NRG_FOOD")],
+    "法 失業率":[Source("France ILO unemployment", "INSEE", "insee", {"idbank":"001688527"}, "ILO unemployment rate, quarterly", "INSEE idbank 001688527")],
+    "西 失業率":[Source("Spain unemployment rate", "Eurostat", "eurostat", {"dataset":"une_rt_q","filters":{"geo":"ES","age":"Y15-74","sex":"T","s_adj":"SA","unit":"PC_ACT"}}, "ILO unemployment rate, quarterly SA", "une_rt_q / ES / Y15-74 / T / SA / PC_ACT")],
+    "德 Unemployment Rate SWDA":[Source("Germany registered unemployment rate", "Bundesbank", "bundesbank", {"flow":"BBDL1","key":"M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A"}, "Registered unemployment rate, calendar and seasonally adjusted", "BBDL1.M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A")],
+    "歐 失業率":[Source("Euro-area unemployment rate", "Eurostat", "eurostat", {"dataset":"une_rt_m","filters":{"geo":"EA21","age":"Y15-74","sex":"T","s_adj":"SA","unit":"PC_ACT"}}, "ILO unemployment rate, monthly SA", "une_rt_m / EA21 / Y15-74 / T / SA / PC_ACT")],
+    "西 就業":[Source("Spain social-security affiliation SA change", "Ministry of Inclusion", "html_release", {"url":"https://www.inclusion.gob.es/web/guest/w/la-seguridad-social-suma-afiliados-en-junio-y-alcanza-los-21-9-millones-de-ocupados","patterns":[r"seasonally adjusted.{0,180}?(?:increase|rose|added)[^0-9-]*([+-]?\d+(?:[.,]\d+)?)\s*(?:thousand|000)"]}, "Registered employed, SA net monthly change, thousand", "Spanish Social Security monthly affiliation release")],
+    "德 失業人口":[Source("Germany registered unemployment change", "Bundesbank", "bundesbank", {"flow":"BBDL1","key":"M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A","transform":"mom_change_thousands"}, "MoM change of registered unemployment, calendar and seasonally adjusted, thousand", "BBDL1.M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A")],
+    "西 零售":[Source("Spain real retail original YoY", "INE", "html_release", {"url":"https://ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736176900&menu=ultiDatos&idp=1254735576799","patterns":[r"Constant price sales index\s+Original series.{0,80}?([+-]?\d+(?:[.,]\d+)?)\s*(?:%|$)"]}, "Original constant-price retail index, YoY", "INE RTI Base 2021 / original series annual change")],
+    "德 零售":[Source("Germany retail volume MoM", "Eurostat", "eurostat", {"dataset":"sts_trtu_m","filters":{"geo":"DE","unit":"PCH_PRE","s_adj":"SCA","nace_r2":"G47"}}, "Retail volume SCA, MoM", "sts_trtu_m / DE / PCH_PRE / SCA / G47")],
+    "歐 Real零售":[Source("Euro-area retail volume YoY", "Eurostat", "eurostat", {"dataset":"sts_trtu_m","filters":{"geo":"EA21","unit":"PCH_SM","s_adj":"CA","nace_r2":"G47"}}, "Retail volume calendar adjusted, YoY", "sts_trtu_m / EA21 / PCH_SM / CA / G47")],
+    "德 工業":[Source("Germany industrial production YoY", "Destatis", "html_release", {"url":"https://www.destatis.de/EN/Press/2026/07/PE26_237_421.html","patterns":[r"May 2026.{0,180}?([+-]?\d+(?:[.,]\d+)?)%\s+on the same month a year earlier"]}, "Real production in industry, calendar-adjusted YoY", "Destatis production in industry press release / code 421")],
+    "法 信心":[Source("France household confidence", "INSEE", "insee", {"idbank":"001587668"}, "Household confidence synthetic index", "INSEE idbank 001587668")],
+    "德 GfK Consumer Confidence":[Source("NIM Consumer Climate powered by GfK", "NIM/GfK", "html_release", {"url":"https://www.nim.org/en/consumer-climate/detail-consumer-climate/konsumklima-verharrt-auf-niedrigem-niveau","patterns":[r"indicator stands at\s*([+-]?\d+(?:[.,]\d+)?)\s*points"],"fixed_period":"2026-08"}, "Forecast-month consumer climate; prior month is revised in release", "NIM Consumer Climate powered by GfK release")],
+    "德 製造業PMI":[Source("Germany Manufacturing PMI", "S&P Global/HCOB", "sp_pmi", {"country":"Germany","sector":"manufacturing"}, "Headline Manufacturing PMI; final preferred to flash", "S&P Global official press releases")],
+    "法 製造業PMI":[Source("France Manufacturing PMI", "S&P Global/HCOB", "sp_pmi", {"country":"France","sector":"manufacturing"}, "Headline Manufacturing PMI; final preferred to flash", "S&P Global official press releases")],
+    "西 製造業PMI":[Source("Spain Manufacturing PMI", "S&P Global/HCOB", "sp_pmi", {"country":"Spain","sector":"manufacturing"}, "Headline Manufacturing PMI", "S&P Global official press releases")],
+    "德 服務業PMI":[Source("Germany Services PMI", "S&P Global/HCOB", "sp_pmi", {"country":"Germany","sector":"services"}, "Services PMI Business Activity Index; final preferred to flash", "S&P Global official press releases")],
+    "法 服務業PMI":[Source("France Services PMI", "S&P Global/HCOB", "sp_pmi", {"country":"France","sector":"services"}, "Services PMI Business Activity Index; final preferred to flash", "S&P Global official press releases")],
+    "西 服務業PMI":[Source("Spain Services PMI", "S&P Global/HCOB", "sp_pmi", {"country":"Spain","sector":"services"}, "Services PMI Business Activity Index", "S&P Global official press releases")],
+    "法 製造業信心":[Source("France manufacturing climate", "INSEE", "insee", {"idbank":"001585934"}, "Manufacturing business climate", "INSEE idbank 001585934")],
+    "法 企業信心":[Source("France all-sector business climate", "INSEE", "insee", {"idbank":"001565530"}, "All-sector business climate", "INSEE idbank 001565530")],
+    "德 企業信心":[Source("ifo Business Climate Germany", "ifo Institute", "html_release", {"url":"https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026","patterns":[r"Business Climate Index rose to\s*([+-]?\d+(?:[.,]\d+)?)\s*points"],"fixed_period":"2026-07"}, "Seasonally adjusted ifo Business Climate Germany", "ifo Business Climate Germany, index 2015=100")],
+    "德 GDP":[Source("Germany real GDP YoY", "Eurostat", "eurostat", {"dataset":"namq_10_gdp","filters":{"geo":"DE","na_item":"B1GQ","unit":"CLV_PCH_SM","s_adj":"SCA"}}, "Real GDP, YoY, quarterly", "namq_10_gdp / DE / B1GQ / CLV_PCH_SM / SCA")],
+    "西 GDP":[Source("Spain real GDP YoY", "Eurostat", "eurostat", {"dataset":"namq_10_gdp","filters":{"geo":"ES","na_item":"B1GQ","unit":"CLV_PCH_SM","s_adj":"SCA"}}, "Real GDP, YoY, quarterly", "namq_10_gdp / ES / B1GQ / CLV_PCH_SM / SCA")],
+    "法GDP":[Source("France real GDP YoY", "Eurostat", "eurostat", {"dataset":"namq_10_gdp","filters":{"geo":"FR","na_item":"B1GQ","unit":"CLV_PCH_SM","s_adj":"SCA"}}, "Real GDP, YoY, quarterly", "namq_10_gdp / FR / B1GQ / CLV_PCH_SM / SCA")],
+    "歐GDP":[Source("Euro-area real GDP YoY", "Eurostat", "eurostat", {"dataset":"namq_10_gdp","filters":{"geo":"EA21","na_item":"B1GQ","unit":"CLV_PCH_SM","s_adj":"SCA"}}, "Real GDP, YoY, quarterly", "namq_10_gdp / EA21 / B1GQ / CLV_PCH_SM / SCA")],
 }
 
-MANUAL = {
-    "西 就業": ("Spanish Ministry of Inclusion", "Official producer; exact vendor transformation is net monthly change, seasonally adjusted. Add a stable ministry CSV/XLSX URL before automation."),
-    "德 失業人口": ("Bundesagentur fuer Arbeit / Bundesbank", "Official data exist, but the workbook has no Bundesbank time-series key. Supply the BBK flow/key to avoid picking the wrong unemployment concept."),
-    "德 Core CPI": ("Destatis GENESIS", "National CPI excluding food and energy requires a precise GENESIS table/selection. GENESIS supports JSON and XLSX/CSV downloads; set GENESIS_TOKEN after confirming the table code."),
-    "德 GfK Consumer Confidence": ("GfK", "Producer release, not a government/open statistical API; history is normally in press releases or licensed feeds."),
-    "德信心 Current": ("ZEW", "Producer release; exact monthly history generally comes from ZEW releases, not an open JSON API."),
-    "德信心 expect": ("ZEW", "Producer release; exact monthly history generally comes from ZEW releases, not an open JSON API."),
-    "德 製造業PMI": ("S&P Global", "Official producer is S&P Global, but PMI history is proprietary; public press releases can validate recent releases only."),
-    "法 製造業PMI": ("S&P Global", "Official producer is S&P Global, but PMI history is proprietary; public press releases can validate recent releases only."),
-    "西 製造業PMI": ("S&P Global", "Official producer is S&P Global, but PMI history is proprietary; public press releases can validate recent releases only."),
-    "德 服務業PMI": ("S&P Global", "Official producer is S&P Global, but PMI history is proprietary; public press releases can validate recent releases only."),
-    "法 服務業PMI": ("S&P Global", "Official producer is S&P Global, but PMI history is proprietary; public press releases can validate recent releases only."),
-    "西 服務業PMI": ("S&P Global", "Official producer is S&P Global, but PMI history is proprietary; public press releases can validate recent releases only."),
-    "德 企業信心": ("ifo Institute", "Producer release; public releases validate recent values, but the exact seasonally adjusted history/download endpoint must be confirmed."),
+# ZEW has two values in one release; filter by note after fetching.
+def zew(kind: str) -> list[Point]:
+    url = "https://www.zew.de/en/press/latest-press-releases/strong-rise-in-expectations-1"
+    response = get(url)
+    text = clean(response_text(response)).replace("−", "-")
+    pattern = r"situation indicator for Germany is at\s*(?:minus\s*)?([0-9]+(?:[.,][0-9]+)?)" if kind == "current" else r"ZEW Indicator of Economic Sentiment Stands at plus\s*([0-9]+(?:[.,][0-9]+)?)"
+    match = re.search(pattern, text, re.I)
+    if not match:
+        # More generic official-release wording.
+        pattern = r"Economic Situation Germany\s*(-?[0-9]+(?:[.,][0-9]+)?)" if kind == "current" else r"Economic expectations.{0,100}?plus\s*([0-9]+(?:[.,][0-9]+)?)"
+        match = re.search(pattern, text, re.I | re.S)
+    if not match:
+        raise RuntimeError(f"ZEW {kind} value not parsed")
+    value = float(match.group(1).replace(",", "."))
+    if kind == "current":
+        value = -abs(value)
+    return [Point("2026-07", value, response.url)]
+
+SOURCES["德信心 Current"] = [Source("ZEW current situation", "ZEW", "zew", {"kind":"current"}, "Current economic situation Germany, balance", "ZEW Financial Market Survey")]
+SOURCES["德信心 expect"] = [Source("ZEW expectations", "ZEW", "zew", {"kind":"expect"}, "Economic expectations Germany, balance", "ZEW Indicator of Economic Sentiment")]
+
+FETCHERS: dict[str,Callable[...,list[Point]]] = {
+    "eurostat":eurostat,"insee":insee,"bundesbank":bundesbank,"html_release":html_release,
+    "destatis_core_cpi":destatis_core_cpi,"ine_legacy":ine_legacy,"sp_pmi":sp_pmi,"zew":zew,
 }
 
-FETCHERS: dict[str, Callable[..., list[Point]]] = {
-    "eurostat": eurostat,
-    "ine": ine_series,
-    "insee": insee_series,
-    "bundesbank": bundesbank,
-}
 
-
-def compare(expected: list[dict[str, Any]], actual: list[Point], tolerance: float) -> dict[str, Any]:
-    actual_by_period = {p.period: p for p in actual}
-    rows = []
-    for item in expected:
-        point = actual_by_period.get(item["period"])
-        difference = None if point is None else point.value - item["value"]
-        rows.append({
-            **item,
-            "actual": None if point is None else point.value,
-            "difference": difference,
-            "match": difference is not None and abs(difference) <= tolerance,
-            "source_url": None if point is None else point.source_url,
-        })
-    matched_periods = sum(row["actual"] is not None for row in rows)
-    exact = sum(row["match"] for row in rows)
-    mae = None
-    diffs = [abs(row["difference"]) for row in rows if row["difference"] is not None]
-    if diffs:
-        mae = sum(diffs) / len(diffs)
-    return {"rows": rows, "overlap": matched_periods, "matches": exact, "mae": mae}
+def compare_latest(target: dict[str,Any], points: list[Point], tolerance: float) -> dict[str,Any]:
+    expected = target["expected"]
+    if not expected:
+        latest = points[-1]
+        return {"status":"OFFICIAL_ONLY","expected_period":None,"expected":None,"official_period":latest.period,"official":latest.value,"difference":None,"match":None,"source_url":latest.source_url,"note":"EU_ECON has no populated reference value"}
+    expected_period = max(expected)
+    official_by_period = {point.period:point for point in points}
+    official = official_by_period.get(expected_period)
+    if official is None:
+        available_before = [point for point in points if point.period <= expected_period and point.period.startswith(expected_period[:4])]
+        selected = available_before[-1] if available_before else points[-1]
+        return {"status":"NO_SAME_PERIOD","expected_period":expected_period,"expected":expected[expected_period],"official_period":selected.period,"official":selected.value,"difference":None,"match":False,"source_url":selected.source_url,"note":"source fetched but exact EU_ECON period was absent"}
+    difference = official.value - expected[expected_period]
+    match = abs(difference) <= tolerance
+    return {"status":"MATCH" if match else "MISMATCH","expected_period":expected_period,"expected":expected[expected_period],"official_period":official.period,"official":official.value,"difference":difference,"match":match,"source_url":official.source_url,"note":official.note}
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--xlsx",
-        type=Path,
-        default=None,
-        help="Optional EU_ECON workbook. If omitted or missing, use the reference values embedded in this script.",
-    )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
-    parser.add_argument("--tolerance", type=float, default=0.051, help="absolute comparison tolerance")
+    parser.add_argument("--tolerance", type=float, default=0.051)
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
-    if args.xlsx is not None and args.xlsx.exists():
-        targets = read_targets(args.xlsx)
-        reference_source = str(args.xlsx)
-        log(f"[REFERENCE] Loaded workbook: {args.xlsx}")
-    else:
-        targets = EMBEDDED_TARGETS
-        reference_source = "embedded EU_ECON reference values"
-        if args.xlsx is not None:
-            log(f"[REFERENCE] Workbook not found: {args.xlsx}; using embedded reference values")
-        else:
-            log("[REFERENCE] Using embedded EU_ECON reference values")
-    report: dict[str, Any] = {
-        "script_version": VERSION,
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "workbook": reference_source,
-        "tolerance": args.tolerance,
-        "results": [],
-    }
-    for target in targets:
+    report: dict[str,Any] = {"script_version":VERSION,"generated_at":datetime.now(timezone.utc).isoformat(),"comparison_mode":"latest populated EU_ECON period vs same official period","tolerance":args.tolerance,"results":[]}
+    for target in TARGETS:
         label = target["label"]
         log(f"\n=== {label} ===")
-        item = {**target, "candidates": []}
-        candidates = C.get(label, [])
-        if not candidates:
-            provider, note = MANUAL.get(label, (target["declared_source"] or "Unknown", "No exact official machine-readable mapping has been confirmed."))
-            item.update({"status": "NEEDS_MAPPING", "provider": provider, "note": note})
+        item = {"label":label,"frequency":target["frequency"],"expected":target["expected"],"candidates":[]}
+        for source in SOURCES.get(label, []):
+            candidate = {"name":source.name,"provider":source.provider,"source_id":source.source_id,"definition":source.definition}
+            try:
+                points = FETCHERS[source.fetcher](**source.args)
+                candidate["status"] = "OK"
+                candidate["latest_points"] = [asdict(point) for point in points[-12:]]
+                candidate["comparison"] = compare_latest(target, points, args.tolerance)
+            except Exception as error:
+                candidate["status"] = "ERROR"
+                candidate["error"] = f"{type(error).__name__}: {error}"
+                log(f"[ERROR] {source.name}: {candidate['error']}")
+            item["candidates"].append(candidate)
+        successful = [candidate for candidate in item["candidates"] if candidate["status"] == "OK"]
+        if successful:
+            selected = sorted(successful, key=lambda c: {"MATCH":0,"MISMATCH":1,"OFFICIAL_ONLY":2,"NO_SAME_PERIOD":3}.get(c["comparison"]["status"],9))[0]
+            item["selected_candidate"] = selected["name"]
+            item["source_id"] = selected["source_id"]
+            item["status"] = selected["comparison"]["status"]
+            item["comparison"] = selected["comparison"]
+        elif item["candidates"]:
+            item["status"] = "FETCH_ERROR"
         else:
-            for candidate in candidates:
-                result = {**asdict(candidate)}
-                try:
-                    points = FETCHERS[candidate.fetcher](**candidate.args)
-                    result["latest_points"] = [asdict(p) for p in points[-12:]]
-                    result["comparison"] = compare(target["expected"], points, args.tolerance)
-                    result["status"] = "OK"
-                except Exception as exc:
-                    result["status"] = "ERROR"
-                    result["error"] = f"{type(exc).__name__}: {exc}"
-                    log(f"[ERROR] {candidate.name}: {result['error']}")
-                item["candidates"].append(result)
-            successful = [x for x in item["candidates"] if x["status"] == "OK"]
-            successful.sort(key=lambda x: (-x["comparison"]["overlap"], x["comparison"]["mae"] if x["comparison"]["mae"] is not None else 1e99))
-            if successful:
-                best = successful[0]
-                cmp = best["comparison"]
-                item["selected_candidate"] = best["name"]
-                item["status"] = "MATCH" if cmp["overlap"] and cmp["matches"] == cmp["overlap"] else ("MISMATCH" if cmp["overlap"] else "NO_PERIOD_OVERLAP")
-            else:
-                item["status"] = "FETCH_ERROR"
+            item["status"] = "NO_SOURCE_MAPPING"
         report["results"].append(item)
-
-    summary: dict[str, int] = {}
+    summary: dict[str,int] = {}
     for item in report["results"]:
-        summary[item["status"]] = summary.get(item["status"], 0) + 1
+        summary[item["status"]] = summary.get(item["status"],0) + 1
     report["summary"] = summary
     json_path = args.out / "eu_macro_source_comparison.json"
-    json_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-
+    json_path.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
     csv_path = args.out / "eu_macro_source_comparison.csv"
-    with csv_path.open("w", encoding="utf-8-sig", newline="") as handle:
+    with csv_path.open("w",encoding="utf-8-sig",newline="") as handle:
         writer = csv.writer(handle)
-        writer.writerow(["label", "status", "selected_candidate", "period", "EU_ECON", "official", "difference", "match", "source_url", "note"])
+        writer.writerow(["label","status","source_id","expected_period","EU_ECON","official_period","official","difference","match","source_url","definition_or_error"])
         for item in report["results"]:
-            selected = next((x for x in item.get("candidates", []) if x.get("name") == item.get("selected_candidate")), None)
-            if selected:
-                for row in selected["comparison"]["rows"]:
-                    writer.writerow([item["label"], item["status"], selected["name"], row["period"], row["value"], row["actual"], row["difference"], row["match"], row["source_url"], selected.get("definition_note", "")])
-            else:
-                writer.writerow([item["label"], item["status"], "", "", "", "", "", "", "", item.get("note", "")])
-
+            cmp = item.get("comparison",{})
+            selected = next((c for c in item.get("candidates",[]) if c.get("name") == item.get("selected_candidate")),None)
+            note = selected.get("definition","") if selected else " | ".join(c.get("error","") for c in item.get("candidates",[]))
+            writer.writerow([item["label"],item["status"],item.get("source_id",""),cmp.get("expected_period"),cmp.get("expected"),cmp.get("official_period"),cmp.get("official"),cmp.get("difference"),cmp.get("match"),cmp.get("source_url"),note])
     log("\n[SUMMARY]")
-    for status, count in sorted(summary.items()):
+    for status,count in sorted(summary.items()):
         log(f"{status}: {count}")
     log(f"JSON: {json_path}")
     log(f"CSV : {csv_path}")
-    # Debugging should finish and upload reports even when individual sources fail.
     return 0
 
 
