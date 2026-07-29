@@ -1,1266 +1,388 @@
+#!/usr/bin/env python3
+"""Debug official sources for the indicators listed in EU_ECON.xlsx.
+
+This script is intentionally read-only: it downloads recent observations, compares
+up to four populated spreadsheet cells, and writes machine-readable diagnostics to
+``debug/eu_macro_sources``. It does not update production JSON.
+
+Designed for GitHub Actions. Required packages: requests, openpyxl.
+Optional secrets are not required for Eurostat, INE, INSEE, or Bundesbank.
+``GENESIS_TOKEN`` can be supplied later for Destatis GENESIS requests.
+"""
 from __future__ import annotations
 
+import argparse
 import csv
 import io
 import json
+import math
+import os
 import re
+import sys
 import time
-import hashlib
-import zipfile
-from io import BytesIO
-from urllib.parse import urljoin
-from html.parser import HTMLParser
-from datetime import datetime, timezone
+import xml.etree.ElementTree as ET
+from dataclasses import asdict, dataclass
+from datetime import date, datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import requests
 from openpyxl import load_workbook
-from pypdf import PdfReader
 
-OUTPUT_DIR = Path("debug/eu_macro_sources")
-OUTPUT_JSON = OUTPUT_DIR / "eu_last_6_periods.json"
-SOURCE_BUNDLE_JSON = OUTPUT_DIR / "eu_source_bundle.json"
-COMPARISON_JSON = OUTPUT_DIR / "eu_comparison_report.json"
-TIMEOUT = 40
-MAX_RAW_CHARS = 250_000
-RAW_BUNDLE: dict[str, Any] = {"requests": [], "candidate_fetches": {}}
-USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-
+VERSION = "2026-07-29-v1"
+DEFAULT_XLSX = Path("EU_ECON.xlsx")
+DEFAULT_OUT = Path("debug/eu_macro_sources")
+USER_AGENT = "Mozilla/5.0 (compatible; EUMacroSourceDebugger/1.0; GitHub-Actions)"
 SESSION = requests.Session()
-SESSION.headers.update({
-    "User-Agent": USER_AGENT,
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,application/json;q=0.8,*/*;q=0.7",
-    "Accept-Language": "en-GB,en;q=0.9",
-    "Cache-Control": "no-cache",
-    "Pragma": "no-cache",
-    "DNT": "1",
-    "Upgrade-Insecure-Requests": "1",
-})
+SESSION.headers.update({"User-Agent": USER_AGENT, "Accept-Language": "en,en-US;q=0.9"})
 
-EUROSTAT_BASE = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data"
-
-# 第一階段只納入已能明確對應官方資料集、單位及調整方式的序列。
-# CPI：西、法、德仍採國內 CPI；在找到各國官方精確序列 ID 前不以 HICP 代替。
-EUROSTAT_SERIES = {
-    "euro_unemployment_rate": {
-        "label": "歐元區失業率",
-        "dataset": "une_rt_m",
-        "params": {"geo": "EA21", "sex": "T", "age": "TOTAL", "unit": "PC_ACT", "s_adj": "SA"},
-        "frequency": "monthly",
-        "expected_name": "Eurostat Unemployment Eurozone",
-        "discovery_filters": {"geo": "EA21"},
-        "preferred": {"freq": "M", "sex": "T", "age": "TOTAL", "unit": "PC_ACT", "s_adj": "SA"},
-    },
-    "euro_core_hicp_yoy": {
-        "label": "歐元區 Core HICP YoY",
-        "dataset": "prc_hicp_minr",
-        "params": {"geo": "EA21", "coicop18": "TOT_X_NRG_FOOD", "unit": "RCH_A"},
-        "frequency": "monthly",
-        "expected_name": "Eurostat Eurozone Core MUICP YoY",
-        "discovery_filters": {"geo": "EA21", "unit": "RCH_A"},
-        "preferred": {"freq": "M", "unit": "RCH_A"},
-        "dimension_label_keywords": {"coicop18": ["excluding energy", "food", "alcohol", "tobacco"]},
-    },
-    "euro_real_retail_yoy": {
-        "label": "歐元區實質零售 YoY",
-        "dataset": "sts_trtu_m",
-        "params": {"geo": "EA21", "nace_r2": "G47", "indic_bt": "VOL_SLS", "s_adj": "CA", "unit": "PCH_SM"},
-        "frequency": "monthly",
-        "expected_name": "Eurostat Retail Sales Eurozone YoY",
-        "discovery_filters": {"geo": "EA21", "nace_r2": "G47"},
-        "preferred": {"freq": "M", "indic_bt": "VOL_SLS", "nace_r2": "G47", "s_adj": "CA", "unit": "PCH_SM"},
-    },
-    "euro_gdp_yoy": {
-        "label": "歐元區 GDP YoY",
-        "dataset": "namq_10_gdp",
-        "params": {"geo": "EA21", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"},
-        "frequency": "quarterly",
-        "expected_name": "Euro Area Gross Domestic Product YoY",
-        "discovery_filters": {"geo": "EA21", "na_item": "B1GQ"},
-        "preferred": {"freq": "Q", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"},
-    },
-}
-
-BUNDESBANK_SERIES = {
-    "germany_unemployment_rate_swda": {
-        "label": "德國失業率 SWDA",
-        "flow": "BBDL1",
-        "key": "M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A",
-        "frequency": "monthly",
-        "expected_name": "Germany Unemployment Rate SWDA",
-    },
-}
-
-# 尚待精確確認官方序列 ID 的項目。程式會把這些項目列入結果，避免誤用近似指標。
-ALL_REMAINING = {
-    "spain_core_cpi_yoy": "INE 國內 CPI：Underlying inflation（排除未加工食品及能源）",
-    "france_cpi_ex_energy_yoy": "INSEE 國內 CPI：All items excluding energy YoY",
-    "germany_core_cpi_yoy": "Destatis 國內 CPI：Overall index excluding specified components YoY",
-    "france_unemployment_rate_ilo": "INSEE France Unemployment Rate ILO",
-    "spain_unemployment_rate": "INE Spain Unemployment Rate",
-    "spain_registered_employed_total_change": "Spanish Labour Ministry Registered Employed Total change",
-    "germany_unemployment_change_swda": "Bundesbank Germany Unemployment Change SWDA",
-    "spain_real_retail_yoy": "INE Spain Retail Sales Constant Prices Working Day Adjusted YoY",
-    "germany_real_retail_mom": "Destatis Germany Retail Sales Constant Prices SA MoM",
-    "germany_industrial_production_yoy": "Destatis/BMWK Germany Industrial Production YoY",
-    "france_consumer_confidence": "INSEE France Consumer Confidence Overall",
-    "germany_gfk_consumer_confidence": "NIM Consumer Climate powered by GfK",
-    "germany_zew_current": "ZEW Germany Assessment of Current Situation",
-    "germany_zew_expectations": "ZEW Germany Economic Expectations",
-    "germany_manufacturing_pmi": "S&P Global/HCOB Germany Manufacturing PMI",
-    "france_manufacturing_pmi": "S&P Global/HCOB France Manufacturing PMI",
-    "spain_manufacturing_pmi": "S&P Global/HCOB Spain Manufacturing PMI",
-    "germany_services_pmi": "S&P Global/HCOB Germany Services PMI Business Activity Index",
-    "france_services_pmi": "S&P Global/HCOB France Services PMI Business Activity Index",
-    "spain_services_pmi": "S&P Global/HCOB Spain Services PMI Business Activity Index",
-    "france_manufacturing_confidence": "INSEE France Manufacturing Business Confidence",
-    "france_business_confidence": "INSEE France Composite Business Confidence",
-    "germany_ifo_business_climate": "ifo Pan Germany Business Climate Index",
-    "germany_gdp_yoy": "Destatis Germany real GDP YoY",
-    "spain_gdp_yoy": "INE Spain real GDP SA YoY",
-    "france_gdp_yoy": "INSEE France real GDP YoY",
-}
+EUROSTAT = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data"
+INE = "https://servicios.ine.es/wstempus/js/ES/DATOS_SERIE"
+INSEE = "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM"
+BUNDESBANK = "https://api.statistiken.bundesbank.de/rest/data"
 
 
-
-SERIES_VALIDATION = {
-    "spain_core_cpi_yoy": {"frequency": "monthly", "min": -10, "max": 20},
-    "spain_unemployment_rate": {"frequency": "quarterly", "min": 0, "max": 40},
-    "spain_real_retail_yoy": {"frequency": "monthly", "min": -50, "max": 50},
-    "spain_gdp_yoy": {"frequency": "quarterly", "min": -30, "max": 30},
-    "france_cpi_ex_energy_yoy": {"frequency": "monthly", "min": -10, "max": 20},
-    "france_unemployment_rate_ilo": {"frequency": "quarterly", "min": 0, "max": 30},
-    "france_consumer_confidence": {"frequency": "monthly", "min": 40, "max": 160},
-    "france_manufacturing_confidence": {"frequency": "monthly", "min": 40, "max": 160},
-    "france_business_confidence": {"frequency": "monthly", "min": 40, "max": 160},
-    "france_gdp_yoy": {"frequency": "quarterly", "min": -30, "max": 30},
-    "germany_core_cpi_yoy": {"frequency": "monthly", "min": -10, "max": 20},
-    "germany_real_retail_mom": {"frequency": "monthly", "min": -30, "max": 30},
-    "germany_industrial_production_yoy": {"frequency": "monthly", "min": -40, "max": 40},
-    "germany_gdp_yoy": {"frequency": "quarterly", "min": -30, "max": 30},
-    "germany_unemployment_change_swda": {"frequency": "monthly", "min": -1000, "max": 1000},
-    "spain_registered_employed_total_change": {"frequency": "monthly", "min": -2000, "max": 2000},
-    "germany_gfk_consumer_confidence": {"frequency": "monthly", "min": -100, "max": 100},
-    "germany_zew_current": {"frequency": "monthly", "min": -100, "max": 100},
-    "germany_zew_expectations": {"frequency": "monthly", "min": -100, "max": 100},
-    "germany_ifo_business_climate": {"frequency": "monthly", "min": 40, "max": 140},
-    "germany_manufacturing_pmi": {"frequency": "monthly", "min": 20, "max": 80},
-    "france_manufacturing_pmi": {"frequency": "monthly", "min": 20, "max": 80},
-    "spain_manufacturing_pmi": {"frequency": "monthly", "min": 20, "max": 80},
-    "germany_services_pmi": {"frequency": "monthly", "min": 20, "max": 80},
-    "france_services_pmi": {"frequency": "monthly", "min": 20, "max": 80},
-    "spain_services_pmi": {"frequency": "monthly", "min": 20, "max": 80},
-}
+@dataclass
+class Point:
+    period: str
+    value: float
+    source_url: str
+    status: str = ""
 
 
-FIXED_SERIES_SOURCES = {
-    "spain_core_cpi_yoy": {"provider": "INE", "dataset": "IPC", "mode": "ine_operation"},
-    "spain_unemployment_rate": {"provider": "INE", "table": "4247", "mode": "ine_table"},
-    "spain_real_retail_yoy": {"provider": "INE", "dataset": "ICM", "mode": "ine_operation"},
-    "spain_gdp_yoy": {"provider": "INE", "dataset": "CNTR", "mode": "ine_operation"},
-    "france_cpi_ex_energy_yoy": {"provider": "INSEE BDM", "idbank": "001763852", "mode": "insee_bdm"},
-    "france_unemployment_rate_ilo": {"provider": "INSEE BDM", "idbank": "001688526", "dataset": "CHOMAGE-TRIM-NATIONAL", "mode": "insee_bdm"},
-    "france_consumer_confidence": {"provider": "INSEE BDM", "idbank": "000857189", "dataset": "CAMME", "mode": "insee_bdm"},
-    "france_manufacturing_confidence": {"provider": "INSEE BDM", "idbank": "000857181", "mode": "insee_bdm"},
-    "france_business_confidence": {"provider": "INSEE BDM", "idbank": "001586737", "mode": "insee_bdm"},
-    "france_gdp_yoy": {"provider": "INSEE Melodi", "dataset": "CNT-2014-PIB-EQB-RF", "mode": "insee_dataset"},
-    "germany_core_cpi_yoy": {"provider": "Destatis GENESIS", "tables": ["61111-0004", "61111-0006"], "mode": "destatis_tables"},
-    "germany_real_retail_mom": {"provider": "Destatis GENESIS", "tables": ["45211-0002"], "mode": "destatis_tables"},
-    "germany_industrial_production_yoy": {"provider": "Destatis GENESIS", "tables": ["42153-0001"], "mode": "destatis_tables"},
-    "germany_gdp_yoy": {"provider": "Destatis GENESIS", "tables": ["81000-0001"], "mode": "destatis_tables"},
-}
-
-INE_OPERATION_KEYWORDS = {
-    "spain_core_cpi_yoy": ["subyacente", "general sin alimentos no elaborados", "energia"],
-    "spain_real_retail_yoy": ["general", "precios constantes", "anual"],
-    "spain_gdp_yoy": ["producto interior bruto", "precios de mercado", "interanual"],
-}
+@dataclass
+class Candidate:
+    name: str
+    provider: str
+    official: bool
+    fetcher: str
+    args: dict[str, Any]
+    definition_note: str = ""
 
 
-SOURCE_GROUPS = {
-    "ine": {
-        "url": "https://servicios.ine.es/wstempus/js/EN/OPERACIONES_DISPONIBLES",
-        "series": {
-            "spain_core_cpi_yoy": ["ipc", "subyacente"],
-            "spain_unemployment_rate": ["encuesta de poblacion activa"],
-            "spain_real_retail_yoy": ["comercio minorista"],
-            "spain_gdp_yoy": ["contabilidad nacional trimestral"],
-        },
-    },
-    "insee": {
-        "url": "https://api.insee.fr/melodi/catalog/all",
-        "accept_json": True,
-        "series": {
-            "france_cpi_ex_energy_yoy": ["prix a la consommation"],
-            "france_unemployment_rate_ilo": ["chomage"],
-            "france_consumer_confidence": ["confiance des menages"],
-            "france_manufacturing_confidence": ["climat des affaires"],
-            "france_business_confidence": ["climat des affaires"],
-            "france_gdp_yoy": ["produit interieur brut"],
-        },
-    },
-    "destatis": {
-        "url": "https://www-genesis.destatis.de/genesisWS/rest/2020/find/find",
-        "method": "POST",
-        "base_params": {"username": "GAST", "password": "GAST", "language": "de", "category": "all", "pagelength": 100},
-        "series": {
-            "germany_core_cpi_yoy": ["verbraucherpreisindex", "ohne"],
-            "germany_real_retail_mom": ["einzelhandel", "preisbereinigt"],
-            "germany_industrial_production_yoy": ["produktionsindex", "industrie"],
-            "germany_gdp_yoy": ["bruttoinlandsprodukt", "preisbereinigt"],
-        },
-    },
-    "bundesbank_catalogue": {
-        "url": "https://api.statistiken.bundesbank.de/rest/metadata/dataflow/BBK/BBDL1?references=all",
-        "series": {
-            "germany_unemployment_change_swda": ["unemployment", "change"],
-        },
-    },
-    "spain_social_security": {
-        "url": "https://www.seg-social.es/wps/portal/wss/internet/EstadisticasPresupuestosEstudios/Estadisticas",
-        "series": {
-            "spain_registered_employed_total_change": ["affiliation"],
-        },
-    },
-    "nim_gfk": {
-        "url": "https://www.nim.org/en/consumer-climate/all-releases",
-        "series": {"germany_gfk_consumer_confidence": ["consumer climate"]},
-    },
-    "zew": {
-        "url": "https://www.zew.de/en/publications/zew-expertises-research-reports/research-reports/business-cycle/zew-financial-market-survey",
-        "series": {
-            "germany_zew_current": ["current situation", "germany"],
-            "germany_zew_expectations": ["economic sentiment", "germany"],
-        },
-    },
-    "ifo": {
-        "url": "https://www.ifo.de/en/ifo-time-series",
-        "series": {"germany_ifo_business_climate": ["business climate"]},
-    },
-    "sp_global_pmi": {
-        "url": "https://www.pmi.spglobal.com/Public/Release/PressReleases?language=en",
-        "series": {
-            "germany_manufacturing_pmi": ["germany", "manufacturing"],
-            "france_manufacturing_pmi": ["france", "manufacturing"],
-            "spain_manufacturing_pmi": ["spain", "manufacturing"],
-            "germany_services_pmi": ["germany", "services"],
-            "france_services_pmi": ["france", "services"],
-            "spain_services_pmi": ["spain", "services"],
-        },
-    },
-}
+def log(message: str) -> None:
+    print(message, flush=True)
 
 
-class _TextExtractor(HTMLParser):
-    def __init__(self) -> None:
-        super().__init__()
-        self.parts: list[str] = []
-        self.links: list[dict[str, str]] = []
-        self._current_href = ""
-        self._current_text: list[str] = []
-
-    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if tag.lower() == "a":
-            self._current_href = dict(attrs).get("href") or ""
-            self._current_text = []
-
-    def handle_data(self, data: str) -> None:
-        clean = " ".join(data.split())
-        if clean:
-            self.parts.append(clean)
-            if self._current_href:
-                self._current_text.append(clean)
-
-    def handle_endtag(self, tag: str) -> None:
-        if tag.lower() == "a" and self._current_href:
-            self.links.append({
-                "href": self._current_href,
-                "text": " ".join(self._current_text),
-            })
-            self._current_href = ""
-            self._current_text = []
-
-
-def html_text(text: str) -> str:
-    parser = _TextExtractor()
-    parser.feed(text)
-    return " ".join(parser.parts)
-
-
-def _flatten_strings(value: Any) -> list[str]:
-    output: list[str] = []
-    if isinstance(value, dict):
-        for child in value.values():
-            output.extend(_flatten_strings(child))
-    elif isinstance(value, list):
-        for child in value:
-            output.extend(_flatten_strings(child))
-    elif isinstance(value, (str, int, float)):
-        output.append(str(value))
-    return output
-
-
-def fetch_source_group(group_id: str, config: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    params = dict(config.get("base_params", {}))
-    if group_id == "sp_global_pmi":
-        # Use the same browser-style session warm-up as the working UK pipeline.
-        # Directly calling the release index with the debug bot UA was returning 403.
-        request("https://www.pmi.spglobal.com/Public?language=en")
-        time.sleep(1.0)
-    request_headers = {"Accept": "application/json"} if config.get("accept_json") else None
-    if config.get("method") == "POST":
-        response = SESSION.post(
-            config["url"], data=params or None, headers=request_headers, timeout=TIMEOUT
-        )
-        RAW_BUNDLE["requests"].append({
-            "method": "POST", "url": response.url, "request_data": params,
-            "status": response.status_code,
-            "content_type": response.headers.get("Content-Type", ""),
-            "bytes": len(response.content),
-            "sha256": hashlib.sha256(response.content).hexdigest(),
-            "body": response.text[:MAX_RAW_CHARS],
-            "truncated": len(response.text) > MAX_RAW_CHARS,
-        })
-        response.raise_for_status()
-    else:
-        response = request(config["url"], params=params or None, headers=request_headers)
-    content_type = response.headers.get("Content-Type", "")
-    is_json = "json" in content_type.lower() or response.text.lstrip().startswith(("{", "["))
-    if is_json:
-        payload: Any = response.json()
-        searchable = " ".join(_flatten_strings(payload)).lower()
-        raw_path = OUTPUT_DIR / f"raw_source_{group_id}.json"
-        raw_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    else:
-        payload = None
-        parser = _TextExtractor()
-        parser.feed(response.text)
-        searchable = " ".join(parser.parts).lower()
-        records = parser.links
-        raw_path = OUTPUT_DIR / f"raw_source_{group_id}.html"
-        raw_path.write_text(response.text, encoding="utf-8")
-
-    results: dict[str, dict[str, Any]] = {}
-    if is_json:
-        records = payload if isinstance(payload, list) else []
-    elif group_id == "sp_global_pmi":
-        contextual_records: list[dict[str, str]] = []
-        for match in re.finditer(
-            r'href=["\']([^"\']*/Public/Home/PressRelease/[^"\']+)["\']',
-            response.text,
-            re.I,
-        ):
-            context_start = max(0, match.start() - 900)
-            context_end = min(len(response.text), match.end() + 220)
-            context_html = response.text[context_start:context_end]
-            context_parser = _TextExtractor()
-            context_parser.feed(context_html)
-            context_text = " ".join(context_parser.parts)
-            contextual_records.append({
-                "href": requests.compat.urljoin(response.url, match.group(1)),
-                "text": context_text,
-            })
-        records = contextual_records
-        (OUTPUT_DIR / "raw_sp_global_contextual_links.json").write_text(
-            json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
-    for series_id, keywords in config["series"].items():
-        hits = [keyword for keyword in keywords if keyword.lower() in searchable]
-        candidate_records = []
-        for record in records:
-            record_text = " ".join(_flatten_strings(record)).lower()
-            if group_id == "sp_global_pmi":
-                href = str(record.get("href", "")) if isinstance(record, dict) else ""
-                same_record_match = all(keyword.lower() in record_text for keyword in keywords)
-                if same_record_match and "/Public/Home/PressRelease/" in href:
-                    candidate = dict(record)
-                    candidate["match_score"] = sum(
-                        record_text.rfind(keyword.lower()) for keyword in keywords
-                    )
-                    candidate_records.append(candidate)
-            elif any(token.lower() in record_text for keyword in keywords for token in keyword.split()):
-                candidate_records.append(record)
-            if len(candidate_records) >= 15:
-                break
-        if group_id == "sp_global_pmi" and candidate_records:
-            deduped: dict[str, dict[str, Any]] = {}
-            for candidate in sorted(
-                candidate_records,
-                key=lambda item: item.get("match_score", -1),
-                reverse=True,
-            ):
-                deduped.setdefault(candidate.get("href", ""), candidate)
-            candidate_records = list(deduped.values())[:15]
-        numbers = re.findall(r"(?<!\d)-?\d+(?:[.,]\d+)?(?!\d)", searchable)
-        results[series_id] = {
-            "status": (
-                "candidate_links_found" if candidate_records else
-                ("source_reachable" if hits else "source_reachable_no_keyword_match")
-            ),
-            "source_group": group_id,
-            "source_url": response.url,
-            "http_status": response.status_code,
-            "matched_keywords": hits,
-            "required_keywords": keywords,
-            "candidate_records": candidate_records,
-            "candidate_numbers_tail": numbers[-20:],
-            "raw_file": str(raw_path),
-            "data": [],
-            "diagnostic": (
-                "Official source reached; exact series/table and observation parser still required"
-                if hits else
-                "Official source reached, but expected keywords were not found in this response"
-            ),
-        }
-    return results
-
-def request(
-    url: str,
-    *,
-    params: dict[str, str] | None = None,
-    headers: dict[str, str] | None = None,
-) -> requests.Response:
-    for attempt in range(1, 4):
-        print(f"[HTTP] {attempt}/3 {url} params={params}", flush=True)
-        response = SESSION.get(url, params=params, headers=headers, timeout=TIMEOUT)
-        print(f"[HTTP] status={response.status_code} bytes={len(response.content)}", flush=True)
-        RAW_BUNDLE["requests"].append({
-            "method": "GET", "url": response.url, "status": response.status_code,
-            "content_type": response.headers.get("Content-Type", ""),
-            "bytes": len(response.content),
-            "sha256": hashlib.sha256(response.content).hexdigest(),
-            "body": response.text[:MAX_RAW_CHARS],
-            "truncated": len(response.text) > MAX_RAW_CHARS,
-        })
-        if response.ok:
-            return response
-        if response.status_code not in {429, 500, 502, 503, 504}:
-            response.raise_for_status()
-        wait = int(response.headers.get("Retry-After", "0") or 0) or (5 * attempt)
-        time.sleep(wait)
+def get(url: str, *, params: dict[str, Any] | None = None, headers: dict[str, str] | None = None) -> requests.Response:
+    last: Exception | None = None
+    for attempt in range(3):
+        try:
+            response = SESSION.get(url, params=params, headers=headers, timeout=45)
+            log(f"[HTTP] {response.status_code} {response.url} bytes={len(response.content)}")
+            if response.status_code < 400:
+                return response
+            if response.status_code not in {429, 500, 502, 503, 504}:
+                response.raise_for_status()
+        except requests.RequestException as exc:
+            last = exc
+        if attempt < 2:
+            time.sleep(2 ** attempt * 2)
+    if last:
+        raise last
     response.raise_for_status()
     return response
 
 
-def _ordered_codes(payload: dict[str, Any], dim_id: str) -> list[str]:
-    index = payload["dimension"][dim_id]["category"]["index"]
-    if isinstance(index, dict):
-        return [key for key, _ in sorted(index.items(), key=lambda item: item[1])]
-    return list(index)
+def number(value: Any) -> float | None:
+    if value is None or isinstance(value, bool):
+        return None
+    if isinstance(value, (int, float)):
+        return float(value) if math.isfinite(float(value)) else None
+    text = str(value).strip().replace("%", "").replace(" ", "").replace(",", ".")
+    if not text or text in {"-", "..", ":", "NA", "N/A"}:
+        return None
+    match = re.fullmatch(r"[+-]?\d+(?:\.\d+)?", text)
+    return float(text) if match else None
 
 
-def jsonstat_points(payload: dict[str, Any]) -> list[dict[str, Any]]:
-    ids = payload.get("id") or []
-    sizes = payload.get("size") or []
-    dimensions = payload.get("dimension") or {}
-    values = payload.get("value")
-    if "time" not in ids:
-        raise RuntimeError(f"Eurostat response has no time dimension: {ids}")
-
-    categories = [_ordered_codes(payload, dim_id) for dim_id in ids]
-    labels = {
-        dim_id: dimensions[dim_id].get("category", {}).get("label", {})
-        for dim_id in ids
-    }
-    total = 1
-    for size in sizes:
-        total *= size
-
-    points: list[dict[str, Any]] = []
-    for flat_index in range(total):
-        if isinstance(values, list):
-            raw_value = values[flat_index] if flat_index < len(values) else None
-        elif isinstance(values, dict):
-            raw_value = values.get(str(flat_index), values.get(flat_index))
-        else:
-            raw_value = None
-        if raw_value is None:
-            continue
-        remainder = flat_index
-        coordinates = [0] * len(sizes)
-        for i in range(len(sizes) - 1, -1, -1):
-            coordinates[i] = remainder % sizes[i]
-            remainder //= sizes[i]
-        codes = {ids[i]: categories[i][coordinates[i]] for i in range(len(ids))}
-        point_labels = {
-            dim_id: labels[dim_id].get(code, code)
-            for dim_id, code in codes.items()
-        }
-        points.append({
-            "period": codes["time"],
-            "value": float(raw_value),
-            "dimensions": codes,
-            "dimension_labels": point_labels,
-        })
-    points.sort(key=lambda point: point["period"])
-    return points
+def month_key(value: Any) -> str | None:
+    if isinstance(value, (datetime, date)):
+        return f"{value.year:04d}-{value.month:02d}"
+    text = str(value or "").strip()
+    match = re.match(r"^(20\d{2})[-/]?(0[1-9]|1[0-2])", text)
+    if match:
+        return f"{match.group(1)}-{match.group(2)}"
+    q = re.match(r"^(20\d{2})[- ]?Q([1-4])$", text, re.I)
+    if q:
+        return f"{q.group(1)}-Q{q.group(2)}"
+    return None
 
 
-def dimension_options(payload: dict[str, Any]) -> dict[str, list[dict[str, str]]]:
-    output: dict[str, list[dict[str, str]]] = {}
-    for dim_id in payload.get("id") or []:
-        codes = _ordered_codes(payload, dim_id)
-        label_map = payload["dimension"][dim_id].get("category", {}).get("label", {})
-        output[dim_id] = [{"code": code, "label": label_map.get(code, code)} for code in codes]
-    return output
-
-
-def _matches_preferred(point: dict[str, Any], preferred: dict[str, str]) -> bool:
-    dimensions = point.get("dimensions", {})
-    return all(dimensions.get(key) == value for key, value in preferred.items())
-
-
-def _matches_keywords(point: dict[str, Any], rules: dict[str, list[str]]) -> bool:
-    labels = point.get("dimension_labels", {})
-    for dim_id, keywords in rules.items():
-        text = str(labels.get(dim_id, "")).lower()
-        if not all(keyword.lower() in text for keyword in keywords):
-            return False
-    return True
-
-def fetch_eurostat(config: dict[str, Any]) -> dict[str, Any]:
-    url = f"{EUROSTAT_BASE}/{config['dataset']}"
-    current_year = datetime.now(timezone.utc).year
-    geo_candidates = ["EA21", "EA", "EA20"]
-    query_attempts: list[dict[str, Any]] = []
-    combined_points: list[dict[str, Any]] = []
-    payloads: list[dict[str, Any]] = []
-
-    # Query each official euro-area composition separately. Eurostat does not
-    # expose geo=EA consistently across all datasets, while 2026 observations
-    # are published under EA21 and older observations may remain under EA20.
-    for geo in geo_candidates:
-        params = {**config["params"], "geo": geo, "lang": "EN", "lastTimePeriod": "18"}
-        response = request(url, params=params)
-        payload = response.json()
-        raw_name = f"raw_eurostat_{config['dataset']}_{geo}_exact.json"
-        (OUTPUT_DIR / raw_name).write_text(
-            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
-        has_empty_dimension = any(size == 0 for size in payload.get("size", []))
-        points = (
-            jsonstat_points(payload)
-            if not payload.get("error") and not has_empty_dimension
-            else []
-        )
-        query_attempts.append({
-            "geo": geo,
-            "url": response.url,
-            "observation_count": len(points),
-            "newest_period": max((point["period"] for point in points), default=None),
-            "empty_dimension": has_empty_dimension,
-        })
-        if points:
-            combined_points.extend(points)
-            payloads.append(payload)
-
-    preferred_without_geo = {
-        key: value for key, value in config.get("preferred", {}).items()
-        if key != "geo"
-    }
-    candidates = [
-        point for point in combined_points
-        if _matches_preferred(point, preferred_without_geo)
-    ]
-    keyword_rules = config.get("dimension_label_keywords", {})
-    if keyword_rules:
-        candidates = [point for point in candidates if _matches_keywords(point, keyword_rules)]
-
-    # If the exact slices still fail, run one broader EA21 discovery request.
-    selection_mode = "geo_composition_fallback"
-    if not candidates:
-        discovery_filters = {
-            **config.get("discovery_filters", {}),
-            "geo": "EA21",
-            "lang": "EN",
-            "lastTimePeriod": "18",
-        }
-        response = request(url, params=discovery_filters)
-        payload = response.json()
-        (OUTPUT_DIR / f"raw_eurostat_{config['dataset']}_EA21_discovery.json").write_text(
-            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
-        has_empty_dimension = any(size == 0 for size in payload.get("size", []))
-        all_points = (
-            jsonstat_points(payload)
-            if not payload.get("error") and not has_empty_dimension
-            else []
-        )
-        candidates = [
-            point for point in all_points
-            if _matches_preferred(point, preferred_without_geo)
-        ]
-        if keyword_rules:
-            candidates = [point for point in candidates if _matches_keywords(point, keyword_rules)]
-        query_attempts.append({
-            "geo": "EA21-discovery",
-            "url": response.url,
-            "observation_count": len(all_points),
-            "matched_count": len(candidates),
-            "empty_dimension": has_empty_dimension,
-        })
-        payloads.append(payload)
-        selection_mode = "EA21_dimension_discovery"
-
-    # For duplicate periods, prefer the composition applicable to that year:
-    # EA21 from 2026, EA20 before 2026, then changing-composition EA.
-    geo_priority = {"EA21": 3, "EA20": 2, "EA": 1}
-    by_period: dict[str, dict[str, Any]] = {}
-    for point in candidates:
-        period = point["period"]
-        point_geo = point.get("dimensions", {}).get("geo", "")
-        preferred_geo = "EA21" if period.startswith(str(current_year)) else "EA20"
-        score = 10 if point_geo == preferred_geo else geo_priority.get(point_geo, 0)
-        current = by_period.get(period)
-        if current is None or score > current["_score"]:
-            by_period[period] = {**point, "_score": score}
-    points = []
-    for period in sorted(by_period)[-6:]:
-        clean = {key: value for key, value in by_period[period].items() if key != "_score"}
-        points.append(clean)
-
-    options = dimension_options(payloads[-1]) if payloads else {}
-    return {
-        "status": "ok" if points else "no_data",
-        "source": "Eurostat Statistics API",
-        "source_url": query_attempts[-1]["url"] if query_attempts else url,
-        "dataset": config["dataset"],
-        "filters": config["params"],
-        "selection_mode": selection_mode,
-        "query_attempts": query_attempts,
-        "selected_dimensions": points[-1]["dimensions"] if points else None,
-        "available_dimension_options": options,
-        "data": points,
-        **({"diagnostic": "No observations matched across EA21, EA and EA20"} if not points else {}),
-    }
-
-def parse_bundesbank_csv(text: str) -> list[dict[str, Any]]:
-    # Bundesbank下載檔是metadata列加上period/value列；分隔符可能是逗號或分號。
-    delimiter = ";" if text.count(";") > text.count(",") else ","
-    rows = csv.reader(io.StringIO(text.lstrip("\ufeff")), delimiter=delimiter)
-    points = []
-    for row in rows:
-        if len(row) < 2:
-            continue
-        period = row[0].strip().strip('"')
-        value = row[1].strip().strip('"').replace(",", ".")
-        if re.fullmatch(r"\d{4}-\d{2}", period) and re.fullmatch(r"-?\d+(?:\.\d+)?", value):
-            points.append({"period": period, "value": float(value)})
-    return points
-
-
-def fetch_bundesbank(config: dict[str, Any]) -> dict[str, Any]:
-    url = f"https://api.statistiken.bundesbank.de/rest/download/{config['flow']}/{config['key']}"
-    response = request(url, params={"format": "csv", "lang": "en"})
-    raw_name = f"raw_bundesbank_{config['flow']}.csv"
-    (OUTPUT_DIR / raw_name).write_text(response.text, encoding="utf-8")
-    points = parse_bundesbank_csv(response.text)[-6:]
-    if not points:
-        raise RuntimeError("Bundesbank CSV contained no monthly observations")
-    return {
-        "status": "ok",
-        "source": "Deutsche Bundesbank SDMX download API",
-        "source_url": response.url,
-        "flow": config["flow"],
-        "key": config["key"],
-        "data": points,
-    }
-
-
-
-
-
-def parse_structured_observations(text: str) -> list[dict[str, Any]]:
+def read_targets(path: Path) -> list[dict[str, Any]]:
+    wb = load_workbook(path, read_only=True, data_only=True)
+    ws = wb[wb.sheetnames[0]]
+    rows = list(ws.iter_rows(values_only=True))
+    if not rows:
+        raise RuntimeError("EU_ECON workbook is empty")
+    header = rows[0]
+    date_columns = [(index, month_key(value)) for index, value in enumerate(header) if index >= 5 and month_key(value)]
     output: list[dict[str, Any]] = []
-    # SDMX XML attributes.
-    for match in re.finditer(
-        r'(?:TIME_PERIOD|time)[="\'](?P<period>20\d{2}(?:-Q[1-4]|-(?:0[1-9]|1[0-2]))?)["\']'
-        r'.{0,300}?(?:OBS_VALUE|value)[="\'](?P<value>-?\d+(?:[.,]\d+)?)["\']',
-        text, re.I | re.S,
-    ):
-        output.append({"period": match.group("period"), "value": float(match.group("value").replace(",", "."))})
-    # CSV/semicolon/tab rows beginning with a period.
-    for line in text.splitlines():
-        match = re.match(
-            r'^["\']?(?P<period>20\d{2}(?:-Q[1-4]|-(?:0[1-9]|1[0-2])))["\']?[,;\t]+'
-            r'["\']?(?P<value>-?\d+(?:[.,]\d+)?)["\']?', line.strip(), re.I,
-        )
-        if match:
-            output.append({"period": match.group("period"), "value": float(match.group("value").replace(",", "."))})
-    unique = {(row["period"], row["value"]): row for row in output}
-    return sorted(unique.values(), key=lambda row: row["period"])[-12:]
-
-
-def capture_fixed_response(series_id: str, response: requests.Response, tag: str) -> dict[str, Any]:
-    text = response_text(response)
-    record = {
-        "tag": tag,
-        "url": response.url,
-        "status": response.status_code,
-        "content_type": response.headers.get("Content-Type", ""),
-        "bytes": len(response.content),
-        "sha256": hashlib.sha256(response.content).hexdigest(),
-        "extracted_text": text[:MAX_RAW_CHARS],
-        "truncated": len(text) > MAX_RAW_CHARS,
-    }
-    RAW_BUNDLE["candidate_fetches"].setdefault(series_id, []).append(record)
-    return record
-
-
-def fetch_insee_bdm(series_id: str, config: dict[str, Any]) -> dict[str, Any]:
-    idbank = config["idbank"]
-    urls = [
-        f"https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/{idbank}?periodeDebut=2024-01&periodeFin=2026-12",
-        f"https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/{idbank}",
-    ]
-    errors: list[str] = []
-    candidates: list[dict[str, Any]] = []
-    for url in urls:
-        try:
-            response = request(url, headers={"Accept": "application/vnd.sdmx.genericdata+xml;version=2.1, application/xml, text/csv"})
-            record = capture_fixed_response(series_id, response, f"idbank:{idbank}")
-            candidates.extend(parse_structured_observations(record["extracted_text"]))
-            if candidates:
-                break
-        except Exception as error:
-            errors.append(str(error))
-    parsed, rejections = strict_validate_observations(series_id, candidates)
-    return {
-        "definition": ALL_REMAINING[series_id], "source_group": "insee_bdm",
-        "fixed_source": config, "data": parsed,
-        "status": "ok_fixed_series" if parsed else "parse_error",
-        "final_status": "needs_reference_validation" if parsed else "parse_error",
-        "candidate_rejections": rejections, "errors": errors,
-    }
-
-
-def fetch_destatis_tables(series_id: str, config: dict[str, Any]) -> dict[str, Any]:
-    endpoint = "https://www-genesis.destatis.de/genesisWS/rest/2020/data/tablefile"
-    candidates: list[dict[str, Any]] = []
-    errors: list[str] = []
-    for table in config["tables"]:
-        payload = {
-            "username": "GAST", "password": "GAST", "name": table,
-            "area": "all", "compress": "false", "transpose": "false",
-            "startyear": "2024", "endyear": "2026", "timeslices": "true",
-            "regionalvariable": "", "regionalkey": "",
-        }
-        try:
-            response = SESSION.post(endpoint, data=payload, timeout=TIMEOUT)
-            response.raise_for_status()
-            record = capture_fixed_response(series_id, response, f"table:{table}")
-            candidates.extend(parse_structured_observations(record["extracted_text"]))
-        except Exception as error:
-            errors.append(f"{table}: {error}")
-    parsed, rejections = strict_validate_observations(series_id, candidates)
-    return {
-        "definition": ALL_REMAINING[series_id], "source_group": "destatis_fixed",
-        "fixed_source": config, "data": parsed,
-        "status": "ok_fixed_table" if parsed else "parse_error",
-        "final_status": "needs_reference_validation" if parsed else "parse_error",
-        "candidate_rejections": rejections, "errors": errors,
-    }
-
-
-def fetch_ine_fixed(series_id: str, config: dict[str, Any]) -> dict[str, Any]:
-    if config["mode"] == "ine_table":
-        url = f"https://servicios.ine.es/wstempus/js/EN/DATOS_TABLA/{config['table']}?nult=8"
-        response = request(url)
-        record = capture_fixed_response(series_id, response, f"table:{config['table']}")
-        payload = response.json()
-        observations: list[dict[str, Any]] = []
-        # Preserve every returned series and its metadata for exact matching.
-        RAW_BUNDLE["candidate_fetches"].setdefault(series_id, []).append({
-            "tag": "ine_table_json", "payload": payload,
-        })
-        return {
-            "definition": ALL_REMAINING[series_id], "source_group": "ine_fixed",
-            "fixed_source": config, "data": observations, "status": "parse_error",
-            "final_status": "parse_error",
-            "final_error": "Table 4247 downloaded; select exact national total unemployment-rate series from payload",
-        }
-    # Exact operation code, no longer scan unrelated operations.
-    operations = request("https://servicios.ine.es/wstempus/js/EN/OPERACIONES_DISPONIBLES").json()
-    wanted = config["dataset"].upper()
-    matches = [row for row in operations if str(row.get("Codigo", "")).upper() == wanted or str(row.get("Codigo", "")).upper().startswith(wanted)]
-    fetched: list[dict[str, Any]] = []
-    for operation in matches[-3:]:
-        op_id = operation.get("Id")
-        if op_id is None:
+    section = ""
+    for row_no, row in enumerate(rows[1:], 2):
+        if row and row[0]:
+            section = str(row[0]).strip()
+        label = str(row[1] or "").strip() if len(row) > 1 else ""
+        if not label:
             continue
-        response = request(f"https://servicios.ine.es/wstempus/js/EN/TABLAS_OPERACION/{op_id}")
-        fetched.append(capture_fixed_response(series_id, response, f"operation:{wanted}:{op_id}"))
-    return {
-        "definition": ALL_REMAINING[series_id], "source_group": "ine_fixed",
-        "fixed_source": config, "operation_matches": matches[-3:], "candidate_records": fetched,
-        "data": [], "status": "parse_error", "final_status": "parse_error",
-        "final_error": f"Exact INE operation {wanted} located; table/series selection pending from targeted payload",
-    }
-
-
-def fetch_insee_dataset(series_id: str, config: dict[str, Any]) -> dict[str, Any]:
-    dataset = config["dataset"]
-    urls = [
-        f"https://api.insee.fr/melodi/data/{dataset}",
-        f"https://api.insee.fr/melodi/file/{dataset}/{dataset}_CSV_FR",
-    ]
-    records = []
-    for url in urls:
-        try:
-            response = request(url, headers={"Accept": "application/json, text/csv, application/zip"})
-            records.append(capture_fixed_response(series_id, response, f"dataset:{dataset}"))
-        except Exception as error:
-            records.append({"url": url, "error": str(error)})
-    return {
-        "definition": ALL_REMAINING[series_id], "source_group": "insee_dataset",
-        "fixed_source": config, "candidate_records": records, "data": [],
-        "status": "parse_error", "final_status": "parse_error",
-        "final_error": "Targeted GDP dataset fetched; exact real SA-WDA YoY dimensions must be selected",
-    }
-
-
-def fetch_all_fixed_sources() -> dict[str, dict[str, Any]]:
-    output: dict[str, dict[str, Any]] = {}
-    for series_id, config in FIXED_SERIES_SOURCES.items():
-        print(f"[FIXED SOURCE] {series_id} {config}", flush=True)
-        try:
-            mode = config["mode"]
-            if mode == "insee_bdm":
-                output[series_id] = fetch_insee_bdm(series_id, config)
-            elif mode == "destatis_tables":
-                output[series_id] = fetch_destatis_tables(series_id, config)
-            elif mode in {"ine_table", "ine_operation"}:
-                output[series_id] = fetch_ine_fixed(series_id, config)
-            elif mode == "insee_dataset":
-                output[series_id] = fetch_insee_dataset(series_id, config)
-        except Exception as error:
-            output[series_id] = {
-                "definition": ALL_REMAINING[series_id], "fixed_source": config,
-                "status": "source_error", "final_status": "source_error",
-                "error": str(error), "data": [],
-            }
+        expected = []
+        for col, period in date_columns:
+            value = number(row[col] if col < len(row) else None)
+            if value is not None:
+                expected.append({"period": period, "value": value, "cell": f"R{row_no}C{col+1}"})
+        output.append({
+            "row": row_no,
+            "section": section,
+            "label": label,
+            "description": str(row[2] or "").strip(),
+            "declared_source": str(row[3] or "").strip(),
+            "possible_code": str(row[4] or "").strip(),
+            "expected": expected[:4],
+        })
     return output
 
-def _walk_urls(value: Any, base_url: str = "") -> list[str]:
-    urls: list[str] = []
-    if isinstance(value, dict):
-        for key, child in value.items():
-            if isinstance(child, str) and key.lower() in {
-                "href", "url", "accessurl", "downloadurl", "contenturl"
-            }:
-                if child.startswith(("http://", "https://", "/")):
-                    urls.append(urljoin(base_url, child))
-            else:
-                urls.extend(_walk_urls(child, base_url))
-    elif isinstance(value, list):
-        for child in value:
-            urls.extend(_walk_urls(child, base_url))
-    return urls
+
+def flatten_index(position: int, sizes: list[int]) -> list[int]:
+    coords = [0] * len(sizes)
+    for i in range(len(sizes) - 1, -1, -1):
+        coords[i] = position % sizes[i]
+        position //= sizes[i]
+    return coords
 
 
-def candidate_urls(series_id: str, item: dict[str, Any]) -> list[str]:
-    base_url = item.get("source_url", "")
-    urls = _walk_urls(item.get("candidate_records") or [], base_url)
-    # INE Tempus exposes tables/series through IDs rather than absolute links.
-    if series_id.startswith("spain_"):
-        for record in item.get("candidate_records") or []:
-            if isinstance(record, dict) and record.get("Id") is not None:
-                operation_id = record["Id"]
-                urls.append(
-                    f"https://servicios.ine.es/wstempus/js/EN/TABLAS_OPERACION/{operation_id}"
-                )
-    return list(dict.fromkeys(urls))[:30]
+def eurostat(dataset: str, filters: dict[str, str]) -> list[Point]:
+    params = {"lang": "EN", "format": "JSON", **filters}
+    response = get(f"{EUROSTAT}/{dataset}", params=params)
+    payload = response.json()
+    ids = payload.get("id", [])
+    sizes = payload.get("size", [])
+    values = payload.get("value", {})
+    if not ids or not sizes or "time" not in ids:
+        raise RuntimeError(f"Unexpected Eurostat JSON-stat structure for {dataset}")
+    categories: dict[str, list[str]] = {}
+    for dim in ids:
+        index = payload["dimension"][dim]["category"]["index"]
+        if isinstance(index, dict):
+            ordered = [None] * len(index)
+            for code, pos in index.items():
+                ordered[int(pos)] = code
+            categories[dim] = ordered
+        else:
+            categories[dim] = list(index)
+    points = []
+    for raw_pos, raw_value in values.items():
+        coords = flatten_index(int(raw_pos), sizes)
+        record = {dim: categories[dim][coords[i]] for i, dim in enumerate(ids)}
+        period = month_key(record.get("time"))
+        value = number(raw_value)
+        if period and value is not None:
+            points.append(Point(period, value, response.url, str(payload.get("status", {}).get(raw_pos, ""))))
+    return dedupe(points)
 
 
-def response_text(response: requests.Response) -> str:
-    content_type = (response.headers.get("Content-Type") or "").lower()
-    content = response.content
-    if content.startswith(b"%PDF") or "pdf" in content_type:
-        reader = PdfReader(BytesIO(content))
-        return "\n".join(page.extract_text() or "" for page in reader.pages)
-    if content.startswith(b"PK") or "spreadsheet" in content_type or response.url.lower().endswith((".xlsx", ".xlsm")):
-        try:
-            workbook = load_workbook(BytesIO(content), read_only=True, data_only=True)
-            lines: list[str] = []
-            for worksheet in workbook.worksheets:
-                lines.append(f"[SHEET] {worksheet.title}")
-                for row in worksheet.iter_rows(values_only=True):
-                    values = [str(cell) for cell in row if cell is not None]
-                    if values:
-                        lines.append("\t".join(values))
-            return "\n".join(lines)
-        except Exception:
-            pass
-    encoding = response.encoding or "utf-8"
-    return content.decode(encoding, errors="replace")
+def ine_series(code: str) -> list[Point]:
+    response = get(f"{INE}/{code}", params={"nult": 18})
+    payload = response.json()
+    rows = payload[0].get("Data", []) if isinstance(payload, list) and payload else payload.get("Data", [])
+    points = []
+    for row in rows:
+        period = month_key(row.get("Fecha"))
+        if not period and row.get("Anyo") and row.get("FK_Periodo"):
+            match = re.search(r"(\d{1,2})$", str(row.get("FK_Periodo")))
+            if match:
+                period = f"{int(row['Anyo']):04d}-{int(match.group(1)):02d}"
+        value = number(row.get("Valor"))
+        if period and value is not None:
+            points.append(Point(period, value, response.url, str(row.get("T3_TipoDato", ""))))
+    if not points:
+        raise RuntimeError(f"INE {code} returned no observations")
+    return dedupe(points)
 
 
-def parse_period_value_pairs(text: str) -> list[dict[str, Any]]:
-    pairs: list[dict[str, Any]] = []
-    month_names = {
-        name.lower(): index for index, name in enumerate(
-            ["January", "February", "March", "April", "May", "June", "July",
-             "August", "September", "October", "November", "December"], 1
-        )
-    }
-    patterns = [
-        r"(?P<period>20\d{2}[-/](?:0?[1-9]|1[0-2]))[^\d-]{0,40}(?P<value>-?\d{1,6}(?:[.,]\d+)?)",
-        r"(?P<period>20\d{2}[- ]?Q[1-4])[^\d-]{0,40}(?P<value>-?\d{1,6}(?:[.,]\d+)?)",
-        r"(?P<month>January|February|March|April|May|June|July|August|September|October|November|December)\s+(?P<year>20\d{2})[^\d-]{0,40}(?P<value>-?\d{1,6}(?:[.,]\d+)?)",
-    ]
-    for pattern in patterns:
-        for match in re.finditer(pattern, text, re.I):
-            try:
-                value = float(match.group("value").replace(",", "."))
-            except ValueError:
-                continue
-            if match.groupdict().get("month"):
-                period = f"{match.group('year')}-{month_names[match.group('month').lower()]:02d}"
-            else:
-                raw = match.group("period").replace("/", "-").replace(" ", "-")
-                parts = raw.split("-")
-                period = f"{parts[0]}-{int(parts[1]):02d}" if len(parts) == 2 and parts[1].isdigit() else raw
-            pairs.append({"period": period, "value": value})
-    unique = {(row["period"], row["value"]): row for row in pairs}
-    return sorted(unique.values(), key=lambda row: row["period"])[-20:]
+def insee_series(idbank: str) -> list[Point]:
+    response = get(f"{INSEE}/{idbank}", params={"lastNObservations": 18})
+    root = ET.fromstring(response.content)
+    points = []
+    for obs in root.iter():
+        if not obs.tag.endswith("Obs"):
+            continue
+        period = month_key(obs.attrib.get("TIME_PERIOD") or obs.attrib.get("timePeriod"))
+        value = number(obs.attrib.get("OBS_VALUE") or obs.attrib.get("obsValue"))
+        if period and value is not None:
+            points.append(Point(period, value, response.url, obs.attrib.get("OBS_STATUS", "")))
+    if not points:
+        raise RuntimeError(f"INSEE idbank {idbank} returned no observations")
+    return dedupe(points)
 
 
-def parse_pmi_page(text: str, series_id: str) -> list[dict[str, Any]]:
-    country = series_id.split("_", 1)[0].title()
-    sector = "manufacturing" if "manufacturing" in series_id else "services"
-    clean = " ".join(text.split())
-    month_match = re.search(
-        r"\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})\b",
-        clean, re.I,
+def bundesbank(flow: str, key: str) -> list[Point]:
+    response = get(
+        f"{BUNDESBANK}/{flow}/{key}",
+        params={"format": "sdmx_csv", "lang": "en", "startPeriod": "2025-01"},
+        headers={"Accept": "text/csv"},
     )
-    if not month_match:
-        return []
-    month_num = datetime.strptime(month_match.group(1).title(), "%B").month
-    period = f"{month_match.group(2)}-{month_num:02d}"
-    if sector == "manufacturing":
-        patterns = [
-            r"Manufacturing PMI(?:®|™)?\s+(?:at|posted|rose to|fell to|:)?\s*(\d{2}\.\d)",
-            r"Manufacturing Purchasing Managers[’']? Index.{0,160}?(?:posted|at)\s+(\d{2}\.\d)",
-            r"headline.{0,120}?Manufacturing PMI.{0,80}?(\d{2}\.\d)",
-        ]
-    else:
-        patterns = [
-            r"Services PMI Business Activity Index(?:®|™)?.{0,120}?(?:posted|at|:)\s*(\d{2}\.\d)",
-            r"Services PMI(?:®|™)?.{0,80}?(?:posted|at|rose to|fell to|:)\s*(\d{2}\.\d)",
-            r"At\s+(\d{2}\.\d)\s+in\s+(?:January|February|March|April|May|June|July|August|September|October|November|December).{0,450}?Services PMI Business Activity Index",
-        ]
-    for pattern in patterns:
-        for match in re.finditer(pattern, clean, re.I):
-            value = float(match.group(1))
-            context = clean[max(0, match.start()-120):match.end()+120].lower()
-            if value == 50.0 or "50 = no change" in context or ">50" in context:
-                continue
-            return [{"period": period, "value": value}]
-    return []
+    text = response.content.decode("utf-8-sig", "replace")
+    reader = csv.DictReader(io.StringIO(text))
+    points = []
+    for row in reader:
+        period = month_key(row.get("TIME_PERIOD"))
+        value = number(row.get("OBS_VALUE"))
+        if period and value is not None:
+            points.append(Point(period, value, response.url, row.get("OBS_STATUS", "")))
+    if not points:
+        raise RuntimeError(f"Bundesbank {flow}/{key} returned no observations")
+    return dedupe(points)
 
 
-def expand_ine_urls(url: str, response: requests.Response) -> list[str]:
-    if "/TABLAS_OPERACION/" not in url:
-        return []
-    try:
-        payload = response.json()
-    except Exception:
-        return []
-    output: list[str] = []
-    if isinstance(payload, list):
-        for table in payload:
-            if isinstance(table, dict) and table.get("Id") is not None:
-                output.append(
-                    f"https://servicios.ine.es/wstempus/js/EN/SERIES_TABLA/{table['Id']}"
-                )
-    return output[:25]
+def dedupe(points: list[Point]) -> list[Point]:
+    by_period = {point.period: point for point in points}
+    return [by_period[key] for key in sorted(by_period)]
 
 
-def strict_validate_observations(series_id: str, rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[str]]:
-    config = SERIES_VALIDATION.get(series_id, {})
-    minimum = config.get("min", float("-inf"))
-    maximum = config.get("max", float("inf"))
-    current_year = datetime.now(timezone.utc).year
-    accepted: list[dict[str, Any]] = []
-    reasons: list[str] = []
-    for row in rows:
-        period = str(row.get("period", ""))
-        try:
-            value = float(row.get("value"))
-            year = int(period[:4])
-        except (TypeError, ValueError):
-            reasons.append(f"invalid={row}")
-            continue
-        if year < current_year - 2 or year > current_year:
-            reasons.append(f"out_of_window={period}:{value}")
-            continue
-        if not minimum <= value <= maximum:
-            reasons.append(f"out_of_range={period}:{value}")
-            continue
-        accepted.append({"period": period, "value": value})
-    unique = {(row["period"], row["value"]): row for row in accepted}
-    return sorted(unique.values(), key=lambda row: row["period"])[-6:], reasons[-30:]
+# Candidate definitions. Multiple official candidates are deliberately retained for
+# ambiguous vendor labels; the report ranks them by overlap and error instead of
+# silently selecting a similar but definitionally different series.
+C: dict[str, list[Candidate]] = {
+    "西Core CPI": [Candidate("INE IPC208611", "INE", True, "ine", {"code": "IPC208611"}, "National CPI core, year-on-year")],
+    "法 Core CPI": [Candidate("INSEE 001768579", "INSEE", True, "insee", {"idbank": "001768579"}, "French national CPI excluding energy, year-on-year")],
+    "歐 Core CPI": [Candidate("Euro area HICP excluding energy and food", "Eurostat", True, "eurostat", {"dataset": "prc_hicp_manr", "filters": {"geo": "EA20", "unit": "RCH_A", "coicop": "TOT_X_NRG_FOOD"}}, "HICP, not national CPI")],
+    "法 失業率": [Candidate("INSEE 001688527", "INSEE", True, "insee", {"idbank": "001688527"}, "ILO unemployment rate; verify monthly-vs-quarterly vintage")],
+    "西 失業率": [Candidate("INE EPA815", "INE", True, "ine", {"code": "EPA815"}, "Spanish Labour Force Survey unemployment rate")],
+    "歐 失業率": [Candidate("Euro area unemployment rate", "Eurostat", True, "eurostat", {"dataset": "une_rt_m", "filters": {"geo": "EA20", "age": "Y15-74", "sex": "T", "s_adj": "SA", "unit": "PC_ACT"}}, "Seasonally adjusted, ages 15-74")],
+    "西 零售": [Candidate("INE ICM2522", "INE", True, "ine", {"code": "ICM2522"}, "Retail trade constant-price series")],
+    "法 信心": [Candidate("INSEE 001587668", "INSEE", True, "insee", {"idbank": "001587668"}, "Household confidence synthetic index")],
+    "法 製造業信心": [Candidate("INSEE 001585934", "INSEE", True, "insee", {"idbank": "001585934"}, "Manufacturing business climate")],
+    "法 企業信心": [Candidate("INSEE 001565530", "INSEE", True, "insee", {"idbank": "001565530"}, "All-sector business climate")],
+    "德 GDP": [Candidate("Germany real GDP YoY", "Eurostat", True, "eurostat", {"dataset": "namq_10_gdp", "filters": {"geo": "DE", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"}}, "Quarterly real GDP change from same quarter previous year")],
+    "西 GDP": [Candidate("INE CNTR4892", "INE", True, "ine", {"code": "CNTR4892"}, "Quarterly chained-volume GDP year-on-year")],
+    "法GDP": [Candidate("France real GDP YoY", "Eurostat", True, "eurostat", {"dataset": "namq_10_gdp", "filters": {"geo": "FR", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"}}, "Quarterly real GDP change from same quarter previous year")],
+    "歐GDP": [Candidate("Euro area real GDP YoY", "Eurostat", True, "eurostat", {"dataset": "namq_10_gdp", "filters": {"geo": "EA20", "na_item": "B1GQ", "unit": "CLV_PCH_SM", "s_adj": "SCA"}}, "Quarterly real GDP change from same quarter previous year")],
+    "德 Unemployment Rate SWDA": [Candidate("Germany unemployment rate", "Eurostat", True, "eurostat", {"dataset": "une_rt_m", "filters": {"geo": "DE", "age": "Y15-74", "sex": "T", "s_adj": "SA", "unit": "PC_ACT"}}, "ILO concept; may differ from German registered-unemployment rate")],
+    "德 零售": [Candidate("Germany retail volume MoM", "Eurostat", True, "eurostat", {"dataset": "sts_trtu_m", "filters": {"geo": "DE", "unit": "PCH_PRE", "s_adj": "SCA", "nace_r2": "G47"}}, "Retail volume, seasonally/calendar adjusted, month-on-month")],
+    "歐 Real零售": [Candidate("Euro area retail volume YoY", "Eurostat", True, "eurostat", {"dataset": "sts_trtu_m", "filters": {"geo": "EA20", "unit": "PCH_SM", "s_adj": "CA", "nace_r2": "G47"}}, "Retail volume, calendar adjusted, year-on-year")],
+    "德 工業": [Candidate("Germany industrial production YoY", "Eurostat", True, "eurostat", {"dataset": "sts_inpr_m", "filters": {"geo": "DE", "unit": "PCH_SM", "s_adj": "CA", "nace_r2": "B-D"}}, "Production index, calendar adjusted, year-on-year")],
+}
+
+MANUAL = {
+    "西 就業": ("Spanish Ministry of Inclusion", "Official producer; exact vendor transformation is net monthly change, seasonally adjusted. Add a stable ministry CSV/XLSX URL before automation."),
+    "德 失業人口": ("Bundesagentur fuer Arbeit / Bundesbank", "Official data exist, but the workbook has no Bundesbank time-series key. Supply the BBK flow/key to avoid picking the wrong unemployment concept."),
+    "德 Core CPI": ("Destatis GENESIS", "National CPI excluding food and energy requires a precise GENESIS table/selection. GENESIS supports JSON and XLSX/CSV downloads; set GENESIS_TOKEN after confirming the table code."),
+    "德 GfK Consumer Confidence": ("GfK", "Producer release, not a government/open statistical API; history is normally in press releases or licensed feeds."),
+    "德信心 Current": ("ZEW", "Producer release; exact monthly history generally comes from ZEW releases, not an open JSON API."),
+    "德信心 expect": ("ZEW", "Producer release; exact monthly history generally comes from ZEW releases, not an open JSON API."),
+    "德 製造業PMI": ("S&P Global", "Official producer is S&P Global, but PMI history is proprietary; public press releases can validate recent releases only."),
+    "法 製造業PMI": ("S&P Global", "Official producer is S&P Global, but PMI history is proprietary; public press releases can validate recent releases only."),
+    "西 製造業PMI": ("S&P Global", "Official producer is S&P Global, but PMI history is proprietary; public press releases can validate recent releases only."),
+    "德 服務業PMI": ("S&P Global", "Official producer is S&P Global, but PMI history is proprietary; public press releases can validate recent releases only."),
+    "法 服務業PMI": ("S&P Global", "Official producer is S&P Global, but PMI history is proprietary; public press releases can validate recent releases only."),
+    "西 服務業PMI": ("S&P Global", "Official producer is S&P Global, but PMI history is proprietary; public press releases can validate recent releases only."),
+    "德 企業信心": ("ifo Institute", "Producer release; public releases validate recent values, but the exact seasonally adjusted history/download endpoint must be confirmed."),
+}
+
+FETCHERS: dict[str, Callable[..., list[Point]]] = {
+    "eurostat": eurostat,
+    "ine": ine_series,
+    "insee": insee_series,
+    "bundesbank": bundesbank,
+}
 
 
-def deep_fetch_candidates(result: dict[str, Any]) -> None:
-    for series_id, item in result.get("series", {}).items():
-        if item.get("data") or series_id in FIXED_SERIES_SOURCES:
-            continue
-        queue = candidate_urls(series_id, item)
-        seen: set[str] = set()
-        fetched: list[dict[str, Any]] = []
-        observations: list[dict[str, Any]] = []
-        while queue and len(seen) < 60:
-            url = queue.pop(0)
-            if not url or url in seen:
-                continue
-            seen.add(url)
-            try:
-                response = request(url)
-                text = response_text(response)
-                record = {
-                    "url": response.url,
-                    "status": response.status_code,
-                    "content_type": response.headers.get("Content-Type", ""),
-                    "bytes": len(response.content),
-                    "sha256": hashlib.sha256(response.content).hexdigest(),
-                    "extracted_text": text[:MAX_RAW_CHARS],
-                    "truncated": len(text) > MAX_RAW_CHARS,
-                }
-                fetched.append(record)
-                queue.extend(expand_ine_urls(url, response))
-                # Follow downloadable links discovered on candidate HTML pages.
-                parser = _TextExtractor()
-                parser.feed(text if "html" in record["content_type"].lower() else "")
-                for link in parser.links:
-                    href = link.get("href", "")
-                    label = link.get("text", "").lower()
-                    if href and any(token in (href + " " + label).lower() for token in (
-                        ".csv", ".xlsx", ".pdf", "download", "descarga", "series", "datos"
-                    )):
-                        queue.append(urljoin(response.url, href))
-                if "_pmi" in series_id:
-                    observations.extend(parse_pmi_page(text, series_id))
-                else:
-                    # Generic date/number extraction is diagnostic only. It must never
-                    # become an official observation without a series-specific parser.
-                    observations.extend(parse_period_value_pairs(text))
-                # INE SERIES_TABLA response contains series IDs; request each last six values.
-                if "/SERIES_TABLA/" in url:
-                    try:
-                        payload = response.json()
-                        if isinstance(payload, list):
-                            for row in payload[:30]:
-                                code = row.get("COD") or row.get("Id") if isinstance(row, dict) else None
-                                if code:
-                                    queue.append(f"https://servicios.ine.es/wstempus/js/EN/DATOS_SERIE/{code}?nult=8")
-                    except Exception:
-                        pass
-            except Exception as error:
-                fetched.append({"url": url, "error": str(error)})
-        RAW_BUNDLE["candidate_fetches"][series_id] = fetched
-        candidate_pairs, rejection_reasons = strict_validate_observations(series_id, observations)
-        item["candidate_pairs"] = candidate_pairs
-        item["candidate_rejections"] = rejection_reasons
-        if "_pmi" in series_id and candidate_pairs:
-            item["data"] = candidate_pairs
-            item["status"] = "ok_pmi_text_parser"
-            item["final_status"] = "needs_reference_validation"
-        else:
-            # Never label generic metadata matches as successful data. The previous
-            # version incorrectly promoted years, table IDs and footnote numbers.
-            item["data"] = []
-            item["status"] = "parse_error"
-            item["final_status"] = "parse_error"
-            item["final_error"] = (
-                "Candidate resources fetched; exact series-specific parser still required"
-                if fetched else "No candidate source URL discovered"
-            )
-
-def normalize_reference(payload: Any) -> dict[str, dict[str, float]]:
-    output: dict[str, dict[str, float]] = {}
-    if isinstance(payload, dict) and isinstance(payload.get("series"), dict):
-        payload = payload["series"]
-    if not isinstance(payload, dict):
-        return output
-    for series_id, item in payload.items():
-        rows = item.get("data", item) if isinstance(item, dict) else item
-        if not isinstance(rows, list):
-            continue
-        values: dict[str, float] = {}
-        for row in rows:
-            if not isinstance(row, dict):
-                continue
-            period = row.get("period") or row.get("date")
-            value = row.get("value")
-            try:
-                if period is not None and value is not None:
-                    values[str(period)[:7]] = float(value)
-            except (TypeError, ValueError):
-                pass
-        if values:
-            output[str(series_id)] = values
-    return output
-
-
-def build_comparison(result: dict[str, Any]) -> dict[str, Any]:
-    reference_candidates = [
-        Path("eu_reference.json"), Path("data/eu_reference.json"),
-        Path("data/eu_macro.json"), Path("eu_macro.json"),
-    ]
-    reference_path = next((path for path in reference_candidates if path.exists()), None)
-    report: dict[str, Any] = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "reference_file": str(reference_path) if reference_path else None,
-        "series": {},
-    }
-    reference = {}
-    if reference_path:
-        reference = normalize_reference(json.loads(reference_path.read_text(encoding="utf-8")))
-    for series_id, item in result.get("series", {}).items():
-        official = {str(row.get("period"))[:7]: row.get("value") for row in item.get("data") or []}
-        expected = reference.get(series_id, {})
-        comparisons = []
-        for period in sorted(set(official) & set(expected)):
-            try:
-                official_value = float(official[period])
-                expected_value = float(expected[period])
-                difference = round(official_value - expected_value, 6)
-                comparisons.append({
-                    "period": period, "official": official_value,
-                    "reference": expected_value, "difference": difference,
-                    "match": abs(difference) <= 0.05,
-                })
-            except (TypeError, ValueError):
-                continue
-        if item.get("status") == "parse_error":
-            status = "official_value_not_extracted"
-        elif not reference_path:
-            status = "missing_reference_file"
-        elif not expected:
-            status = "series_missing_in_reference"
-        elif not comparisons:
-            status = "no_overlapping_period"
-        elif all(row["match"] for row in comparisons):
-            status = "match"
-        else:
-            status = "mismatch"
-        report["series"][series_id] = {
-            "status": status,
-            "official_observations": len(official),
-            "reference_observations": len(expected),
-            "comparisons": comparisons[-6:],
-        }
-    return report
-
-def write_all_series_summary(result: dict[str, Any]) -> None:
-    rows: list[dict[str, Any]] = []
-    for series_id, item in result.get("series", {}).items():
-        data = item.get("data") or []
-        latest = data[-1] if data else {}
+def compare(expected: list[dict[str, Any]], actual: list[Point], tolerance: float) -> dict[str, Any]:
+    actual_by_period = {p.period: p for p in actual}
+    rows = []
+    for item in expected:
+        point = actual_by_period.get(item["period"])
+        difference = None if point is None else point.value - item["value"]
         rows.append({
-            "series_id": series_id,
-            "definition": item.get("definition") or item.get("label") or "",
-            "status": item.get("status", "unknown"),
-            "source": item.get("source") or item.get("source_group") or "",
-            "observation_count": len(data),
-            "latest_period": latest.get("period"),
-            "latest_value": latest.get("value"),
-            "error": item.get("error", ""),
-            "diagnostic": item.get("diagnostic", ""),
-            "candidate_record_count": len(item.get("candidate_records") or []),
+            **item,
+            "actual": None if point is None else point.value,
+            "difference": difference,
+            "match": difference is not None and abs(difference) <= tolerance,
+            "source_url": None if point is None else point.source_url,
         })
+    matched_periods = sum(row["actual"] is not None for row in rows)
+    exact = sum(row["match"] for row in rows)
+    mae = None
+    diffs = [abs(row["difference"]) for row in rows if row["difference"] is not None]
+    if diffs:
+        mae = sum(diffs) / len(diffs)
+    return {"rows": rows, "overlap": matched_periods, "matches": exact, "mae": mae}
 
-    expected = set(EUROSTAT_SERIES) | set(BUNDESBANK_SERIES) | set(ALL_REMAINING)
-    actual = {row["series_id"] for row in rows}
-    missing = sorted(expected - actual)
-    if missing:
-        raise RuntimeError(f"Series missing from debug output: {missing}")
 
-    print("\n[ALL SERIES DEBUG SUMMARY]", flush=True)
-    for row in rows:
-        print(
-            f"{row['series_id']} | {row['status']} | obs={row['observation_count']} | "
-            f"latest={row['latest_period']} {row['latest_value']} | source={row['source']}",
-            flush=True,
-        )
-    print(f"[ALL SERIES DEBUG SUMMARY] total={len(rows)} missing=0", flush=True)
-
-def main() -> None:
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    result: dict[str, Any] = {
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--xlsx", type=Path, default=DEFAULT_XLSX)
+    parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--tolerance", type=float, default=0.051, help="absolute comparison tolerance")
+    args = parser.parse_args()
+    args.out.mkdir(parents=True, exist_ok=True)
+    targets = read_targets(args.xlsx)
+    report: dict[str, Any] = {
+        "script_version": VERSION,
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "scope": "official-source diagnostic; latest 6 available periods",
-        "important_note": "Fixed IDs supplied by user are queried directly for INE, INSEE BDM and Destatis. National CPI is never substituted with HICP. Generic discovery is only retained for series without an exact ID.",
-        "series": {},
+        "workbook": str(args.xlsx),
+        "tolerance": args.tolerance,
+        "results": [],
     }
+    for target in targets:
+        label = target["label"]
+        log(f"\n=== {label} ===")
+        item = {**target, "candidates": []}
+        candidates = C.get(label, [])
+        if not candidates:
+            provider, note = MANUAL.get(label, (target["declared_source"] or "Unknown", "No exact official machine-readable mapping has been confirmed."))
+            item.update({"status": "NEEDS_MAPPING", "provider": provider, "note": note})
+        else:
+            for candidate in candidates:
+                result = {**asdict(candidate)}
+                try:
+                    points = FETCHERS[candidate.fetcher](**candidate.args)
+                    result["latest_points"] = [asdict(p) for p in points[-12:]]
+                    result["comparison"] = compare(target["expected"], points, args.tolerance)
+                    result["status"] = "OK"
+                except Exception as exc:
+                    result["status"] = "ERROR"
+                    result["error"] = f"{type(exc).__name__}: {exc}"
+                    log(f"[ERROR] {candidate.name}: {result['error']}")
+                item["candidates"].append(result)
+            successful = [x for x in item["candidates"] if x["status"] == "OK"]
+            successful.sort(key=lambda x: (-x["comparison"]["overlap"], x["comparison"]["mae"] if x["comparison"]["mae"] is not None else 1e99))
+            if successful:
+                best = successful[0]
+                cmp = best["comparison"]
+                item["selected_candidate"] = best["name"]
+                item["status"] = "MATCH" if cmp["overlap"] and cmp["matches"] == cmp["overlap"] else ("MISMATCH" if cmp["overlap"] else "NO_PERIOD_OVERLAP")
+            else:
+                item["status"] = "FETCH_ERROR"
+        report["results"].append(item)
 
-    for series_id, config in EUROSTAT_SERIES.items():
-        print(f"[EUROSTAT] {series_id}", flush=True)
-        try:
-            result["series"][series_id] = {**config, **fetch_eurostat(config)}
-        except Exception as error:
-            result["series"][series_id] = {**config, "status": "error", "error": str(error)}
+    summary: dict[str, int] = {}
+    for item in report["results"]:
+        summary[item["status"]] = summary.get(item["status"], 0) + 1
+    report["summary"] = summary
+    json_path = args.out / "eu_macro_source_comparison.json"
+    json_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    for series_id, config in BUNDESBANK_SERIES.items():
-        print(f"[BUNDESBANK] {series_id}", flush=True)
-        try:
-            result["series"][series_id] = {**config, **fetch_bundesbank(config)}
-        except Exception as error:
-            result["series"][series_id] = {**config, "status": "error", "error": str(error)}
+    csv_path = args.out / "eu_macro_source_comparison.csv"
+    with csv_path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(["label", "status", "selected_candidate", "period", "EU_ECON", "official", "difference", "match", "source_url", "note"])
+        for item in report["results"]:
+            selected = next((x for x in item.get("candidates", []) if x.get("name") == item.get("selected_candidate")), None)
+            if selected:
+                for row in selected["comparison"]["rows"]:
+                    writer.writerow([item["label"], item["status"], selected["name"], row["period"], row["value"], row["actual"], row["difference"], row["match"], row["source_url"], selected.get("definition_note", "")])
+            else:
+                writer.writerow([item["label"], item["status"], "", "", "", "", "", "", "", item.get("note", "")])
 
-    fixed_results = fetch_all_fixed_sources()
-    result["series"].update(fixed_results)
-
-    probed_ids: set[str] = set(fixed_results)
-    for group_id, config in SOURCE_GROUPS.items():
-        print(f"[SOURCE PROBE] {group_id}", flush=True)
-        try:
-            group_results = fetch_source_group(group_id, config)
-            for series_id, item in group_results.items():
-                if series_id in fixed_results:
-                    continue
-                result["series"][series_id] = {
-                    "definition": ALL_REMAINING[series_id],
-                    **item,
-                }
-                probed_ids.add(series_id)
-        except Exception as error:
-            for series_id in config["series"]:
-                if series_id in fixed_results:
-                    continue
-                result["series"][series_id] = {
-                    "definition": ALL_REMAINING[series_id],
-                    "status": "source_error",
-                    "source_group": group_id,
-                    "source_url": config["url"],
-                    "error": str(error),
-                    "data": [],
-                }
-                probed_ids.add(series_id)
-
-    for series_id, definition in ALL_REMAINING.items():
-        if series_id not in probed_ids:
-            result["series"][series_id] = {
-                "status": "source_not_configured",
-                "definition": definition,
-                "data": [],
-            }
-
-    deep_fetch_candidates(result)
-    comparison = build_comparison(result)
-    write_all_series_summary(result)
-
-    OUTPUT_JSON.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-    SOURCE_BUNDLE_JSON.write_text(json.dumps(RAW_BUNDLE, ensure_ascii=False, indent=2), encoding="utf-8")
-    COMPARISON_JSON.write_text(json.dumps(comparison, ensure_ascii=False, indent=2), encoding="utf-8")
-
-    print("\n[SUMMARY]", flush=True)
-    for series_id, item in result["series"].items():
-        print(series_id, item["status"], len(item.get("data", [])), flush=True)
-    print(f"\nSaved: {OUTPUT_JSON}", flush=True)
+    log("\n[SUMMARY]")
+    for status, count in sorted(summary.items()):
+        log(f"{status}: {count}")
+    log(f"JSON: {json_path}")
+    log(f"CSV : {csv_path}")
+    # Debugging should finish and upload reports even when individual sources fail.
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

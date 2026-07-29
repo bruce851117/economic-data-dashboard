@@ -1,45 +1,64 @@
-name: Debug EU Macro Official Sources
+name: Update UK macro and debug EU sources
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "20 7 * * 1-5"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: debug-eu-macro-official-sources
-  cancel-in-progress: true
+  group: update-macro-data
+  cancel-in-progress: false
 
 jobs:
-  debug:
+  update:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
-      - name: Checkout repository
+      - name: Check out repository
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
 
       - name: Install dependencies
-        run: python -m pip install --disable-pip-version-check requests openpyxl pypdf
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install requests beautifulsoup4 pypdf openpyxl
 
-      - name: Fetch all official sources and compare reference data
+      - name: Update UK macro data
+        run: python update_uk_macro.py
+
+      - name: Compare EU_ECON with official sources
+        if: always()
+        run: python debug_eu_macro_sources.py --xlsx EU_ECON.xlsx --out debug/eu_macro_sources
         env:
-          PYTHONUNBUFFERED: "1"
-        run: python -u debug_eu_macro_sources.py
+          GENESIS_TOKEN: ${{ secrets.GENESIS_TOKEN }}
 
-      - name: Upload exactly three JSON debug files
+      - name: Upload EU source diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: eu-macro-three-json-${{ github.run_number }}
-          path: |
-            debug/eu_macro_sources/eu_last_6_periods.json
-            debug/eu_macro_sources/eu_source_bundle.json
-            debug/eu_macro_sources/eu_comparison_report.json
+          name: eu-macro-source-diagnostics-${{ github.run_number }}
+          path: debug/eu_macro_sources/
+          if-no-files-found: warn
           retention-days: 14
-          if-no-files-found: error
+
+      - name: Commit updated UK data and EU diagnostics
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/uk_macro.json debug/eu_macro_sources/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update UK macro data and EU source diagnostics"
+            git push
+          fi
