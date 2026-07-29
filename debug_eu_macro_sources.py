@@ -31,7 +31,7 @@ import requests
 from bs4 import BeautifulSoup, NavigableString
 from pypdf import PdfReader
 
-VERSION = "2026-07-29-v4-direct-pmi-search-full-debug"
+VERSION = "2026-07-29-v5-pmi-calendar-title-context"
 DEFAULT_OUT = Path("debug/eu_macro_sources")
 SESSION = requests.Session()
 SESSION.headers.update({
@@ -376,12 +376,14 @@ def spain_retail() -> list[Point]:
 
 
 def ifo_business() -> list[Point]:
-    response=get("https://www.ifo.de/en/media/58205/download")
+    url="https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026"
+    response=get(url)
     text=clean(response_text(response))
-    match=re.search(r"Business Climate Index rose to\s*([0-9]+(?:[.,][0-9]+)?)\s*points in July",text,re.I)
+    match=re.search(r"Business Climate Index\s+(?:rose|increased)\s+to\s*([0-9]+(?:[.,][0-9]+)?)\s*points\s+in\s+July",text,re.I)
+    if not match:
+        match=re.search(r"Climate\s+88[.,]5\s+88[.,]8.{0,250}?84[.,]5\s+85[.,]0\s+85[.,]7\s+([0-9]+(?:[.,][0-9]+)?)",text,re.I|re.S)
     if not match: raise RuntimeError("ifo Business Climate value not parsed")
     return [Point("2026-07",float(match.group(1).replace(",",".")),response.url)]
-
 
 def search_result_urls(query: str) -> list[str]:
     """Directly locate target press releases using search-result pages, as in UK logic."""
@@ -479,13 +481,75 @@ def ine_legacy(series: str) -> list[Point]:
     return dedupe(points)
 
 
+def preceding_release_context(anchor: Any) -> str:
+    """Recover the release title/date immediately preceding a View More link."""
+    chunks=[anchor.get_text(" ",strip=True)]
+    node=anchor
+    for _ in range(8):
+        node=node.previous_sibling
+        if node is None: break
+        if isinstance(node,NavigableString):
+            value=clean(node)
+        else:
+            try: value=clean(node.get_text(" ",strip=True))
+            except Exception: value=""
+        if value: chunks.append(value)
+    if anchor.parent:
+        chunks.append(clean(anchor.parent.get_text(" ",strip=True)))
+    return clean(" ".join(chunks))
+
+
 def sp_release_candidates(country: str) -> list[dict[str,str]]:
+    """Read S&P's release list once and keep title/date context for exact targeting."""
     response=get(SP_RELEASES)
-    urls=[]
-    for match in re.finditer(r"(?:https?://www\.pmi\.spglobal\.com)?/Public/Home/PressRelease/[A-Za-z0-9_-]+",response.text,re.I):
-        url=urljoin(SP_RELEASES,match.group(0))
-        if url not in urls: urls.append(url)
-    return [{"title":"","url":url,"release_date":""} for url in urls[:120]]
+    soup=BeautifulSoup(response.text,"html.parser")
+    candidates=[]; seen=set()
+    for anchor in soup.find_all("a",href=True):
+        href=anchor.get("href","")
+        if "/Public/Home/PressRelease/" not in href: continue
+        url=urljoin(SP_RELEASES,href)
+        if url in seen: continue
+        context=preceding_release_context(anchor)
+        if country.lower() not in context.lower() or "pmi" not in context.lower(): continue
+        date_match=re.search(r"(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}\s+20\d{2}",context,re.I)
+        candidates.append({"title":context,"url":url,"release_date":date_match.group(0) if date_match else ""})
+        seen.add(url)
+    return candidates
+
+
+def sp_pmi(country: str, sector: str) -> list[Point]:
+    """UK-style direct title targeting on S&P's official releases list."""
+    candidates=sp_release_candidates(country)
+    # Direct web-search lookup is fallback only when S&P returns a partial calendar.
+    if not candidates:
+        query=f'site:pmi.spglobal.com/Public/Home/PressRelease "{country}" "PMI" 2026'
+        candidates=[{"title":"","url":url,"release_date":""} for url in search_result_urls(query)]
+    if not candidates:
+        raise RuntimeError(f"No S&P Global {country} PMI release located")
+    observations: dict[str,Point]={}; errors=[]
+    for candidate in candidates[:40]:
+        title=candidate["title"]
+        # Flash country releases contain both manufacturing and services. Final
+        # country releases are sector-specific; inspect both where title is broad.
+        if sector not in title.lower() and "flash" not in title.lower() and title:
+            continue
+        try:
+            response=get(candidate["url"]); text=response_text(response)
+            if country.lower() not in clean(text).lower(): continue
+            value,label=extract_pmi_summary(text,country,sector)
+            period=month_name_period(text)
+            if not period: raise RuntimeError("reference period not found")
+            is_flash=bool(re.search(rf"Flash\s+{re.escape(country)}\s+(?:PMI|Manufacturing|Services)",text,re.I))
+            release_type="flash" if is_flash else "final"
+            point=Point(period,value,response.url,release_type,note=f"matched exact summary label: {label}")
+            old=observations.get(period)
+            if old is None or (release_type=="final" and old.status!="final"):
+                observations[period]=point
+        except Exception as error:
+            errors.append(f"{candidate['url']}: {error}")
+    if not observations:
+        raise RuntimeError("No exact S&P Global PMI summary parsed; " + " | ".join(errors[:5]))
+    return [observations[key] for key in sorted(observations)]
 
 def latest_press_series(url: str, specs: list[tuple[str,str]], period: str) -> list[Point]:
     response = get(url)
