@@ -109,6 +109,798 @@ def month_key(value: Any) -> str | None:
     return None
 
 
+EMBEDDED_TARGETS: list[dict[str, Any]] = [
+    {
+        "row": 2,
+        "section": "通膨",
+        "label": "西Core CPI",
+        "description": "Spain CPI Core YoY",
+        "declared_source": "INE",
+        "possible_code": "IPC208611",
+        "expected": [
+            {
+                "period": "2026-06",
+                "value": 2.9,
+                "cell": "R2C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 3.0,
+                "cell": "R2C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 2.8,
+                "cell": "R2C9"
+            }
+        ]
+    },
+    {
+        "row": 3,
+        "section": "通膨",
+        "label": "法 Core CPI",
+        "description": "France CPI All Ex Energy YoY",
+        "declared_source": "INSEE National Statistics Offi",
+        "possible_code": "001768579",
+        "expected": [
+            {
+                "period": "2026-06",
+                "value": 1.00498,
+                "cell": "R3C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 1.25824,
+                "cell": "R3C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 1.15814,
+                "cell": "R3C9"
+            }
+        ]
+    },
+    {
+        "row": 4,
+        "section": "通膨",
+        "label": "德 Core CPI",
+        "description": "Germany CPI Overall Index excl",
+        "declared_source": "German Federal Statistical Off",
+        "possible_code": "DE CPI ex Food&Energy Y",
+        "expected": [
+            {
+                "period": "2026-06",
+                "value": 2.45139,
+                "cell": "R4C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 2.54022,
+                "cell": "R4C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 2.29007,
+                "cell": "R4C9"
+            }
+        ]
+    },
+    {
+        "row": 5,
+        "section": "通膨",
+        "label": "歐 Core CPI",
+        "description": "Eurostat Eurozone Core MUICP Y",
+        "declared_source": "Eurostat",
+        "possible_code": "YoY",
+        "expected": [
+            {
+                "period": "2026-06",
+                "value": 2.4,
+                "cell": "R5C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 2.6,
+                "cell": "R5C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 2.2,
+                "cell": "R5C9"
+            }
+        ]
+    },
+    {
+        "row": 6,
+        "section": "失業率",
+        "label": "法 失業率",
+        "description": "France Unemployment Rate ILO M",
+        "declared_source": "INSEE National Statistics Offi",
+        "possible_code": "001688527",
+        "expected": []
+    },
+    {
+        "row": 7,
+        "section": "失業率",
+        "label": "西 失業率",
+        "description": "Spain Unemployment Rate",
+        "declared_source": "INE",
+        "possible_code": "EPA815",
+        "expected": []
+    },
+    {
+        "row": 8,
+        "section": "失業率",
+        "label": "德 Unemployment Rate SWDA",
+        "description": "Germany Unemployment Rate SWDA",
+        "declared_source": "Deutsche Bundesbank",
+        "possible_code": "DE Unemployment Rate SWDA",
+        "expected": [
+            {
+                "period": "2026-06",
+                "value": 6.3,
+                "cell": "R8C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 6.3,
+                "cell": "R8C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 6.4,
+                "cell": "R8C9"
+            }
+        ]
+    },
+    {
+        "row": 9,
+        "section": "失業率",
+        "label": "歐 失業率",
+        "description": "Eurostat Unemployment Eurozone",
+        "declared_source": "Eurostat",
+        "possible_code": "Eurozone",
+        "expected": [
+            {
+                "period": "2026-05",
+                "value": 6.2,
+                "cell": "R9C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 6.2,
+                "cell": "R9C9"
+            }
+        ]
+    },
+    {
+        "row": 10,
+        "section": "其他就業",
+        "label": "西 就業",
+        "description": "Spain Registered Employed Tota",
+        "declared_source": "Spanish Labour Ministry",
+        "possible_code": "Employed Tot Net change MoM SA",
+        "expected": [
+            {
+                "period": "2026-06",
+                "value": 92.5299999999988,
+                "cell": "R10C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 63.7400000000016,
+                "cell": "R10C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 41.75,
+                "cell": "R10C9"
+            }
+        ]
+    },
+    {
+        "row": 11,
+        "section": "其他就業",
+        "label": "德 失業人口",
+        "description": "Germany Unemployment Change SW",
+        "declared_source": "Deutsche Bundesbank",
+        "possible_code": "Unemploy. change",
+        "expected": [
+            {
+                "period": "2026-06",
+                "value": -1.0,
+                "cell": "R11C7"
+            },
+            {
+                "period": "2026-05",
+                "value": -12.0,
+                "cell": "R11C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 18.0,
+                "cell": "R11C9"
+            }
+        ]
+    },
+    {
+        "row": 12,
+        "section": "零售",
+        "label": "西 零售",
+        "description": "Spain Retail Sales Constant Pr",
+        "declared_source": "INE",
+        "possible_code": "ICM2522",
+        "expected": [
+            {
+                "period": "2026-05",
+                "value": -0.4,
+                "cell": "R12C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 0.2,
+                "cell": "R12C9"
+            }
+        ]
+    },
+    {
+        "row": 13,
+        "section": "零售",
+        "label": "德 零售",
+        "description": "Germany Retail Sales Constant",
+        "declared_source": "German Federal Statistical Off",
+        "possible_code": "DE Rtl Sls Real SWDA MoM",
+        "expected": [
+            {
+                "period": "2026-05",
+                "value": 1.0,
+                "cell": "R13C8"
+            },
+            {
+                "period": "2026-04",
+                "value": -0.2,
+                "cell": "R13C9"
+            }
+        ]
+    },
+    {
+        "row": 14,
+        "section": "零售",
+        "label": "歐 Real零售",
+        "description": "Eurostat Retail Sales Eurozone",
+        "declared_source": "Eurostat",
+        "possible_code": "WDA YoY %",
+        "expected": [
+            {
+                "period": "2026-05",
+                "value": 1.6,
+                "cell": "R14C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 0.9,
+                "cell": "R14C9"
+            }
+        ]
+    },
+    {
+        "row": 15,
+        "section": "工業",
+        "label": "德 工業",
+        "description": "Germany Industrial Production",
+        "declared_source": "Bundesministerium fur Wirtscha",
+        "possible_code": "Ind Prod YoY NSA WDA",
+        "expected": [
+            {
+                "period": "2026-05",
+                "value": 0.0,
+                "cell": "R15C8"
+            },
+            {
+                "period": "2026-04",
+                "value": -0.8762322015334,
+                "cell": "R15C9"
+            }
+        ]
+    },
+    {
+        "row": 16,
+        "section": "消費者信心",
+        "label": "法 信心",
+        "description": "France Consumer Confidence Ove",
+        "declared_source": "INSEE National Statistics Offi",
+        "possible_code": "001587668",
+        "expected": [
+            {
+                "period": "2026-06",
+                "value": 84.0,
+                "cell": "R16C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 82.0,
+                "cell": "R16C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 84.0,
+                "cell": "R16C9"
+            }
+        ]
+    },
+    {
+        "row": 17,
+        "section": "消費者信心",
+        "label": "德 GfK Consumer Confidence",
+        "description": "GfK Consumer Confidence",
+        "declared_source": "GfK SE",
+        "possible_code": "GfK Confidence (No History) Co",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": -29.3,
+                "cell": "R17C6"
+            },
+            {
+                "period": "2026-06",
+                "value": -29.7,
+                "cell": "R17C7"
+            },
+            {
+                "period": "2026-05",
+                "value": -33.1,
+                "cell": "R17C8"
+            },
+            {
+                "period": "2026-04",
+                "value": -28.1,
+                "cell": "R17C9"
+            }
+        ]
+    },
+    {
+        "row": 18,
+        "section": "消費者信心",
+        "label": "德信心 Current",
+        "description": "ZEW Germany Assessment of Curr",
+        "declared_source": "ZEW Zentrum fuer Europaeische",
+        "possible_code": "Current Situation",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": -77.6,
+                "cell": "R18C6"
+            },
+            {
+                "period": "2026-06",
+                "value": -81.0,
+                "cell": "R18C7"
+            },
+            {
+                "period": "2026-05",
+                "value": -77.8,
+                "cell": "R18C8"
+            },
+            {
+                "period": "2026-04",
+                "value": -73.7,
+                "cell": "R18C9"
+            }
+        ]
+    },
+    {
+        "row": 19,
+        "section": "消費者信心",
+        "label": "德信心 expect",
+        "description": "ZEW Germany Expectation of Eco",
+        "declared_source": "ZEW Zentrum fuer Europaeische",
+        "possible_code": "Expectations",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": 26.3,
+                "cell": "R19C6"
+            },
+            {
+                "period": "2026-06",
+                "value": 10.5,
+                "cell": "R19C7"
+            },
+            {
+                "period": "2026-05",
+                "value": -10.2,
+                "cell": "R19C8"
+            },
+            {
+                "period": "2026-04",
+                "value": -17.2,
+                "cell": "R19C9"
+            }
+        ]
+    },
+    {
+        "row": 20,
+        "section": "製造業",
+        "label": "德 製造業PMI",
+        "description": "S&P Global/BME Germany Manufac",
+        "declared_source": "S&P Global",
+        "possible_code": "",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": 52.2,
+                "cell": "R20C6"
+            },
+            {
+                "period": "2026-06",
+                "value": 50.3,
+                "cell": "R20C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 50.1,
+                "cell": "R20C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 51.4,
+                "cell": "R20C9"
+            }
+        ]
+    },
+    {
+        "row": 21,
+        "section": "製造業",
+        "label": "法 製造業PMI",
+        "description": "France Manufacturing PMI SA",
+        "declared_source": "S&P Global",
+        "possible_code": "",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": 50.0,
+                "cell": "R21C6"
+            },
+            {
+                "period": "2026-06",
+                "value": 51.2,
+                "cell": "R21C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 49.7,
+                "cell": "R21C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 52.8,
+                "cell": "R21C9"
+            }
+        ]
+    },
+    {
+        "row": 22,
+        "section": "製造業",
+        "label": "法 製造業信心",
+        "description": "France Business Confidence Man",
+        "declared_source": "INSEE National Statistics Offi",
+        "possible_code": "001585934",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": 101.3,
+                "cell": "R22C6"
+            },
+            {
+                "period": "2026-06",
+                "value": 100.2,
+                "cell": "R22C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 102.2,
+                "cell": "R22C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 100.2,
+                "cell": "R22C9"
+            }
+        ]
+    },
+    {
+        "row": 23,
+        "section": "製造業",
+        "label": "西 製造業PMI",
+        "description": "Spain Manufacturing PMI SA",
+        "declared_source": "S&P Global",
+        "possible_code": "",
+        "expected": [
+            {
+                "period": "2026-06",
+                "value": 49.7,
+                "cell": "R23C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 51.2,
+                "cell": "R23C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 51.7,
+                "cell": "R23C9"
+            }
+        ]
+    },
+    {
+        "row": 24,
+        "section": "服務業",
+        "label": "德 服務業PMI",
+        "description": "Germany Services PMI Business",
+        "declared_source": "S&P Global",
+        "possible_code": "",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": 49.6,
+                "cell": "R24C6"
+            },
+            {
+                "period": "2026-06",
+                "value": 48.6,
+                "cell": "R24C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 48.1,
+                "cell": "R24C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 46.9,
+                "cell": "R24C9"
+            }
+        ]
+    },
+    {
+        "row": 25,
+        "section": "服務業",
+        "label": "法 服務業PMI",
+        "description": "France Services PMI SA",
+        "declared_source": "S&P Global",
+        "possible_code": "",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": 49.8,
+                "cell": "R25C6"
+            },
+            {
+                "period": "2026-06",
+                "value": 46.8,
+                "cell": "R25C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 44.3,
+                "cell": "R25C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 46.5,
+                "cell": "R25C9"
+            }
+        ]
+    },
+    {
+        "row": 26,
+        "section": "服務業",
+        "label": "西 服務業PMI",
+        "description": "Spain Services PMI Business Ac",
+        "declared_source": "S&P Global",
+        "possible_code": "",
+        "expected": [
+            {
+                "period": "2026-06",
+                "value": 54.2,
+                "cell": "R26C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 50.1,
+                "cell": "R26C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 47.9,
+                "cell": "R26C9"
+            }
+        ]
+    },
+    {
+        "row": 27,
+        "section": "企業信心",
+        "label": "法 企業信心",
+        "description": "France Business Confidence Com",
+        "declared_source": "INSEE National Statistics Offi",
+        "possible_code": "001565530",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": 97.2,
+                "cell": "R27C6"
+            },
+            {
+                "period": "2026-06",
+                "value": 95.0,
+                "cell": "R27C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 93.9,
+                "cell": "R27C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 94.1,
+                "cell": "R27C9"
+            }
+        ]
+    },
+    {
+        "row": 28,
+        "section": "企業信心",
+        "label": "德 企業信心",
+        "description": "Ifo Pan Germany Business Clima",
+        "declared_source": "IFO Institute - Institut fuer",
+        "possible_code": "Business Climate",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": 86.59582,
+                "cell": "R28C6"
+            },
+            {
+                "period": "2026-06",
+                "value": 85.7,
+                "cell": "R28C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 85.0,
+                "cell": "R28C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 84.5,
+                "cell": "R28C9"
+            }
+        ]
+    },
+    {
+        "row": 31,
+        "section": "GDP",
+        "label": "德 GDP",
+        "description": "Germany GDP Chain Linked Pan G",
+        "declared_source": "German Federal Statistical Off",
+        "possible_code": "YoY",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": 0.5,
+                "cell": "R31C6"
+            },
+            {
+                "period": "2026-06",
+                "value": 0.5,
+                "cell": "R31C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 0.3,
+                "cell": "R31C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 0.0,
+                "cell": "R31C9"
+            }
+        ]
+    },
+    {
+        "row": 32,
+        "section": "GDP",
+        "label": "西 GDP",
+        "description": "Spain GDP SA Chained Linked at",
+        "declared_source": "INE",
+        "possible_code": "CNTR4892",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": 2.7126,
+                "cell": "R32C6"
+            },
+            {
+                "period": "2026-06",
+                "value": 2.6461,
+                "cell": "R32C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 2.703,
+                "cell": "R32C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 2.8792,
+                "cell": "R32C9"
+            }
+        ]
+    },
+    {
+        "row": 33,
+        "section": "GDP",
+        "label": "法GDP",
+        "description": "France GDP Chain Linked Prices",
+        "declared_source": "INSEE National Statistics Offi",
+        "possible_code": "GDP YoY",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": 0.87354,
+                "cell": "R33C6"
+            },
+            {
+                "period": "2026-06",
+                "value": 1.1,
+                "cell": "R33C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 0.8,
+                "cell": "R33C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 0.8,
+                "cell": "R33C9"
+            }
+        ]
+    },
+    {
+        "row": 34,
+        "section": "GDP",
+        "label": "歐GDP",
+        "description": "Euro Area Gross Domestic Produ",
+        "declared_source": "Eurostat",
+        "possible_code": "EA GDP YoY",
+        "expected": [
+            {
+                "period": "2026-07",
+                "value": 0.5,
+                "cell": "R34C6"
+            },
+            {
+                "period": "2026-06",
+                "value": 1.1,
+                "cell": "R34C7"
+            },
+            {
+                "period": "2026-05",
+                "value": 1.2,
+                "cell": "R34C8"
+            },
+            {
+                "period": "2026-04",
+                "value": 1.4,
+                "cell": "R34C9"
+            }
+        ]
+    }
+]
+
+
 def read_targets(path: Path) -> list[dict[str, Any]]:
     wb = load_workbook(path, read_only=True, data_only=True)
     ws = wb[wb.sheetnames[0]]
@@ -311,16 +1103,31 @@ def compare(expected: list[dict[str, Any]], actual: list[Point], tolerance: floa
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--xlsx", type=Path, default=DEFAULT_XLSX)
+    parser.add_argument(
+        "--xlsx",
+        type=Path,
+        default=None,
+        help="Optional EU_ECON workbook. If omitted or missing, use the reference values embedded in this script.",
+    )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--tolerance", type=float, default=0.051, help="absolute comparison tolerance")
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
-    targets = read_targets(args.xlsx)
+    if args.xlsx is not None and args.xlsx.exists():
+        targets = read_targets(args.xlsx)
+        reference_source = str(args.xlsx)
+        log(f"[REFERENCE] Loaded workbook: {args.xlsx}")
+    else:
+        targets = EMBEDDED_TARGETS
+        reference_source = "embedded EU_ECON reference values"
+        if args.xlsx is not None:
+            log(f"[REFERENCE] Workbook not found: {args.xlsx}; using embedded reference values")
+        else:
+            log("[REFERENCE] Using embedded EU_ECON reference values")
     report: dict[str, Any] = {
         "script_version": VERSION,
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "workbook": str(args.xlsx),
+        "workbook": reference_source,
         "tolerance": args.tolerance,
         "results": [],
     }

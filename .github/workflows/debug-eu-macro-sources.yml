@@ -29,10 +29,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install requests openpyxl
 
-      - name: Compare EU_ECON with official sources
+      - name: Compare official sources with EU_ECON reference values
         run: |
           python debug_eu_macro_sources.py \
-            --xlsx EU_ECON.xlsx \
             --out debug/eu_macro_sources
         env:
           GENESIS_TOKEN: ${{ secrets.GENESIS_TOKEN }}
