@@ -154,6 +154,30 @@ SERIES_VALIDATION = {
 }
 
 
+FIXED_SERIES_SOURCES = {
+    "spain_core_cpi_yoy": {"provider": "INE", "dataset": "IPC", "mode": "ine_operation"},
+    "spain_unemployment_rate": {"provider": "INE", "table": "4247", "mode": "ine_table"},
+    "spain_real_retail_yoy": {"provider": "INE", "dataset": "ICM", "mode": "ine_operation"},
+    "spain_gdp_yoy": {"provider": "INE", "dataset": "CNTR", "mode": "ine_operation"},
+    "france_cpi_ex_energy_yoy": {"provider": "INSEE BDM", "idbank": "001763852", "mode": "insee_bdm"},
+    "france_unemployment_rate_ilo": {"provider": "INSEE BDM", "idbank": "001688526", "dataset": "CHOMAGE-TRIM-NATIONAL", "mode": "insee_bdm"},
+    "france_consumer_confidence": {"provider": "INSEE BDM", "idbank": "000857189", "dataset": "CAMME", "mode": "insee_bdm"},
+    "france_manufacturing_confidence": {"provider": "INSEE BDM", "idbank": "000857181", "mode": "insee_bdm"},
+    "france_business_confidence": {"provider": "INSEE BDM", "idbank": "001586737", "mode": "insee_bdm"},
+    "france_gdp_yoy": {"provider": "INSEE Melodi", "dataset": "CNT-2014-PIB-EQB-RF", "mode": "insee_dataset"},
+    "germany_core_cpi_yoy": {"provider": "Destatis GENESIS", "tables": ["61111-0004", "61111-0006"], "mode": "destatis_tables"},
+    "germany_real_retail_mom": {"provider": "Destatis GENESIS", "tables": ["45211-0002"], "mode": "destatis_tables"},
+    "germany_industrial_production_yoy": {"provider": "Destatis GENESIS", "tables": ["42153-0001"], "mode": "destatis_tables"},
+    "germany_gdp_yoy": {"provider": "Destatis GENESIS", "tables": ["81000-0001"], "mode": "destatis_tables"},
+}
+
+INE_OPERATION_KEYWORDS = {
+    "spain_core_cpi_yoy": ["subyacente", "general sin alimentos no elaborados", "energia"],
+    "spain_real_retail_yoy": ["general", "precios constantes", "anual"],
+    "spain_gdp_yoy": ["producto interior bruto", "precios de mercado", "interanual"],
+}
+
+
 SOURCE_GROUPS = {
     "ine": {
         "url": "https://servicios.ine.es/wstempus/js/EN/OPERACIONES_DISPONIBLES",
@@ -646,6 +670,178 @@ def fetch_bundesbank(config: dict[str, Any]) -> dict[str, Any]:
 
 
 
+
+def parse_structured_observations(text: str) -> list[dict[str, Any]]:
+    output: list[dict[str, Any]] = []
+    # SDMX XML attributes.
+    for match in re.finditer(
+        r'(?:TIME_PERIOD|time)[="\'](?P<period>20\d{2}(?:-Q[1-4]|-(?:0[1-9]|1[0-2]))?)["\']'
+        r'.{0,300}?(?:OBS_VALUE|value)[="\'](?P<value>-?\d+(?:[.,]\d+)?)["\']',
+        text, re.I | re.S,
+    ):
+        output.append({"period": match.group("period"), "value": float(match.group("value").replace(",", "."))})
+    # CSV/semicolon/tab rows beginning with a period.
+    for line in text.splitlines():
+        match = re.match(
+            r'^["\']?(?P<period>20\d{2}(?:-Q[1-4]|-(?:0[1-9]|1[0-2])))["\']?[,;\t]+'
+            r'["\']?(?P<value>-?\d+(?:[.,]\d+)?)["\']?', line.strip(), re.I,
+        )
+        if match:
+            output.append({"period": match.group("period"), "value": float(match.group("value").replace(",", "."))})
+    unique = {(row["period"], row["value"]): row for row in output}
+    return sorted(unique.values(), key=lambda row: row["period"])[-12:]
+
+
+def capture_fixed_response(series_id: str, response: requests.Response, tag: str) -> dict[str, Any]:
+    text = response_text(response)
+    record = {
+        "tag": tag,
+        "url": response.url,
+        "status": response.status_code,
+        "content_type": response.headers.get("Content-Type", ""),
+        "bytes": len(response.content),
+        "sha256": hashlib.sha256(response.content).hexdigest(),
+        "extracted_text": text[:MAX_RAW_CHARS],
+        "truncated": len(text) > MAX_RAW_CHARS,
+    }
+    RAW_BUNDLE["candidate_fetches"].setdefault(series_id, []).append(record)
+    return record
+
+
+def fetch_insee_bdm(series_id: str, config: dict[str, Any]) -> dict[str, Any]:
+    idbank = config["idbank"]
+    urls = [
+        f"https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/{idbank}?periodeDebut=2024-01&periodeFin=2026-12",
+        f"https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/{idbank}",
+    ]
+    errors: list[str] = []
+    candidates: list[dict[str, Any]] = []
+    for url in urls:
+        try:
+            response = request(url, headers={"Accept": "application/vnd.sdmx.genericdata+xml;version=2.1, application/xml, text/csv"})
+            record = capture_fixed_response(series_id, response, f"idbank:{idbank}")
+            candidates.extend(parse_structured_observations(record["extracted_text"]))
+            if candidates:
+                break
+        except Exception as error:
+            errors.append(str(error))
+    parsed, rejections = strict_validate_observations(series_id, candidates)
+    return {
+        "definition": ALL_REMAINING[series_id], "source_group": "insee_bdm",
+        "fixed_source": config, "data": parsed,
+        "status": "ok_fixed_series" if parsed else "parse_error",
+        "final_status": "needs_reference_validation" if parsed else "parse_error",
+        "candidate_rejections": rejections, "errors": errors,
+    }
+
+
+def fetch_destatis_tables(series_id: str, config: dict[str, Any]) -> dict[str, Any]:
+    endpoint = "https://www-genesis.destatis.de/genesisWS/rest/2020/data/tablefile"
+    candidates: list[dict[str, Any]] = []
+    errors: list[str] = []
+    for table in config["tables"]:
+        payload = {
+            "username": "GAST", "password": "GAST", "name": table,
+            "area": "all", "compress": "false", "transpose": "false",
+            "startyear": "2024", "endyear": "2026", "timeslices": "true",
+            "regionalvariable": "", "regionalkey": "",
+        }
+        try:
+            response = SESSION.post(endpoint, data=payload, timeout=TIMEOUT)
+            response.raise_for_status()
+            record = capture_fixed_response(series_id, response, f"table:{table}")
+            candidates.extend(parse_structured_observations(record["extracted_text"]))
+        except Exception as error:
+            errors.append(f"{table}: {error}")
+    parsed, rejections = strict_validate_observations(series_id, candidates)
+    return {
+        "definition": ALL_REMAINING[series_id], "source_group": "destatis_fixed",
+        "fixed_source": config, "data": parsed,
+        "status": "ok_fixed_table" if parsed else "parse_error",
+        "final_status": "needs_reference_validation" if parsed else "parse_error",
+        "candidate_rejections": rejections, "errors": errors,
+    }
+
+
+def fetch_ine_fixed(series_id: str, config: dict[str, Any]) -> dict[str, Any]:
+    if config["mode"] == "ine_table":
+        url = f"https://servicios.ine.es/wstempus/js/EN/DATOS_TABLA/{config['table']}?nult=8"
+        response = request(url)
+        record = capture_fixed_response(series_id, response, f"table:{config['table']}")
+        payload = response.json()
+        observations: list[dict[str, Any]] = []
+        # Preserve every returned series and its metadata for exact matching.
+        RAW_BUNDLE["candidate_fetches"].setdefault(series_id, []).append({
+            "tag": "ine_table_json", "payload": payload,
+        })
+        return {
+            "definition": ALL_REMAINING[series_id], "source_group": "ine_fixed",
+            "fixed_source": config, "data": observations, "status": "parse_error",
+            "final_status": "parse_error",
+            "final_error": "Table 4247 downloaded; select exact national total unemployment-rate series from payload",
+        }
+    # Exact operation code, no longer scan unrelated operations.
+    operations = request("https://servicios.ine.es/wstempus/js/EN/OPERACIONES_DISPONIBLES").json()
+    wanted = config["dataset"].upper()
+    matches = [row for row in operations if str(row.get("Codigo", "")).upper() == wanted or str(row.get("Codigo", "")).upper().startswith(wanted)]
+    fetched: list[dict[str, Any]] = []
+    for operation in matches[-3:]:
+        op_id = operation.get("Id")
+        if op_id is None:
+            continue
+        response = request(f"https://servicios.ine.es/wstempus/js/EN/TABLAS_OPERACION/{op_id}")
+        fetched.append(capture_fixed_response(series_id, response, f"operation:{wanted}:{op_id}"))
+    return {
+        "definition": ALL_REMAINING[series_id], "source_group": "ine_fixed",
+        "fixed_source": config, "operation_matches": matches[-3:], "candidate_records": fetched,
+        "data": [], "status": "parse_error", "final_status": "parse_error",
+        "final_error": f"Exact INE operation {wanted} located; table/series selection pending from targeted payload",
+    }
+
+
+def fetch_insee_dataset(series_id: str, config: dict[str, Any]) -> dict[str, Any]:
+    dataset = config["dataset"]
+    urls = [
+        f"https://api.insee.fr/melodi/data/{dataset}",
+        f"https://api.insee.fr/melodi/file/{dataset}/{dataset}_CSV_FR",
+    ]
+    records = []
+    for url in urls:
+        try:
+            response = request(url, headers={"Accept": "application/json, text/csv, application/zip"})
+            records.append(capture_fixed_response(series_id, response, f"dataset:{dataset}"))
+        except Exception as error:
+            records.append({"url": url, "error": str(error)})
+    return {
+        "definition": ALL_REMAINING[series_id], "source_group": "insee_dataset",
+        "fixed_source": config, "candidate_records": records, "data": [],
+        "status": "parse_error", "final_status": "parse_error",
+        "final_error": "Targeted GDP dataset fetched; exact real SA-WDA YoY dimensions must be selected",
+    }
+
+
+def fetch_all_fixed_sources() -> dict[str, dict[str, Any]]:
+    output: dict[str, dict[str, Any]] = {}
+    for series_id, config in FIXED_SERIES_SOURCES.items():
+        print(f"[FIXED SOURCE] {series_id} {config}", flush=True)
+        try:
+            mode = config["mode"]
+            if mode == "insee_bdm":
+                output[series_id] = fetch_insee_bdm(series_id, config)
+            elif mode == "destatis_tables":
+                output[series_id] = fetch_destatis_tables(series_id, config)
+            elif mode in {"ine_table", "ine_operation"}:
+                output[series_id] = fetch_ine_fixed(series_id, config)
+            elif mode == "insee_dataset":
+                output[series_id] = fetch_insee_dataset(series_id, config)
+        except Exception as error:
+            output[series_id] = {
+                "definition": ALL_REMAINING[series_id], "fixed_source": config,
+                "status": "source_error", "final_status": "source_error",
+                "error": str(error), "data": [],
+            }
+    return output
+
 def _walk_urls(value: Any, base_url: str = "") -> list[str]:
     urls: list[str] = []
     if isinstance(value, dict):
@@ -809,7 +1005,7 @@ def strict_validate_observations(series_id: str, rows: list[dict[str, Any]]) -> 
 
 def deep_fetch_candidates(result: dict[str, Any]) -> None:
     for series_id, item in result.get("series", {}).items():
-        if item.get("data"):
+        if item.get("data") or series_id in FIXED_SERIES_SOURCES:
             continue
         queue = candidate_urls(series_id, item)
         seen: set[str] = set()
@@ -996,7 +1192,7 @@ def main() -> None:
     result: dict[str, Any] = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "scope": "official-source diagnostic; latest 6 available periods",
-        "important_note": "Spain, France and Germany CPI must use national CPI, not HICP. Euro-area latest data use geo=EA21 from 2026; fallback queries also test EA and EA20 for continuity. All 31 series are actively diagnosed; national CPI definitions are not substituted with HICP.",
+        "important_note": "Fixed IDs supplied by user are queried directly for INE, INSEE BDM and Destatis. National CPI is never substituted with HICP. Generic discovery is only retained for series without an exact ID.",
         "series": {},
     }
 
@@ -1014,12 +1210,17 @@ def main() -> None:
         except Exception as error:
             result["series"][series_id] = {**config, "status": "error", "error": str(error)}
 
-    probed_ids: set[str] = set()
+    fixed_results = fetch_all_fixed_sources()
+    result["series"].update(fixed_results)
+
+    probed_ids: set[str] = set(fixed_results)
     for group_id, config in SOURCE_GROUPS.items():
         print(f"[SOURCE PROBE] {group_id}", flush=True)
         try:
             group_results = fetch_source_group(group_id, config)
             for series_id, item in group_results.items():
+                if series_id in fixed_results:
+                    continue
                 result["series"][series_id] = {
                     "definition": ALL_REMAINING[series_id],
                     **item,
@@ -1027,6 +1228,8 @@ def main() -> None:
                 probed_ids.add(series_id)
         except Exception as error:
             for series_id in config["series"]:
+                if series_id in fixed_results:
+                    continue
                 result["series"][series_id] = {
                     "definition": ALL_REMAINING[series_id],
                     "status": "source_error",
