@@ -31,7 +31,7 @@ import requests
 from bs4 import BeautifulSoup, NavigableString
 from pypdf import PdfReader
 
-VERSION = "2026-07-29-v7-spain-affiliation-official-pdf"
+VERSION = "2026-07-29-v9-pmi-country-by-country-uk-template"
 DEFAULT_OUT = Path("debug/eu_macro_sources")
 SESSION = requests.Session()
 SESSION.headers.update({
@@ -42,7 +42,7 @@ EUROSTAT = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data"
 INSEE = "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM"
 BUNDESBANK = "https://api.statistiken.bundesbank.de/rest/data"
 SP_RELEASES = "https://www.pmi.spglobal.com/Public/Release/PressReleases"
-_SP_RELEASE_CACHE: list[dict[str,str]] | None = None
+_SP_COUNTRY_CACHE: dict[str, dict[str, list[Point]]] = {}
 
 
 @dataclass
@@ -370,84 +370,68 @@ def spain_epa_unemployment() -> list[Point]:
 
 
 def spain_social_security_affiliation() -> list[Point]:
-    """Fetch Spain's official seasonally adjusted monthly affiliation change.
+    """Fetch official Spanish seasonally adjusted affiliation MoM change.
 
-    Primary source is the Seguridad Social statistics page. The page publishes a
-    monthly PDF titled 'Afiliados medios y con ajuste estacional por actividad
-    economica'. We discover the current PDF URL dynamically, so the pipeline does
-    not depend on a news-release slug that changes every month.
+    Primary source: Revista Seguridad Social official statistics articles, which
+    directly state both the adjusted level and the monthly increase. The current
+    article URL is discovered from the official statistics index; fixed current
+    URL is only a fallback. This is more reliable than the sector PDF, which does
+    not contain the total-system monthly change as extractable text.
     """
-    index_url = (
-        "https://www.seg-social.es/wps/portal/wss/internet/"
-        "EstadisticasPresupuestosEstudios/Estadisticas/EST8/"
-        "f32c1896-f56d-4728-a4ac-fa0b410ea0b2/"
-        "42105a1e-060c-47f4-9b3c-33c530a606ca"
+    index_urls=[
+        "https://revista.seg-social.es/estadisticas",
+        "https://revista.seg-social.es/home",
+    ]
+    article_urls=[]
+    for index_url in index_urls:
+        try:
+            response=get(index_url)
+            soup=BeautifulSoup(response.text,"html.parser")
+            for anchor in soup.find_all("a",href=True):
+                href=urljoin(response.url,anchor.get("href",""))
+                context=clean(anchor.get_text(" ",strip=True)).lower()
+                if "revista.seg-social.es/-/" in href and any(word in context for word in ("afiliad","ocupad","empleo")):
+                    if href not in article_urls: article_urls.append(href)
+        except Exception as error:
+            log(f"[WARN] Seguridad Social article index failed: {error}")
+    fallback=(
+        "https://revista.seg-social.es/-/"
+        "espa%C3%B1a-suma-621.925-afiliados-en-los-primeros-seis-meses-del-a%C3%B1o-"
+        "y-supera-la-cota-de-los-22-4-millones-de-ocupados"
     )
-    index_response = get(index_url)
-    soup = BeautifulSoup(index_response.text, "html.parser")
-    candidates: list[tuple[str, str]] = []
-    for anchor in soup.find_all("a", href=True):
-        label = clean(anchor.get_text(" ", strip=True))
-        parent_text = clean(anchor.parent.get_text(" ", strip=True)) if anchor.parent else label
-        context = clean(f"{label} {parent_text}")
-        href = urljoin(index_response.url, anchor.get("href", ""))
-        if ("ajuste estacional" in context.lower() and href.lower().split("?")[0].endswith(".pdf")):
-            candidates.append((context, href))
-    if not candidates:
-        # WCM pages may expose the file only in raw markup.
-        pattern = re.compile(r'href=["\']([^"\']+\.pdf[^"\']*)["\']', re.I)
-        for match in pattern.finditer(index_response.text):
-            href = urljoin(index_response.url, match.group(1).replace("&amp;", "&"))
-            raw_context = clean(BeautifulSoup(index_response.text[max(0, match.start()-600):match.end()+200], "html.parser").get_text(" ", strip=True))
-            if "ajuste estacional" in raw_context.lower():
-                candidates.append((raw_context, href))
-    if not candidates:
-        raise RuntimeError("Official Seguridad Social seasonally-adjusted affiliation PDF not found")
+    if fallback not in article_urls: article_urls.append(fallback)
 
-    month_names = {
+    month_names={
         "enero":1,"febrero":2,"marzo":3,"abril":4,"mayo":5,"junio":6,
         "julio":7,"agosto":8,"septiembre":9,"octubre":10,"noviembre":11,"diciembre":12,
     }
-    errors=[]
-    for context, pdf_url in candidates:
+    points=[]; errors=[]
+    for url in article_urls[:30]:
         try:
-            response=get(pdf_url)
-            text=clean(response_text(response)).replace("−", "-")
-            # Determine reference period from page context, file name, or PDF text.
-            combined=clean(f"{context} {pdf_url} {text[:2500]}")
-            year_match=re.search(r"\b(20\d{2})\b", combined)
-            month_match=next((m for name,m in month_names.items() if re.search(rf"\b{name}\b", combined, re.I)), None)
-            if not year_match or not month_match:
-                compact_date=re.search(r"(20\d{2})(0[1-9]|1[0-2])", pdf_url)
-                if compact_date:
-                    year=int(compact_date.group(1)); month_match=int(compact_date.group(2))
-                else:
-                    raise RuntimeError("reference month not found")
-            else:
-                year=int(year_match.group(1))
-
-            patterns=[
-                r"VARIACI[OÓ]N\s+MENSUAL\s+AJUSTADA\s*:?\s*([+-]?\s*[0-9][0-9. ]*)",
-                r"variaci[oó]n mensual.{0,80}?desestacionalizad[ao].{0,80}?([+-]?\s*[0-9][0-9. ]*)",
-                r"en t[eé]rminos desestacionalizados.{0,180}?(?:suma|aumenta|crece|incorpora).{0,50}?([0-9][0-9. ]*)\s+afiliad",
-            ]
-            raw_value=None
-            for pattern in patterns:
-                match=re.search(pattern,text,re.I|re.S)
-                if match:
-                    token=match.group(1).replace(" ", "")
-                    sign=-1 if token.startswith("-") else 1
-                    digits=re.sub(r"[^0-9]", "", token)
-                    if digits:
-                        raw_value=sign*int(digits)
-                        break
-            if raw_value is None:
-                raise RuntimeError("seasonally adjusted monthly change not parsed")
-            period=f"{year:04d}-{int(month_match):02d}"
-            return [Point(period, raw_value/1000.0, response.url, note="official adjusted monthly change; persons converted to thousand")]
+            response=get(url); text=clean(response_text(response)).replace("−","-")
+            # Official wording: "La serie desestacionalizada ... tras sumar 92.531 en el ultimo mes".
+            match=re.search(
+                r"serie desestacionalizada.{0,260}?(?:tras sumar|suma|aumenta en|incremento de)\s*([+-]?[0-9][0-9. ]*)\s+(?:afiliad[oa]s?|en el (?:ultimo|último) mes)",
+                text,re.I|re.S,
+            )
+            if not match:
+                match=re.search(r"desestacionalizad[ao].{0,260}?([+-]?[0-9]{2,3}(?:[.]?[0-9]{3})+)\s+en el (?:ultimo|último) mes",text,re.I|re.S)
+            if not match: continue
+            token=match.group(1).replace(" ","")
+            sign=-1 if token.startswith("-") else 1
+            persons=sign*int(re.sub(r"[^0-9]","",token))
+            # Reference month from article publication date/title/body. Prefer named month near the opening.
+            head=text[:3000].lower()
+            month=next((m for name,m in month_names.items() if re.search(rf"\b{name}\b",head)),None)
+            year_match=re.search(r"\b(20\d{2})\b",head)
+            if not month or not year_match: continue
+            period=f"{int(year_match.group(1)):04d}-{month:02d}"
+            points.append(Point(period,persons/1000.0,response.url,note="official adjusted monthly change; persons converted to thousand"))
         except Exception as error:
-            errors.append(f"{pdf_url}: {error}")
-    raise RuntimeError(" | ".join(errors[:3]))
+            errors.append(f"{url}: {error}")
+    if not points:
+        raise RuntimeError("Official Seguridad Social adjusted monthly change not parsed; "+" | ".join(errors[:3]))
+    return dedupe(points)
 
 def spain_retail() -> list[Point]:
     response=get("https://www.ine.es/dyngs/Prensa/en/ICM0526.htm?print=1")
@@ -474,74 +458,6 @@ def ifo_business() -> list[Point]:
             return [Point("2026-07",float(match.group(1).replace(",",".")),response.url)]
     raise RuntimeError("ifo Business Climate value not parsed")
 
-def search_result_urls(query: str) -> list[str]:
-    """Directly locate target press releases using search-result pages, as in UK logic."""
-    urls=[]
-    engines=[
-        f"https://www.bing.com/search?q={quote_plus(query)}",
-        f"https://html.duckduckgo.com/html/?q={quote_plus(query)}",
-    ]
-    for engine in engines:
-        try:
-            response=get(engine)
-            soup=BeautifulSoup(response.text,"html.parser")
-            for anchor in soup.find_all("a",href=True):
-                href=unquote(anchor.get("href",""))
-                # Bing/DDG may wrap the target URL in a query parameter.
-                match=re.search(r"https?://(?:www\.)?pmi\.spglobal\.com/Public/Home/PressRelease/[A-Za-z0-9_-]+",href,re.I)
-                if match and match.group(0) not in urls: urls.append(match.group(0))
-        except Exception as error:
-            log(f"[SEARCH] {engine}: {error}")
-        if urls: break
-    return urls
-
-
-def extract_pmi_summary(text: str, country: str, sector: str) -> tuple[float,str]:
-    compact=clean(text).replace("™","").replace("®","")
-    number=r"([0-9]{1,2}(?:\.[0-9]+)?)"
-    c=re.escape(country)
-    if sector=="manufacturing":
-        labels=[
-            rf"(?:HCOB|S&P Global)(?:/BME)?\s+{c}\s+Manufacturing PMI\s*[:：]\s*{number}",
-            rf"Flash\s+{c}\s+Manufacturing PMI\s*[:：]\s*{number}",
-        ]
-    else:
-        labels=[
-            rf"(?:HCOB|S&P Global)(?:/BME)?\s+{c}\s+Services PMI Business Activity Index\s*[:：]\s*{number}",
-            rf"Flash\s+{c}\s+Services PMI Business Activity Index\s*[:：]\s*{number}",
-        ]
-    for pattern in labels:
-        match=re.search(pattern,compact,re.I)
-        if match:
-            value=float(match.group(1))
-            if 20<=value<=80: return value,match.group(0)
-    raise RuntimeError(f"Exact {country} {sector} PMI summary label not found")
-
-
-def sp_pmi(country: str, sector: str) -> list[Point]:
-    query=f'site:pmi.spglobal.com/Public/Home/PressRelease "{country}" "{sector} PMI" 2026'
-    urls=search_result_urls(query)
-    if not urls:
-        # Last-resort S&P calendar discovery; direct search remains primary.
-        urls=[item["url"] for item in sp_release_candidates(country)]
-    observations: dict[str,Point]={}
-    errors=[]
-    for url in urls[:20]:
-        try:
-            response=get(url); text=response_text(response); low=clean(text).lower()
-            if country.lower() not in low or "pmi" not in low: continue
-            value,label=extract_pmi_summary(text,country,sector)
-            period=month_name_period(text)
-            if not period: continue
-            release_type="flash" if re.search(rf"Flash\s+{re.escape(country)}\s+PMI",text,re.I) else "final"
-            point=Point(period,value,response.url,release_type,note=f"matched exact summary label: {label}")
-            old=observations.get(period)
-            if old is None or (point.status=="final" and old.status!="final"): observations[period]=point
-        except Exception as error:
-            errors.append(f"{url}: {error}")
-    if not observations:
-        raise RuntimeError("No exact S&P Global PMI summary parsed; " + " | ".join(errors[:3]))
-    return [observations[k] for k in sorted(observations)]
 
 def ine_legacy(series: str) -> list[Point]:
     # Kept only for currently maintained Tempus series. Correctly maps INE quarterly
@@ -570,97 +486,181 @@ def ine_legacy(series: str) -> list[Point]:
     return dedupe(points)
 
 
-def _all_sp_release_entries() -> list[dict[str,str]]:
-    """Parse each S&P release link with nearby raw-HTML and DOM context once."""
-    global _SP_RELEASE_CACHE
-    if _SP_RELEASE_CACHE is not None:
-        return _SP_RELEASE_CACHE
+def preceding_sp_release_context(anchor: Any) -> str:
+    """Exact context strategy used by the working UK PMI pipeline."""
+    parts=[]
+    for element in anchor.previous_elements:
+        if isinstance(element,NavigableString):
+            text=clean(str(element))
+            if text:
+                parts.append(text)
+        if len(" ".join(parts)) >= 280:
+            break
+    return " ".join(reversed(parts[-20:]))
+
+
+def parse_sp_release_date(value: str) -> datetime | None:
+    text=clean(value).replace(",","")
+    for fmt in ("%B %d %Y","%b %d %Y"):
+        try:
+            return datetime.strptime(text,fmt).replace(tzinfo=timezone.utc)
+        except ValueError:
+            pass
+    return None
+
+
+def discover_sp_country_releases(country: str) -> list[dict[str,str]]:
+    """Discover releases for exactly one country, copied from the UK workflow."""
+    log(f"[S&P PMI/{country}] discover country releases")
     response=get(SP_RELEASES)
-    html=response.text
-    soup=BeautifulSoup(html,"html.parser")
-    entries=[]; seen=set()
+    soup=BeautifulSoup(response.text,"html.parser")
+    candidates=[]; seen=set()
+    c=re.escape(country)
     for anchor in soup.find_all("a",href=True):
         href=anchor.get("href","")
-        if "/Public/Home/PressRelease/" not in href: continue
+        if "/Public/Home/PressRelease/" not in href:
+            continue
         url=urljoin(SP_RELEASES,href)
-        if url in seen: continue
-        pieces=[]
-        # S&P title/date may be in separate preceding blocks, not siblings.
-        for node in anchor.find_all_previous(limit=12):
-            try:
-                value=clean(node.get_text(" ",strip=True))
-            except Exception:
-                value=""
-            if value and len(value)<500: pieces.append(value)
-        pos=html.find(href)
-        if pos>=0:
-            raw=html[max(0,pos-1800):pos]
-            pieces.append(clean(BeautifulSoup(raw,"html.parser").get_text(" ",strip=True)))
-        context=clean(" ".join(pieces))
-        entries.append({"title":context,"url":url,"release_date":""})
+        if url in seen:
+            continue
+        anchor_text=clean(anchor.get_text(" ",strip=True))
+        parent_text=clean(anchor.parent.get_text(" ",strip=True) if anchor.parent else "")
+        previous_text=preceding_sp_release_context(anchor)
+        context=clean(" ".join(x for x in (anchor_text,parent_text,previous_text) if x))
+        # Same two-stage exact/broad title matching as the working UK code.
+        title_match=re.search(
+            rf"(S&P Global\s+(?:Flash\s+)?{c}(?:\s+(?:Manufacturing|Services))?\s+PMI(?:[^|]{{0,80}})?)",
+            context,re.I,
+        )
+        if not title_match:
+            title_match=re.search(
+                rf"((?:Flash\s+)?{c}(?:\s+(?:Manufacturing|Services))?\s+PMI(?:[^|]{{0,80}})?)",
+                context,re.I,
+            )
+        if not title_match:
+            continue
+        title=clean(title_match.group(1))
+        date_match=re.search(
+            r"([A-Za-z]+\s+\d{1,2},?\s+20\d{2})\s+\d{2}:\d{2}\s+UTC",
+            context,re.I,
+        )
+        release_date=date_match.group(1).replace(",","") if date_match else ""
+        candidates.append({"title":title,"url":url,"release_date":release_date,"index_context":context})
         seen.add(url)
-    # Also recover links from embedded markup if anchors are incomplete.
-    for match in re.finditer(r"(?:https?://www\.pmi\.spglobal\.com)?/Public/Home/PressRelease/[A-Za-z0-9_-]+",html,re.I):
-        url=urljoin(SP_RELEASES,match.group(0))
-        if url in seen: continue
-        raw=html[max(0,match.start()-1800):match.start()]
-        context=clean(BeautifulSoup(raw,"html.parser").get_text(" ",strip=True))
-        entries.append({"title":context,"url":url,"release_date":""})
-        seen.add(url)
-    _SP_RELEASE_CACHE=entries
-    return entries
+    cutoff=datetime.now(timezone.utc)-timedelta(days=150)
+    recent=[]
+    for candidate in candidates:
+        dt=parse_sp_release_date(candidate["release_date"])
+        if dt is not None and dt>=cutoff:
+            recent.append(candidate)
+    if not recent:
+        recent=candidates[:30]
+    recent.sort(key=lambda x:parse_sp_release_date(x["release_date"]) or datetime.min.replace(tzinfo=timezone.utc),reverse=True)
+    log(f"[S&P PMI/{country}] discovered={len(candidates)} recent={len(recent)}")
+    return recent
 
 
-def sp_release_candidates(country: str) -> list[dict[str,str]]:
-    entries=_all_sp_release_entries()
-    country_lower=country.lower()
-    selected=[]
-    for entry in entries:
-        context=entry["title"].lower()
-        # Require the actual release title phrase. This prevents Eurozone releases
-        # whose article body merely mentions Germany or France from being selected.
-        exact_phrases=[
-            f"flash {country_lower} pmi",
-            f"{country_lower} manufacturing pmi",
-            f"{country_lower} services pmi",
+def extract_country_pmi_value(text: str,country: str,sector: str) -> tuple[float,str] | None:
+    """UK parser structure, with the country name parameterised."""
+    compact=clean(text).replace("™","").replace("®","")
+    number=r"([0-9]{1,2}(?:\.[0-9]+)?)"
+    c=re.escape(country)
+    if sector=="manufacturing":
+        patterns=[
+            rf"\bFlash\s+{c}\s+Manufacturing PMI\s*:\s*{number}\b",
+            rf"\b(?:HCOB|S&P Global)(?:/BME)?\s+{c}\s+Manufacturing PMI\s*:\s*{number}\b",
+            rf"\b{c}\s+Manufacturing PMI\s+at\s+{number}\s+in\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\b",
+            rf"\b(?:HCOB|S&P Global)(?:/BME)?\s+{c}\s+Manufacturing Purchasing Managers['’]? Index\s*\(PMI\)\s+(?:posted|registered|stood at)\s+{number}\b",
+            rf"\bseasonally adjusted (?:HCOB|S&P Global)(?:/BME)?\s+{c}\s+Manufacturing PMI\s+(?:posted|registered|stood at)\s+{number}\b",
         ]
-        if any(phrase in context for phrase in exact_phrases):
-            selected.append(entry)
-    return selected
+    elif sector=="services":
+        patterns=[
+            rf"\bAt\s+{number}\s+in\s+(?:January|February|March|April|May|June|July|August|September|October|November|December).{{0,400}}?\b(?:HCOB|S&P Global)(?:/BME)?\s+{c}\s+Services PMI Business Activity Index\b",
+            rf"\bFlash\s+{c}\s+Services PMI Business Activity Index\s*:\s*{number}\b",
+            rf"\b(?:HCOB|S&P Global)(?:/BME)?\s+{c}\s+Services PMI Business Activity Index\s*:\s*{number}\b",
+            rf"\b(?:HCOB|S&P Global)(?:/BME)?\s+{c}\s+Services PMI Business Activity Index\s+(?:posted|registered|stood at)\s+{number}\b",
+            rf"\b{c}\s+Services PMI Business Activity Index\s+(?:posted|registered|stood at|rose to|fell to)\s+{number}\b",
+        ]
+    else:
+        raise ValueError(sector)
+    for priority,pattern in enumerate(patterns,1):
+        for match in re.finditer(pattern,compact,re.I|re.S):
+            value=float(match.group(1))
+            context=compact[max(0,match.start()-120):match.end()+150]
+            if not 20<=value<=80:
+                continue
+            if value==50.0 and re.search(r">\s*50(?:\.0)?\s*=|50\s*=\s*(?:growth|improvement|expansion)",context,re.I):
+                continue
+            return value,match.group(0)
+    return None
 
-def sp_pmi(country: str, sector: str) -> list[Point]:
-    """UK-style direct title targeting on S&P's official releases list."""
-    candidates=sp_release_candidates(country)
-    # Direct web-search lookup is fallback only when S&P returns a partial calendar.
-    if not candidates:
-        query=f'site:pmi.spglobal.com/Public/Home/PressRelease "{country}" "PMI" 2026'
-        candidates=[{"title":"","url":url,"release_date":""} for url in search_result_urls(query)]
+
+def fetch_sp_country_pmi(country: str) -> dict[str,list[Point]]:
+    """Process one country from discovery through both sectors before moving on."""
+    if country in _SP_COUNTRY_CACHE:
+        return _SP_COUNTRY_CACHE[country]
+    log(f"[S&P PMI/{country}] START country-only pipeline")
+    candidates=discover_sp_country_releases(country)
     if not candidates:
         raise RuntimeError(f"No S&P Global {country} PMI release located")
-    observations: dict[str,Point]={}; errors=[]
-    for candidate in candidates[:40]:
-        title=candidate["title"]
-        # Flash country releases contain both manufacturing and services. Final
-        # country releases are sector-specific; inspect both where title is broad.
-        if sector not in title.lower() and "flash" not in title.lower() and title:
+    observations: dict[str,dict[str,Point]]={"manufacturing":{},"services":{}}
+    errors=[]
+    for candidate in candidates:
+        title_lower=candidate["title"].lower()
+        release_type="flash" if "flash" in title_lower else "final"
+        if "manufacturing" in title_lower:
+            sectors=["manufacturing"]
+        elif "services" in title_lower:
+            sectors=["services"]
+        elif "flash" in title_lower and country.lower() in title_lower and "pmi" in title_lower:
+            sectors=["manufacturing","services"]
+        else:
             continue
+        release_dt=parse_sp_release_date(candidate["release_date"])
+        if release_dt is not None:
+            if release_type=="flash":
+                expected_period=f"{release_dt.year:04d}-{release_dt.month:02d}"
+            else:
+                serial=release_dt.year*12+release_dt.month-2
+                expected_period=f"{serial//12:04d}-{serial%12+1:02d}"
+        else:
+            expected_period=""
         try:
-            response=get(candidate["url"]); text=response_text(response)
-            if country.lower() not in clean(text).lower(): continue
-            value,label=extract_pmi_summary(text,country,sector)
-            period=month_name_period(text)
-            if not period: raise RuntimeError("reference period not found")
-            is_flash=bool(re.search(rf"Flash\s+{re.escape(country)}\s+(?:PMI|Manufacturing|Services)",text,re.I))
-            release_type="flash" if is_flash else "final"
-            point=Point(period,value,response.url,release_type,note=f"matched exact summary label: {label}")
-            old=observations.get(period)
-            if old is None or (release_type=="final" and old.status!="final"):
-                observations[period]=point
+            response=get(candidate["url"])
+            text=response_text(response)
+            if country.lower() not in clean(text).lower():
+                continue
+            if not expected_period:
+                expected_period=month_name_period(text) or ""
+            if not expected_period:
+                raise RuntimeError("reference period not found")
+            for sector in sectors:
+                parsed=extract_country_pmi_value(text,country,sector)
+                if parsed is None:
+                    errors.append(f"{candidate['url']} {sector}: exact value not parsed")
+                    continue
+                value,label=parsed
+                point=Point(expected_period,value,response.url,release_type,note=f"matched UK-template label: {label}")
+                current=observations[sector].get(expected_period)
+                if current is None or (release_type=="final" and current.status!="final"):
+                    observations[sector][expected_period]=point
+                log(f"[S&P PMI/{country}] {expected_period} {sector}={value} ({release_type})")
         except Exception as error:
             errors.append(f"{candidate['url']}: {error}")
-    if not observations:
-        raise RuntimeError("No exact S&P Global PMI summary parsed; " + " | ".join(errors[:5]))
-    return [observations[key] for key in sorted(observations)]
+    result={sector:[rows[key] for key in sorted(rows)] for sector,rows in observations.items()}
+    _SP_COUNTRY_CACHE[country]=result
+    log(f"[S&P PMI/{country}] DONE manufacturing={len(result['manufacturing'])} services={len(result['services'])}")
+    if not result["manufacturing"] and not result["services"]:
+        raise RuntimeError("No exact S&P Global PMI values parsed; "+" | ".join(errors[:8]))
+    return result
+
+
+def sp_pmi(country: str,sector: str) -> list[Point]:
+    country_result=fetch_sp_country_pmi(country)
+    points=country_result.get(sector,[])
+    if not points:
+        raise RuntimeError(f"{country} {sector} PMI not parsed in country-only pipeline")
+    return points
 
 def latest_press_series(url: str, specs: list[tuple[str,str]], period: str) -> list[Point]:
     response = get(url)
