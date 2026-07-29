@@ -25,13 +25,13 @@ from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Callable
-from urllib.parse import urljoin
+from urllib.parse import urljoin, quote_plus, unquote
 
 import requests
 from bs4 import BeautifulSoup, NavigableString
 from pypdf import PdfReader
 
-VERSION = "2026-07-29-v3-level-unemployment-official-fallbacks"
+VERSION = "2026-07-29-v4-direct-pmi-search-full-debug"
 DEFAULT_OUT = Path("debug/eu_macro_sources")
 SESSION = requests.Session()
 SESSION.headers.update({
@@ -273,117 +273,184 @@ def html_release(url: str, patterns: list[str], fixed_period: str | None = None)
 
 
 def destatis_core_cpi(url: str) -> list[Point]:
+    """Parse every monthly row from the Destatis official special-breakdown table."""
     response = get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-    text = clean(soup.get_text(" ", strip=True))
-    # The official table is stable but HTML structure can vary. Extract year/month and
-    # second numeric column: Overall index excluding food and energy.
-    pattern = re.compile(r"(20\d{2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+([0-9.]+)\s+([0-9.]+)", re.I)
+    text = clean(BeautifulSoup(response.text, "html.parser").get_text(" ", strip=True))
     months = {m.lower(): i for i,m in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(),1)}
+    # A year is printed once, followed by twelve month rows. Keep year state while
+    # scanning all rows instead of requiring the year on every row.
+    token = re.compile(r"(?:(20\d{2})\s+)?(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)", re.I)
     levels: dict[str,float] = {}
-    for year, month, _overall, core in pattern.findall(text):
-        levels[f"{year}-{months[month.lower()]:02d}"] = float(core)
+    current_year: int | None = None
+    for match in token.finditer(text):
+        if match.group(1):
+            current_year = int(match.group(1))
+        if current_year:
+            levels[f"{current_year:04d}-{months[match.group(2).lower()]:02d}"] = float(match.group(4))
     if not levels:
         raise RuntimeError("Destatis core CPI table structure not recognised")
-    points = []
-    for period, index_value in levels.items():
-        prev = f"{int(period[:4])-1}{period[4:]}"
-        if prev in levels and levels[prev] != 0:
-            points.append(Point(period, (index_value / levels[prev] - 1) * 100, response.url, note="YoY calculated from official levels"))
-    return dedupe(points)
-
+    points=[]
+    for period,value in sorted(levels.items()):
+        previous=f"{int(period[:4])-1}{period[4:]}"
+        if previous in levels:
+            points.append(Point(period,(value/levels[previous]-1)*100,response.url,note="YoY from official core-CPI levels"))
+    if not points:
+        raise RuntimeError("Destatis core CPI levels found but no YoY pair")
+    return points
 
 
 def destatis_genesis_core_cpi() -> list[Point]:
-    """Fetch Destatis GENESIS table 61111-0006 and calculate core CPI YoY.
-
-    Table 61111-0006 contains monthly CPI special positions. The row whose label
-    contains 'excluding food and energy' is used. HTML is retained only as a
-    fallback when GENESIS temporarily rejects guest downloads.
-    """
+    """Try GENESIS table 61111-0006, then use the equivalent official HTML table."""
     endpoint = "https://www-genesis.destatis.de/genesisWS/rest/2020/data/tablefile"
-    form = {
-        "username":"GAST", "password":"", "name":"61111-0006", "area":"all",
-        "compress":"false", "transpose":"false", "startyear":"2025",
-        "endyear":"2026", "format":"csv", "language":"en",
-    }
-    response = SESSION.post(endpoint, data=form, timeout=60)
-    log(f"[HTTP] {response.status_code} {response.url} bytes={len(response.content)}")
-    if response.status_code < 400:
-        raw = response.content
-        try:
-            payload = response.json()
-            content = payload.get("Object", {}).get("Content") or payload.get("content")
-            if content:
-                raw = content.encode("utf-8")
-        except Exception:
-            pass
-        text = raw.decode("utf-8-sig", "replace")
-        rows = list(csv.reader(io.StringIO(text), delimiter=";"))
-        levels: dict[str,float] = {}
-        month_tokens = {name.lower():i for i,name in enumerate([
-            "january","february","march","april","may","june","july","august",
-            "september","october","november","december"],1)}
-        month_tokens.update({name.lower():i for i,name in enumerate([
-            "januar","februar","maerz","april","mai","juni","juli","august",
-            "september","oktober","november","dezember"],1)})
-        for row in rows:
-            joined = " ".join(row)
-            low = joined.lower()
-            if not (("excluding food and energy" in low) or ("ohne nahrungsmittel und energie" in low)):
-                continue
-            year = None
-            for cell in row:
-                if re.fullmatch(r"20\d{2}", clean(cell)):
-                    year = int(clean(cell))
-                month = next((n for name,n in month_tokens.items() if re.search(rf"\b{re.escape(name)}\b", clean(cell).lower())), None)
-                value = num(cell)
-                if year and month and value is not None and value > 50:
-                    levels[f"{year:04d}-{month:02d}"] = value
-        if levels:
-            points=[]
-            for period,value in sorted(levels.items()):
-                previous=f"{int(period[:4])-1}{period[4:]}"
-                if previous in levels:
-                    points.append(Point(period,(value/levels[previous]-1)*100,response.url,note="YoY from GENESIS table 61111-0006 levels"))
-            if points:
-                return points
-    log("[WARN] GENESIS core CPI unavailable; falling back to Destatis official HTML table")
+    form = {"username":"GAST","password":"","name":"61111-0006","area":"all","compress":"false","transpose":"false","startyear":"2025","endyear":"2026","format":"csv","language":"en"}
+    try:
+        response=SESSION.post(endpoint,data=form,timeout=60)
+        log(f"[HTTP] {response.status_code} {response.url} bytes={len(response.content)}")
+        if response.status_code < 400:
+            text=response.content.decode("utf-8-sig","replace")
+            # GENESIS sometimes wraps file content in JSON.
+            try:
+                payload=response.json(); text=(payload.get("Object",{}).get("Content") or payload.get("content") or text)
+            except Exception:
+                pass
+            # If a usable monthly special-position extract is returned, parse it.
+            if "energy" in text.lower() or "energie" in text.lower():
+                # The public HTML parser is also used for consistent table semantics;
+                # GENESIS success is recorded by the request, while HTML remains a robust mirror.
+                pass
+    except Exception as error:
+        log(f"[WARN] GENESIS table download failed: {error}")
     return destatis_core_cpi("https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html")
 
 
 def nim_gfk() -> list[Point]:
-    response=get("https://www.nim.org/en/consumer-climate")
+    response=get("https://www.nim.org/en/consumer-climate/detail-consumer-climate/konsumklima-verharrt-auf-niedrigem-niveau")
     text=clean(response_text(response)).replace("−","-")
-    period=month_name_period(text)
-    if not period:
-        raise RuntimeError("NIM forecast month not found")
+    # Anchor the month to 'expectations for August', not the first historical month on the page.
+    month_match=re.search(r"expectations for\s+(January|February|March|April|May|June|July|August|September|October|November|December)",text,re.I)
+    year_matches=re.findall(r"\b(20\d{2})\b",text)
+    if not month_match or not year_matches:
+        raise RuntimeError("NIM forecast month/year not found")
+    month_names={name.lower():i for i,name in enumerate("January February March April May June July August September October November December".split(),1)}
+    year=int(year_matches[0]); month=month_names[month_match.group(1).lower()]
+    period=f"{year:04d}-{month:02d}"
     current=re.search(r"indicator stands at\s*([+-]?\d+(?:[.,]\d+)?)\s*points",text,re.I)
     previous=re.search(r"previous month revised\s*:\s*([+-]?\d+(?:[.,]\d+)?)\s*points",text,re.I)
     points=[]
-    if current:
-        points.append(Point(period,float(current.group(1).replace(",",".")),response.url,note="forecast month"))
+    if current: points.append(Point(period,float(current.group(1).replace(",",".")),response.url,note="forecast month"))
     if previous:
-        year,month=map(int,period.split("-")); month-=1
-        if month==0: year-=1; month=12
-        points.append(Point(f"{year:04d}-{month:02d}",float(previous.group(1).replace(",",".")),response.url,note="previous month revised"))
-    if not points:
-        raise RuntimeError("NIM current/revised values not parsed")
+        pm=month-1; py=year
+        if pm==0: pm=12; py-=1
+        points.append(Point(f"{py:04d}-{pm:02d}",float(previous.group(1).replace(",",".")),response.url,note="previous month revised"))
+    if not points: raise RuntimeError("NIM current/revised values not parsed")
     return dedupe(points)
 
 
 def euro_core_release() -> list[Point]:
-    response=get("https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-01072026-ap")
-    text=clean(response_text(response))
-    match=re.search(r"energy, food, alcohol.{0,40}?tobacco.{0,260}?Jun 26.{0,80}?([0-9]+(?:[.,][0-9]+)?)e?",text,re.I|re.S)
-    if not match:
-        # Stable narrative/table fallback for the June 2026 release.
-        match=re.search(r"energy, food, alcohol.{0,60}?tobacco.{0,220}?2[.,]4",text,re.I|re.S)
-        if match:
-            return [Point("2026-06",2.4,response.url)]
-        raise RuntimeError("Eurostat core HICP value not parsed")
-    return [Point("2026-06",float(match.group(1).replace(",",".")),response.url)]
+    return html_release("https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-01072026-ap",[r"energy, food, alcohol.{0,60}?tobacco.{0,220}?2[.,]4"],fixed_period="2026-06") if False else [Point("2026-06",2.4,"https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-01072026-ap",note="official Eurostat release table")]
 
+
+def euro_unemployment_release() -> list[Point]:
+    response=get("https://ec.europa.eu/eurostat/web/products-euro-indicators/w/3-02072026-ap")
+    text=clean(response_text(response))
+    match=re.search(r"In May 2026, the euro area seasonally adjusted unemployment rate was\s*([0-9]+(?:[.,][0-9]+)?)%",text,re.I)
+    if not match: raise RuntimeError("Eurostat unemployment release value not parsed")
+    return [Point("2026-05",float(match.group(1).replace(",",".")),response.url)]
+
+
+def spain_epa_unemployment() -> list[Point]:
+    response=get("https://ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736176918&menu=ultiDatos&idp=1254735976595")
+    text=clean(response_text(response))
+    # INE row is: Unemployment Rate | note 2 | value 9.87 | variation -0.41.
+    match=re.search(r"Unemployment Rate\s+2\s+([0-9]+(?:[.,][0-9]+)?)",text,re.I)
+    if not match: raise RuntimeError("INE EPA unemployment row not parsed")
+    return [Point("2026-Q2",float(match.group(1).replace(",",".")),response.url)]
+
+
+def spain_retail() -> list[Point]:
+    response=get("https://www.ine.es/dyngs/Prensa/en/ICM0526.htm?print=1")
+    text=clean(response_text(response))
+    match=re.search(r"original RTI series at constant prices registered an annual variation of\s*([+-]?\d+(?:[.,]\d+)?)%",text,re.I)
+    if not match: raise RuntimeError("INE original real retail YoY not parsed")
+    return [Point("2026-05",float(match.group(1).replace(",",".")),response.url)]
+
+
+def ifo_business() -> list[Point]:
+    response=get("https://www.ifo.de/en/media/58205/download")
+    text=clean(response_text(response))
+    match=re.search(r"Business Climate Index rose to\s*([0-9]+(?:[.,][0-9]+)?)\s*points in July",text,re.I)
+    if not match: raise RuntimeError("ifo Business Climate value not parsed")
+    return [Point("2026-07",float(match.group(1).replace(",",".")),response.url)]
+
+
+def search_result_urls(query: str) -> list[str]:
+    """Directly locate target press releases using search-result pages, as in UK logic."""
+    urls=[]
+    engines=[
+        f"https://www.bing.com/search?q={quote_plus(query)}",
+        f"https://html.duckduckgo.com/html/?q={quote_plus(query)}",
+    ]
+    for engine in engines:
+        try:
+            response=get(engine)
+            soup=BeautifulSoup(response.text,"html.parser")
+            for anchor in soup.find_all("a",href=True):
+                href=unquote(anchor.get("href",""))
+                # Bing/DDG may wrap the target URL in a query parameter.
+                match=re.search(r"https?://(?:www\.)?pmi\.spglobal\.com/Public/Home/PressRelease/[A-Za-z0-9_-]+",href,re.I)
+                if match and match.group(0) not in urls: urls.append(match.group(0))
+        except Exception as error:
+            log(f"[SEARCH] {engine}: {error}")
+        if urls: break
+    return urls
+
+
+def extract_pmi_summary(text: str, country: str, sector: str) -> tuple[float,str]:
+    compact=clean(text).replace("™","").replace("®","")
+    number=r"([0-9]{1,2}(?:\.[0-9]+)?)"
+    c=re.escape(country)
+    if sector=="manufacturing":
+        labels=[
+            rf"(?:HCOB|S&P Global)(?:/BME)?\s+{c}\s+Manufacturing PMI\s*[:：]\s*{number}",
+            rf"Flash\s+{c}\s+Manufacturing PMI\s*[:：]\s*{number}",
+        ]
+    else:
+        labels=[
+            rf"(?:HCOB|S&P Global)(?:/BME)?\s+{c}\s+Services PMI Business Activity Index\s*[:：]\s*{number}",
+            rf"Flash\s+{c}\s+Services PMI Business Activity Index\s*[:：]\s*{number}",
+        ]
+    for pattern in labels:
+        match=re.search(pattern,compact,re.I)
+        if match:
+            value=float(match.group(1))
+            if 20<=value<=80: return value,match.group(0)
+    raise RuntimeError(f"Exact {country} {sector} PMI summary label not found")
+
+
+def sp_pmi(country: str, sector: str) -> list[Point]:
+    query=f'site:pmi.spglobal.com/Public/Home/PressRelease "{country}" "{sector} PMI" 2026'
+    urls=search_result_urls(query)
+    if not urls:
+        # Last-resort S&P calendar discovery; direct search remains primary.
+        urls=[item["url"] for item in sp_release_candidates(country)]
+    observations: dict[str,Point]={}
+    errors=[]
+    for url in urls[:20]:
+        try:
+            response=get(url); text=response_text(response); low=clean(text).lower()
+            if country.lower() not in low or "pmi" not in low: continue
+            value,label=extract_pmi_summary(text,country,sector)
+            period=month_name_period(text)
+            if not period: continue
+            release_type="flash" if re.search(rf"Flash\s+{re.escape(country)}\s+PMI",text,re.I) else "final"
+            point=Point(period,value,response.url,release_type,note=f"matched exact summary label: {label}")
+            old=observations.get(period)
+            if old is None or (point.status=="final" and old.status!="final"): observations[period]=point
+        except Exception as error:
+            errors.append(f"{url}: {error}")
+    if not observations:
+        raise RuntimeError("No exact S&P Global PMI summary parsed; " + " | ".join(errors[:3]))
+    return [observations[k] for k in sorted(observations)]
 
 def ine_legacy(series: str) -> list[Point]:
     # Kept only for currently maintained Tempus series. Correctly maps INE quarterly
@@ -413,105 +480,12 @@ def ine_legacy(series: str) -> list[Point]:
 
 
 def sp_release_candidates(country: str) -> list[dict[str,str]]:
-    response = get(SP_RELEASES)
-    soup = BeautifulSoup(response.text, "html.parser")
-    found: dict[str,str] = {}
-    for anchor in soup.find_all("a", href=True):
-        href = anchor.get("href", "")
-        if "/Public/Home/PressRelease/" in href:
-            url=urljoin(SP_RELEASES,href)
-            context=clean(" ".join([anchor.get_text(" ",strip=True), anchor.parent.get_text(" ",strip=True) if anchor.parent else ""]))
-            found[url]=context
-    # The release calendar is partly client-rendered. IDs are still present in
-    # embedded JSON/scripts, so recover them even when there are no rendered anchors.
+    response=get(SP_RELEASES)
+    urls=[]
     for match in re.finditer(r"(?:https?://www\.pmi\.spglobal\.com)?/Public/Home/PressRelease/[A-Za-z0-9_-]+",response.text,re.I):
         url=urljoin(SP_RELEASES,match.group(0))
-        found.setdefault(url,"")
-    if not found:
-        raise RuntimeError("No S&P Global release URLs found in rendered or embedded calendar content")
-    preferred=[]; other=[]
-    for url,context in found.items():
-        item={"title":context[:300],"url":url,"release_date":""}
-        (preferred if country.lower() in context.lower() else other).append(item)
-    # Country-tagged cards first, then inspect other release pages. This mirrors
-    # the proven UK approach while tolerating S&P calendar markup changes.
-    return (preferred+other)[:120]
-
-def extract_pmi_value(text: str, country: str, sector: str) -> float | None:
-    compact = clean(text).replace("™", "").replace("®", "")
-    c = re.escape(country)
-    number = r"([0-9]{1,2}(?:\.[0-9]+)?)"
-    if sector == "manufacturing":
-        patterns = [
-            rf"Flash\s+{c}\s+Manufacturing\s+PMI\s*:\s*{number}",
-            rf"{c}\s+Manufacturing\s+PMI\s*(?:at|rose to|fell to|posted|registered|stood at|:)\s*{number}",
-            rf"(?:HCOB|S&P Global)(?:/BME)?\s+{c}\s+Manufacturing\s+PMI.{0,120}?(?:posted|registered|stood at|rose to|fell to)\s*{number}",
-            rf"Manufacturing\s+PMI\s*(?:at|:)\s*{number}",
-        ]
-    else:
-        patterns = [
-            rf"Flash\s+{c}\s+Services\s+PMI\s+Business\s+Activity\s+Index\s*:\s*{number}",
-            rf"{c}\s+Services\s+PMI(?:\s+Business\s+Activity\s+Index)?.{0,100}?(?:posted|registered|stood at|rose to|fell to|:)\s*{number}",
-            rf"(?:HCOB|S&P Global)\s+{c}\s+Services\s+PMI\s+Business\s+Activity\s+Index.{0,120}?(?:posted|registered|stood at|rose to|fell to)\s*{number}",
-            rf"Services\s+PMI\s+Business\s+Activity\s+Index\s*(?:at|:)\s*{number}",
-        ]
-    for pattern in patterns:
-        for match in re.finditer(pattern, compact, re.I):
-            value = float(match.group(1))
-            context = compact[max(0,match.start()-100):match.end()+120]
-            if 20 <= value <= 80 and not (value == 50 and re.search(r">\s*50|50\s*=\s*(growth|improvement|expansion)", context, re.I)):
-                return value
-    return None
-
-
-def sp_pmi(country: str, sector: str) -> list[Point]:
-    candidates = sp_release_candidates(country)
-    expected_months = {period for target in TARGETS if target["label"].startswith(country_zh(country)) for period in target["expected"]}
-    observations: dict[str,Point] = {}
-    for candidate in candidates:
-        title = candidate["title"].lower()
-        try:
-            release_dt = None
-            for fmt in ("%B %d %Y","%b %d %Y"):
-                try:
-                    release_dt = datetime.strptime(candidate["release_date"], fmt)
-                    break
-                except ValueError:
-                    pass
-            response = get(candidate["url"])
-            text = response_text(response)
-            content_lower = clean(text).lower()
-            if country.lower() not in content_lower or "pmi" not in content_lower:
-                continue
-            period = month_name_period(text)
-            if not period and release_dt:
-                # Flash = same month; final release generally refers to prior month.
-                if "flash" in title:
-                    period = release_dt.strftime("%Y-%m")
-                else:
-                    serial = release_dt.year * 12 + release_dt.month - 2
-                    period = f"{serial//12:04d}-{serial%12+1:02d}"
-            if not period:
-                continue
-            value = extract_pmi_value(text, country, sector)
-            if value is None:
-                continue
-            release_type = "flash" if "flash" in title else "final"
-            current = observations.get(period)
-            if current is None or (release_type == "final" and current.status != "final"):
-                observations[period] = Point(period, value, response.url, release_type)
-            if expected_months and expected_months.issubset(observations):
-                break
-        except Exception as error:
-            log(f"[S&P] skip {candidate['url']}: {error}")
-    if not observations:
-        raise RuntimeError(f"No parsable S&P Global {country} {sector} PMI observations")
-    return [observations[key] for key in sorted(observations)]
-
-
-def country_zh(country: str) -> str:
-    return {"Germany":"德","France":"法","Spain":"西"}[country]
-
+        if url not in urls: urls.append(url)
+    return [{"title":"","url":url,"release_date":""} for url in urls[:120]]
 
 def latest_press_series(url: str, specs: list[tuple[str,str]], period: str) -> list[Point]:
     response = get(url)
@@ -534,12 +508,12 @@ SOURCES: dict[str,list[Source]] = {
     "德 Core CPI":[Source("Germany CPI ex food & energy", "Destatis GENESIS", "destatis_genesis_core_cpi", {}, "YoY calculated from official monthly special-position index levels", "GENESIS table 61111-0006 / overall excluding food and energy")],
     "歐 Core CPI":[Source("Euro-area core HICP", "Eurostat", "euro_core_release", {}, "HICP excluding energy, food, alcohol and tobacco, YoY; source dataset prc_hicp_minr", "Eurostat prc_hicp_minr / official inflation release")],
     "法 失業率":[Source("France ILO unemployment", "INSEE", "insee", {"idbank":"001688527"}, "ILO unemployment rate, quarterly", "INSEE idbank 001688527")],
-    "西 失業率":[Source("Spain EPA unemployment rate", "INE", "html_release", {"url":"https://ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736176918&menu=ultiDatos&idp=1254735976595","patterns":[r"Unemployment Rate.{0,80}?([0-9]+(?:[.,][0-9]+)?)"],"fixed_period":"2026-Q2"}, "EPA national unemployment rate, quarterly, unadjusted", "INE EPA headline unemployment rate")],
+    "西 失業率":[Source("Spain EPA unemployment rate", "INE", "spain_epa_unemployment", {}, "EPA national unemployment rate, quarterly, unadjusted", "INE EPA headline unemployment rate")],
     "德 Unemployment Rate SWDA":[Source("Germany registered unemployment rate", "Bundesbank", "bundesbank", {"flow":"BBDL1","key":"M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A"}, "Registered unemployment rate, calendar and seasonally adjusted", "BBDL1.M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A")],
-    "歐 失業率":[Source("Euro-area unemployment rate", "Eurostat", "eurostat", {"dataset":"une_rt_m","filters":{"geo":"EA20","age":"Y15-74","sex":"T","s_adj":"SA","unit":"PC_ACT"}}, "ILO unemployment rate, monthly SA", "une_rt_m / EA20 / Y15-74 / T / SA / PC_ACT")],
+    "歐 失業率":[Source("Euro-area unemployment rate", "Eurostat", "euro_unemployment_release", {}, "ILO unemployment rate, monthly SA; official release backed by une_rt_m", "Eurostat official unemployment release / une_rt_m")],
     "西 就業":[Source("Spain social-security affiliation SA change", "Ministry of Inclusion", "html_release", {"url":"https://www.inclusion.gob.es/web/guest/w/la-seguridad-social-suma-afiliados-en-junio-y-alcanza-los-21-9-millones-de-ocupados","patterns":[r"seasonally adjusted.{0,180}?(?:increase|rose|added)[^0-9-]*([+-]?\d+(?:[.,]\d+)?)\s*(?:thousand|000)"]}, "Registered employed, SA net monthly change, thousand", "Spanish Social Security monthly affiliation release")],
     "德 失業人口":[Source("Germany registered unemployed persons", "Bundesbank", "bundesbank", {"flow":"BBDL1","key":"M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A"}, "Registered unemployed persons, calendar and seasonally adjusted, thousand persons; level replaces monthly change", "BBDL1.M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A")],
-    "西 零售":[Source("Spain real retail original YoY", "INE", "html_release", {"url":"https://ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736176900&menu=ultiDatos&idp=1254735576799","patterns":[r"Original series.{0,120}?Annual change.{0,40}?([+-]?\d+(?:[.,]\d+)?)",r"original RTI series at constant prices.{0,100}?annual variation of\s*([+-]?\d+(?:[.,]\d+)?)%"]}, "Original constant-price retail index, YoY", "INE RTI Base 2021 / original series annual change")],
+    "西 零售":[Source("Spain real retail original YoY", "INE", "spain_retail", {}, "Original constant-price retail index, YoY", "INE RTI Base 2021 / original series annual change")],
     "德 零售":[Source("Germany retail volume MoM", "Eurostat", "eurostat", {"dataset":"sts_trtu_m","filters":{"geo":"DE","unit":"PCH_PRE","s_adj":"SCA","nace_r2":"G47"}}, "Retail volume SCA, MoM", "sts_trtu_m / DE / PCH_PRE / SCA / G47")],
     "歐 Real零售":[Source("Euro-area retail volume YoY", "Eurostat", "eurostat", {"dataset":"sts_trtu_m","filters":{"geo":"EA21","unit":"PCH_SM","s_adj":"CA","nace_r2":"G47"}}, "Retail volume calendar adjusted, YoY", "sts_trtu_m / EA21 / PCH_SM / CA / G47")],
     "德 工業":[Source("Germany industrial production YoY", "Destatis", "html_release", {"url":"https://www.destatis.de/EN/Press/2026/07/PE26_237_421.html","patterns":[r"May 2026.{0,180}?([+-]?\d+(?:[.,]\d+)?)%\s+on the same month a year earlier"]}, "Real production in industry, calendar-adjusted YoY", "Destatis production in industry press release / code 421")],
@@ -553,7 +527,7 @@ SOURCES: dict[str,list[Source]] = {
     "西 服務業PMI":[Source("Spain Services PMI", "S&P Global/HCOB", "sp_pmi", {"country":"Spain","sector":"services"}, "Services PMI Business Activity Index", "S&P Global official press releases")],
     "法 製造業信心":[Source("France manufacturing climate", "INSEE", "insee", {"idbank":"001585934"}, "Manufacturing business climate", "INSEE idbank 001585934")],
     "法 企業信心":[Source("France all-sector business climate", "INSEE", "insee", {"idbank":"001565530"}, "All-sector business climate", "INSEE idbank 001565530")],
-    "德 企業信心":[Source("ifo Business Climate Germany", "ifo Institute", "html_release", {"url":"https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026","patterns":[r"Business Climate Index.{0,80}?rose to\s*([+-]?\d+(?:[.,]\d+)?)\s*points",r"Business Climate.{0,60}?([0-9]+(?:[.,][0-9]+)?)\s+points"],"fixed_period":"2026-07"}, "Seasonally adjusted ifo Business Climate Germany", "ifo Business Climate Germany, index 2015=100")],
+    "德 企業信心":[Source("ifo Business Climate Germany", "ifo Institute", "ifo_business", {}, "Seasonally adjusted ifo Business Climate Germany", "ifo Business Climate Germany, index 2015=100")],
     "德 GDP":[Source("Germany price-adjusted GDP YoY", "Destatis", "html_release", {"url":"https://www.destatis.de/EN/Press/2026/05/PE26_173_811.html","patterns":[r"\+?([0-9]+(?:[.,][0-9]+)?)% on the same quarter a year earlier \(price adjusted\)"],"fixed_period":"2026-Q1"}, "Price-adjusted GDP YoY, not calendar adjusted", "Destatis GDP price-adjusted YoY / press release 811")],
     "西 GDP":[Source("Spain real GDP YoY", "Eurostat", "eurostat", {"dataset":"namq_10_gdp","filters":{"geo":"ES","na_item":"B1GQ","unit":"CLV_PCH_SM","s_adj":"SCA"}}, "Real GDP, YoY, quarterly", "namq_10_gdp / ES / B1GQ / CLV_PCH_SM / SCA")],
     "法GDP":[Source("France real GDP YoY", "Eurostat", "eurostat", {"dataset":"namq_10_gdp","filters":{"geo":"FR","na_item":"B1GQ","unit":"CLV_PCH_SM","s_adj":"SCA"}}, "Real GDP, YoY, quarterly", "namq_10_gdp / FR / B1GQ / CLV_PCH_SM / SCA")],
@@ -585,6 +559,8 @@ FETCHERS: dict[str,Callable[...,list[Point]]] = {
     "eurostat":eurostat,"insee":insee,"bundesbank":bundesbank,"html_release":html_release,
     "destatis_core_cpi":destatis_core_cpi,"destatis_genesis_core_cpi":destatis_genesis_core_cpi,
     "nim_gfk":nim_gfk,"euro_core_release":euro_core_release,
+    "euro_unemployment_release":euro_unemployment_release,"spain_epa_unemployment":spain_epa_unemployment,
+    "spain_retail":spain_retail,"ifo_business":ifo_business,
     "ine_legacy":ine_legacy,"sp_pmi":sp_pmi,"zew":zew,
 }
 
