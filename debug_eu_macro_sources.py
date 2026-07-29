@@ -31,7 +31,7 @@ import requests
 from bs4 import BeautifulSoup, NavigableString
 from pypdf import PdfReader
 
-VERSION = "2026-07-29-v5-pmi-calendar-title-context"
+VERSION = "2026-07-29-v7-spain-affiliation-official-pdf"
 DEFAULT_OUT = Path("debug/eu_macro_sources")
 SESSION = requests.Session()
 SESSION.headers.update({
@@ -42,6 +42,7 @@ EUROSTAT = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data"
 INSEE = "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM"
 BUNDESBANK = "https://api.statistiken.bundesbank.de/rest/data"
 SP_RELEASES = "https://www.pmi.spglobal.com/Public/Release/PressReleases"
+_SP_RELEASE_CACHE: list[dict[str,str]] | None = None
 
 
 @dataclass
@@ -367,6 +368,87 @@ def spain_epa_unemployment() -> list[Point]:
     return [Point("2026-Q2",float(match.group(1).replace(",",".")),response.url)]
 
 
+
+def spain_social_security_affiliation() -> list[Point]:
+    """Fetch Spain's official seasonally adjusted monthly affiliation change.
+
+    Primary source is the Seguridad Social statistics page. The page publishes a
+    monthly PDF titled 'Afiliados medios y con ajuste estacional por actividad
+    economica'. We discover the current PDF URL dynamically, so the pipeline does
+    not depend on a news-release slug that changes every month.
+    """
+    index_url = (
+        "https://www.seg-social.es/wps/portal/wss/internet/"
+        "EstadisticasPresupuestosEstudios/Estadisticas/EST8/"
+        "f32c1896-f56d-4728-a4ac-fa0b410ea0b2/"
+        "42105a1e-060c-47f4-9b3c-33c530a606ca"
+    )
+    index_response = get(index_url)
+    soup = BeautifulSoup(index_response.text, "html.parser")
+    candidates: list[tuple[str, str]] = []
+    for anchor in soup.find_all("a", href=True):
+        label = clean(anchor.get_text(" ", strip=True))
+        parent_text = clean(anchor.parent.get_text(" ", strip=True)) if anchor.parent else label
+        context = clean(f"{label} {parent_text}")
+        href = urljoin(index_response.url, anchor.get("href", ""))
+        if ("ajuste estacional" in context.lower() and href.lower().split("?")[0].endswith(".pdf")):
+            candidates.append((context, href))
+    if not candidates:
+        # WCM pages may expose the file only in raw markup.
+        pattern = re.compile(r'href=["\']([^"\']+\.pdf[^"\']*)["\']', re.I)
+        for match in pattern.finditer(index_response.text):
+            href = urljoin(index_response.url, match.group(1).replace("&amp;", "&"))
+            raw_context = clean(BeautifulSoup(index_response.text[max(0, match.start()-600):match.end()+200], "html.parser").get_text(" ", strip=True))
+            if "ajuste estacional" in raw_context.lower():
+                candidates.append((raw_context, href))
+    if not candidates:
+        raise RuntimeError("Official Seguridad Social seasonally-adjusted affiliation PDF not found")
+
+    month_names = {
+        "enero":1,"febrero":2,"marzo":3,"abril":4,"mayo":5,"junio":6,
+        "julio":7,"agosto":8,"septiembre":9,"octubre":10,"noviembre":11,"diciembre":12,
+    }
+    errors=[]
+    for context, pdf_url in candidates:
+        try:
+            response=get(pdf_url)
+            text=clean(response_text(response)).replace("−", "-")
+            # Determine reference period from page context, file name, or PDF text.
+            combined=clean(f"{context} {pdf_url} {text[:2500]}")
+            year_match=re.search(r"\b(20\d{2})\b", combined)
+            month_match=next((m for name,m in month_names.items() if re.search(rf"\b{name}\b", combined, re.I)), None)
+            if not year_match or not month_match:
+                compact_date=re.search(r"(20\d{2})(0[1-9]|1[0-2])", pdf_url)
+                if compact_date:
+                    year=int(compact_date.group(1)); month_match=int(compact_date.group(2))
+                else:
+                    raise RuntimeError("reference month not found")
+            else:
+                year=int(year_match.group(1))
+
+            patterns=[
+                r"VARIACI[OÓ]N\s+MENSUAL\s+AJUSTADA\s*:?\s*([+-]?\s*[0-9][0-9. ]*)",
+                r"variaci[oó]n mensual.{0,80}?desestacionalizad[ao].{0,80}?([+-]?\s*[0-9][0-9. ]*)",
+                r"en t[eé]rminos desestacionalizados.{0,180}?(?:suma|aumenta|crece|incorpora).{0,50}?([0-9][0-9. ]*)\s+afiliad",
+            ]
+            raw_value=None
+            for pattern in patterns:
+                match=re.search(pattern,text,re.I|re.S)
+                if match:
+                    token=match.group(1).replace(" ", "")
+                    sign=-1 if token.startswith("-") else 1
+                    digits=re.sub(r"[^0-9]", "", token)
+                    if digits:
+                        raw_value=sign*int(digits)
+                        break
+            if raw_value is None:
+                raise RuntimeError("seasonally adjusted monthly change not parsed")
+            period=f"{year:04d}-{int(month_match):02d}"
+            return [Point(period, raw_value/1000.0, response.url, note="official adjusted monthly change; persons converted to thousand")]
+        except Exception as error:
+            errors.append(f"{pdf_url}: {error}")
+    raise RuntimeError(" | ".join(errors[:3]))
+
 def spain_retail() -> list[Point]:
     response=get("https://www.ine.es/dyngs/Prensa/en/ICM0526.htm?print=1")
     text=clean(response_text(response))
@@ -378,12 +460,19 @@ def spain_retail() -> list[Point]:
 def ifo_business() -> list[Point]:
     url="https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026"
     response=get(url)
-    text=clean(response_text(response))
-    match=re.search(r"Business Climate Index\s+(?:rose|increased)\s+to\s*([0-9]+(?:[.,][0-9]+)?)\s*points\s+in\s+July",text,re.I)
-    if not match:
-        match=re.search(r"Climate\s+88[.,]5\s+88[.,]8.{0,250}?84[.,]5\s+85[.,]0\s+85[.,]7\s+([0-9]+(?:[.,][0-9]+)?)",text,re.I|re.S)
-    if not match: raise RuntimeError("ifo Business Climate value not parsed")
-    return [Point("2026-07",float(match.group(1).replace(",",".")),response.url)]
+    # Search visible text, raw HTML, meta description and JSON-LD together.
+    blob=" ".join([response.text, response_text(response)])
+    blob=clean(BeautifulSoup(blob,"html.parser").get_text(" ",strip=True))
+    patterns=[
+        r"Business Climate Index\s+(?:rose|increased)\s+to\s*([0-9]+(?:[.,][0-9]+)?)\s*points\s+in\s+July",
+        r"ifo Business Climate Index.{0,160}?([0-9]{2}[.,][0-9])\s*points in July",
+        r"rose to\s*([0-9]{2}[.,][0-9])\s*points in July",
+    ]
+    for pattern in patterns:
+        match=re.search(pattern,blob,re.I|re.S)
+        if match:
+            return [Point("2026-07",float(match.group(1).replace(",",".")),response.url)]
+    raise RuntimeError("ifo Business Climate value not parsed")
 
 def search_result_urls(query: str) -> list[str]:
     """Directly locate target press releases using search-result pages, as in UK logic."""
@@ -481,41 +570,63 @@ def ine_legacy(series: str) -> list[Point]:
     return dedupe(points)
 
 
-def preceding_release_context(anchor: Any) -> str:
-    """Recover the release title/date immediately preceding a View More link."""
-    chunks=[anchor.get_text(" ",strip=True)]
-    node=anchor
-    for _ in range(8):
-        node=node.previous_sibling
-        if node is None: break
-        if isinstance(node,NavigableString):
-            value=clean(node)
-        else:
-            try: value=clean(node.get_text(" ",strip=True))
-            except Exception: value=""
-        if value: chunks.append(value)
-    if anchor.parent:
-        chunks.append(clean(anchor.parent.get_text(" ",strip=True)))
-    return clean(" ".join(chunks))
-
-
-def sp_release_candidates(country: str) -> list[dict[str,str]]:
-    """Read S&P's release list once and keep title/date context for exact targeting."""
+def _all_sp_release_entries() -> list[dict[str,str]]:
+    """Parse each S&P release link with nearby raw-HTML and DOM context once."""
+    global _SP_RELEASE_CACHE
+    if _SP_RELEASE_CACHE is not None:
+        return _SP_RELEASE_CACHE
     response=get(SP_RELEASES)
-    soup=BeautifulSoup(response.text,"html.parser")
-    candidates=[]; seen=set()
+    html=response.text
+    soup=BeautifulSoup(html,"html.parser")
+    entries=[]; seen=set()
     for anchor in soup.find_all("a",href=True):
         href=anchor.get("href","")
         if "/Public/Home/PressRelease/" not in href: continue
         url=urljoin(SP_RELEASES,href)
         if url in seen: continue
-        context=preceding_release_context(anchor)
-        if country.lower() not in context.lower() or "pmi" not in context.lower(): continue
-        date_match=re.search(r"(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}\s+20\d{2}",context,re.I)
-        candidates.append({"title":context,"url":url,"release_date":date_match.group(0) if date_match else ""})
+        pieces=[]
+        # S&P title/date may be in separate preceding blocks, not siblings.
+        for node in anchor.find_all_previous(limit=12):
+            try:
+                value=clean(node.get_text(" ",strip=True))
+            except Exception:
+                value=""
+            if value and len(value)<500: pieces.append(value)
+        pos=html.find(href)
+        if pos>=0:
+            raw=html[max(0,pos-1800):pos]
+            pieces.append(clean(BeautifulSoup(raw,"html.parser").get_text(" ",strip=True)))
+        context=clean(" ".join(pieces))
+        entries.append({"title":context,"url":url,"release_date":""})
         seen.add(url)
-    return candidates
+    # Also recover links from embedded markup if anchors are incomplete.
+    for match in re.finditer(r"(?:https?://www\.pmi\.spglobal\.com)?/Public/Home/PressRelease/[A-Za-z0-9_-]+",html,re.I):
+        url=urljoin(SP_RELEASES,match.group(0))
+        if url in seen: continue
+        raw=html[max(0,match.start()-1800):match.start()]
+        context=clean(BeautifulSoup(raw,"html.parser").get_text(" ",strip=True))
+        entries.append({"title":context,"url":url,"release_date":""})
+        seen.add(url)
+    _SP_RELEASE_CACHE=entries
+    return entries
 
+
+def sp_release_candidates(country: str) -> list[dict[str,str]]:
+    entries=_all_sp_release_entries()
+    country_lower=country.lower()
+    selected=[]
+    for entry in entries:
+        context=entry["title"].lower()
+        # Require the actual release title phrase. This prevents Eurozone releases
+        # whose article body merely mentions Germany or France from being selected.
+        exact_phrases=[
+            f"flash {country_lower} pmi",
+            f"{country_lower} manufacturing pmi",
+            f"{country_lower} services pmi",
+        ]
+        if any(phrase in context for phrase in exact_phrases):
+            selected.append(entry)
+    return selected
 
 def sp_pmi(country: str, sector: str) -> list[Point]:
     """UK-style direct title targeting on S&P's official releases list."""
@@ -575,7 +686,7 @@ SOURCES: dict[str,list[Source]] = {
     "西 失業率":[Source("Spain EPA unemployment rate", "INE", "spain_epa_unemployment", {}, "EPA national unemployment rate, quarterly, unadjusted", "INE EPA headline unemployment rate")],
     "德 Unemployment Rate SWDA":[Source("Germany registered unemployment rate", "Bundesbank", "bundesbank", {"flow":"BBDL1","key":"M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A"}, "Registered unemployment rate, calendar and seasonally adjusted", "BBDL1.M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A")],
     "歐 失業率":[Source("Euro-area unemployment rate", "Eurostat", "euro_unemployment_release", {}, "ILO unemployment rate, monthly SA; official release backed by une_rt_m", "Eurostat official unemployment release / une_rt_m")],
-    "西 就業":[Source("Spain social-security affiliation SA change", "Ministry of Inclusion", "html_release", {"url":"https://www.inclusion.gob.es/web/guest/w/la-seguridad-social-suma-afiliados-en-junio-y-alcanza-los-21-9-millones-de-ocupados","patterns":[r"seasonally adjusted.{0,180}?(?:increase|rose|added)[^0-9-]*([+-]?\d+(?:[.,]\d+)?)\s*(?:thousand|000)"]}, "Registered employed, SA net monthly change, thousand", "Spanish Social Security monthly affiliation release")],
+    "西 就業":[Source("Spain social-security affiliation SA change", "Seguridad Social / TGSS", "spain_social_security_affiliation", {}, "Total-system registered affiliation, seasonally adjusted net monthly change, thousand persons", "Seguridad Social official monthly affiliation report / adjusted series")],
     "德 失業人口":[Source("Germany registered unemployed persons", "Bundesbank", "bundesbank", {"flow":"BBDL1","key":"M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A"}, "Registered unemployed persons, calendar and seasonally adjusted, thousand persons; level replaces monthly change", "BBDL1.M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A")],
     "西 零售":[Source("Spain real retail original YoY", "INE", "spain_retail", {}, "Original constant-price retail index, YoY", "INE RTI Base 2021 / original series annual change")],
     "德 零售":[Source("Germany retail volume MoM", "Eurostat", "eurostat", {"dataset":"sts_trtu_m","filters":{"geo":"DE","unit":"PCH_PRE","s_adj":"SCA","nace_r2":"G47"}}, "Retail volume SCA, MoM", "sts_trtu_m / DE / PCH_PRE / SCA / G47")],
@@ -624,6 +735,7 @@ FETCHERS: dict[str,Callable[...,list[Point]]] = {
     "destatis_core_cpi":destatis_core_cpi,"destatis_genesis_core_cpi":destatis_genesis_core_cpi,
     "nim_gfk":nim_gfk,"euro_core_release":euro_core_release,
     "euro_unemployment_release":euro_unemployment_release,"spain_epa_unemployment":spain_epa_unemployment,
+    "spain_social_security_affiliation":spain_social_security_affiliation,
     "spain_retail":spain_retail,"ifo_business":ifo_business,
     "ine_legacy":ine_legacy,"sp_pmi":sp_pmi,"zew":zew,
 }
