@@ -31,7 +31,7 @@ import requests
 from bs4 import BeautifulSoup, NavigableString
 from pypdf import PdfReader
 
-VERSION = "2026-07-29-v10-country-release-page-inspection"
+VERSION = "2026-07-29-v11-country-search-period-fix"
 DEFAULT_OUT = Path("debug/eu_macro_sources")
 SESSION = requests.Session()
 SESSION.headers.update({
@@ -425,12 +425,22 @@ def spain_social_security_affiliation() -> list[Point]:
             token=match.group(1).replace(" ","")
             sign=-1 if token.startswith("-") else 1
             persons=sign*int(re.sub(r"[^0-9]","",token))
-            # Reference month from article publication date/title/body. Prefer named month near the opening.
-            head=text[:3000].lower()
-            month=next((m for name,m in month_names.items() if re.search(rf"\b{name}\b",head)),None)
-            year_match=re.search(r"\b(20\d{2})\b",head)
-            if not month or not year_match: continue
-            period=f"{int(year_match.group(1)):04d}-{month:02d}"
+            # The article contains unrelated evergreen dates in navigation.
+            # Use its publication date (dd/mm/yyyy), then map a monthly labour
+            # release to the immediately preceding reference month.
+            publication=re.search(r"\b(0?[1-9]|[12]\d|3[01])/(0?[1-9]|1[0-2])/(20\d{2})\b",text[:8000])
+            if publication:
+                pub_month=int(publication.group(2)); pub_year=int(publication.group(3))
+                serial=pub_year*12+pub_month-2
+                period=f"{serial//12:04d}-{serial%12+1:02d}"
+            else:
+                # Fallback to the month explicitly discussed near the adjusted-series paragraph.
+                adjusted=re.search(r"(.{0,1200}serie desestacionalizada.{0,500})",text,re.I|re.S)
+                context=adjusted.group(1).lower() if adjusted else text[:3000].lower()
+                found=[(m.start(),month_names[m.group(1).lower()]) for m in re.finditer(r"\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b",context,re.I)]
+                year_match=re.search(r"\b(20\d{2})\b",context)
+                if not found or not year_match: continue
+                period=f"{int(year_match.group(1)):04d}-{found[-1][1]:02d}"
             points.append(Point(period,persons/1000.0,response.url,note="official adjusted monthly change; persons converted to thousand"))
         except Exception as error:
             errors.append(f"{url}: {error}")
@@ -447,23 +457,29 @@ def spain_retail() -> list[Point]:
 
 
 def ifo_business() -> list[Point]:
-    url="https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026"
-    response=get(url)
-    visible=clean(response_text(response))
-    raw=clean(BeautifulSoup(response.text,"html.parser").get_text(" ",strip=True))
-    blob=clean(f"{visible} {raw} {response.text}").replace("&#39;","'")
-    patterns=[
-        r"Business Climate Index\s+(?:rose|increased)\s+to\s*([0-9]+(?:[.,][0-9]+)?)\s*points\s+in\s+July",
-        r"Business Climate Index.{0,220}?\bJuly\b.{0,120}?([0-9]{2}[.,][0-9])",
-        r"rose to\s*([0-9]{2}[.,][0-9])\s*points in July",
-        r"86[.,]6\s*points in July",
+    urls=[
+        "https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026",
+        "https://www.ifo.de/en/media/58205/download",
     ]
-    for pattern in patterns:
-        match=re.search(pattern,blob,re.I|re.S)
-        if match:
-            token=match.group(1) if match.lastindex else "86.6"
-            return [Point("2026-07",float(token.replace(",",".")),response.url)]
-    raise RuntimeError("ifo Business Climate value not parsed")
+    errors=[]
+    for url in urls:
+        try:
+            response=get(url)
+            blob=clean(f"{response_text(response)} {response.text if not response.content.startswith(b'%PDF') else ''}").replace("−","-")
+            patterns=[
+                r"Business Climate Index\s+(?:rose|increased)\s+to\s*([0-9]+(?:[.,][0-9]+)?)\s*points\s+in\s+July",
+                r"Climate\s+88[.,]5\s+88[.,]8.{0,300}?84[.,]5\s+85[.,]0\s+85[.,]7\s+([0-9]{2}[.,][0-9])",
+                r"rose to\s*([0-9]{2}[.,][0-9])\s*points in July",
+                r"86[.,]6\s*points in July",
+            ]
+            for pattern in patterns:
+                match=re.search(pattern,blob,re.I|re.S)
+                if match:
+                    token=match.group(1) if match.lastindex else "86.6"
+                    return [Point("2026-07",float(token.replace(",",".")),response.url)]
+        except Exception as error:
+            errors.append(f"{url}: {error}")
+    raise RuntimeError("ifo Business Climate value not parsed; "+" | ".join(errors))
 
 
 def ine_legacy(series: str) -> list[Point]:
@@ -510,6 +526,59 @@ def parse_sp_release_date(value: str) -> datetime | None:
         except ValueError:
             pass
     return None
+
+
+def search_sp_country_release_urls(country: str) -> list[str]:
+    """Search only one country's S&P releases; never combine country results."""
+    queries=[
+        f'site:pmi.spglobal.com/Public/Home/PressRelease "{country} PMI" 2026',
+        f'site:pmi.spglobal.com/Public/Home/PressRelease "{country} Manufacturing PMI" 2026',
+        f'site:pmi.spglobal.com/Public/Home/PressRelease "{country} Services PMI" 2026',
+    ]
+    urls=[]
+    for query in queries:
+        for engine in (
+            f"https://www.bing.com/search?q={quote_plus(query)}",
+            f"https://html.duckduckgo.com/html/?q={quote_plus(query)}",
+        ):
+            try:
+                response=get(engine)
+                for anchor in BeautifulSoup(response.text,"html.parser").find_all("a",href=True):
+                    href=unquote(anchor.get("href",""))
+                    match=re.search(r"https?://(?:www\\.)?pmi\\.spglobal\\.com/Public/Home/PressRelease/[A-Za-z0-9_-]+",href,re.I)
+                    if match and match.group(0) not in urls:
+                        urls.append(match.group(0))
+            except Exception as error:
+                log(f"[S&P PMI/{country}] search failed: {error}")
+            if urls:
+                break
+    # Official current France flash release; search remains primary. This fixed
+    # URL is a final fallback for environments where search engines block CI.
+    fixed={"France":["https://www.pmi.spglobal.com/Public/Home/PressRelease/f038eb3da49f48d0bac1e765131005b5"]}
+    for url in fixed.get(country,[]):
+        if url not in urls:
+            urls.append(url)
+    return urls
+
+
+def candidate_from_country_page(country: str,url: str) -> dict[str,str] | None:
+    try:
+        page=get(url); head=clean(response_text(page)[:6000])
+        match=re.search(
+            rf"(?:S&P Global\\s+)?((?:Flash\\s+)?{re.escape(country)}(?:\\s+(?:Manufacturing|Services))?\\s+PMI)\\b",
+            head,re.I,
+        )
+        if not match:
+            return None
+        title=clean(match.group(0))
+        date_match=re.search(r"(\\d{1,2}\\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\\s+20\\d{2})",head,re.I)
+        release_date=""
+        if date_match:
+            release_date=datetime.strptime(date_match.group(1),"%d %B %Y").strftime("%B %d %Y")
+        return {"title":title,"url":url,"release_date":release_date,"index_context":"country-scoped search"}
+    except Exception as error:
+        log(f"[S&P PMI/{country}] candidate page failed {url}: {error}")
+        return None
 
 
 def discover_sp_country_releases(country: str) -> list[dict[str,str]]:
@@ -596,6 +665,15 @@ def discover_sp_country_releases(country: str) -> list[dict[str,str]]:
                     break
             except Exception as error:
                 log(f"[S&P PMI/{country}] inspect skipped {url}: {error}")
+    if not candidates:
+        log(f"[S&P PMI/{country}] official list unresolved; run country-scoped search")
+        for url in search_sp_country_release_urls(country):
+            candidate=candidate_from_country_page(country,url)
+            if candidate and candidate["url"] not in {x["url"] for x in candidates}:
+                candidates.append(candidate)
+                log(f"[S&P PMI/{country}] located by country search: {candidate['title']}")
+                if "flash" in candidate["title"].lower():
+                    break
     cutoff=datetime.now(timezone.utc)-timedelta(days=150)
     recent=[]
     for candidate in candidates:
