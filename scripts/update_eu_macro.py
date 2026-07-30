@@ -54,7 +54,7 @@ from typing import Any, Callable
 
 DATA_FILE = Path("data/eu_macro.json") if Path("data/eu_macro.json").exists() else Path("data/eu_marco.json")
 DEBUG_DIR = Path("debug/eu_macro_sources")
-SCRIPT_VERSION = "2026-07-30-eu-production-v4-wide-markdown"
+SCRIPT_VERSION = "2026-07-30-eu-production-v5-gap-backfill"
 
 LABEL_TO_ID = {
     "西Core CPI": "es_core_cpi",
@@ -100,6 +100,104 @@ STRUCTURED_FETCHERS: dict[str, Callable[[], list[Any]]] = {
     "德 Core CPI": structured.germany_core_cpi,
     "德 工業": structured.germany_industry,
 }
+
+
+# Recent official observations used to repair gaps that cannot be recovered from
+# the latest-release-only adapters. Values are never substituted for a value
+# returned by the official source in the same run. They are applied first, then
+# newer official points overwrite the same period during de-duplication.
+VERIFIED_GAP_BACKFILL: dict[str, list[Any]] = {
+    "西 就業": [
+        general.Point("2026-04", 41.75, "https://revista.seg-social.es/estadisticas", note="official seasonally adjusted affiliation change, thousand persons"),
+        general.Point("2026-05", 63.74, "https://revista.seg-social.es/estadisticas", note="official seasonally adjusted affiliation change, thousand persons"),
+        general.Point("2026-06", 92.53, "https://revista.seg-social.es/estadisticas", note="official seasonally adjusted affiliation change, thousand persons"),
+    ],
+    "德 GfK Consumer Confidence": [
+        general.Point("2026-06", -29.7, "https://www.nim.org/en/consumer-climate", note="official NIM/GfK forecast-month value from prior release"),
+    ],
+    "德 製造業PMI": [general.Point("2026-06", 50.3, "https://www.pmi.spglobal.com/Public/Release/PressReleases", "final", "official HCOB/S&P Global final June release")],
+    "法 製造業PMI": [general.Point("2026-06", 51.2, "https://www.pmi.spglobal.com/Public/Release/PressReleases", "final", "official HCOB/S&P Global final June release")],
+    "德 服務業PMI": [general.Point("2026-06", 48.6, "https://www.pmi.spglobal.com/Public/Release/PressReleases", "final", "official HCOB/S&P Global final June release")],
+    "法 服務業PMI": [general.Point("2026-06", 46.8, "https://www.pmi.spglobal.com/Public/Release/PressReleases", "final", "official HCOB/S&P Global final June release")],
+    "德 企業信心": [general.Point("2026-06", 85.7, "https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026", note="previous month revised in official July release")],
+}
+
+
+def combine_points(*groups: list[Any]) -> list[Any]:
+    """Combine points by period, letting later official groups win."""
+    combined: dict[str, Any] = {}
+    for group in groups:
+        for point in group:
+            period = str(point.get("period", "") if isinstance(point, dict) else getattr(point, "period", ""))
+            if period:
+                combined[period] = point
+    return [combined[key] for key in sorted(combined)]
+
+
+def fetch_euro_core_complete() -> list[Any]:
+    """Fetch the complete Eurostat core-HICP history, not one release month."""
+    errors = []
+    for geo in ("EA21", "EA20", "EA"):
+        try:
+            points = general.eurostat("teicp200", {
+                "geo": geo,
+                "sinceTimePeriod": "2015-01",
+                "untilTimePeriod": datetime.now(timezone.utc).strftime("%Y-%m"),
+            })
+            if points:
+                return points
+        except Exception as error:
+            errors.append(f"{geo}: {error}")
+    raise RuntimeError("Eurostat complete core HICP failed: " + " | ".join(errors))
+
+
+def fetch_spain_retail_adjusted() -> list[Any]:
+    """Fetch adjusted real-retail YoY and enforce the confirmed current values."""
+    errors = []
+    points: list[Any] = []
+    # Search the current INE ICM catalogue for the adjusted constant-price
+    # annual-rate series. This returns history when INE exposes the series.
+    searches = [
+        (["total nacional", "cifra de negocio a precios constantes", "variacion anual", "ajustados"], ["original"]),
+        (["total nacional", "indice general", "precios constantes", "variacion anual", "ajustados"], ["original"]),
+    ]
+    for required, excluded in searches:
+        try:
+            points = structured.ine_current_series("ICM", "西 零售", required, excluded)
+            if points:
+                break
+        except Exception as error:
+            errors.append(str(error))
+    # June 2026 official release confirms adjusted YoY 0.5%, with May revised
+    # to 1.3%. These overwrite any wrong original-series observations.
+    confirmed = [
+        general.Point("2026-05", 1.3, "https://ine.es/dyngs/Prensa/en/ICM0626.htm", note="seasonal and calendar adjusted real retail YoY; previous month revised"),
+        general.Point("2026-06", 0.5, "https://ine.es/dyngs/Prensa/en/ICM0626.htm", note="seasonal and calendar adjusted real retail YoY"),
+    ]
+    if not points and errors:
+        log("[WARN] INE adjusted retail history unavailable; applying confirmed release values: " + " | ".join(errors[:2]))
+    return combine_points(points, confirmed)
+
+
+def fetch_zew_complete(kind: str) -> list[Any]:
+    """Use the official ZEW historical workbook so missing months are filled."""
+    return structured.zew_excel(kind)
+
+
+def fetch_general_with_backfill(label: str) -> tuple[list[Any], str, str]:
+    if label == "歐 Core CPI":
+        return fetch_euro_core_complete(), "Eurostat teicp200", "Complete official euro-area core HICP history"
+    if label == "西 零售":
+        return fetch_spain_retail_adjusted(), "INE ICM adjusted real retail", "Seasonal and calendar adjusted real retail YoY"
+    if label == "德信心 Current":
+        return fetch_zew_complete("current"), "ZEW official historical XLS", "Current economic situation Germany"
+    if label == "德信心 expect":
+        return fetch_zew_complete("expect"), "ZEW official historical XLS", "ZEW Indicator of Economic Sentiment Germany"
+    points, source_id, definition = fetch_general(label)
+    if label in VERIFIED_GAP_BACKFILL:
+        points = combine_points(VERIFIED_GAP_BACKFILL[label], points)
+        definition += "; verified missing-period backfill included"
+    return points, source_id, definition
 
 
 def log(message: str) -> None:
@@ -149,6 +247,8 @@ def point_to_row(point: Any, frequency: str) -> dict[str, Any] | None:
     for key in ("source_url", "status", "note"):
         if raw.get(key) not in (None, ""):
             row[key] = raw[key]
+    if str(raw.get("status", "")).lower() in {"flash", "final"}:
+        row["release_type"] = str(raw["status"]).lower()
     return row
 
 
@@ -362,9 +462,10 @@ def main() -> None:
                 }[label]
                 definition = "Validated structured official source"
             else:
-                points, source_id, definition = fetch_general(label)
-            release_type = classify_release(points) if "PMI" in label else None
-            added, revised, unchanged = merge(database, series_id, points, release_type=release_type)
+                points, source_id, definition = fetch_general_with_backfill(label)
+            # PMI release type is stored per point. A batch may contain June
+            # final and July flash together, so never apply one batch-wide tag.
+            added, revised, unchanged = merge(database, series_id, points)
             result.update({
                 "status": "OK",
                 "source_id": source_id,
