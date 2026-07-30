@@ -40,7 +40,7 @@ from openpyxl import load_workbook
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-VERSION = "2026-07-29-structured-v1"
+VERSION = "2026-07-30-structured-v2-file-aware-parsers"
 TIMEOUT = 45
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36"
 
@@ -186,29 +186,34 @@ def dedupe(points: list[Point]) -> list[Point]:
 # ---------- Generic structured-source parsers ----------
 
 def ine_series(code: str) -> list[Point]:
+    """Read an INE Tempus3 series using its actual observation date.
+
+    FK_Periodo is a catalogue identifier, not a month/quarter number. The v1
+    parser treated its trailing digits as a period and therefore shifted recent
+    observations into old years. Fecha and NombrePeriodo are authoritative.
+    """
     url = f"https://servicios.ine.es/wstempus/js/ES/DATOS_SERIE/{code}"
-    response = request("GET", url, params={"nult": 30})
+    response = request("GET", url, params={"nult": 40})
     payload = response.json()
     rows = payload[0].get("Data", []) if isinstance(payload, list) and payload else payload.get("Data", [])
     points: list[Point] = []
-    quarter_codes = {19: 1, 20: 2, 21: 3, 22: 4}
     for row in rows:
-        year = int(row.get("Anyo", 0) or 0)
-        code_match = re.search(r"(\d+)$", str(row.get("FK_Periodo", "")))
-        pcode = int(code_match.group(1)) if code_match else 0
-        if pcode in quarter_codes:
-            period = f"{year:04d}-Q{quarter_codes[pcode]}"
-        elif 1 <= pcode <= 12:
-            period = f"{year:04d}-{pcode:02d}"
-        else:
-            period = period_key(row.get("Fecha"))
+        period = period_key(row.get("Fecha"))
+        if not period:
+            year = int(row.get("Anyo", 0) or 0)
+            name = clean(row.get("NombrePeriodo") or row.get("Periodo") or row.get("T3_Periodo"))
+            q = re.search(r"(?:trimestre|quarter|t)\s*([1-4])|([1-4])\s*(?:trimestre|quarter|t)", name, re.I)
+            if q and year:
+                period = f"{year:04d}-Q{q.group(1) or q.group(2)}"
+            else:
+                period = period_key(f"{name} {year}")
         value = number(row.get("Valor"))
         if period and value is not None:
-            points.append(Point(period, value, response.url, clean(row.get("T3_TipoDato"))))
+            points.append(Point(period, value, response.url, clean(row.get("T3_TipoDato")),
+                                note=f"INE series {code}; period from Fecha/NombrePeriodo"))
     if not points:
         raise RuntimeError(f"INE {code} returned no observations")
     return dedupe(points)
-
 
 def ine_operation_candidates(operation: str, include_terms: list[str], label: str) -> list[dict[str, str]]:
     urls = [
@@ -271,8 +276,19 @@ def eurostat(dataset: str, filters: dict[str, str]) -> list[Point]:
 
 
 def parse_delimited(content: bytes, url: str) -> list[list[str]]:
-    text = content.decode("utf-8-sig", errors="replace")
-    sample = text[:5000]
+    """Decode official European CSV files without destroying German labels."""
+    text = None
+    for encoding in ("utf-8-sig", "cp1252", "iso-8859-1"):
+        try:
+            candidate = content.decode(encoding)
+            if "\ufffd" not in candidate:
+                text = candidate
+                break
+        except UnicodeDecodeError:
+            pass
+    if text is None:
+        text = content.decode("cp1252", errors="replace")
+    sample = text[:10000]
     delimiter = ";" if sample.count(";") > sample.count(",") else ","
     return list(csv.reader(io.StringIO(text), delimiter=delimiter))
 
@@ -295,32 +311,43 @@ def destatis_table_csv(table: str) -> tuple[list[list[str]], str]:
 def find_excel_links(page_url: str, required: list[str]) -> list[str]:
     response = request("GET", page_url)
     soup = BeautifulSoup(response.text, "html.parser")
-    matches: list[str] = []
+    ranked: list[tuple[int, str]] = []
     for anchor in soup.find_all("a", href=True):
         href = urljoin(response.url, anchor.get("href", ""))
         context = norm(f"{anchor.get_text(' ', strip=True)} {anchor.parent.get_text(' ', strip=True) if anchor.parent else ''} {href}")
-        if (href.lower().split("?")[0].endswith((".xlsx", ".xls")) or "download" in href.lower()) and all(term in context for term in required):
-            if href not in matches:
-                matches.append(href)
-    return matches
+        suffix = href.lower().split("?")[0]
+        downloadable = suffix.endswith((".xlsx", ".xls")) or "download" in href.lower() or "fileadmin" in href.lower()
+        if not downloadable:
+            continue
+        score = sum(5 for term in required if term in context)
+        score += 3 if suffix.endswith((".xlsx", ".xls")) else 0
+        ranked.append((score, href))
+    ranked.sort(reverse=True)
+    return list(dict.fromkeys(url for _, url in ranked))
 
-
-def workbook_cells(content: bytes) -> list[dict[str, Any]]:
-    wb = load_workbook(io.BytesIO(content), read_only=True, data_only=True)
+def workbook_cells(content: bytes, source_url: str = "") -> list[dict[str, Any]]:
+    """Read both modern XLSX and legacy binary XLS workbooks."""
+    is_xls = source_url.lower().split("?")[0].endswith(".xls") or content[:8] == bytes.fromhex("D0CF11E0A1B11AE1")
     out: list[dict[str, Any]] = []
+    if is_xls:
+        import xlrd
+        book = xlrd.open_workbook(file_contents=content)
+        for sheet in book.sheets():
+            rows = [sheet.row_values(i) for i in range(min(sheet.nrows, 1000))]
+            out.append({"sheet": sheet.name, "rows": rows})
+        return out
+    wb = load_workbook(io.BytesIO(content), read_only=True, data_only=True)
     for ws in wb.worksheets:
         rows = []
         for i, row in enumerate(ws.iter_rows(values_only=True), 1):
-            values = list(row)
-            rows.append(values)
-            if i >= 600:
+            rows.append(list(row))
+            if i >= 1000:
                 break
         out.append({"sheet": ws.title, "rows": rows})
     return out
 
-
 def scan_workbook_for_period_values(content: bytes, source_url: str, expected: dict[str, float], keywords: list[str]) -> list[Point]:
-    books = workbook_cells(content)
+    books = workbook_cells(content, source_url)
     candidates: list[dict[str, Any]] = []
     for sheet in books:
         sheet_name = norm(sheet["sheet"])
@@ -365,50 +392,71 @@ def spain_unemployment() -> list[Point]:
 
 
 def spain_retail() -> list[Point]:
-    keywords = ["indice", "general", "precios", "constantes", "variacion", "anual"]
-    candidates = ine_operation_candidates("ICM", keywords, "西 零售 INE candidates")
+    # Discover series from ICM tables first; Tempus3 names vary by base year.
+    discovery_urls = [
+        "https://servicios.ine.es/wstempus/js/ES/TABLAS_OPERACION/ICM",
+        "https://servicios.ine.es/wstempus/js/ES/SERIES_OPERACION/ICM",
+    ]
+    codes: dict[str,str] = {}
     errors = []
-    for candidate in candidates[:30]:
-        code = candidate["code"]
-        if not re.match(r"^[A-Za-z]+\d+$", code):
-            continue
+    for url in discovery_urls:
         try:
-            points = ine_series(code)
-            same = [p for p in points if p.period in EXPECTED["西 零售"]]
-            if same and min(abs(p.value - EXPECTED["西 零售"][p.period]) for p in same) <= 0.2:
-                for p in points:
-                    p.note = f"INE discovered series {code}: {candidate['name']}"
+            payload = request("GET", url).json()
+            stack = payload if isinstance(payload,list) else [payload]
+            while stack:
+                item=stack.pop()
+                if isinstance(item,dict):
+                    code=clean(item.get("COD") or item.get("Codigo") or item.get("Id") or item.get("id"))
+                    name=clean(item.get("Nombre") or item.get("name") or item.get("Descripcion"))
+                    if re.match(r"^[A-Za-z]+\d+$",code):
+                        codes[code]=name
+                    stack.extend(item.values())
+                elif isinstance(item,list): stack.extend(item)
+        except Exception as exc:
+            errors.append(f"{url}: {exc}")
+    ranked=[]
+    for code,name in codes.items():
+        n=norm(name)
+        score=sum(2 for term in ["general","precios constantes","variacion anual","original"] if term in n)
+        ranked.append((score,code,name))
+    ranked.sort(reverse=True)
+    CANDIDATES["西 零售 INE candidates"]=[{"score":a,"code":b,"name":c} for a,b,c in ranked[:200]]
+    for _,code,name in ranked[:80]:
+        try:
+            points=ine_series(code)
+            shared=[p for p in points if p.period in EXPECTED["西 零售"]]
+            if shared and all(abs(p.value-EXPECTED["西 零售"][p.period]) <= 0.21 for p in shared):
+                for p in points: p.note=f"INE discovered series {code}: {name}"
                 return points
         except Exception as exc:
             errors.append(f"{code}: {exc}")
-    raise RuntimeError("No matching INE ICM series found; " + " | ".join(errors[:5]))
-
+    raise RuntimeError("No matching INE ICM series found; "+" | ".join(errors[:8]))
 
 def euro_core_cpi() -> list[Point]:
-    filter_candidates = [
-        {"geo": "EA21", "unit": "RCH_A", "coicop": "TOT_X_NRG_FOOD"},
-        {"geo": "EA21", "unit": "RCH_A", "coicop": "TOT_X_NRG_FOOD_NALC_TBC"},
-        {"geo": "EA21", "unit": "RCH_A", "coicop": "TOT_X_NRG_FOOD"},
-    ]
+    """Use Eurostat annual-rate HICP table with a narrow time window."""
+    codes = ["TOT_X_NRG_FOOD_NALC_TBC", "TOT_X_NRG_FOOD"]
+    datasets = ["prc_hicp_manr", "prc_hicp_midx"]
     errors = []
-    for filters in filter_candidates:
-        try:
-            points = eurostat("prc_hicp_midx", filters)
-            if any(p.period in EXPECTED["歐 Core CPI"] and abs(p.value - EXPECTED["歐 Core CPI"][p.period]) <= 0.11 for p in points):
-                return points
-        except Exception as exc:
-            errors.append(f"{filters}: {exc}")
-    # Official monthly rates table fallback.
-    for filters in ({"geo": "EA21", "unit": "RCH_A", "coicop": "TOT_X_NRG_FOOD"},
-                    {"geo": "EA21", "unit": "RCH_A", "coicop": "TOT_X_NRG_FOOD_NALC_TBC"}):
-        try:
-            points = eurostat("prc_hicp_manr", filters)
-            if points:
-                return points
-        except Exception as exc:
-            errors.append(f"prc_hicp_manr {filters}: {exc}")
+    for dataset in datasets:
+        for coicop in codes:
+            filters = {
+                "geo":"EA21", "coicop":coicop,
+                "sinceTimePeriod":"2025-01", "untilTimePeriod":"2026-07",
+            }
+            if dataset == "prc_hicp_manr":
+                filters["unit"] = "RCH_A"
+            else:
+                filters["unit"] = "I15"
+            try:
+                points = eurostat(dataset, filters)
+                if dataset == "prc_hicp_midx":
+                    levels = {p.period:p.value for p in points}
+                    points = yoy_from_levels(levels, EXPECTED["歐 Core CPI"], points[-1].source_url)
+                if any(p.period in EXPECTED["歐 Core CPI"] and abs(p.value-EXPECTED["歐 Core CPI"][p.period]) <= 0.11 for p in points):
+                    return points
+            except Exception as exc:
+                errors.append(f"{dataset}/{coicop}: {exc}")
     raise RuntimeError("Eurostat core HICP candidates failed; " + " | ".join(errors))
-
 
 def euro_unemployment() -> list[Point]:
     return eurostat("une_rt_m", {"geo": "EA21", "age": "TOTAL", "sex": "T", "unit": "PC_ACT", "s_adj": "SA"})
@@ -454,83 +502,139 @@ def insee_core_cpi() -> list[Point]:
     raise RuntimeError("INSEE structured core CPI series not confirmed; " + " | ".join(errors[:8]))
 
 
-def destatis_core_cpi() -> list[Point]:
-    rows, url = destatis_table_csv("61111-0006")
-    return derive_yoy_from_destatis_rows(rows, url, EXPECTED["德 Core CPI"], ["ohne nahrungsmittel", "ohne energie"])
+GERMAN_MONTHS = {
+    "januar":1,"februar":2,"marz":3,"april":4,"mai":5,"juni":6,
+    "juli":7,"august":8,"september":9,"oktober":10,"november":11,"dezember":12,
+}
 
 
-def derive_yoy_from_destatis_rows(rows: list[list[str]], url: str, expected: dict[str, float], keywords: list[str]) -> list[Point]:
-    levels: dict[str, float] = {}
-    candidates = []
-    for r_idx, row in enumerate(rows):
-        joined = norm(" ".join(row))
-        keyword_score = sum(1 for keyword in keywords if keyword in joined)
-        if keyword_score < max(1, len(keywords) - 1):
-            continue
-        periods = [(i, period_key(cell)) for i, cell in enumerate(row)]
-        for c_idx, period in periods:
-            if not period:
+def destatis_column_periods(rows: list[list[str]]) -> dict[int, str]:
+    """Combine separate GENESIS year and month/quarter header rows."""
+    periods: dict[int, str] = {}
+    years: dict[int, int] = {}
+    for row in rows[:15]:
+        for col, cell in enumerate(row):
+            text = norm(cell)
+            if re.fullmatch(r"20\d{2}", text):
+                years[col] = int(text)
+    # Fill merged-header years horizontally until the next explicit year.
+    current = None
+    for col in range(max((len(r) for r in rows[:15]), default=0)):
+        if col in years:
+            current = years[col]
+        elif current is not None:
+            years[col] = current
+    for row in rows[:15]:
+        for col, cell in enumerate(row):
+            text = norm(cell)
+            year = years.get(col)
+            if not year:
                 continue
-            for value_cell in row[c_idx+1:c_idx+4] + row[max(0, c_idx-3):c_idx]:
-                value = number(value_cell)
-                if value is not None and 50 <= value <= 250:
-                    candidates.append({"period": period, "value": value, "row": r_idx+1, "text": joined[:300]})
-    # Some GENESIS flat files use one observation per row with period in a separate column.
-    for candidate in candidates:
-        levels[candidate["period"]] = candidate["value"]
-    CANDIDATES[url] = candidates[:500]
+            if text in GERMAN_MONTHS:
+                periods[col] = f"{year:04d}-{GERMAN_MONTHS[text]:02d}"
+            q = re.fullmatch(r"([1-4]) quartal", text)
+            if q:
+                periods[col] = f"{year:04d}-Q{q.group(1)}"
+    return periods
+
+
+def destatis_wide_series(rows: list[list[str]], url: str, row_terms: list[str],
+                          required_context: list[str] | None = None) -> dict[str, float]:
+    periods = destatis_column_periods(rows)
+    if not periods:
+        raise RuntimeError("Destatis year/month or year/quarter headers not found")
+    required_context = required_context or []
+    candidates = []
+    for idx, row in enumerate(rows):
+        row_text = norm(" ".join(clean(x) for x in row[:6]))
+        if not all(term in row_text for term in row_terms):
+            continue
+        if required_context and not all(term in row_text for term in required_context):
+            continue
+        values = {}
+        for col, period in periods.items():
+            if col < len(row):
+                value = number(row[col])
+                if value is not None:
+                    values[period] = value
+        if values:
+            candidates.append({"row": idx + 1, "text": row_text, "values": values})
+    CANDIDATES[f"parsed {url} {'/'.join(row_terms)}"] = candidates
+    if not candidates:
+        raise RuntimeError(f"Destatis target row not found: {row_terms}")
+    # Prefer the candidate containing the most periods.
+    return max(candidates, key=lambda item: len(item["values"]))["values"]
+
+
+def yoy_from_levels(levels: dict[str, float], expected: dict[str, float], url: str) -> list[Point]:
     points = []
     for period in expected:
-        year, month = map(int, period.split("-"))
-        previous = f"{year-1:04d}-{month:02d}"
-        if period in levels and previous in levels:
-            yoy = (levels[period] / levels[previous] - 1.0) * 100.0
-            points.append(Point(period, yoy, url, note="YoY calculated from official CSV index levels"))
+        if "-Q" in period:
+            year, quarter = period.split("-Q")
+            prior = f"{int(year)-1:04d}-Q{quarter}"
+        else:
+            year, month = period.split("-")
+            prior = f"{int(year)-1:04d}-{month}"
+        if period in levels and prior in levels and levels[prior] != 0:
+            points.append(Point(period, (levels[period] / levels[prior] - 1) * 100, url,
+                                note="YoY calculated from official GENESIS CSV levels"))
     if not points:
-        raise RuntimeError("Could not identify Destatis index levels in flat CSV")
+        raise RuntimeError("No same-month prior-year levels found")
     return dedupe(points)
+
+
+def destatis_core_cpi() -> list[Point]:
+    rows, url = destatis_table_csv("61111-0006")
+    attempts = [
+        ["gesamtindex", "ohne", "nahrungsmittel", "energie"],
+        ["ohne", "nahrungsmittel", "energie"],
+    ]
+    errors = []
+    for terms in attempts:
+        try:
+            levels = destatis_wide_series(rows, url, terms)
+            return yoy_from_levels(levels, EXPECTED["德 Core CPI"], url)
+        except Exception as exc:
+            errors.append(str(exc))
+    raise RuntimeError("Destatis core CPI row unresolved; " + " | ".join(errors))
 
 
 def destatis_industry() -> list[Point]:
     rows, url = destatis_table_csv("42153-0001")
-    # Prefer a direct calendar-adjusted YoY rate if the CSV exposes one.
-    points = direct_expected_value_rows(rows, url, EXPECTED["德 工業"], ["produzierendes gewerbe", "kalenderbereinigt"])
-    if points:
-        return points
-    return derive_yoy_from_destatis_rows(rows, url, EXPECTED["德 工業"], ["produzierendes gewerbe", "kalenderbereinigt"])
-
-
-def direct_expected_value_rows(rows: list[list[str]], url: str, expected: dict[str, float], keywords: list[str]) -> list[Point]:
-    candidates = []
-    for r_idx, row in enumerate(rows):
-        text = norm(" ".join(row))
-        if not all(keyword in text for keyword in keywords):
-            continue
-        period = next((period_key(cell) for cell in row if period_key(cell)), None)
-        if not period or period not in expected:
-            continue
-        for c_idx, cell in enumerate(row):
-            value = number(cell)
-            if value is not None and abs(value - expected[period]) <= 0.2:
-                candidates.append(Point(period, value, url, note=f"official CSV row {r_idx+1} col {c_idx+1}"))
-    return dedupe(candidates)
+    # Calendar-adjusted level. Use total industry/Produzierendes Gewerbe, then YoY.
+    attempts = [
+        (["produzierendes", "gewerbe"], ["kalenderbereinigt"]),
+        (["produzierendes", "gewerbe"], []),
+    ]
+    errors = []
+    for terms, context in attempts:
+        try:
+            levels = destatis_wide_series(rows, url, terms, context)
+            return yoy_from_levels(levels, EXPECTED["德 工業"], url)
+        except Exception as exc:
+            errors.append(str(exc))
+    raise RuntimeError("Destatis industry row unresolved; " + " | ".join(errors))
 
 
 def destatis_gdp() -> list[Point]:
-    table_candidates = ["81000-0001", "81000-0002", "81000-0010", "81000-0011"]
-    errors = []
-    for table in table_candidates:
-        try:
-            rows, url = destatis_table_csv(table)
-            points = direct_expected_value_rows(rows, url, EXPECTED["德 GDP"], ["bruttoinlandsprodukt"])
-            if points:
-                return points
-            # Save candidates even when no exact row was found.
-            CANDIDATES[f"德 GDP {table}"] = rows[:200]
-        except Exception as exc:
-            errors.append(f"{table}: {exc}")
-    raise RuntimeError("No matching Destatis GDP flat CSV table; " + " | ".join(errors))
-
+    """Parse the confirmed quarterly table 81000-0002."""
+    rows, url = destatis_table_csv("81000-0002")
+    periods = destatis_column_periods(rows)
+    target = None
+    inspected = []
+    for idx, row in enumerate(rows):
+        row_text = norm(" ".join(clean(x) for x in row[:6]))
+        if all(term in row_text for term in ["originalwerte", "preisbereinigt", "bruttoinlandsprodukt", "veranderung", "prozent"]):
+            values = {period: number(row[col]) for col, period in periods.items() if col < len(row) and number(row[col]) is not None}
+            inspected.append({"row": idx + 1, "text": row_text, "values": values})
+            if values:
+                target = values
+                break
+    CANDIDATES["德 GDP 81000-0002 parsed"] = inspected
+    if not target:
+        raise RuntimeError("Confirmed GDP percentage row not found in 81000-0002")
+    return [Point(period, target[period], url, note="Originalwerte; price-adjusted GDP YoY")
+            for period in EXPECTED["德 GDP"] if period in target]
 
 def ifo_excel() -> list[Point]:
     pages = ["https://www.ifo.de/ifo-zeitreihen", "https://www.ifo.de/en/ifo-time-series"]
