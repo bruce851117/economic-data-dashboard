@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-07-30T08:39:03.766047+00:00",
+  "generated_at": "2026-07-30T08:42:24.630982+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
-    "script_version": "2026-07-30-eu-production-v10-german-unemployed-level",
+    "script_version": "2026-07-30-eu-production-v11-gdp-flash-overlay",
     "note": "Existing Excel-import history preserved; official observations overwrite matching periods."
   },
   "blocks": [
@@ -13581,6 +13581,12 @@
         {
           "date": "2025-12-01",
           "value": 0.5
+        },
+        {
+          "date": "2026-06-01",
+          "value": 0.9,
+          "source_url": "https://www.destatis.de/EN/Press/2026/07/PE26_269_811.html",
+          "note": "Destatis preliminary GDP estimate; price-adjusted YoY"
         }
       ]
     },
@@ -13829,6 +13835,13 @@
           "value": 2.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
           "status": "p"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 2.7,
+          "source_url": "https://ine.es/dyngs/Prensa/en/avCNTR2T26.htm",
+          "status": "p",
+          "note": "INE quarterly national accounts advance estimate; SCA real GDP YoY"
         }
       ]
     },
