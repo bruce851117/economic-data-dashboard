@@ -8,6 +8,7 @@ fails. Generated 2026-07-30 from the validated EU source adapters.
 from __future__ import annotations
 import sys
 import types
+import re
 
 
 def _load_embedded_module(name: str, source: str) -> types.ModuleType:
@@ -53,7 +54,7 @@ from typing import Any, Callable
 
 DATA_FILE = Path("data/eu_macro.json") if Path("data/eu_macro.json").exists() else Path("data/eu_marco.json")
 DEBUG_DIR = Path("debug/eu_macro_sources")
-SCRIPT_VERSION = "2026-07-30-eu-production-v3-commit-markdown"
+SCRIPT_VERSION = "2026-07-30-eu-production-v4-wide-markdown"
 
 LABEL_TO_ID = {
     "西Core CPI": "es_core_cpi",
@@ -244,18 +245,24 @@ def markdown_number(value: Any) -> str:
     return f"{number:.10f}".rstrip("0").rstrip(".")
 
 
+def display_period_end(date_value: str) -> str:
+    """Convert the JSON month key to the month-end label used by EU_ECON."""
+    from calendar import monthrange
+    match = re.match(r"^(\d{4})-(\d{2})", str(date_value or ""))
+    if not match:
+        return markdown_cell(date_value)
+    year, month = int(match.group(1)), int(match.group(2))
+    return f"{year}/{month}/{monthrange(year, month)[1]}"
+
+
 def write_markdown_snapshot(database: dict[str, Any]) -> Path:
-    """Write every observation in eu_macro.json to one Markdown file.
+    """Write the repository Markdown as one wide EU_ECON-style matrix.
 
-    The output contains:
-    1. A latest-value overview for quick checking.
-    2. A complete table for every series, including every historical point.
-    3. Source metadata, release type and notes when available.
-
-    The file is written beside eu_macro.json under data/ so GitHub Actions can
-    commit it directly to the repository after every successful update.
+    Rows follow the block and series order in eu_macro.json. Columns contain all
+    available periods from newest to oldest. Empty observations stay blank, so
+    monthly and quarterly series can be checked together exactly like the source
+    EU_ECON worksheet.
     """
-    DEBUG_DIR.mkdir(parents=True, exist_ok=True)
     output_path = DATA_FILE.parent / "eu_macro_all_data.md"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     series_by_id = {
@@ -263,91 +270,62 @@ def write_markdown_snapshot(database: dict[str, Any]) -> Path:
         for item in database.get("series", [])
         if item.get("id")
     }
+
+    ordered: list[tuple[str, dict[str, Any]]] = []
+    seen: set[str] = set()
+    for block in database.get("blocks", []):
+        block_name = block.get("title") or block.get("id") or ""
+        for series_id in block.get("series", []):
+            series = series_by_id.get(series_id)
+            if series and series_id not in seen:
+                ordered.append((block_name, series))
+                seen.add(series_id)
+    for series_id, series in series_by_id.items():
+        if series_id not in seen:
+            ordered.append((series.get("block", ""), series))
+
+    # Keep one column for every month/quarter-end appearing anywhere in the JSON.
+    period_set = {
+        str(row.get("date", ""))[:7]
+        for _, series in ordered
+        for row in series.get("data", [])
+        if re.match(r"^\d{4}-\d{2}", str(row.get("date", "")))
+    }
+    # Always show the current calendar month as the first column, even before
+    # every indicator has published a value. This matches the EU_ECON layout.
+    period_set.add(datetime.now(timezone.utc).strftime("%Y-%m"))
+    periods = sorted(period_set, reverse=True)
+
     lines: list[str] = [
-        "# EU Macro Data Debug Snapshot",
+        "# EU Macro Data",
         "",
-        f"- Generated at: `{markdown_cell(database.get('generated_at', ''))}`",
-        f"- Script version: `{SCRIPT_VERSION}`",
-        f"- Series count: `{len(series_by_id)}`",
-        f"- Observation count: `{sum(len(item.get('data', [])) for item in series_by_id.values())}`",
+        f"> 更新時間：`{markdown_cell(database.get('generated_at', ''))}` ｜ "
+        f"指標數：`{len(ordered)}` ｜ 資料筆數：`{sum(len(s.get('data', [])) for _, s in ordered)}`",
         "",
-        "> 此檔案由 update_eu_macro.py 自動產生，完整列出 eu_macro.json 目前保存的所有資料，供人工核對日期、數值、來源及修訂狀態。",
-        "",
-        "## Latest Value Overview",
-        "",
-        "| Block | Series ID | Name | Frequency | Latest Date | Latest Value | Source URL | Release Type |",
-        "|---|---|---|---|---|---:|---|---|",
+        "| 分類 | 指標 | " + " | ".join(display_period_end(period + "-01") for period in periods) + " |",
+        "|---|---|" + "---:|" * len(periods),
     ]
 
-    for block in database.get("blocks", []):
-        block_name = block.get("title") or block.get("id") or ""
-        for series_id in block.get("series", []):
-            series = series_by_id.get(series_id)
-            if not series:
-                continue
-            rows = sorted(series.get("data", []), key=lambda row: row.get("date", ""))
-            latest = rows[-1] if rows else {}
-            lines.append(
-                "| " + " | ".join([
-                    markdown_cell(block_name),
-                    markdown_cell(series_id),
-                    markdown_cell(series.get("name", "")),
-                    markdown_cell(series.get("frequency", "")),
-                    markdown_cell(latest.get("date", "")),
-                    markdown_number(latest.get("value")),
-                    markdown_cell(latest.get("source_url", "")),
-                    markdown_cell(latest.get("release_type", "")),
-                ]) + " |"
-            )
-
-    lines.extend(["", "## Complete Historical Data", ""])
-
-    listed_ids: set[str] = set()
-    ordered_series: list[tuple[str, dict[str, Any]]] = []
-    for block in database.get("blocks", []):
-        block_name = block.get("title") or block.get("id") or ""
-        for series_id in block.get("series", []):
-            series = series_by_id.get(series_id)
-            if series and series_id not in listed_ids:
-                ordered_series.append((block_name, series))
-                listed_ids.add(series_id)
-    for series_id, series in series_by_id.items():
-        if series_id not in listed_ids:
-            ordered_series.append((series.get("block", ""), series))
-
-    for block_name, series in ordered_series:
-        rows = sorted(series.get("data", []), key=lambda row: row.get("date", ""))
-        lines.extend([
-            f"### {markdown_cell(series.get('name') or series.get('id') or '')}",
-            "",
-            f"- Block: `{markdown_cell(block_name)}`",
-            f"- Series ID: `{markdown_cell(series.get('id', ''))}`",
-            f"- Original ticker/label: `{markdown_cell(series.get('ticker', ''))}`",
-            f"- Frequency: `{markdown_cell(series.get('frequency', ''))}`",
-            f"- Observations: `{len(rows)}`",
-            "",
-            "| Date | Value | Source URL | Source Frequency | Release Type | Status | Note |",
-            "|---|---:|---|---|---|---|---|",
-        ])
-        if not rows:
-            lines.append("|  |  |  |  |  |  | No data |")
-        else:
-            for row in rows:
-                lines.append(
-                    "| " + " | ".join([
-                        markdown_cell(row.get("date", "")),
-                        markdown_number(row.get("value")),
-                        markdown_cell(row.get("source_url", "")),
-                        markdown_cell(row.get("source_frequency", "")),
-                        markdown_cell(row.get("release_type", "")),
-                        markdown_cell(row.get("status", "")),
-                        markdown_cell(row.get("note", "")),
-                    ]) + " |"
-                )
-        lines.append("")
+    previous_block = None
+    for block_name, series in ordered:
+        values = {
+            str(row.get("date", ""))[:7]: row.get("value")
+            for row in series.get("data", [])
+            if re.match(r"^\d{4}-\d{2}", str(row.get("date", "")))
+        }
+        # Match the screenshot: show a block name only on its first row.
+        block_cell = block_name if block_name != previous_block else ""
+        previous_block = block_name
+        label = series.get("ticker") or series.get("name") or series.get("id") or ""
+        row_values = [markdown_number(values.get(period)) if period in values else "" for period in periods]
+        lines.append(
+            "| " + markdown_cell(block_cell) + " | " + markdown_cell(label) + " | "
+            + " | ".join(row_values) + " |"
+        )
 
     output_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
     return output_path
+
 
 def validate_database(database: dict[str, Any]) -> None:
     ids = [item.get("id") for item in database.get("series", [])]
