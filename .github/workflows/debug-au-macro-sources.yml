@@ -32,7 +32,7 @@ jobs:
       - name: Validate Australian macro sources
         env:
           PYTHONUNBUFFERED: "1"
-        run: python -u debug_au_macro_sources_v2.py
+        run: python -u debug_au_macro_sources.py
 
       - name: Print source comparison
         if: always()
