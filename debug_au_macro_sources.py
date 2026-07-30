@@ -28,7 +28,7 @@ from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-30-au-source-validation-v1"
+VERSION = "2026-07-30-au-source-validation-v2"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -111,24 +111,55 @@ def dedupe(points: list[Point]) -> list[Point]:
     return [mapping[key] for key in sorted(mapping)]
 
 
+ABS_FLOW_ALIASES = {
+    "LF": ["LF"],
+    "JV": ["JV"],
+    "WPI": ["WPI"],
+    # Monthly CPI moved into the consolidated CPI flow. CPI_M is retained as a
+    # fallback for historical metadata snapshots.
+    "CPI_MONTHLY": ["CPI", "CPI_M"],
+    "HSI_M": ["HSI_M", "MHSI", "HSI"],
+    "ANA_AGG": ["ANA_AGG"],
+}
+
+
 def abs_csv(flow: str, start_period: str, *, last_n: int | None = None) -> tuple[list[dict[str, str]], str]:
-    url = f"{ABS_API}/ABS,{flow},latest/all"
+    """Download ABS SDMX CSV using the official media-type labels syntax.
+
+    ABS expects labels=both inside the Accept media type, not as a URL query
+    parameter. The v1 diagnostic incorrectly sent labels=both in the query,
+    which caused the common HTTP 400 responses.
+    """
     params: dict[str, str] = {
         "startPeriod": start_period,
         "dimensionAtObservation": "TIME_PERIOD",
-        "labels": "both",
     }
     if last_n:
         params["lastNObservations"] = str(last_n)
-    response = get(url, params=params, headers={"Accept": "application/vnd.sdmx.data+csv;file=true"})
-    raw_path = OUT / f"abs_{flow.lower()}_raw.csv"
-    raw_path.write_bytes(response.content)
-    text = response.content.decode("utf-8-sig", "replace")
-    rows = list(csv.DictReader(io.StringIO(text)))
-    if not rows:
-        raise RuntimeError(f"ABS {flow} returned no CSV rows")
-    return rows, response.url
-
+    errors: list[str] = []
+    for candidate in ABS_FLOW_ALIASES.get(flow, [flow]):
+        url = f"{ABS_API}/ABS,{candidate},latest/all"
+        response = SESSION.get(
+            url,
+            params=params,
+            timeout=120,
+            allow_redirects=True,
+            headers={"Accept": "application/vnd.sdmx.data+csv;file=true;labels=both"},
+        )
+        log(f"[HTTP] {response.status_code} {response.url} bytes={len(response.content)}")
+        safe_name = re.sub(r"[^a-z0-9]+", "_", candidate.lower()).strip("_")
+        (OUT / f"abs_{safe_name}_http_{response.status_code}.txt").write_bytes(response.content)
+        if response.status_code >= 400:
+            errors.append(f"{candidate}: HTTP {response.status_code}: {response.text[:500]}")
+            continue
+        raw_path = OUT / f"abs_{safe_name}_raw.csv"
+        raw_path.write_bytes(response.content)
+        text = response.content.decode("utf-8-sig", "replace")
+        rows = list(csv.DictReader(io.StringIO(text)))
+        if rows:
+            return rows, response.url
+        errors.append(f"{candidate}: successful response contained no CSV rows")
+    raise RuntimeError("ABS dataflow attempts failed: " + " | ".join(errors))
 
 def row_text(row: dict[str, Any]) -> str:
     return norm(" ".join(str(value) for key, value in row.items() if key not in {"OBS_VALUE", "TIME_PERIOD"}))
@@ -332,8 +363,21 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "時薪YoY":
         return fetch_abs_target("WPI", "2024-Q1", ["all sectors", "australia", "seasonally adjusted", "annual"], ["private", "public", "quarterly"], target.expected)
     if label == "預計離職":
-        # Annual ABS Job Mobility is structured XLSX but not confirmed as a Data API flow.
-        raise RuntimeError("Pending exact workbook row confirmation; official ABS Job Mobility XLSX only")
+        # Table 7 is an official structured PJSM workbook. With no populated
+        # AU_ECON reference value, expose workbook candidates rather than guess.
+        url = "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/participation-job-search-and-mobility-australia/feb-2025/62230_Table07.xlsx"
+        response = get(url)
+        (OUT / "abs_job_mobility_table07_raw.xlsx").write_bytes(response.content)
+        books = workbook_rows(response.content)
+        candidates = []
+        points = []
+        for book in books:
+            rows = book["rows"]
+            for row_index, row in enumerate(rows):
+                text = norm(" ".join(clean(cell) for cell in row if cell is not None))
+                if any(term in text for term in ("expect to leave", "expected to leave", "intends to leave", "intention to leave")):
+                    candidates.append({"sheet": book["sheet"], "row": row_index + 1, "preview": [clean(cell) for cell in row[:20]]})
+        return points, {"request_url": response.url, "candidate_rows": candidates, "note": "Official ABS XLSX downloaded; definition requires AU_ECON reference value"}
     if label == "CPI YoY":
         return fetch_abs_target("CPI_MONTHLY", "2025-01", ["all groups", "australia", "annual"], ["trimmed", "quarterly"], target.expected)
     if label == "Trimmed Mean YoY":
@@ -341,35 +385,56 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "零售":
         return fetch_abs_target("HSI_M", "2025-01", ["household spending", "australia", "seasonally adjusted", "monthly"], ["trend", "through the year"], target.expected)
     if label == "NAB企業售價":
-        points = pdf_value(
-            "https://www.nab.com.au/content/dam/nab/documents/news/2026m06-nab-monthly-business-survey-mnb.pdf",
-            [r"Product prices\s+To\s*([+-]?\d+(?:\.\d+)?)%", r"product price growth.{0,80}?([+-]?\d+(?:\.\d+)?)%"],
-            "2026-06", "nab_june_2026.pdf"
-        )
-        return points, {"note": "Official PDF; no public API/CSV found"}
+        releases = [
+            ("2026-06", "https://www.nab.com.au/content/dam/nab/documents/news/2026m06-nab-monthly-business-survey-mnb.pdf", "nab_june_2026.pdf"),
+            ("2026-05", "https://news.nab.com.au/content/dam/nab-news/documents/economics/nab-monthly-business-survey-may-26.pdf", "nab_may_2026.pdf"),
+            ("2026-04", "https://news.nab.com.au/content/dam/nab-news/documents/economics/nab-monthly-business-survey-april-26.pdf", "nab_april_2026.pdf"),
+        ]
+        points = []
+        errors = []
+        patterns = [r"Product prices\s+To\s*([+-]?\d+(?:\.\d+)?)%", r"product price growth.{0,120}?(?:at|to)\s*([+-]?\d+(?:\.\d+)?)%", r"final product prices.{0,100}?([+-]?\d+(?:\.\d+)?)%"]
+        for period, url, raw_name in releases:
+            try:
+                points.extend(pdf_value(url, patterns, period, raw_name))
+            except Exception as error:
+                errors.append(f"{period}: {error}")
+        if not points:
+            raise RuntimeError("NAB monthly PDFs failed: " + " | ".join(errors))
+        return points, {"note": "Official monthly PDFs; no public API/CSV found", "errors": errors}
     if label == "消費信心":
         points = official_html_value(
-            "https://melbourneinstitute.unimelb.edu.au/research/macroeconomics/latest-news/index-of-consumer-sentiment",
-            [r"Consumer Sentiment Index rose.{0,80}?to\s*([0-9]+(?:\.\d+)?)\s+in July", r"Index up.{0,40}?to\s*([0-9]+(?:\.\d+)?)"],
-            "2026-07", "westpac_consumer_sentiment.html"
+            "https://www.westpac.com.au/news/making-news/2026/06/consumer-sentiment-slips-again-as-cost-of-living-pressures-weigh-on-households/",
+            [r"Consumer Sentiment Index dropped.{0,100}?to\s*([0-9]+(?:\.\d+)?)\s+in June", r"Index.{0,80}?to\s*([0-9]+(?:\.\d+)?)\s+in June"],
+            "2026-06", "westpac_consumer_sentiment_june.html"
         )
         return points, {"note": "Latest official release; full history is licensed"}
     if label == "失業預期":
         points = official_html_value(
-            "https://melbourneinstitute.unimelb.edu.au/research/macroeconomics/latest-news/index-of-consumer-sentiment",
-            [r"Unemployment Expectations Index dropped.{0,80}?to\s*([0-9]+(?:\.\d+)?)\s+in July"],
-            "2026-07", "westpac_unemployment_expectations.html"
+            "https://www.westpac.com.au/news/making-news/2026/06/consumer-sentiment-slips-again-as-cost-of-living-pressures-weigh-on-households/",
+            [r"unemployment expectations.{0,120}?([0-9]+(?:\.\d+)?)"],
+            "2026-06", "westpac_unemployment_expectations_june.html"
         )
         return points, {"note": "Latest official release; full history is licensed"}
     if label in {"製造業PMI", "服務業PMI"}:
-        # S&P has no public structured history. Official release HTML is the last-resort source.
-        sector = "Manufacturing" if label == "製造業PMI" else "Services"
-        patterns = [rf"Australia {sector} PMI.{0,200}?([0-9]+(?:\.\d+)?)", rf"{sector} PMI.{0,120}?([0-9]+(?:\.\d+)?)"]
+        # S&P has no free public structured history. Use the individual official
+        # Australia release, not the release-directory page.
+        if label == "製造業PMI":
+            patterns = [
+                r"Flash Australia Manufacturing PMI:\s*([0-9]+(?:\.\d+)?)",
+                r"Australia Manufacturing PMI.{0,80}?([0-9]+(?:\.\d+)?)",
+            ]
+            raw_name = "sp_global_australia_manufacturing_july.html"
+        else:
+            patterns = [
+                r"Flash Australia Services PMI Business Activity Index:\s*([0-9]+(?:\.\d+)?)",
+                r"Australia Services PMI.{0,80}?([0-9]+(?:\.\d+)?)",
+            ]
+            raw_name = "sp_global_australia_services_july.html"
         points = official_html_value(
-            "https://www.pmi.spglobal.com/Public/Release/PressReleases",
-            patterns, "2026-07", f"sp_global_australia_{sector.lower()}.html"
+            "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df",
+            patterns, "2026-07", raw_name
         )
-        return points, {"note": "Official S&P release HTML; no free public API/CSV"}
+        return points, {"note": "Official individual S&P Australia release HTML; no free public API/CSV"}
     if label == "GDP YoY":
         return fetch_abs_target("ANA_AGG", "2024-Q1", ["gross domestic product", "chain volume", "seasonally adjusted"], ["per capita", "quarterly percentage"], target.expected)
     if label == "GDP私人消費YoY":
