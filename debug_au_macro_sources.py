@@ -11,6 +11,7 @@ Read-only diagnostic. It never modifies production JSON files.
 from __future__ import annotations
 
 import csv
+import html
 import io
 import json
 import math
@@ -28,7 +29,7 @@ from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-30-au-source-validation-v2"
+VERSION = "2026-07-30-au-source-validation-v3"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -138,7 +139,7 @@ def abs_csv(flow: str, start_period: str, *, last_n: int | None = None) -> tuple
         params["lastNObservations"] = str(last_n)
     errors: list[str] = []
     for candidate in ABS_FLOW_ALIASES.get(flow, [flow]):
-        url = f"{ABS_API}/ABS,{candidate},latest/all"
+        url = f"{ABS_API}/ABS,{candidate}/all"
         response = SESSION.get(
             url,
             params=params,
@@ -278,13 +279,15 @@ def fetch_anz_job_ads(expected: dict[str, float]) -> tuple[list[Point], dict[str
 def official_html_value(url: str, patterns: list[str], period: str, raw_name: str) -> list[Point]:
     response = get(url)
     (OUT / raw_name).write_bytes(response.content)
-    text = clean(BeautifulSoup(response.text, "html.parser").get_text(" ", strip=True)).replace("−", "-")
-    for pattern in patterns:
-        match = re.search(pattern, text, re.I | re.S)
-        if match:
-            value = number(match.group(1))
-            if value is not None:
-                return [Point(period, value, response.url)]
+    visible_text = clean(BeautifulSoup(response.text, "html.parser").get_text(" ", strip=True)).replace("−", "-")
+    raw_text = html.unescape(response.text).replace("−", "-")
+    for haystack in (visible_text, raw_text):
+        for pattern in patterns:
+            match = re.search(pattern, haystack, re.I | re.S)
+            if match:
+                value = number(match.group(1))
+                if value is not None:
+                    return [Point(period, value, response.url)]
     raise RuntimeError("Official HTML value not parsed")
 
 
