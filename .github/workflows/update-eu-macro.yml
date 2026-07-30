@@ -1,0 +1,64 @@
+name: Update EU Macro Data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "45 8 * * 1-5"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-eu-macro-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --disable-pip-version-check requests beautifulsoup4 pypdf openpyxl xlrd urllib3
+
+      - name: Update all available EU data
+        env:
+          PYTHONUNBUFFERED: "1"
+          GENESIS_TOKEN: ${{ secrets.GENESIS_TOKEN }}
+          GENESIS_USERNAME: ${{ secrets.GENESIS_USERNAME }}
+          GENESIS_PASSWORD: ${{ secrets.GENESIS_PASSWORD }}
+        run: python -u scripts/update_eu_macro.py
+
+      - name: Upload EU source debug files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eu-macro-source-debug-${{ github.run_number }}
+          path: debug/eu_macro_sources/
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Commit changes
+        run: |
+          if git diff --quiet -- data/eu_macro.json; then
+            echo "No new or revised EU data."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/eu_macro.json
+          git commit -m "Update EU macro data"
+          git push
