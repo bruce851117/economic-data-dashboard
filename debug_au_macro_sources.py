@@ -29,7 +29,7 @@ from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-30-au-source-validation-v3"
+VERSION = "2026-07-30-au-source-validation-v4"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -179,6 +179,13 @@ def rank_abs_series(
     *,
     transform: str = "level",
 ) -> tuple[list[Point], list[dict[str, Any]]]:
+    """Rank every ABS series by numerical agreement, then metadata relevance.
+
+    ABS label columns vary across dataflows, so requiring every English phrase
+    to appear in one concatenated label incorrectly discarded valid series.
+    The diagnostic now keeps every numeric series, compares common reference
+    periods first, and uses metadata terms only as a secondary ranking signal.
+    """
     grouped: dict[str, list[dict[str, str]]] = {}
     for row in rows:
         grouped.setdefault(series_identity(row), []).append(row)
@@ -186,10 +193,11 @@ def rank_abs_series(
     ranked: list[dict[str, Any]] = []
     for identity, series_rows in grouped.items():
         text = row_text(series_rows[0])
-        if any(term not in text for term in include) or any(term in text for term in exclude):
-            continue
+        include_hits = sum(1 for term in include if term in text)
+        exclude_hits = sum(1 for term in exclude if term in text)
+        metadata_score = include_hits * 10 - exclude_hits * 20
+
         levels: dict[str, float] = {}
-        source_url = ""
         for row in series_rows:
             period = period_key(row.get("TIME_PERIOD"))
             value = number(row.get("OBS_VALUE"))
@@ -197,28 +205,55 @@ def rank_abs_series(
                 levels[period] = value
         if not levels:
             continue
+
         values = levels
         if transform == "mom_diff":
             ordered = sorted(levels)
-            values = {current: levels[current] - levels[previous] for previous, current in zip(ordered, ordered[1:])}
+            values = {
+                current: levels[current] - levels[previous]
+                for previous, current in zip(ordered, ordered[1:])
+            }
+
         common = sorted(set(expected) & set(values))
-        mae = sum(abs(values[p] - expected[p]) for p in common) / len(common) if common else 999999.0
+        diffs = [abs(values[p] - expected[p]) for p in common]
+        mae = sum(diffs) / len(diffs) if diffs else 999999.0
+        max_error = max(diffs) if diffs else 999999.0
         ranked.append({
             "identity": identity,
             "description": text,
+            "include_hits": include_hits,
+            "include_total": len(include),
+            "exclude_hits": exclude_hits,
+            "metadata_score": metadata_score,
             "matches": len(common),
             "mae": mae,
+            "max_error": max_error,
             "latest": [[period, values[period]] for period in sorted(values)[-12:]],
             "values": values,
-            "source_url": source_url,
         })
-    ranked.sort(key=lambda item: (-item["matches"], item["mae"], -len(item["values"])))
-    if not ranked:
-        raise RuntimeError(f"No ABS candidate matched include={include} exclude={exclude}")
-    best = ranked[0]
-    points = [Point(period, value, "ABS Data API", note=best["description"]) for period, value in sorted(best["values"].items())]
-    return points, ranked[:30]
 
+    ranked.sort(
+        key=lambda item: (
+            -item["matches"],
+            item["mae"],
+            item["max_error"],
+            -item["metadata_score"],
+            -len(item["values"]),
+        )
+    )
+    if not ranked:
+        raise RuntimeError("ABS response contained no numeric time series")
+
+    best = ranked[0]
+    points = [
+        Point(period, value, "ABS Data API", note=best["description"])
+        for period, value in sorted(best["values"].items())
+    ]
+    public_candidates = [
+        {key: value for key, value in item.items() if key != "values"}
+        for item in ranked[:50]
+    ]
+    return points, public_candidates
 
 def fetch_abs_target(flow: str, start: str, include: list[str], exclude: list[str], expected: dict[str, float], transform: str = "level") -> tuple[list[Point], dict[str, Any]]:
     rows, url = abs_csv(flow, start)
@@ -290,6 +325,28 @@ def official_html_value(url: str, patterns: list[str], period: str, raw_name: st
                     return [Point(period, value, response.url)]
     raise RuntimeError("Official HTML value not parsed")
 
+
+
+def sp_australia_pmi(label: str) -> tuple[list[Point], dict[str, Any]]:
+    url = "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df"
+    response = get(url)
+    (OUT / "sp_global_australia_pmi_july.html").write_bytes(response.content)
+    visible = clean(BeautifulSoup(response.text, "html.parser").get_text(" ", strip=True)).replace("−", "-")
+    raw = html.unescape(response.text).replace("−", "-")
+    if label == "製造業PMI":
+        names = ["Flash Australia Manufacturing PMI", "Australia Manufacturing PMI"]
+    else:
+        names = ["Flash Australia Services PMI Business Activity Index", "Australia Services PMI Business Activity Index"]
+    for haystack in (visible, raw):
+        for name in names:
+            pattern = re.escape(name) + r"\s*:?\s*([0-9]+(?:\.[0-9]+)?)\s*\(\s*Jun\s*:?\s*([0-9]+(?:\.[0-9]+)?)\s*\)"
+            match = re.search(pattern, haystack, re.I | re.S)
+            if match:
+                return [
+                    Point("2026-06", float(match.group(2)), response.url, status="final", note="Previous value in July Flash release"),
+                    Point("2026-07", float(match.group(1)), response.url, status="flash", note="July 2026 Flash"),
+                ], {"note": "Official individual S&P Australia release; current and previous values parsed together"}
+    raise RuntimeError("Official Australia PMI current/previous values not parsed")
 
 def pdf_value(url: str, patterns: list[str], period: str, raw_name: str) -> list[Point]:
     response = get(url)
@@ -419,25 +476,7 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
         )
         return points, {"note": "Latest official release; full history is licensed"}
     if label in {"製造業PMI", "服務業PMI"}:
-        # S&P has no free public structured history. Use the individual official
-        # Australia release, not the release-directory page.
-        if label == "製造業PMI":
-            patterns = [
-                r"Flash Australia Manufacturing PMI:\s*([0-9]+(?:\.\d+)?)",
-                r"Australia Manufacturing PMI.{0,80}?([0-9]+(?:\.\d+)?)",
-            ]
-            raw_name = "sp_global_australia_manufacturing_july.html"
-        else:
-            patterns = [
-                r"Flash Australia Services PMI Business Activity Index:\s*([0-9]+(?:\.\d+)?)",
-                r"Australia Services PMI.{0,80}?([0-9]+(?:\.\d+)?)",
-            ]
-            raw_name = "sp_global_australia_services_july.html"
-        points = official_html_value(
-            "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df",
-            patterns, "2026-07", raw_name
-        )
-        return points, {"note": "Official individual S&P Australia release HTML; no free public API/CSV"}
+        return sp_australia_pmi(label)
     if label == "GDP YoY":
         return fetch_abs_target("ANA_AGG", "2024-Q1", ["gross domestic product", "chain volume", "seasonally adjusted"], ["per capita", "quarterly percentage"], target.expected)
     if label == "GDP私人消費YoY":
