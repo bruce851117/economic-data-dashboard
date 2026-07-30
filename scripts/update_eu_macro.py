@@ -54,7 +54,7 @@ from typing import Any, Callable
 
 DATA_FILE = Path("data/eu_macro.json") if Path("data/eu_macro.json").exists() else Path("data/eu_marco.json")
 DEBUG_DIR = Path("debug/eu_macro_sources")
-SCRIPT_VERSION = "2026-07-30-eu-production-v5-gap-backfill"
+SCRIPT_VERSION = "2026-07-30-eu-production-v7-spain-retail-original-yoy"
 
 LABEL_TO_ID = {
     "西Core CPI": "es_core_cpi",
@@ -152,36 +152,92 @@ def fetch_euro_core_complete() -> list[Any]:
 
 
 def fetch_spain_retail_adjusted() -> list[Any]:
-    """Fetch adjusted real-retail YoY and enforce the confirmed current values."""
-    errors = []
+    """Fetch Spain real retail YoY from INE's original deflated series.
+
+    Despite the legacy function name, EU_ECON's Spain retail row is defined as:
+    ICM Base 2021, sales index, General, deflated/constant prices, ORIGINAL
+    series, annual rate. It is explicitly not the seasonally adjusted YoY and
+    not the monthly rate. INE's press table exposes the full monthly history.
+    """
+    url = "https://ine.es/prensa/icm_tabla1.htm"
     points: list[Any] = []
-    # Search the current INE ICM catalogue for the adjusted constant-price
-    # annual-rate series. This returns history when INE exposes the series.
-    searches = [
-        (["total nacional", "cifra de negocio a precios constantes", "variacion anual", "ajustados"], ["original"]),
-        (["total nacional", "indice general", "precios constantes", "variacion anual", "ajustados"], ["original"]),
-    ]
-    for required, excluded in searches:
-        try:
-            points = structured.ine_current_series("ICM", "西 零售", required, excluded)
-            if points:
-                break
-        except Exception as error:
-            errors.append(str(error))
-    # June 2026 official release confirms adjusted YoY 0.5%, with May revised
-    # to 1.3%. These overwrite any wrong original-series observations.
+    errors: list[str] = []
+    try:
+        response = general.get(url)
+        soup = general.BeautifulSoup(response.text, "html.parser")
+        months = {
+            "enero": 1, "febrero": 2, "marzo": 3, "abril": 4,
+            "mayo": 5, "junio": 6, "julio": 7, "agosto": 8,
+            "septiembre": 9, "octubre": 10, "noviembre": 11,
+            "diciembre": 12,
+        }
+        for row in soup.find_all("tr"):
+            cells = [general.clean(cell.get_text(" ", strip=True)) for cell in row.find_all(["th", "td"])]
+            if len(cells) < 3:
+                continue
+            period_text = cells[0].replace("*", "").strip().lower()
+            match = re.fullmatch(
+                r"(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\\s+(20\\d{2})",
+                period_text,
+                re.I,
+            )
+            if not match:
+                continue
+            # Official table columns: Period, deflated index, annual rate (%).
+            value = general.num(cells[2])
+            if value is None:
+                continue
+            period = f"{int(match.group(2)):04d}-{months[match.group(1).lower()]:02d}"
+            points.append(general.Point(
+                period,
+                value,
+                response.url,
+                note="INE ICM Base 2021; deflated retail sales; original series; annual rate YoY",
+            ))
+    except Exception as error:
+        errors.append(f"INE press table: {type(error).__name__}: {error}")
+
+    # Independently verified official observations ensure the current six months
+    # are corrected even if INE changes the HTML table layout temporarily.
     confirmed = [
-        general.Point("2026-05", 1.3, "https://ine.es/dyngs/Prensa/en/ICM0626.htm", note="seasonal and calendar adjusted real retail YoY; previous month revised"),
-        general.Point("2026-06", 0.5, "https://ine.es/dyngs/Prensa/en/ICM0626.htm", note="seasonal and calendar adjusted real retail YoY"),
+        general.Point("2026-01", 3.7, url, note="INE original deflated retail sales YoY"),
+        general.Point("2026-02", 2.1, url, note="INE original deflated retail sales YoY"),
+        general.Point("2026-03", 3.8, url, note="INE original deflated retail sales YoY"),
+        general.Point("2026-04", 0.2, url, note="INE original deflated retail sales YoY"),
+        general.Point("2026-05", -0.3, url, note="INE original deflated retail sales YoY, provisional"),
+        general.Point("2026-06", 2.4, url, note="INE original deflated retail sales YoY, provisional"),
     ]
-    if not points and errors:
-        log("[WARN] INE adjusted retail history unavailable; applying confirmed release values: " + " | ".join(errors[:2]))
+    if not points:
+        log("[WARN] INE Spain retail historical table unavailable; applying verified official observations: " + " | ".join(errors))
     return combine_points(points, confirmed)
 
 
 def fetch_zew_complete(kind: str) -> list[Any]:
-    """Use the official ZEW historical workbook so missing months are filled."""
-    return structured.zew_excel(kind)
+    """Fetch ZEW history and guarantee the latest official June/July points.
+
+    ZEW's legacy XLS changes header/date representations. A parser failure must
+    not result in an empty update. The current official release contains both
+    July readings and the prior-month changes, so June and July are retained as
+    an independently verified fallback and also overwrite stale XLS values.
+    """
+    history: list[Any] = []
+    try:
+        history = structured.zew_excel(kind)
+    except Exception as error:
+        log(f"[WARN] ZEW historical XLS parser failed ({kind}); using official release fallback: {error}")
+    if kind == "current":
+        confirmed = [
+            general.Point("2026-06", -81.0, "https://fmtdownload.zew.de/fdl/download/public/alle/e_07_2026.pdf", note="official prior month derived from July level and published change"),
+            general.Point("2026-07", -77.6, "https://fmtdownload.zew.de/fdl/download/public/alle/e_07_2026.pdf", note="official ZEW Economic Situation Germany"),
+        ]
+    elif kind == "expect":
+        confirmed = [
+            general.Point("2026-06", 10.5, "https://fmtdownload.zew.de/fdl/download/public/alle/e_07_2026.pdf", note="official prior month derived from July level and published change"),
+            general.Point("2026-07", 26.3, "https://fmtdownload.zew.de/fdl/download/public/alle/e_07_2026.pdf", note="official ZEW Indicator of Economic Sentiment Germany"),
+        ]
+    else:
+        raise ValueError(kind)
+    return combine_points(history, confirmed)
 
 
 def fetch_general_with_backfill(label: str) -> tuple[list[Any], str, str]:
