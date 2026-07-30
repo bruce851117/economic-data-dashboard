@@ -54,7 +54,7 @@ from typing import Any, Callable
 
 DATA_FILE = Path("data/eu_macro.json") if Path("data/eu_macro.json").exists() else Path("data/eu_marco.json")
 DEBUG_DIR = Path("debug/eu_macro_sources")
-SCRIPT_VERSION = "2026-07-30-eu-production-v11-gdp-flash-overlay"
+SCRIPT_VERSION = "2026-07-30-eu-production-v11-germany-gdp-csv-parser"
 
 LABEL_TO_ID = {
     "西Core CPI": "es_core_cpi",
@@ -419,136 +419,97 @@ def fetch_ifo_xlsx_complete() -> list[Any]:
 
 
 def fetch_germany_gdp_csv_complete() -> list[Any]:
-    """Destatis public CSV table 81000-0002, real original GDP YoY history."""
+    """Destatis table 81000-0002, unadjusted real GDP YoY history.
+
+    Target row:
+      Originalwerte
+      preisbereinigt, Kettenindex (2020=100)
+      nachr.: Bruttoinlandsprodukt (Veraenderung in %)
+      Prozent
+
+    Matching deliberately avoids umlauts because the public CSV has sometimes
+    been delivered with a legacy encoding and can appear garbled in CI.
+    """
     url = "https://genesis.destatis.de/genesisWS/downloads/00/tables/81000-0002_00.csv"
     response = general.get(url)
-    text = response.content.decode("utf-8-sig", "replace")
+
+    # Try the encodings used by Destatis exports. Row selection below does not
+    # depend on German umlauts, so a legacy-encoded label cannot break matching.
+    text = None
+    for encoding in ("utf-8-sig", "cp1252", "iso-8859-1"):
+        try:
+            candidate = response.content.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+        if "Originalwerte" in candidate and "Bruttoinlandsprodukt" in candidate:
+            text = candidate
+            break
+    if text is None:
+        text = response.content.decode("utf-8-sig", "replace")
+
     rows = list(general.csv.reader(general.io.StringIO(text), delimiter=";"))
-    year_row = quarter_row = None
+    year_row = None
+    quarter_row = None
     target_row = None
+
     for row in rows:
         normalized = [general.clean(cell).lower() for cell in row]
         if sum(bool(re.fullmatch(r"20\d{2}", cell)) for cell in normalized) >= 2:
             year_row = row
         if sum("quartal" in cell for cell in normalized) >= 2:
             quarter_row = row
-        joined = " | ".join(normalized)
-        if (
-            normalized and normalized[0] == "originalwerte"
-            and "preisbereinigt, kettenindex" in joined
-            and "bruttoinlandsprodukt (veränderung in %)" in joined
+
+        # Use stable ASCII words and the unit column. This uniquely selects the
+        # unadjusted, price-adjusted GDP YoY row and excludes GDP per capita.
+        if len(normalized) >= 4 and (
+            normalized[0] == "originalwerte"
+            and "preisbereinigt" in normalized[1]
+            and "kettenindex" in normalized[1]
+            and "bruttoinlandsprodukt" in normalized[2]
+            and normalized[3] == "prozent"
+            and "einwohner" not in normalized[2]
+            and "erwerbst" not in normalized[2]
         ):
             target_row = row
             break
+
     if year_row is None or quarter_row is None or target_row is None:
-        raise RuntimeError("Destatis 81000-0002 target row/header not found")
+        raise RuntimeError("Destatis 81000-0002 GDP YoY row/header not found")
+
+    def parse_percent(cell: Any) -> float | None:
+        value = general.num(cell)
+        if value is not None:
+            return value
+        raw = general.clean(cell).replace("−", "-").replace(",", ".")
+        # Some previews expose decimal-comma values as an embedded line break,
+        # for example '0\\n5'. It represents 0.5, not 5.
+        match = re.fullmatch(r"([+-]?\d+)\s+(\d+)", raw)
+        if match:
+            return float(f"{match.group(1)}.{match.group(2)}")
+        return None
+
     points = []
     current_year = None
-    for column in range(max(len(year_row), len(quarter_row), len(target_row))):
+    width = max(len(year_row), len(quarter_row), len(target_row))
+    for column in range(width):
         year_cell = general.clean(year_row[column] if column < len(year_row) else "")
         if re.fullmatch(r"20\d{2}", year_cell):
             current_year = int(year_cell)
         quarter_cell = general.clean(quarter_row[column] if column < len(quarter_row) else "")
         quarter_match = re.search(r"([1-4])\.\s*quartal", quarter_cell, re.I)
-        value = general.num(target_row[column] if column < len(target_row) else None)
+        value = parse_percent(target_row[column] if column < len(target_row) else None)
         if current_year and quarter_match and value is not None:
             points.append(general.Point(
                 f"{current_year:04d}-Q{quarter_match.group(1)}",
                 value,
                 response.url,
-                note="Destatis 81000-0002; original; price-adjusted chain index; GDP YoY",
+                note="Destatis 81000-0002; Originalwerte; preisbereinigt Kettenindex; GDP YoY",
             ))
+
+    points = general.dedupe(points)
     if not points:
-        raise RuntimeError("Destatis 81000-0002 returned no quarterly GDP observations")
-    return general.dedupe(points)
-
-
-def fetch_germany_gdp_q2_flash() -> list[Any]:
-    """Latest German GDP YoY flash estimate from the official Destatis release."""
-    url = "https://www.destatis.de/EN/Press/2026/07/PE26_269_811.html"
-    response = general.get(url)
-    text = general.clean(general.response_text(response)).replace("−", "-")
-    patterns = [
-        r"GDP.{0,400}?2(?:nd|\.) quarter 2026.{0,300}?([+-]?\d+(?:[.,]\d+)?)\s*%\s+on the same quarter a year earlier\s*\(price adjusted\)",
-        r"second quarter of 2026.{0,600}?price adjusted.{0,150}?([+-]?\d+(?:[.,]\d+)?)\s*%\s+higher than in the second quarter of 2025",
-        r"\+?([0-9]+(?:[.,][0-9]+)?)\s*%\s+on the same quarter a year earlier\s*\(price adjusted\)",
-    ]
-    for pattern in patterns:
-        match = re.search(pattern, text, re.I | re.S)
-        if match:
-            value = general.num(match.group(1))
-            if value is not None:
-                return [general.Point(
-                    "2026-Q2", value, response.url,
-                    note="Destatis preliminary GDP estimate; price-adjusted YoY",
-                )]
-    raise RuntimeError("Destatis 2026-Q2 GDP YoY not parsed")
-
-
-def fetch_germany_gdp_complete_with_flash() -> list[Any]:
-    """Complete Destatis history plus a newer official flash quarter when needed."""
-    history: list[Any] = []
-    errors: list[str] = []
-    try:
-        history = fetch_germany_gdp_csv_complete()
-    except Exception as error:
-        errors.append(f"81000-0002 CSV: {error}")
-    try:
-        flash = fetch_germany_gdp_q2_flash()
-    except Exception as error:
-        flash = []
-        errors.append(f"Q2 flash: {error}")
-    points = combine_points(history, flash)
-    if points:
-        if errors:
-            log("[WARN] Germany GDP partial-source fallback: " + " | ".join(errors))
-        return points
-    raise RuntimeError("Germany GDP sources failed: " + " | ".join(errors))
-
-
-def fetch_spain_gdp_q2_flash() -> list[Any]:
-    """Latest Spanish GDP YoY advance estimate from the official INE release."""
-    url = "https://ine.es/dyngs/Prensa/en/avCNTR2T26.htm"
-    response = general.get(url)
-    text = general.clean(general.response_text(response)).replace("−", "-")
-    patterns = [
-        r"annual change of GDP was\s*([+-]?\d+(?:[.,]\d+)?)%",
-        r"interannual variation of GDP was\s*([+-]?\d+(?:[.,]\d+)?)%",
-        r"variaci[oó]n interanual del PIB fue del\s*([+-]?\d+(?:[.,]\d+)?)%",
-        r"GDP at market prices.{0,160}?Annual change.{0,100}?([+-]?\d+(?:[.,]\d+)?)",
-    ]
-    for pattern in patterns:
-        match = re.search(pattern, text, re.I | re.S)
-        if match:
-            value = general.num(match.group(1))
-            if value is not None:
-                return [general.Point(
-                    "2026-Q2", value, response.url,
-                    status="p", note="INE quarterly national accounts advance estimate; SCA real GDP YoY",
-                )]
-    raise RuntimeError("INE 2026-Q2 GDP YoY not parsed")
-
-
-def fetch_spain_gdp_complete_with_flash() -> list[Any]:
-    """Eurostat complete history plus the newer INE advance estimate."""
-    history: list[Any] = []
-    errors: list[str] = []
-    try:
-        history, _, _ = fetch_general("西 GDP")
-    except Exception as error:
-        errors.append(f"Eurostat history: {error}")
-    try:
-        flash = fetch_spain_gdp_q2_flash()
-    except Exception as error:
-        flash = []
-        errors.append(f"INE Q2 flash: {error}")
-    points = combine_points(history, flash)
-    if points:
-        if errors:
-            log("[WARN] Spain GDP partial-source fallback: " + " | ".join(errors))
-        return points
-    raise RuntimeError("Spain GDP sources failed: " + " | ".join(errors))
-
+        raise RuntimeError("Destatis 81000-0002 GDP YoY row found but no quarterly values parsed")
+    return points
 
 def fetch_general_with_backfill(label: str) -> tuple[list[Any], str, str]:
     if label == "德 失業人口":
@@ -560,9 +521,7 @@ def fetch_general_with_backfill(label: str) -> tuple[list[Any], str, str]:
     if label == "德 企業信心":
         return fetch_ifo_xlsx_complete(), "ifo official Business Climate XLSX", "Complete revised monthly Business Climate Germany history"
     if label == "德 GDP":
-        return fetch_germany_gdp_complete_with_flash(), "Destatis 81000-0002 CSV + official Q2 flash", "Complete quarterly real original GDP YoY history; latest official flash overlays publication lag"
-    if label == "西 GDP":
-        return fetch_spain_gdp_complete_with_flash(), "Eurostat namq_10_gdp + INE Q2 advance", "Complete quarterly SCA real GDP YoY history; latest INE advance overlays Eurostat publication lag"
+        return fetch_germany_gdp_csv_complete(), "Destatis 81000-0002 CSV", "Complete quarterly real original GDP YoY history"
     if label == "歐 Core CPI":
         return fetch_euro_core_complete(), "Eurostat teicp200", "Complete official euro-area core HICP history"
     if label == "西 零售":
