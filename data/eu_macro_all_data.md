@@ -1,6 +1,6 @@
 # EU Macro Data Debug Snapshot
 
-- Generated at: `2026-07-30T03:53:49.456299+00:00`
+- Generated at: `2026-07-30T04:02:25.705029+00:00`
 - Script version: `2026-07-30-eu-production-v3-commit-markdown`
 - Series count: `31`
 - Observation count: `3106`
