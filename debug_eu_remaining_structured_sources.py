@@ -39,7 +39,7 @@ from openpyxl import load_workbook
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-VERSION = "2026-07-30-remaining-structured-v1"
+VERSION = "2026-07-30-remaining-structured-v3-official-version-stitching"
 TIMEOUT = 60
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36"
 
@@ -84,6 +84,17 @@ def num(value: Any) -> float | None:
 
 
 def period_key(value: Any, year: Any = None, period_code: Any = None) -> str | None:
+    # INE quarterly observations carry timestamps at the first month of each
+    # quarter. FK_Periodo 19..22 is authoritative and must be checked first.
+    if year is not None and period_code is not None:
+        try:
+            y = int(year); p = int(period_code)
+            if 19 <= p <= 22:
+                return f"{y:04d}-Q{p - 18}"
+            if 1 <= p <= 12:
+                return f"{y:04d}-{p:02d}"
+        except (TypeError, ValueError):
+            pass
     text = clean(value)
     if re.fullmatch(r"1\d{12}", text):
         return datetime.fromtimestamp(int(text) / 1000, timezone.utc).strftime("%Y-%m")
@@ -93,16 +104,6 @@ def period_key(value: Any, year: Any = None, period_code: Any = None) -> str | N
     m = re.search(r"(20\d{2})[-/. ](0?[1-9]|1[0-2])(?:\D|$)", text)
     if m:
         return f"{m.group(1)}-{int(m.group(2)):02d}"
-    if year:
-        try:
-            y = int(year)
-            p = int(period_code)
-            if 1 <= p <= 12:
-                return f"{y:04d}-{p:02d}"
-            if 19 <= p <= 22:
-                return f"{y:04d}-Q{p - 18}"
-        except (TypeError, ValueError):
-            pass
     return None
 
 
@@ -198,8 +199,30 @@ def choose_ine_series(table_id: str, label: str, required: list[str], excluded: 
 
 
 def spain_core_cpi() -> list[Point]:
-    return choose_ine_series("50907", "西Core CPI",
-                             ["general sin alimentos no elaborados ni productos energeticos", "variacion anual"])
+    old=[]; current=[]; errors=[]
+    try:
+        old=choose_ine_series("50907","西Core CPI",
+            ["general sin alimentos no elaborados ni productos energeticos","variacion anual"])
+    except Exception as exc:
+        errors.append(f"50907 historical: {exc}")
+    # INE changed all IPC table identifiers with Base 2025. Probe only the
+    # documented 761xx block; DATOS_TABLA is the official JSON distribution.
+    for table_no in range(76120,76161):
+        table_id=str(table_no)
+        try:
+            pts=choose_ine_series(table_id,"西Core CPI",
+                ["general sin alimentos no elaborados ni productos energeticos","variacion anual"])
+            if any(p.period >= "2026-01" for p in pts):
+                current=pts; DETAILS["INE Base 2025 core CPI selected table"]=table_id; break
+        except Exception as exc:
+            errors.append(f"{table_id}: {exc}")
+    merged={p.period:p for p in old if p.period <= "2025-12"}
+    merged.update({p.period:p for p in current if p.period >= "2026-01"})
+    if not merged or not any(period in merged for period in EXPECTED["西Core CPI"]):
+        raise RuntimeError("INE Base 2025 core CPI not resolved; "+" | ".join(errors[-12:]))
+    for point in merged.values():
+        point.note += "; stitched at 2026-01 (Base 2021 historical + Base 2025 current)"
+    return dedupe(list(merged.values()))
 
 
 def spain_unemployment() -> list[Point]:
@@ -253,10 +276,35 @@ def yoy_from_levels(points: list[Point], expected_periods: list[str], note: str)
 
 
 def france_core_cpi() -> list[Point]:
-    levels = insee_idbank("011814143")
-    DETAILS["INSEE 011814143 levels"] = [asdict(p) for p in levels]
-    return yoy_from_levels(levels, list(EXPECTED["法 Core CPI"]),
-                           "YoY calculated from INSEE Base 2025 underlying CPI levels; idbank=011814143")
+    # Base 2025 level=011814143, monthly rate=011814144. Adjacent identifiers
+    # are tested for the official annual-rate series to avoid computing YoY
+    # from display-rounded index levels. Historical Base 2015 annual rate is
+    # retained only through 2025-12.
+    old=[]; current=[]; errors=[]
+    try:
+        old=insee_idbank("001768593")
+        for p in old: p.note="INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+    except Exception as exc: errors.append(f"001768593: {exc}")
+    for idbank in ("011814145","011814146","011814147","011814148"):
+        try:
+            pts=insee_idbank(idbank)
+            vals={p.period:p.value for p in pts}
+            shared=[q for q in EXPECTED["法 Core CPI"] if q in vals]
+            if shared and all(-10 < vals[q] < 10 for q in shared):
+                current=pts
+                for p in current: p.note=f"INSEE Base 2025 official annual underlying inflation; idbank={idbank}"
+                DETAILS["INSEE Base 2025 annual core CPI selected idbank"]=idbank
+                break
+        except Exception as exc: errors.append(f"{idbank}: {exc}")
+    if not current:
+        levels=insee_idbank("011814143")
+        DETAILS["INSEE 011814143 levels"]=[asdict(p) for p in levels]
+        current=yoy_from_levels(levels,list(EXPECTED["法 Core CPI"]),
+            "Fallback YoY from display-rounded Base 2025 levels; idbank=011814143")
+    merged={p.period:p for p in old if p.period <= "2025-12"}
+    merged.update({p.period:p for p in current if p.period >= "2026-01"})
+    if not merged: raise RuntimeError("INSEE old/new core CPI series unavailable; "+" | ".join(errors))
+    return dedupe(list(merged.values()))
 
 
 # ------------------------- Destatis GENESIS REST -------------------------
@@ -381,28 +429,80 @@ def select_destatis_row(rows: list[list[str]], label: str, required: list[str], 
     return dedupe(points)
 
 
+def destatis_core_html() -> list[Point]:
+    url="https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html"
+    r=request("GET",url); soup=BeautifulSoup(r.text,"html.parser")
+    points=[]; current_year=None
+    for tr in soup.find_all("tr"):
+        cells=[clean(x.get_text(" ",strip=True)) for x in tr.find_all(["th","td"])]
+        if not cells: continue
+        # Expected row layout: year (occasionally row-spanned), month, overall,
+        # overall excluding food and energy, food, excluding energy, energy.
+        if re.fullmatch(r"20\d{2}",cells[0]):
+            current_year=int(cells[0]); cells=cells[1:]
+        if current_year and len(cells)>=3:
+            month_name=norm(cells[0])
+            months={name:i for i,name in enumerate("jan feb mar apr may jun jul aug sep oct nov dec".split(),1)}
+            month=months.get(month_name[:3])
+            value=num(cells[2])
+            if month and value is not None:
+                points.append(Point(f"{current_year:04d}-{month:02d}",value,r.url,
+                    "Destatis official special breakdown: overall index excluding food and energy"))
+    DETAILS["Destatis core CPI HTML points"]=[asdict(p) for p in points]
+    if not points: raise RuntimeError("Destatis official core CPI HTML table not parsed")
+    return dedupe(points)
+
+
 def germany_core_cpi() -> list[Point]:
-    rows, source_url = genesis_table("61111-0006", 2025, 2026)
-    DETAILS["Destatis 61111-0006 raw preview"] = rows[:300]
-    levels = select_destatis_row(rows, "core CPI",
-                                 ["ohne", "nahrungsmittel", "energie"],
-                                 ["alkohol", "tabak"])
-    for p in levels:
-        p.source_url = source_url
-    return yoy_from_levels(levels, list(EXPECTED["德 Core CPI"]),
-                           "YoY from GENESIS CPI special-aggregate levels")
+    errors=[]
+    try:
+        rows,source_url=genesis_table("61111-0006",2025,2026)
+        DETAILS["Destatis 61111-0006 raw preview"]=rows[:300]
+        levels=select_destatis_row(rows,"core CPI",["ohne","nahrungsmittel","energie"],["alkohol","tabak"])
+        for p in levels: p.source_url=source_url
+    except Exception as exc:
+        errors.append(str(exc)); levels=destatis_core_html()
+    points=yoy_from_levels(levels,list(EXPECTED["德 Core CPI"]),"YoY from official Destatis core CPI levels")
+    for p in points: p.note += "; API preferred, official HTML table fallback"
+    return points
+
+
+def select_destatis_row_oriented(rows: list[list[str]], label: str,
+                                   aggregate_terms: list[str], column_terms: list[str]) -> list[Point]:
+    # Tables such as 42153-0001 put year/month on each observation row and
+    # adjustment methods in columns, unlike CPI's wide month-column layout.
+    header_idx=None; value_col=None
+    for idx,row in enumerate(rows[:30]):
+        for col,cell in enumerate(row):
+            text=norm(cell)
+            if all(term in text for term in column_terms):
+                header_idx=idx; value_col=col; break
+        if value_col is not None: break
+    if value_col is None:
+        raise RuntimeError(f"Destatis {label}: adjustment column not found")
+    months={name:i for i,name in enumerate("januar februar marz april mai juni juli august september oktober november dezember".split(),1)}
+    points=[]
+    for idx,row in enumerate(rows[header_idx+1:],header_idx+2):
+        if len(row)<=value_col: continue
+        aggregate=norm(row[0] if row else "")
+        if not all(term in aggregate for term in aggregate_terms): continue
+        try: year=int(clean(row[1]))
+        except (ValueError,IndexError): continue
+        month=months.get(norm(row[2]) if len(row)>2 else "")
+        value=num(row[value_col])
+        if month and value is not None:
+            points.append(Point(f"{year:04d}-{month:02d}",value,"",f"row={idx}; column={value_col+1}"))
+    DETAILS[f"Destatis {label} row-oriented"]=[asdict(p) for p in points]
+    if not points: raise RuntimeError(f"Destatis {label}: no row-oriented observations")
+    return dedupe(points)
 
 
 def germany_industry() -> list[Point]:
     rows, source_url = genesis_table("42153-0001", 2025, 2026)
     DETAILS["Destatis 42153-0001 raw preview"] = rows[:300]
-    levels = select_destatis_row(rows, "industry",
-                                 ["produzierendes gewerbe", "kalenderbereinigt"],
-                                 ["saisonbereinigt"])
-    for p in levels:
-        p.source_url = source_url
-    return yoy_from_levels(levels, list(EXPECTED["德 工業"]),
-                           "YoY from GENESIS calendar-adjusted production levels")
+    levels = select_destatis_row_oriented(rows,"industry",["produzierendes","gewerbe"],["x13","kalenderbereinigt"])
+    for p in levels: p.source_url=source_url
+    return yoy_from_levels(levels,list(EXPECTED["德 工業"]),"YoY from GENESIS X13 calendar-adjusted production levels")
 
 
 # ------------------------- ifo XLS/XLSX and PDF fallback -------------------------
@@ -476,60 +576,74 @@ def ifo_from_workbook(content: bytes, url: str) -> list[Point]:
 
 def ifo_from_pdf(content: bytes, url: str) -> list[Point]:
     from pypdf import PdfReader
-    reader = PdfReader(io.BytesIO(content))
-    text = "\n".join(page.extract_text() or "" for page in reader.pages)
-    DETAILS[f"ifo PDF text {url}"] = text[:50000]
-    points = []
-    # Press-release sentence is reliable for the latest month; the embedded table
-    # remains in DETAILS for deterministic parser refinement if needed.
-    months = {name: i for i, name in enumerate(
-        "januar februar marz april mai juni juli august september oktober november dezember".split(), 1)}
-    pattern = r"geschaftsklimaindex\s+(?:stieg|sank).*?im\s+(januar|februar|marz|april|mai|juni|juli|august|september|oktober|november|dezember).*?auf\s+([0-9]+[,.][0-9]+)\s+punkte"
-    match = re.search(pattern, norm(text), re.S)
-    if match:
-        month = months[match.group(1)]
-        year_match = re.search(r"\b(20\d{2})\b", text)
-        if year_match:
-            points.append(Point(f"{year_match.group(1)}-{month:02d}", float(match.group(2).replace(",", ".")), url,
-                                "ifo official press-release PDF sentence"))
+    reader=PdfReader(io.BytesIO(content)); text="\n".join(page.extract_text() or "" for page in reader.pages)
+    DETAILS[f"ifo PDF text {url}"]=text[:50000]
+    points=[]
+    # Extract the official 13-month table. pypdf usually preserves the sequence
+    # "Monat/Jahr 06/25 ... 06/26 Klima Lage Erwartungen <13 climate values>...".
+    compact=re.sub(r"\s+"," ",text.replace("−","-"))
+    block=re.search(r"Monat/Jahr\s+((?:\d{2}/\d{2}\s+){8,15}).*?Klima\s+Lage\s+Erwartungen\s+((?:-?\d+[,.]\d+\s+){20,50})",compact,re.I)
+    if block:
+        periods=re.findall(r"(\d{2})/(\d{2})",block.group(1))
+        values=[float(x.replace(",",".")) for x in re.findall(r"-?\d+[,.]\d+",block.group(2))]
+        # Table is printed month-by-month in the PDFs: climate, situation,
+        # expectations for each month. If layout instead groups rows, compare
+        # both interpretations and retain values in the plausible 70..110 range.
+        n=len(periods); candidates=[]
+        if len(values)>=3*n:
+            candidates.append(values[0:3*n:3])
+            candidates.append(values[:n])
+        for climate in candidates:
+            if len(climate)==n and all(70 <= x <= 110 for x in climate):
+                for (mm,yy),value in zip(periods,climate):
+                    points.append(Point(f"20{yy}-{int(mm):02d}",value,url,"ifo official PDF table"))
+                break
     if not points:
-        raise RuntimeError("ifo PDF downloaded but latest value not parsed")
-    return points
+        match=re.search(r"Geschäftsklimaindex\s+(?:stieg|sank).*?im\s+([A-Za-zä]+).*?auf\s+([0-9]+[,.][0-9]+)\s+Punkte",text,re.S|re.I)
+        if match:
+            months={norm(name):i for i,name in enumerate("januar februar marz april mai juni juli august september oktober november dezember".split(),1)}
+            month=months.get(norm(match.group(1))); year_match=re.search(r"\b(20\d{2})\b",text)
+            if month and year_match: points.append(Point(f"{year_match.group(1)}-{month:02d}",float(match.group(2).replace(",",".")),url,"ifo official PDF sentence"))
+    if not points: raise RuntimeError("ifo PDF downloaded but table/latest value not parsed")
+    return dedupe(points)
+
+
+def ifo_html_value(page_url: str, period: str) -> Point:
+    r=request("GET",page_url); text=BeautifulSoup(r.text,"html.parser").get_text(" ",strip=True)
+    n=norm(text)
+    match=re.search(r"geschaftsklimaindex (?:stieg|sank).*?auf ([0-9]+[.,][0-9]+) punkte",n,re.S)
+    if not match: raise RuntimeError("ifo HTML latest value not found")
+    return Point(period,float(match.group(1).replace(",",".")),r.url,"ifo official release HTML fallback")
 
 
 def ifo_business() -> list[Point]:
-    pages = [
-        "https://www.ifo.de/ifo-zeitreihen",
-        "https://www.ifo.de/umfragen/zeitreihen",
-        "https://www.ifo.de/fakten/2026-07-27/ifo-geschaeftsklimaindex-gestiegen-juli-2026",
-    ]
-    urls = []
-    errors = []
+    pages=["https://www.ifo.de/ifo-zeitreihen","https://www.ifo.de/umfragen/zeitreihen",
+           "https://www.ifo.de/fakten/2026-07-27/ifo-geschaeftsklimaindex-gestiegen-juli-2026"]
+    urls=[]; errors=[]
     for page in pages:
-        try:
-            urls.extend(asset_urls(page))
-        except Exception as exc:
-            errors.append(f"{page}: {exc}")
-    urls = list(dict.fromkeys(urls))
-    DETAILS["ifo discovered assets"] = urls
-    # Workbook assets first.
+        try: urls.extend(asset_urls(page))
+        except Exception as exc: errors.append(f"{page}: {exc}")
+    # Official indexed June PDF; its embedded table covers 2025-06..2026-06.
+    urls.extend(["https://www.ifo.de/media/57983/download"])
+    urls=list(dict.fromkeys(urls)); DETAILS["ifo discovered assets"]=urls
     for url in urls:
-        if not url.lower().split("?")[0].endswith((".xlsx", ".xls")):
-            continue
+        if not url.lower().split("?")[0].endswith((".xlsx",".xls")): continue
         try:
-            r = request("GET", url)
-            return ifo_from_workbook(r.content, r.url)
-        except Exception as exc:
-            errors.append(f"{url}: {exc}")
-    # Official PDF/media fallback.
+            r=request("GET",url); return ifo_from_workbook(r.content,r.url)
+        except Exception as exc: errors.append(f"{url}: {exc}")
+    points=[]
     for url in urls:
         try:
-            r = request("GET", url)
-            if "pdf" in r.headers.get("content-type", "").lower() or r.content.startswith(b"%PDF"):
-                return ifo_from_pdf(r.content, r.url)
-        except Exception as exc:
-            errors.append(f"{url}: {exc}")
-    raise RuntimeError("ifo official asset not parsed: " + " | ".join(errors[:15]))
+            r=request("GET",url)
+            if "pdf" in r.headers.get("content-type","").lower() or r.content.startswith(b"%PDF"):
+                try: points.extend(ifo_from_pdf(r.content,r.url))
+                except Exception as exc: errors.append(f"{url}: {exc}")
+        except Exception as exc: errors.append(f"{url}: {exc}")
+    try: points.append(ifo_html_value(pages[-1],"2026-07"))
+    except Exception as exc: errors.append(f"July HTML: {exc}")
+    points=dedupe(points)
+    if points: return points
+    raise RuntimeError("ifo official asset not parsed: "+" | ".join(errors[:15]))
 
 
 # ------------------------- reporting -------------------------
