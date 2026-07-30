@@ -54,7 +54,7 @@ from typing import Any, Callable
 
 DATA_FILE = Path("data/eu_macro.json") if Path("data/eu_macro.json").exists() else Path("data/eu_marco.json")
 DEBUG_DIR = Path("debug/eu_macro_sources")
-SCRIPT_VERSION = "2026-07-30-eu-production-v10-german-unemployed-level"
+SCRIPT_VERSION = "2026-07-30-eu-production-v11-gdp-flash-overlay"
 
 LABEL_TO_ID = {
     "西Core CPI": "es_core_cpi",
@@ -462,6 +462,94 @@ def fetch_germany_gdp_csv_complete() -> list[Any]:
         raise RuntimeError("Destatis 81000-0002 returned no quarterly GDP observations")
     return general.dedupe(points)
 
+
+def fetch_germany_gdp_q2_flash() -> list[Any]:
+    """Latest German GDP YoY flash estimate from the official Destatis release."""
+    url = "https://www.destatis.de/EN/Press/2026/07/PE26_269_811.html"
+    response = general.get(url)
+    text = general.clean(general.response_text(response)).replace("−", "-")
+    patterns = [
+        r"GDP.{0,400}?2(?:nd|\.) quarter 2026.{0,300}?([+-]?\d+(?:[.,]\d+)?)\s*%\s+on the same quarter a year earlier\s*\(price adjusted\)",
+        r"second quarter of 2026.{0,600}?price adjusted.{0,150}?([+-]?\d+(?:[.,]\d+)?)\s*%\s+higher than in the second quarter of 2025",
+        r"\+?([0-9]+(?:[.,][0-9]+)?)\s*%\s+on the same quarter a year earlier\s*\(price adjusted\)",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text, re.I | re.S)
+        if match:
+            value = general.num(match.group(1))
+            if value is not None:
+                return [general.Point(
+                    "2026-Q2", value, response.url,
+                    note="Destatis preliminary GDP estimate; price-adjusted YoY",
+                )]
+    raise RuntimeError("Destatis 2026-Q2 GDP YoY not parsed")
+
+
+def fetch_germany_gdp_complete_with_flash() -> list[Any]:
+    """Complete Destatis history plus a newer official flash quarter when needed."""
+    history: list[Any] = []
+    errors: list[str] = []
+    try:
+        history = fetch_germany_gdp_csv_complete()
+    except Exception as error:
+        errors.append(f"81000-0002 CSV: {error}")
+    try:
+        flash = fetch_germany_gdp_q2_flash()
+    except Exception as error:
+        flash = []
+        errors.append(f"Q2 flash: {error}")
+    points = combine_points(history, flash)
+    if points:
+        if errors:
+            log("[WARN] Germany GDP partial-source fallback: " + " | ".join(errors))
+        return points
+    raise RuntimeError("Germany GDP sources failed: " + " | ".join(errors))
+
+
+def fetch_spain_gdp_q2_flash() -> list[Any]:
+    """Latest Spanish GDP YoY advance estimate from the official INE release."""
+    url = "https://ine.es/dyngs/Prensa/en/avCNTR2T26.htm"
+    response = general.get(url)
+    text = general.clean(general.response_text(response)).replace("−", "-")
+    patterns = [
+        r"annual change of GDP was\s*([+-]?\d+(?:[.,]\d+)?)%",
+        r"interannual variation of GDP was\s*([+-]?\d+(?:[.,]\d+)?)%",
+        r"variaci[oó]n interanual del PIB fue del\s*([+-]?\d+(?:[.,]\d+)?)%",
+        r"GDP at market prices.{0,160}?Annual change.{0,100}?([+-]?\d+(?:[.,]\d+)?)",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text, re.I | re.S)
+        if match:
+            value = general.num(match.group(1))
+            if value is not None:
+                return [general.Point(
+                    "2026-Q2", value, response.url,
+                    status="p", note="INE quarterly national accounts advance estimate; SCA real GDP YoY",
+                )]
+    raise RuntimeError("INE 2026-Q2 GDP YoY not parsed")
+
+
+def fetch_spain_gdp_complete_with_flash() -> list[Any]:
+    """Eurostat complete history plus the newer INE advance estimate."""
+    history: list[Any] = []
+    errors: list[str] = []
+    try:
+        history, _, _ = fetch_general("西 GDP")
+    except Exception as error:
+        errors.append(f"Eurostat history: {error}")
+    try:
+        flash = fetch_spain_gdp_q2_flash()
+    except Exception as error:
+        flash = []
+        errors.append(f"INE Q2 flash: {error}")
+    points = combine_points(history, flash)
+    if points:
+        if errors:
+            log("[WARN] Spain GDP partial-source fallback: " + " | ".join(errors))
+        return points
+    raise RuntimeError("Spain GDP sources failed: " + " | ".join(errors))
+
+
 def fetch_general_with_backfill(label: str) -> tuple[list[Any], str, str]:
     if label == "德 失業人口":
         return fetch_germany_unemployed_complete(), "Bundesbank BBDL1.M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A", "Registered unemployed persons, SA/SWDA, thousand persons, level"
@@ -472,7 +560,9 @@ def fetch_general_with_backfill(label: str) -> tuple[list[Any], str, str]:
     if label == "德 企業信心":
         return fetch_ifo_xlsx_complete(), "ifo official Business Climate XLSX", "Complete revised monthly Business Climate Germany history"
     if label == "德 GDP":
-        return fetch_germany_gdp_csv_complete(), "Destatis 81000-0002 CSV", "Complete quarterly real original GDP YoY history"
+        return fetch_germany_gdp_complete_with_flash(), "Destatis 81000-0002 CSV + official Q2 flash", "Complete quarterly real original GDP YoY history; latest official flash overlays publication lag"
+    if label == "西 GDP":
+        return fetch_spain_gdp_complete_with_flash(), "Eurostat namq_10_gdp + INE Q2 advance", "Complete quarterly SCA real GDP YoY history; latest INE advance overlays Eurostat publication lag"
     if label == "歐 Core CPI":
         return fetch_euro_core_complete(), "Eurostat teicp200", "Complete official euro-area core HICP history"
     if label == "西 零售":
