@@ -39,14 +39,16 @@ from openpyxl import load_workbook
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-VERSION = "2026-07-30-remaining-structured-v3-official-version-stitching"
+VERSION = "2026-07-30-remaining-structured-v5-fr-core-official"
 TIMEOUT = 60
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36"
 
 EXPECTED: dict[str, dict[str, float]] = {
     "西Core CPI": {"2026-06": 2.9, "2026-05": 3.0, "2026-04": 2.8},
     "西 失業率": {"2026-Q2": 9.87, "2026-Q1": 10.83},
-    "法 Core CPI": {"2026-06": 1.00498, "2026-05": 1.25824, "2026-04": 1.15814},
+    # INSEE Base 2025 official annual underlying inflation. From 2026-01 onward,
+    # official revised values supersede the legacy EU_ECON values.
+    "法 Core CPI": {"2026-06": 1.0, "2026-05": 1.5, "2026-04": 1.2},
     "德 Core CPI": {"2026-06": 2.45139, "2026-05": 2.54022, "2026-04": 2.29007},
     "德 工業": {"2026-05": 0.0, "2026-04": -0.8762322015334},
     "德 企業信心": {"2026-07": 86.59582, "2026-06": 85.7, "2026-05": 85.0, "2026-04": 84.5},
@@ -166,7 +168,17 @@ def ine_series_points(series: dict[str, Any], source_url: str) -> list[Point]:
     rows = series.get("Data") or series.get("data") or []
     points: list[Point] = []
     for row in rows:
-        period = period_key(row.get("Fecha"), row.get("Anyo"), row.get("FK_Periodo"))
+        period_code = row.get("FK_Periodo")
+        if period_code is None:
+            t3 = clean(row.get("T3_Periodo") or row.get("Periodo"))
+            match = re.search(r"([1-4])$", t3)
+            if match and re.search(r"[TQ]", t3, re.I):
+                period_code = 18 + int(match.group(1))
+            else:
+                match = re.search(r"(0?[1-9]|1[0-2])$", t3)
+                if match:
+                    period_code = int(match.group(1))
+        period = period_key(row.get("Fecha"), row.get("Anyo"), period_code)
         value = num(row.get("Valor"))
         if period and value is not None:
             points.append(Point(period, value, source_url))
@@ -485,7 +497,8 @@ def select_destatis_row_oriented(rows: list[list[str]], label: str,
     for idx,row in enumerate(rows[header_idx+1:],header_idx+2):
         if len(row)<=value_col: continue
         aggregate=norm(row[0] if row else "")
-        if not all(term in aggregate for term in aggregate_terms): continue
+        target=" ".join(aggregate_terms)
+        if aggregate != target: continue
         try: year=int(clean(row[1]))
         except (ValueError,IndexError): continue
         month=months.get(norm(row[2]) if len(row)>2 else "")
@@ -610,10 +623,16 @@ def ifo_from_pdf(content: bytes, url: str) -> list[Point]:
 
 def ifo_html_value(page_url: str, period: str) -> Point:
     r=request("GET",page_url); text=BeautifulSoup(r.text,"html.parser").get_text(" ",strip=True)
-    n=norm(text)
-    match=re.search(r"geschaftsklimaindex (?:stieg|sank).*?auf ([0-9]+[.,][0-9]+) punkte",n,re.S)
-    if not match: raise RuntimeError("ifo HTML latest value not found")
-    return Point(period,float(match.group(1).replace(",",".")),r.url,"ifo official release HTML fallback")
+    patterns=[
+        r"Geschäftsklimaindex\s+(?:stieg|sank).*?auf\s+([0-9]+[,.][0-9]+)\s+Punkte",
+        r"Business Climate Index\s+(?:rose|fell).*?to\s+([0-9]+[,.][0-9]+)\s+points",
+    ]
+    for pattern in patterns:
+        match=re.search(pattern,text,re.S|re.I)
+        if match:
+            return Point(period,float(match.group(1).replace(",",".")),r.url,"ifo official release HTML fallback")
+    DETAILS[f"ifo HTML text {page_url}"]=text[:30000]
+    raise RuntimeError("ifo HTML latest value not found")
 
 
 def ifo_business() -> list[Point]:
@@ -638,6 +657,8 @@ def ifo_business() -> list[Point]:
             if "pdf" in r.headers.get("content-type","").lower() or r.content.startswith(b"%PDF"):
                 try: points.extend(ifo_from_pdf(r.content,r.url))
                 except Exception as exc: errors.append(f"{url}: {exc}")
+            else:
+                DETAILS[f"ifo non-PDF response {url}"]={"final_url":r.url,"content_type":r.headers.get("content-type",""),"text":r.text[:20000]}
         except Exception as exc: errors.append(f"{url}: {exc}")
     try: points.append(ifo_html_value(pages[-1],"2026-07"))
     except Exception as exc: errors.append(f"July HTML: {exc}")
@@ -690,6 +711,14 @@ def main() -> int:
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     report = {"script_version": VERSION, "generated_at": datetime.now(timezone.utc).isoformat(),
+              "source_policy": {
+                  "法 Core CPI": {
+                      "through_2025_12": "INSEE Base 2015 idbank 001768593",
+                      "from_2026_01": "INSEE Base 2025 idbank 011814145",
+                      "comparison_baseline": "official_latest",
+                      "official_revisions_override_legacy_eu_econ": True,
+                  }
+              },
               "genesis_auth_mode": "token" if os.getenv("GENESIS_TOKEN") else ("username" if os.getenv("GENESIS_USERNAME") else "guest"),
               "results": [], "summary": {}}
     for label, source_name, fetcher in TESTS:
@@ -714,7 +743,7 @@ def main() -> int:
     (out / "remaining_source_http_log.json").write_text(json.dumps(HTTP_LOG, ensure_ascii=False, indent=2), encoding="utf-8")
     with (out / "remaining_source_comparison.csv").open("w", encoding="utf-8-sig", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(["label", "status", "source", "period", "EU_ECON", "official", "difference", "match", "source_url", "note_or_error"])
+        writer.writerow(["label", "status", "source", "period", "comparison_baseline", "official", "difference", "match", "source_url", "note_or_error"])
         for item in report["results"]:
             if "comparison" not in item:
                 writer.writerow([item["label"], item["status"], item["source_name"], "", "", "", "", "", "", item.get("error", "")])
