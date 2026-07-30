@@ -53,7 +53,7 @@ from typing import Any, Callable
 
 DATA_FILE = Path("data/eu_macro.json") if Path("data/eu_macro.json").exists() else Path("data/eu_marco.json")
 DEBUG_DIR = Path("debug/eu_macro_sources")
-SCRIPT_VERSION = "2026-07-30-eu-production-v1"
+SCRIPT_VERSION = "2026-07-30-eu-production-v3-commit-markdown"
 
 LABEL_TO_ID = {
     "西Core CPI": "es_core_cpi",
@@ -225,6 +225,130 @@ def classify_release(points: list[Any]) -> str | None:
     return None
 
 
+
+def markdown_cell(value: Any) -> str:
+    """Escape a value so it is safe inside a Markdown table cell."""
+    if value is None:
+        return ""
+    text = str(value).replace("\r", " ").replace("\n", "<br>")
+    return text.replace("|", "\\|")
+
+
+def markdown_number(value: Any) -> str:
+    """Keep enough precision for debugging without long floating-point noise."""
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return markdown_cell(value)
+    number = float(value)
+    if number.is_integer():
+        return str(int(number))
+    return f"{number:.10f}".rstrip("0").rstrip(".")
+
+
+def write_markdown_snapshot(database: dict[str, Any]) -> Path:
+    """Write every observation in eu_macro.json to one Markdown file.
+
+    The output contains:
+    1. A latest-value overview for quick checking.
+    2. A complete table for every series, including every historical point.
+    3. Source metadata, release type and notes when available.
+
+    The file is written beside eu_macro.json under data/ so GitHub Actions can
+    commit it directly to the repository after every successful update.
+    """
+    DEBUG_DIR.mkdir(parents=True, exist_ok=True)
+    output_path = DATA_FILE.parent / "eu_macro_all_data.md"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    series_by_id = {
+        item.get("id"): item
+        for item in database.get("series", [])
+        if item.get("id")
+    }
+    lines: list[str] = [
+        "# EU Macro Data Debug Snapshot",
+        "",
+        f"- Generated at: `{markdown_cell(database.get('generated_at', ''))}`",
+        f"- Script version: `{SCRIPT_VERSION}`",
+        f"- Series count: `{len(series_by_id)}`",
+        f"- Observation count: `{sum(len(item.get('data', [])) for item in series_by_id.values())}`",
+        "",
+        "> 此檔案由 update_eu_macro.py 自動產生，完整列出 eu_macro.json 目前保存的所有資料，供人工核對日期、數值、來源及修訂狀態。",
+        "",
+        "## Latest Value Overview",
+        "",
+        "| Block | Series ID | Name | Frequency | Latest Date | Latest Value | Source URL | Release Type |",
+        "|---|---|---|---|---|---:|---|---|",
+    ]
+
+    for block in database.get("blocks", []):
+        block_name = block.get("title") or block.get("id") or ""
+        for series_id in block.get("series", []):
+            series = series_by_id.get(series_id)
+            if not series:
+                continue
+            rows = sorted(series.get("data", []), key=lambda row: row.get("date", ""))
+            latest = rows[-1] if rows else {}
+            lines.append(
+                "| " + " | ".join([
+                    markdown_cell(block_name),
+                    markdown_cell(series_id),
+                    markdown_cell(series.get("name", "")),
+                    markdown_cell(series.get("frequency", "")),
+                    markdown_cell(latest.get("date", "")),
+                    markdown_number(latest.get("value")),
+                    markdown_cell(latest.get("source_url", "")),
+                    markdown_cell(latest.get("release_type", "")),
+                ]) + " |"
+            )
+
+    lines.extend(["", "## Complete Historical Data", ""])
+
+    listed_ids: set[str] = set()
+    ordered_series: list[tuple[str, dict[str, Any]]] = []
+    for block in database.get("blocks", []):
+        block_name = block.get("title") or block.get("id") or ""
+        for series_id in block.get("series", []):
+            series = series_by_id.get(series_id)
+            if series and series_id not in listed_ids:
+                ordered_series.append((block_name, series))
+                listed_ids.add(series_id)
+    for series_id, series in series_by_id.items():
+        if series_id not in listed_ids:
+            ordered_series.append((series.get("block", ""), series))
+
+    for block_name, series in ordered_series:
+        rows = sorted(series.get("data", []), key=lambda row: row.get("date", ""))
+        lines.extend([
+            f"### {markdown_cell(series.get('name') or series.get('id') or '')}",
+            "",
+            f"- Block: `{markdown_cell(block_name)}`",
+            f"- Series ID: `{markdown_cell(series.get('id', ''))}`",
+            f"- Original ticker/label: `{markdown_cell(series.get('ticker', ''))}`",
+            f"- Frequency: `{markdown_cell(series.get('frequency', ''))}`",
+            f"- Observations: `{len(rows)}`",
+            "",
+            "| Date | Value | Source URL | Source Frequency | Release Type | Status | Note |",
+            "|---|---:|---|---|---|---|---|",
+        ])
+        if not rows:
+            lines.append("|  |  |  |  |  |  | No data |")
+        else:
+            for row in rows:
+                lines.append(
+                    "| " + " | ".join([
+                        markdown_cell(row.get("date", "")),
+                        markdown_number(row.get("value")),
+                        markdown_cell(row.get("source_url", "")),
+                        markdown_cell(row.get("source_frequency", "")),
+                        markdown_cell(row.get("release_type", "")),
+                        markdown_cell(row.get("status", "")),
+                        markdown_cell(row.get("note", "")),
+                    ]) + " |"
+                )
+        lines.append("")
+
+    output_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    return output_path
+
 def validate_database(database: dict[str, Any]) -> None:
     ids = [item.get("id") for item in database.get("series", [])]
     if len(ids) != len(set(ids)):
@@ -292,6 +416,7 @@ def main() -> None:
     }
     validate_database(database)
     DATA_FILE.write_text(json.dumps(database, ensure_ascii=False, indent=2), encoding="utf-8")
+    markdown_path = write_markdown_snapshot(database)
 
     summary: dict[str, int] = {}
     for result in results:
@@ -315,6 +440,7 @@ def main() -> None:
             log(f"{result['series_id']}: ERROR {result['error']}")
     log(f"[DONE] summary={summary} elapsed_seconds={time.monotonic() - started:.1f}")
     log(f"[OUTPUT] {DATA_FILE}")
+    log(f"[MARKDOWN] {markdown_path}")
     log(f"[DEBUG] {DEBUG_DIR}")
 
 
