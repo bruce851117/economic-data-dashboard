@@ -54,7 +54,7 @@ from typing import Any, Callable
 
 DATA_FILE = Path("data/eu_macro.json") if Path("data/eu_macro.json").exists() else Path("data/eu_marco.json")
 DEBUG_DIR = Path("debug/eu_macro_sources")
-SCRIPT_VERSION = "2026-07-30-eu-production-v7-spain-retail-original-yoy"
+SCRIPT_VERSION = "2026-07-30-eu-production-v8-structured-four-sources"
 
 LABEL_TO_ID = {
     "西Core CPI": "es_core_cpi",
@@ -240,7 +240,204 @@ def fetch_zew_complete(kind: str) -> list[Any]:
     return combine_points(history, confirmed)
 
 
+
+def fetch_euro_unemployment_complete() -> list[Any]:
+    """Eurostat une_rt_m complete monthly SA unemployment-rate history."""
+    errors = []
+    for geo in ("EA21", "EA20", "EA"):
+        try:
+            points = general.eurostat("une_rt_m", {
+                "geo": geo,
+                "age": "TOTAL",
+                "sex": "T",
+                "unit": "PC_ACT",
+                "s_adj": "SA",
+                "sinceTimePeriod": "2015-01",
+                "untilTimePeriod": datetime.now(timezone.utc).strftime("%Y-%m"),
+            })
+            if points:
+                return points
+        except Exception as error:
+            errors.append(f"{geo}: {error}")
+    raise RuntimeError("Eurostat une_rt_m failed: " + " | ".join(errors))
+
+
+def _pxweb_total_code(variable: dict[str, Any]) -> str:
+    values = variable.get("values", [])
+    texts = variable.get("valueTexts", [])
+    pairs = list(zip(values, texts))
+    for code, text in pairs:
+        normalized = general.clean(text).lower()
+        if normalized in {"total", "todos", "todas"}:
+            return str(code)
+    if values:
+        return str(values[0])
+    raise RuntimeError(f"PXWeb variable has no values: {variable.get('code')}")
+
+
+def fetch_spain_employment_pxweb() -> list[Any]:
+    """TGSS PX-Web seasonally adjusted level history, converted to MoM change."""
+    urls = [
+        "https://w6.seg-social.es/PXWeb/api/v1/es/Afiliados%20en%20alta%20laboral/Afiliados%20en%20alta%20laboral__Afiliados%20Medios/10mb25.%20Afiliados%20medios%20DESESTACIONALIZADOS%20por%20dependencia%20laboral%20y%20sector%20de%20actividad%20CNAE%2025%20%28desde%20ene-21%29.px",
+        "https://w6.seg-social.es/PXWeb/api/v1/es/Afiliados%20en%20alta%20laboral/Afiliados%20en%20alta%20laboral__Afiliados%20Medios/10mb.%20Afiliados%20medios%20DESESTACIONALIZADOS%20por%20relacion%20laboral%20y%20sector%20de%20actividad.px",
+    ]
+    errors = []
+    for url in urls:
+        try:
+            metadata_response = general.SESSION.get(url, timeout=60)
+            metadata_response.raise_for_status()
+            metadata = metadata_response.json()
+            variables = metadata.get("variables", [])
+            query = []
+            period_code = None
+            for variable in variables:
+                code = str(variable.get("code"))
+                normalized = general.clean(variable.get("text")).lower()
+                if "period" in normalized or "periodo" in normalized:
+                    period_code = code
+                    query.append({"code": code, "selection": {"filter": "all", "values": ["*"]}})
+                else:
+                    query.append({"code": code, "selection": {"filter": "item", "values": [_pxweb_total_code(variable)]}})
+            if not period_code:
+                raise RuntimeError("PXWeb period variable not found")
+            payload = {"query": query, "response": {"format": "json-stat2"}}
+            response = general.SESSION.post(url, json=payload, timeout=90)
+            response.raise_for_status()
+            data = response.json()
+            dimension = data.get("dimension", {})
+            period_dimension = dimension.get(period_code, {})
+            index = period_dimension.get("category", {}).get("index", {})
+            if isinstance(index, dict):
+                period_codes = [key for key, _ in sorted(index.items(), key=lambda item: item[1])]
+            else:
+                period_codes = list(period_dimension.get("category", {}).get("label", {}).keys())
+            values = data.get("value", [])
+            if isinstance(values, dict):
+                level_values = [values.get(str(i)) for i in range(len(period_codes))]
+            else:
+                level_values = list(values)
+            levels: list[tuple[str, float]] = []
+            for period_code_value, raw_value in zip(period_codes, level_values):
+                match = re.search(r"(20\d{2})[-/]?(0[1-9]|1[0-2])", str(period_code_value))
+                value = general.num(raw_value)
+                if match and value is not None:
+                    levels.append((f"{match.group(1)}-{match.group(2)}", value))
+            levels.sort()
+            points = []
+            for (previous_period, previous_value), (period, value) in zip(levels, levels[1:]):
+                py, pm = map(int, previous_period.split("-"))
+                y, m = map(int, period.split("-"))
+                if y * 12 + m != py * 12 + pm + 1:
+                    continue
+                points.append(general.Point(
+                    period,
+                    (value - previous_value) / 1000.0,
+                    response.url,
+                    note="TGSS PX-Web seasonally adjusted total affiliation level; MoM difference; thousand persons",
+                ))
+            if points:
+                return points
+        except Exception as error:
+            errors.append(f"{url}: {type(error).__name__}: {error}")
+    # Keep already verified releases as a fallback, but PX-Web is primary.
+    fallback = VERIFIED_GAP_BACKFILL.get("西 就業", [])
+    if fallback:
+        log("[WARN] TGSS PX-Web failed; using verified official recent values: " + " | ".join(errors))
+        return fallback
+    raise RuntimeError("TGSS PX-Web failed: " + " | ".join(errors))
+
+
+def fetch_ifo_xlsx_complete() -> list[Any]:
+    """Download the official ifo Business Climate Germany XLSX history."""
+    pages = [
+        "https://www.ifo.de/ifo-zeitreihen",
+        "https://www.ifo.de/en/ifo-time-series",
+    ]
+    errors = []
+    links: list[str] = []
+    for page in pages:
+        try:
+            for link in structured.asset_urls(page):
+                lower = link.lower()
+                if (lower.endswith((".xlsx", ".xls")) or "download" in lower) and link not in links:
+                    links.append(link)
+        except Exception as error:
+            errors.append(f"{page}: {error}")
+    for link in links:
+        try:
+            response = structured.request("GET", link)
+            if response.content.startswith(b"PK") or response.content[:8] == b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1":
+                points = structured.ifo_from_workbook(response.content, response.url)
+                if points:
+                    return points
+        except Exception as error:
+            errors.append(f"{link}: {error}")
+    # Official release fallback preserves recent verified observations.
+    try:
+        latest, source_id, definition = fetch_general("德 企業信心")
+    except Exception as error:
+        latest = []
+        errors.append(f"ifo release fallback: {error}")
+    points = combine_points(VERIFIED_GAP_BACKFILL.get("德 企業信心", []), latest)
+    if points:
+        log("[WARN] ifo XLSX failed; using official release observations: " + " | ".join(errors[:4]))
+        return points
+    raise RuntimeError("ifo official XLSX failed: " + " | ".join(errors))
+
+
+def fetch_germany_gdp_csv_complete() -> list[Any]:
+    """Destatis public CSV table 81000-0002, real original GDP YoY history."""
+    url = "https://genesis.destatis.de/genesisWS/downloads/00/tables/81000-0002_00.csv"
+    response = general.get(url)
+    text = response.content.decode("utf-8-sig", "replace")
+    rows = list(general.csv.reader(general.io.StringIO(text), delimiter=";"))
+    year_row = quarter_row = None
+    target_row = None
+    for row in rows:
+        normalized = [general.clean(cell).lower() for cell in row]
+        if sum(bool(re.fullmatch(r"20\d{2}", cell)) for cell in normalized) >= 2:
+            year_row = row
+        if sum("quartal" in cell for cell in normalized) >= 2:
+            quarter_row = row
+        joined = " | ".join(normalized)
+        if (
+            normalized and normalized[0] == "originalwerte"
+            and "preisbereinigt, kettenindex" in joined
+            and "bruttoinlandsprodukt (veränderung in %)" in joined
+        ):
+            target_row = row
+            break
+    if year_row is None or quarter_row is None or target_row is None:
+        raise RuntimeError("Destatis 81000-0002 target row/header not found")
+    points = []
+    current_year = None
+    for column in range(max(len(year_row), len(quarter_row), len(target_row))):
+        year_cell = general.clean(year_row[column] if column < len(year_row) else "")
+        if re.fullmatch(r"20\d{2}", year_cell):
+            current_year = int(year_cell)
+        quarter_cell = general.clean(quarter_row[column] if column < len(quarter_row) else "")
+        quarter_match = re.search(r"([1-4])\.\s*quartal", quarter_cell, re.I)
+        value = general.num(target_row[column] if column < len(target_row) else None)
+        if current_year and quarter_match and value is not None:
+            points.append(general.Point(
+                f"{current_year:04d}-Q{quarter_match.group(1)}",
+                value,
+                response.url,
+                note="Destatis 81000-0002; original; price-adjusted chain index; GDP YoY",
+            ))
+    if not points:
+        raise RuntimeError("Destatis 81000-0002 returned no quarterly GDP observations")
+    return general.dedupe(points)
+
 def fetch_general_with_backfill(label: str) -> tuple[list[Any], str, str]:
+    if label == "歐 失業率":
+        return fetch_euro_unemployment_complete(), "Eurostat une_rt_m", "Complete monthly SA euro-area unemployment-rate history"
+    if label == "西 就業":
+        return fetch_spain_employment_pxweb(), "TGSS PX-Web 10mb25/10mb", "Seasonally adjusted affiliation level; calculated MoM change"
+    if label == "德 企業信心":
+        return fetch_ifo_xlsx_complete(), "ifo official Business Climate XLSX", "Complete revised monthly Business Climate Germany history"
+    if label == "德 GDP":
+        return fetch_germany_gdp_csv_complete(), "Destatis 81000-0002 CSV", "Complete quarterly real original GDP YoY history"
     if label == "歐 Core CPI":
         return fetch_euro_core_complete(), "Eurostat teicp200", "Complete official euro-area core HICP history"
     if label == "西 零售":
