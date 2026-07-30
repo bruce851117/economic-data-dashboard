@@ -40,7 +40,7 @@ from openpyxl import load_workbook
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-VERSION = "2026-07-30-structured-v3-value-pattern-and-raw-dump"
+VERSION = "2026-07-30-structured-v4-current-series-discovery"
 TIMEOUT = 45
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36"
 
@@ -105,6 +105,11 @@ def period_key(value: Any) -> str | None:
     text = clean(value)
     if not text:
         return None
+    if re.fullmatch(r"1[0-9]{12}", text):
+        try:
+            return datetime.fromtimestamp(int(text)/1000, tz=timezone.utc).strftime("%Y-%m")
+        except (ValueError, OSError, OverflowError):
+            pass
     q = re.search(r"(20\d{2})\D*[QqTt]([1-4])", text)
     if q:
         return f"{q.group(1)}-Q{q.group(2)}"
@@ -414,91 +419,54 @@ def scan_workbook_for_period_values(content: bytes, source_url: str, expected: d
 
 # ---------- Indicator-specific structured tests ----------
 
+def ine_current_series(operation: str, label: str, required: list[str], excluded: list[str] | None = None) -> list[Point]:
+    excluded=excluded or []
+    payload=request("GET",f"https://servicios.ine.es/wstempus/js/ES/SERIES_OPERACION/{operation}").json()
+    stack=payload if isinstance(payload,list) else [payload]; found={}
+    while stack:
+        item=stack.pop()
+        if isinstance(item,dict):
+            code=clean(item.get("COD") or item.get("Codigo") or item.get("Id") or item.get("id")); name=clean(item.get("Nombre") or item.get("name") or item.get("Descripcion"))
+            if re.match(r"^[A-Za-z]+\d+$",code) and name: found[code]=name
+            stack.extend(item.values())
+        elif isinstance(item,list): stack.extend(item)
+    ranked=[]
+    for code,name in found.items():
+        n=norm(name); score=sum(5 for term in required if term in n)-sum(8 for term in excluded if term in n)
+        score += 4 if "total nacional" in n else 0; score += 3 if "base 2025" in n else 0
+        ranked.append((score,code,name))
+    ranked.sort(reverse=True); CANDIDATES[f"INE current candidates {label}"]=[{"score":a,"code":b,"name":c} for a,b,c in ranked[:150]]
+    errors=[]
+    for _,code,name in ranked[:150]:
+        try:
+            points=ine_series(code); shared=[p for p in points if p.period in EXPECTED[label]]
+            if shared and sum(abs(p.value-EXPECTED[label][p.period]) for p in shared)/len(shared)<=0.11:
+                for p in points: p.note=f"INE current series {code}: {name}"
+                return points
+        except Exception as exc: errors.append(f"{code}: {exc}")
+    raise RuntimeError(f"No current INE series matched {label}; "+" | ".join(errors[:10]))
+
+
 def spain_core_cpi() -> list[Point]:
-    return ine_series("IPC208611")
+    return ine_current_series("IPC","西Core CPI",["general","sin alimentos no elaborados","sin productos energeticos","variacion anual"],["base 2021","serie enlazada"])
 
 
 def spain_unemployment() -> list[Point]:
-    return ine_series("EPA815")
+    return ine_current_series("EPA","西 失業率",["total nacional","tasa de paro","ambos sexos","total"],["menores","extranjeros"])
 
 
 def spain_retail() -> list[Point]:
-    # Discover series from ICM tables first; Tempus3 names vary by base year.
-    discovery_urls = [
-        "https://servicios.ine.es/wstempus/js/ES/TABLAS_OPERACION/ICM",
-        "https://servicios.ine.es/wstempus/js/ES/SERIES_OPERACION/ICM",
-    ]
-    codes: dict[str,str] = {}
-    errors = []
-    for url in discovery_urls:
-        try:
-            payload = request("GET", url).json()
-            stack = payload if isinstance(payload,list) else [payload]
-            while stack:
-                item=stack.pop()
-                if isinstance(item,dict):
-                    code=clean(item.get("COD") or item.get("Codigo") or item.get("Id") or item.get("id"))
-                    name=clean(item.get("Nombre") or item.get("name") or item.get("Descripcion"))
-                    if re.match(r"^[A-Za-z]+\d+$",code):
-                        codes[code]=name
-                    stack.extend(item.values())
-                elif isinstance(item,list): stack.extend(item)
-        except Exception as exc:
-            errors.append(f"{url}: {exc}")
-    ranked=[]
-    for code,name in codes.items():
-        n=norm(name)
-        score=sum(2 for term in ["general","precios constantes","variacion anual"] if term in n)
-        score += 8 if "total nacional" in n else -5
-        score += 6 if "comercio al por menor excepto de vehiculos" in n else 0
-        score -= 8 if "base 2005" in n else 0
-        score -= 6 if "ajustados de estacionalidad" in n or "ajustados de calendario" in n else 0
-        ranked.append((score,code,name))
-    ranked.sort(reverse=True)
-    CANDIDATES["西 零售 INE candidates"]=[{"score":a,"code":b,"name":c} for a,b,c in ranked[:200]]
-    for _,code,name in ranked[:80]:
-        try:
-            points=ine_series(code)
-            shared=[p for p in points if p.period in EXPECTED["西 零售"]]
-            if shared and all(abs(p.value-EXPECTED["西 零售"][p.period]) <= 0.21 for p in shared):
-                for p in points: p.note=f"INE discovered series {code}: {name}"
-                return points
-        except Exception as exc:
-            errors.append(f"{code}: {exc}")
-    raise RuntimeError("No matching INE ICM series found; "+" | ".join(errors[:8]))
+    return ine_current_series("ICM","西 零售",["total nacional","cifra de negocio a precios constantes","comercio al por menor excepto de vehiculos","variacion anual"],["ajustados de calendario","ajustados de estacionalidad","base 2005"])
+
 
 def euro_core_cpi() -> list[Point]:
     errors=[]
-    codes=["TOT_X_NRG_FOOD_NALC_TBC","TOT_X_NRG_FOOD"]
-    for geo in ("EA21","EA20"):
-        for dataset in ("prc_hicp_manr","prc_hicp_midx"):
-            for coicop in codes:
-                filters={"geo":geo,"coicop":coicop,
-                         "sinceTimePeriod":"2025-01","untilTimePeriod":"2026-07"}
-                filters["unit"]="RCH_A" if dataset=="prc_hicp_manr" else "I15"
-                try:
-                    points=eurostat(dataset,filters)
-                    if dataset=="prc_hicp_midx":
-                        points=yoy_from_levels({p.period:p.value for p in points},EXPECTED["歐 Core CPI"],points[-1].source_url)
-                    if any(p.period in EXPECTED["歐 Core CPI"] and abs(p.value-EXPECTED["歐 Core CPI"][p.period])<=0.11 for p in points):
-                        return points
-                except Exception as exc:
-                    errors.append(f"{dataset}/{geo}/{coicop}: {exc}")
-    # Metadata discovery with only geo/time restrictions, retained in diagnostics.
-    for geo in ("EA21","EA20"):
+    for geo in ("EA21","EA20","EA"):
         try:
-            url="https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_manr"
-            response=request("GET",url,params={"format":"JSON","lang":"EN","geo":geo,
-                                               "sinceTimePeriod":"2026-04","untilTimePeriod":"2026-06"})
-            payload=response.json()
-            CANDIDATES[f"Eurostat core discovery {geo}"]={
-                "id":payload.get("id"),"size":payload.get("size"),
-                "dimensions":{k:list(v.get("category",{}).get("index",{}).keys())[:300]
-                              for k,v in payload.get("dimension",{}).items()}
-            }
-        except Exception as exc:
-            errors.append(f"discovery/{geo}: {exc}")
-    raise RuntimeError("Eurostat core HICP candidates failed; "+" | ".join(errors))
+            points=eurostat("teicp200",{"geo":geo,"sinceTimePeriod":"2025-01","untilTimePeriod":"2026-07"})
+            if any(p.period in EXPECTED["歐 Core CPI"] for p in points): return points
+        except Exception as exc: errors.append(f"teicp200/{geo}: {exc}")
+    raise RuntimeError("Eurostat teicp200 failed; "+" | ".join(errors))
 
 def euro_unemployment() -> list[Point]:
     return eurostat("une_rt_m", {"geo": "EA21", "age": "TOTAL", "sex": "T", "unit": "PC_ACT", "s_adj": "SA"})
@@ -687,22 +655,21 @@ def ifo_excel() -> list[Point]:
 
 
 def zew_excel(which: str) -> list[Point]:
-    page = "https://www.zew.de/en/publications/zew-expertises-research-reports/research-reports/business-cycle/zew-financial-market-survey"
-    links = find_excel_links(page, ["historical", "time", "series"])
-    CANDIDATES["ZEW Excel links"] = links
-    expected = EXPECTED["德信心 Current" if which == "current" else "德信心 expect"]
-    keywords = ["economic", "situation", "germany"] if which == "current" else ["economic", "sentiment", "germany"]
-    errors = []
-    for link in links[:20]:
-        try:
-            response = request("GET", link)
-            points = scan_workbook_for_period_values(response.content, response.url, expected, keywords)
-            if points:
-                return points
-        except Exception as exc:
-            errors.append(f"{link}: {exc}")
-    raise RuntimeError(f"ZEW {which} official Excel not parsed; " + " | ".join(errors[:5]))
-
+    url="https://www.zew.de/fileadmin/FTP/div/konjunktur.xls"
+    response=request("GET",url); books=workbook_cells(response.content,response.url)
+    for book in books:
+        rows=book["rows"]
+        if not rows: continue
+        headers=[norm(x) for x in rows[0]]
+        target="economic situation germany" if which=="current" else "zew indicator of economic sentiment germany"
+        cols=[i for i,h in enumerate(headers) if target in h]
+        if not cols: continue
+        col=cols[0]; points=[]
+        for row in rows[1:]:
+            period=period_key(row[0]) if row else None; value=number(row[col]) if col<len(row) else None
+            if period and value is not None: points.append(Point(period,value,response.url,note=f"sheet={book['sheet']} col={col+1}"))
+        if points: return dedupe(points)
+    raise RuntimeError(f"ZEW {which} column not found")
 
 def tgss_pxweb() -> list[Point]:
     roots = [
