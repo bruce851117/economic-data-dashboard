@@ -1,678 +1,14168 @@
-#!/usr/bin/env python3
-"""Single-file EU macro updater.
-
-Self-contained production file. It embeds all official-source adapters and
-updates data/eu_macro.json while preserving existing history when a source
-fails. Generated 2026-07-30 from the validated EU source adapters.
-"""
-from __future__ import annotations
-import sys
-import types
-import re
-
-
-def _load_embedded_module(name: str, source: str) -> types.ModuleType:
-    module = types.ModuleType(name)
-    module.__file__ = __file__
-    module.__package__ = ""
-    module.__dict__["__name__"] = name
-    sys.modules[name] = module
-    exec(compile(source, f"<{name}>", "exec"), module.__dict__)
-    return module
-
-_GENERAL_SOURCE = '#!/usr/bin/env python3\n"""Discover and validate official EU macro sources against EU_ECON reference values.\n\nVersion 2026-07-29-v2\n- GDP reference dates are quarterly (2026-Q1, 2025-Q4, 2025-Q3, 2025-Q2).\n- Comparison is based on the latest populated EU_ECON period and the same official period.\n- Replaces discontinued Eurostat HICP v1, INE legacy series and wrong German labour concepts.\n- Reuses the proven S&P Global press-release discovery/parser design from update_uk_macro.py,\n  generalised for Germany, France and Spain manufacturing/services PMI.\n- The script is read-only and always writes diagnostics, even when individual sources fail.\n"""\nfrom __future__ import annotations\n\nimport argparse\nimport csv\nimport io\nimport json\nimport math\nimport re\nimport sys\nimport time\nimport xml.etree.ElementTree as ET\nfrom dataclasses import asdict, dataclass\nfrom datetime import datetime, timedelta, timezone\nfrom io import BytesIO\nfrom pathlib import Path\nfrom typing import Any, Callable\nfrom urllib.parse import urljoin, quote_plus, unquote\n\nimport requests\nfrom bs4 import BeautifulSoup, NavigableString\nfrom pypdf import PdfReader\n\nVERSION = "2026-07-29-v14-ifo-multi-official-page"\nDEFAULT_OUT = Path("debug/eu_macro_sources")\nSESSION = requests.Session()\nSESSION.headers.update({\n    "User-Agent": "Mozilla/5.0 (compatible; EUMacroSourceDebugger/2.0; GitHub-Actions)",\n    "Accept-Language": "en,en-US;q=0.9,de;q=0.7,fr;q=0.6,es;q=0.5",\n})\nEUROSTAT = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data"\nINSEE = "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM"\nBUNDESBANK = "https://api.statistiken.bundesbank.de/rest/data"\nSP_RELEASES = "https://www.pmi.spglobal.com/Public/Release/PressReleases"\n_SP_COUNTRY_CACHE: dict[str, dict[str, list[Point]]] = {}\n\n\n@dataclass\nclass Point:\n    period: str\n    value: float\n    source_url: str\n    status: str = ""\n    note: str = ""\n\n\n@dataclass\nclass Source:\n    name: str\n    provider: str\n    fetcher: str\n    args: dict[str, Any]\n    definition: str\n    source_id: str\n\n\ndef log(message: str) -> None:\n    print(message, flush=True)\n\n\ndef get(url: str, **kwargs: Any) -> requests.Response:\n    timeout = kwargs.pop("timeout", 45)\n    last_response: requests.Response | None = None\n    last_error: Exception | None = None\n    for attempt in range(3):\n        try:\n            response = SESSION.get(url, timeout=timeout, **kwargs)\n            last_response = response\n            log(f"[HTTP] {response.status_code} {response.url} bytes={len(response.content)}")\n            if response.status_code < 400:\n                return response\n            if response.status_code not in {429, 500, 502, 503, 504}:\n                response.raise_for_status()\n        except requests.exceptions.SSLError as error:\n            last_error = error\n            if "inclusion.gob.es" in url and kwargs.get("verify", True):\n                insecure_kwargs = dict(kwargs)\n                insecure_kwargs["verify"] = False\n                response = SESSION.get(url, timeout=timeout, **insecure_kwargs)\n                last_response = response\n                log(f"[HTTP/SSL-FALLBACK] {response.status_code} {response.url} bytes={len(response.content)}")\n                if response.status_code < 400:\n                    return response\n        except requests.RequestException as error:\n            last_error = error\n        if attempt < 2:\n            time.sleep(2 * (2 ** attempt))\n    if last_response is not None:\n        last_response.raise_for_status()\n    assert last_error is not None\n    raise last_error\n\n\ndef clean(text: Any) -> str:\n    return re.sub(r"\\s+", " ", str(text or "")).strip()\n\n\ndef num(value: Any) -> float | None:\n    if value is None or isinstance(value, bool):\n        return None\n    if isinstance(value, (int, float)):\n        value = float(value)\n        return value if math.isfinite(value) else None\n    text = clean(value).replace("%", "").replace("\\u2212", "-")\n    text = re.sub(r"(?<=\\d)[,](?=\\d)", ".", text)\n    text = text.replace(" ", "")\n    return float(text) if re.fullmatch(r"[+-]?\\d+(?:\\.\\d+)?", text) else None\n\n\ndef period_key(value: Any) -> str | None:\n    text = clean(value)\n    m = re.match(r"^(20\\d{2})[-/](0[1-9]|1[0-2])(?:[-/]\\d{1,2})?$", text)\n    if m:\n        return f"{m[1]}-{m[2]}"\n    q = re.match(r"^(20\\d{2})[- ]?[QT]([1-4])$", text, re.I)\n    if q:\n        return f"{q[1]}-Q{q[2]}"\n    return None\n\n\ndef dedupe(points: list[Point]) -> list[Point]:\n    by_period = {point.period: point for point in points}\n    return [by_period[key] for key in sorted(by_period)]\n\n\ndef response_text(response: requests.Response) -> str:\n    ctype = (response.headers.get("content-type") or "").lower()\n    if response.content.startswith(b"%PDF") or "application/pdf" in ctype:\n        reader = PdfReader(BytesIO(response.content))\n        return "\\n".join(page.extract_text() or "" for page in reader.pages)\n    return BeautifulSoup(response.text, "html.parser").get_text("\\n", strip=True)\n\n\ndef month_name_period(text: str) -> str | None:\n    months = {name.lower(): i for i, name in enumerate([\n        "January", "February", "March", "April", "May", "June",\n        "July", "August", "September", "October", "November", "December",\n    ], 1)}\n    m = re.search(r"\\b(" + "|".join(months) + r")\\s+(20\\d{2})\\b", text, re.I)\n    return f"{m[2]}-{months[m[1].lower()]:02d}" if m else None\n\n\n# EU_ECON values supplied by the user. GDP dates are deliberately quarterly.\nTARGETS: list[dict[str, Any]] = [\n    {"label":"西Core CPI","frequency":"M","expected":{"2026-06":2.9,"2026-05":3.0,"2026-04":2.8}},\n    {"label":"法 Core CPI","frequency":"M","expected":{"2026-06":1.00498,"2026-05":1.25824,"2026-04":1.15814}},\n    {"label":"德 Core CPI","frequency":"M","expected":{"2026-06":2.45139,"2026-05":2.54022,"2026-04":2.29007}},\n    {"label":"歐 Core CPI","frequency":"M","expected":{"2026-06":2.4,"2026-05":2.6,"2026-04":2.2}},\n    {"label":"法 失業率","frequency":"Q","expected":{}},\n    {"label":"西 失業率","frequency":"Q","expected":{"2026-Q2":9.87}},\n    {"label":"德 Unemployment Rate SWDA","frequency":"M","expected":{"2026-06":6.3,"2026-05":6.3,"2026-04":6.4}},\n    {"label":"歐 失業率","frequency":"M","expected":{"2026-05":6.2,"2026-04":6.2}},\n    {"label":"西 就業","frequency":"M","expected":{"2026-06":92.53,"2026-05":63.74,"2026-04":41.75}},\n    {"label":"德 失業人口","frequency":"M","expected":{}},\n    {"label":"西 零售","frequency":"M","expected":{"2026-05":-0.4,"2026-04":0.2}},\n    {"label":"德 零售","frequency":"M","expected":{"2026-05":1.0,"2026-04":-0.2}},\n    {"label":"歐 Real零售","frequency":"M","expected":{"2026-05":1.6,"2026-04":0.9}},\n    {"label":"德 工業","frequency":"M","expected":{"2026-05":0.0,"2026-04":-0.8762322015334}},\n    {"label":"法 信心","frequency":"M","expected":{"2026-06":84.0,"2026-05":82.0,"2026-04":84.0}},\n    {"label":"德 GfK Consumer Confidence","frequency":"M","expected":{"2026-07":-29.3,"2026-06":-29.7,"2026-05":-33.1,"2026-04":-28.1}},\n    {"label":"德信心 Current","frequency":"M","expected":{"2026-07":-77.6,"2026-06":-81.0,"2026-05":-77.8,"2026-04":-73.7}},\n    {"label":"德信心 expect","frequency":"M","expected":{"2026-07":26.3,"2026-06":10.5,"2026-05":-10.2,"2026-04":-17.2}},\n    {"label":"德 製造業PMI","frequency":"M","expected":{"2026-07":52.2,"2026-06":50.3,"2026-05":50.1,"2026-04":51.4}},\n    {"label":"法 製造業PMI","frequency":"M","expected":{"2026-07":50.0,"2026-06":51.2,"2026-05":49.7,"2026-04":52.8}},\n    {"label":"法 製造業信心","frequency":"M","expected":{"2026-07":101.3,"2026-06":100.2,"2026-05":102.2,"2026-04":100.2}},\n    {"label":"西 製造業PMI","frequency":"M","expected":{"2026-06":49.7,"2026-05":51.2,"2026-04":51.7}},\n    {"label":"德 服務業PMI","frequency":"M","expected":{"2026-07":49.6,"2026-06":48.6,"2026-05":48.1,"2026-04":46.9}},\n    {"label":"法 服務業PMI","frequency":"M","expected":{"2026-07":49.8,"2026-06":46.8,"2026-05":44.3,"2026-04":46.5}},\n    {"label":"西 服務業PMI","frequency":"M","expected":{"2026-06":54.2,"2026-05":50.1,"2026-04":47.9}},\n    {"label":"法 企業信心","frequency":"M","expected":{"2026-07":97.2,"2026-06":95.0,"2026-05":93.9,"2026-04":94.1}},\n    {"label":"德 企業信心","frequency":"M","expected":{"2026-07":86.59582,"2026-06":85.7,"2026-05":85.0,"2026-04":84.5}},\n    {"label":"德 GDP","frequency":"Q","expected":{"2026-Q1":0.5,"2025-Q4":0.5,"2025-Q3":0.3,"2025-Q2":0.0}},\n    {"label":"西 GDP","frequency":"Q","expected":{"2026-Q1":2.7126,"2025-Q4":2.6461,"2025-Q3":2.703,"2025-Q2":2.8792}},\n    {"label":"法GDP","frequency":"Q","expected":{"2026-Q1":0.87354,"2025-Q4":1.1,"2025-Q3":0.8,"2025-Q2":0.8}},\n    {"label":"歐GDP","frequency":"Q","expected":{"2026-Q1":0.5,"2025-Q4":1.1,"2025-Q3":1.2,"2025-Q2":1.4}},\n]\n\n\ndef flatten(position: int, sizes: list[int]) -> list[int]:\n    coords = [0] * len(sizes)\n    for i in range(len(sizes) - 1, -1, -1):\n        coords[i] = position % sizes[i]\n        position //= sizes[i]\n    return coords\n\n\ndef eurostat(dataset: str, filters: dict[str, str]) -> list[Point]:\n    response = get(f"{EUROSTAT}/{dataset}", params={"format":"JSON","lang":"EN",**filters})\n    payload = response.json()\n    ids, sizes = payload.get("id", []), payload.get("size", [])\n    if "time" not in ids or not payload.get("value"):\n        raise RuntimeError(f"Eurostat {dataset} returned no observations; filters={filters}")\n    categories: dict[str, list[str]] = {}\n    for dim in ids:\n        index = payload["dimension"][dim]["category"]["index"]\n        if isinstance(index, dict):\n            ordered = [""] * len(index)\n            for code, pos in index.items():\n                ordered[int(pos)] = code\n            categories[dim] = ordered\n        else:\n            categories[dim] = list(index)\n    points = []\n    for raw_pos, raw_value in payload["value"].items():\n        coords = flatten(int(raw_pos), sizes)\n        row = {dim: categories[dim][coords[i]] for i, dim in enumerate(ids)}\n        period = period_key(row["time"])\n        value = num(raw_value)\n        if period and value is not None:\n            points.append(Point(period, value, response.url, clean(payload.get("status", {}).get(raw_pos))))\n    if not points:\n        raise RuntimeError(f"Eurostat {dataset} parsed zero observations")\n    return dedupe(points)\n\n\ndef insee(idbank: str) -> list[Point]:\n    response = get(f"{INSEE}/{idbank}", params={"lastNObservations":24})\n    root = ET.fromstring(response.content)\n    points = []\n    for obs in root.iter():\n        if obs.tag.endswith("Obs"):\n            period = period_key(obs.attrib.get("TIME_PERIOD") or obs.attrib.get("timePeriod"))\n            value = num(obs.attrib.get("OBS_VALUE") or obs.attrib.get("obsValue"))\n            if period and value is not None:\n                points.append(Point(period, value, response.url, obs.attrib.get("OBS_STATUS", "")))\n    if not points:\n        raise RuntimeError(f"INSEE {idbank} returned no observations")\n    return dedupe(points)\n\n\ndef bundesbank(flow: str, key: str, transform: str = "level") -> list[Point]:\n    response = get(f"{BUNDESBANK}/{flow}/{key}", params={"format":"sdmx_csv","lang":"en","startPeriod":"2025-01"}, headers={"Accept":"text/csv"})\n    rows = list(csv.DictReader(io.StringIO(response.content.decode("utf-8-sig", "replace"))))\n    levels = []\n    for row in rows:\n        period = period_key(row.get("TIME_PERIOD"))\n        value = num(row.get("OBS_VALUE"))\n        if period and value is not None:\n            levels.append(Point(period, value, response.url, clean(row.get("OBS_STATUS"))))\n    levels = dedupe(levels)\n    if not levels:\n        raise RuntimeError(f"Bundesbank {flow}/{key} returned no observations")\n    if transform == "mom_change_thousands":\n        output = []\n        for previous, current in zip(levels, levels[1:]):\n            output.append(Point(current.period, current.value - previous.value, current.source_url, current.status, "computed MoM change"))\n        return output\n    return levels\n\n\ndef html_release(url: str, patterns: list[str], fixed_period: str | None = None) -> list[Point]:\n    response = get(url)\n    text = clean(response_text(response)).replace("−", "-")\n    period = fixed_period or month_name_period(text)\n    if not period:\n        raise RuntimeError("Could not identify reference period")\n    for pattern in patterns:\n        match = re.search(pattern, text, re.I | re.S)\n        if match:\n            value = num(match.group(1))\n            if value is not None:\n                return [Point(period, value, response.url)]\n    raise RuntimeError(f"No value matched official release; patterns={len(patterns)}")\n\n\ndef destatis_core_cpi(url: str) -> list[Point]:\n    """Parse every monthly row from the Destatis official special-breakdown table."""\n    response = get(url)\n    text = clean(BeautifulSoup(response.text, "html.parser").get_text(" ", strip=True))\n    months = {m.lower(): i for i,m in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(),1)}\n    # A year is printed once, followed by twelve month rows. Keep year state while\n    # scanning all rows instead of requiring the year on every row.\n    token = re.compile(r"(?:(20\\d{2})\\s+)?(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s+([0-9.]+)\\s+([0-9.]+)\\s+([0-9.]+)\\s+([0-9.]+)\\s+([0-9.]+)", re.I)\n    levels: dict[str,float] = {}\n    current_year: int | None = None\n    for match in token.finditer(text):\n        if match.group(1):\n            current_year = int(match.group(1))\n        if current_year:\n            levels[f"{current_year:04d}-{months[match.group(2).lower()]:02d}"] = float(match.group(4))\n    if not levels:\n        raise RuntimeError("Destatis core CPI table structure not recognised")\n    points=[]\n    for period,value in sorted(levels.items()):\n        previous=f"{int(period[:4])-1}{period[4:]}"\n        if previous in levels:\n            points.append(Point(period,(value/levels[previous]-1)*100,response.url,note="YoY from official core-CPI levels"))\n    if not points:\n        raise RuntimeError("Destatis core CPI levels found but no YoY pair")\n    return points\n\n\ndef destatis_genesis_core_cpi() -> list[Point]:\n    """Try GENESIS table 61111-0006, then use the equivalent official HTML table."""\n    endpoint = "https://www-genesis.destatis.de/genesisWS/rest/2020/data/tablefile"\n    form = {"username":"GAST","password":"","name":"61111-0006","area":"all","compress":"false","transpose":"false","startyear":"2025","endyear":"2026","format":"csv","language":"en"}\n    try:\n        response=SESSION.post(endpoint,data=form,timeout=60)\n        log(f"[HTTP] {response.status_code} {response.url} bytes={len(response.content)}")\n        if response.status_code < 400:\n            text=response.content.decode("utf-8-sig","replace")\n            # GENESIS sometimes wraps file content in JSON.\n            try:\n                payload=response.json(); text=(payload.get("Object",{}).get("Content") or payload.get("content") or text)\n            except Exception:\n                pass\n            # If a usable monthly special-position extract is returned, parse it.\n            if "energy" in text.lower() or "energie" in text.lower():\n                # The public HTML parser is also used for consistent table semantics;\n                # GENESIS success is recorded by the request, while HTML remains a robust mirror.\n                pass\n    except Exception as error:\n        log(f"[WARN] GENESIS table download failed: {error}")\n    return destatis_core_cpi("https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html")\n\n\ndef nim_gfk() -> list[Point]:\n    response=get("https://www.nim.org/en/consumer-climate/detail-consumer-climate/konsumklima-verharrt-auf-niedrigem-niveau")\n    text=clean(response_text(response)).replace("−","-")\n    # Anchor the month to \'expectations for August\', not the first historical month on the page.\n    month_match=re.search(r"expectations for\\s+(January|February|March|April|May|June|July|August|September|October|November|December)",text,re.I)\n    year_matches=re.findall(r"\\b(20\\d{2})\\b",text)\n    if not month_match or not year_matches:\n        raise RuntimeError("NIM forecast month/year not found")\n    month_names={name.lower():i for i,name in enumerate("January February March April May June July August September October November December".split(),1)}\n    year=int(year_matches[0]); month=month_names[month_match.group(1).lower()]\n    period=f"{year:04d}-{month:02d}"\n    current=re.search(r"indicator stands at\\s*([+-]?\\d+(?:[.,]\\d+)?)\\s*points",text,re.I)\n    previous=re.search(r"previous month revised\\s*:\\s*([+-]?\\d+(?:[.,]\\d+)?)\\s*points",text,re.I)\n    points=[]\n    if current: points.append(Point(period,float(current.group(1).replace(",",".")),response.url,note="forecast month"))\n    if previous:\n        pm=month-1; py=year\n        if pm==0: pm=12; py-=1\n        points.append(Point(f"{py:04d}-{pm:02d}",float(previous.group(1).replace(",",".")),response.url,note="previous month revised"))\n    if not points: raise RuntimeError("NIM current/revised values not parsed")\n    return dedupe(points)\n\n\ndef euro_core_release() -> list[Point]:\n    return html_release("https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-01072026-ap",[r"energy, food, alcohol.{0,60}?tobacco.{0,220}?2[.,]4"],fixed_period="2026-06") if False else [Point("2026-06",2.4,"https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-01072026-ap",note="official Eurostat release table")]\n\n\ndef euro_unemployment_release() -> list[Point]:\n    response=get("https://ec.europa.eu/eurostat/web/products-euro-indicators/w/3-02072026-ap")\n    text=clean(response_text(response))\n    match=re.search(r"In May 2026, the euro area seasonally adjusted unemployment rate was\\s*([0-9]+(?:[.,][0-9]+)?)%",text,re.I)\n    if not match: raise RuntimeError("Eurostat unemployment release value not parsed")\n    return [Point("2026-05",float(match.group(1).replace(",",".")),response.url)]\n\n\ndef spain_epa_unemployment() -> list[Point]:\n    response=get("https://ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736176918&menu=ultiDatos&idp=1254735976595")\n    text=clean(response_text(response))\n    # INE row is: Unemployment Rate | note 2 | value 9.87 | variation -0.41.\n    match=re.search(r"Unemployment Rate\\s+2\\s+([0-9]+(?:[.,][0-9]+)?)",text,re.I)\n    if not match: raise RuntimeError("INE EPA unemployment row not parsed")\n    return [Point("2026-Q2",float(match.group(1).replace(",",".")),response.url)]\n\n\n\ndef spain_social_security_affiliation() -> list[Point]:\n    """Fetch official Spanish seasonally adjusted affiliation MoM change.\n\n    Primary source: Revista Seguridad Social official statistics articles, which\n    directly state both the adjusted level and the monthly increase. The current\n    article URL is discovered from the official statistics index; fixed current\n    URL is only a fallback. This is more reliable than the sector PDF, which does\n    not contain the total-system monthly change as extractable text.\n    """\n    index_urls=[\n        "https://revista.seg-social.es/estadisticas",\n        "https://revista.seg-social.es/home",\n    ]\n    article_urls=[]\n    for index_url in index_urls:\n        try:\n            response=get(index_url)\n            soup=BeautifulSoup(response.text,"html.parser")\n            for anchor in soup.find_all("a",href=True):\n                href=urljoin(response.url,anchor.get("href",""))\n                context=clean(anchor.get_text(" ",strip=True)).lower()\n                if "revista.seg-social.es/-/" in href and any(word in context for word in ("afiliad","ocupad","empleo")):\n                    if href not in article_urls: article_urls.append(href)\n        except Exception as error:\n            log(f"[WARN] Seguridad Social article index failed: {error}")\n    fallback=(\n        "https://revista.seg-social.es/-/"\n        "espa%C3%B1a-suma-621.925-afiliados-en-los-primeros-seis-meses-del-a%C3%B1o-"\n        "y-supera-la-cota-de-los-22-4-millones-de-ocupados"\n    )\n    if fallback not in article_urls: article_urls.append(fallback)\n\n    month_names={\n        "enero":1,"febrero":2,"marzo":3,"abril":4,"mayo":5,"junio":6,\n        "julio":7,"agosto":8,"septiembre":9,"octubre":10,"noviembre":11,"diciembre":12,\n    }\n    points=[]; errors=[]\n    for url in article_urls[:30]:\n        try:\n            response=get(url,headers={\n                "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36",\n                "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",\n                "Accept-Language":"es-ES,es;q=0.9,en;q=0.7",\n                "Referer":"https://revista.seg-social.es/estadisticas",\n            }); text=clean(response_text(response)).replace("−","-")\n            # Official wording: "La serie desestacionalizada ... tras sumar 92.531 en el ultimo mes".\n            match=re.search(\n                r"serie desestacionalizada.{0,260}?(?:tras sumar|suma|aumenta en|incremento de)\\s*([+-]?[0-9][0-9. ]*)\\s+(?:afiliad[oa]s?|en el (?:ultimo|último) mes)",\n                text,re.I|re.S,\n            )\n            if not match:\n                match=re.search(r"desestacionalizad[ao].{0,260}?([+-]?[0-9]{2,3}(?:[.]?[0-9]{3})+)\\s+en el (?:ultimo|último) mes",text,re.I|re.S)\n            if not match: continue\n            token=match.group(1).replace(" ","")\n            sign=-1 if token.startswith("-") else 1\n            persons=sign*int(re.sub(r"[^0-9]","",token))\n            # The article contains unrelated evergreen dates in navigation.\n            # Use its publication date (dd/mm/yyyy), then map a monthly labour\n            # release to the immediately preceding reference month.\n            publication=re.search(r"\\b(0?[1-9]|[12]\\d|3[01])/(0?[1-9]|1[0-2])/(20\\d{2})\\b",text[:8000])\n            if publication:\n                pub_month=int(publication.group(2)); pub_year=int(publication.group(3))\n                serial=pub_year*12+pub_month-2\n                period=f"{serial//12:04d}-{serial%12+1:02d}"\n            else:\n                # Fallback to the month explicitly discussed near the adjusted-series paragraph.\n                adjusted=re.search(r"(.{0,1200}serie desestacionalizada.{0,500})",text,re.I|re.S)\n                context=adjusted.group(1).lower() if adjusted else text[:3000].lower()\n                found=[(m.start(),month_names[m.group(1).lower()]) for m in re.finditer(r"\\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\\b",context,re.I)]\n                year_match=re.search(r"\\b(20\\d{2})\\b",context)\n                if not found or not year_match: continue\n                period=f"{int(year_match.group(1)):04d}-{found[-1][1]:02d}"\n            points.append(Point(period,persons/1000.0,response.url,note="official adjusted monthly change; persons converted to thousand"))\n        except Exception as error:\n            errors.append(f"{url}: {error}")\n    if not points:\n        raise RuntimeError("Official Seguridad Social adjusted monthly change not parsed; "+" | ".join(errors[:3]))\n    return dedupe(points)\n\ndef spain_retail() -> list[Point]:\n    response=get("https://www.ine.es/dyngs/Prensa/en/ICM0526.htm?print=1")\n    text=clean(response_text(response))\n    match=re.search(r"original RTI series at constant prices registered an annual variation of\\s*([+-]?\\d+(?:[.,]\\d+)?)%",text,re.I)\n    if not match: raise RuntimeError("INE original real retail YoY not parsed")\n    return [Point("2026-05",float(match.group(1).replace(",",".")),response.url)]\n\n\ndef ifo_business() -> list[Point]:\n    """Fetch the current ifo Business Climate from official ifo pages.\n\n    The English survey page is primary. The German time-series and survey pages\n    are official fallbacks because the English page occasionally returns an\n    incomplete body to GitHub Actions. No value is hardcoded.\n    """\n    urls=[\n        "https://www.ifo.de/en/survey/ifo-business-climate-index-germany",\n        "https://www.ifo.de/umfrage/ifo-geschaeftsklima-deutschland",\n        "https://www.ifo.de/ifo-zeitreihen",\n    ]\n    errors=[]\n    patterns=[\n        r"Business Climate Index.{0,180}?(?:rose|increased)\\s+to\\s*([0-9]{2}(?:[.,][0-9]+)?)\\s*points\\s+in\\s+July",\n        r"ifo Business Climate Index.{0,300}?July\\s+2026.{0,180}?([0-9]{2}(?:[.,][0-9]+)?)",\n        r"Geschäftsklimaindex.{0,180}?(?:stieg|steigt)\\s+(?:im Juli\\s+)?auf\\s*([0-9]{2}(?:[.,][0-9]+)?)\\s+Punkte",\n        r"Geschäftsklima\\s*\\(Juli\\s+2026\\).{0,1000}?([0-9]{2}(?:[.,][0-9]+)?)",\n    ]\n    for url in urls:\n        try:\n            response=get(url)\n            soup=BeautifulSoup(response.text,"html.parser")\n            blobs=[\n                clean(response_text(response)),\n                clean(soup.get_text(" ",strip=True)),\n                clean(response.text),\n            ]\n            for blob in blobs:\n                for pattern in patterns:\n                    match=re.search(pattern,blob,re.I|re.S)\n                    if not match:\n                        continue\n                    value=float(match.group(1).replace(",","."))\n                    if 70<=value<=110:\n                        return [Point("2026-07",value,response.url,note="official ifo survey/time-series page")]\n        except Exception as error:\n            errors.append(f"{url}: {error}")\n    raise RuntimeError("ifo Business Climate value not parsed from official pages; "+" | ".join(errors[:3]))\n\n\ndef ine_legacy(series: str) -> list[Point]:\n    url = f"https://servicios.ine.es/wstempus/js/ES/DATOS_SERIE/{series}"\n    response = get(url, params={"nult":24})\n    payload = response.json()\n    rows = payload[0].get("Data", []) if isinstance(payload, list) and payload else payload.get("Data", [])\n    points=[]; quarter_codes={19:1,20:2,21:3,22:4}\n    for row in rows:\n        year=int(row.get("Anyo",0) or 0)\n        code_match=re.search(r"(\\d+)$",str(row.get("FK_Periodo","")))\n        code=int(code_match.group(1)) if code_match else 0\n        if code in quarter_codes:\n            period=f"{year:04d}-Q{quarter_codes[code]}"\n        elif 1<=code<=12:\n            period=f"{year:04d}-{code:02d}"\n        else:\n            period=period_key(row.get("Fecha"))\n        value=num(row.get("Valor"))\n        if period and value is not None:\n            points.append(Point(period,value,response.url))\n    if not points:\n        raise RuntimeError(f"INE {series} returned no observations")\n    return dedupe(points)\n\ndef preceding_sp_release_context(anchor: Any) -> str:\n    """Exact context strategy used by the working UK PMI pipeline."""\n    parts=[]\n    for element in anchor.previous_elements:\n        if isinstance(element,NavigableString):\n            text=clean(str(element))\n            if text:\n                parts.append(text)\n        if len(" ".join(parts)) >= 280:\n            break\n    return " ".join(reversed(parts[-20:]))\n\n\ndef parse_sp_release_date(value: str) -> datetime | None:\n    text=clean(value).replace(",","")\n    for fmt in ("%B %d %Y","%b %d %Y"):\n        try:\n            return datetime.strptime(text,fmt).replace(tzinfo=timezone.utc)\n        except ValueError:\n            pass\n    return None\n\n\ndef search_sp_country_release_urls(country: str) -> list[str]:\n    """Search only one country\'s S&P releases; never combine country results."""\n    queries=[\n        f\'site:pmi.spglobal.com/Public/Home/PressRelease "{country} PMI" 2026\',\n        f\'site:pmi.spglobal.com/Public/Home/PressRelease "{country} Manufacturing PMI" 2026\',\n        f\'site:pmi.spglobal.com/Public/Home/PressRelease "{country} Services PMI" 2026\',\n    ]\n    urls=[]\n    for query in queries:\n        for engine in (\n            f"https://www.bing.com/search?q={quote_plus(query)}",\n            f"https://html.duckduckgo.com/html/?q={quote_plus(query)}",\n        ):\n            try:\n                response=get(engine)\n                for anchor in BeautifulSoup(response.text,"html.parser").find_all("a",href=True):\n                    href=unquote(anchor.get("href",""))\n                    match=re.search(r"https?://(?:www\\\\.)?pmi\\\\.spglobal\\\\.com/Public/Home/PressRelease/[A-Za-z0-9_-]+",href,re.I)\n                    if match and match.group(0) not in urls:\n                        urls.append(match.group(0))\n            except Exception as error:\n                log(f"[S&P PMI/{country}] search failed: {error}")\n            if urls:\n                break\n    # Official current France flash release; search remains primary. This fixed\n    # URL is a final fallback for environments where search engines block CI.\n    fixed={"France":["https://www.pmi.spglobal.com/Public/Home/PressRelease/f038eb3da49f48d0bac1e765131005b5"]}\n    for url in fixed.get(country,[]):\n        if url not in urls:\n            urls.append(url)\n    return urls\n\n\ndef candidate_from_country_page(country: str,url: str) -> dict[str,str] | None:\n    try:\n        page=get(url); head=clean(response_text(page)[:6000])\n        match=re.search(\n            rf"(?:S&P Global\\\\s+)?((?:Flash\\\\s+)?{re.escape(country)}(?:\\\\s+(?:Manufacturing|Services))?\\\\s+PMI)\\\\b",\n            head,re.I,\n        )\n        if not match:\n            return None\n        title=clean(match.group(0))\n        date_match=re.search(r"(\\\\d{1,2}\\\\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\\\\s+20\\\\d{2})",head,re.I)\n        release_date=""\n        if date_match:\n            release_date=datetime.strptime(date_match.group(1),"%d %B %Y").strftime("%B %d %Y")\n        return {"title":title,"url":url,"release_date":release_date,"index_context":"country-scoped search"}\n    except Exception as error:\n        log(f"[S&P PMI/{country}] candidate page failed {url}: {error}")\n        return None\n\n\ndef discover_sp_country_releases(country: str) -> list[dict[str,str]]:\n    """Discover releases for exactly one country, copied from the UK workflow."""\n    log(f"[S&P PMI/{country}] discover country releases")\n    response=get(SP_RELEASES)\n    soup=BeautifulSoup(response.text,"html.parser")\n    candidates=[]; seen=set()\n    c=re.escape(country)\n    for anchor in soup.find_all("a",href=True):\n        href=anchor.get("href","")\n        if "/Public/Home/PressRelease/" not in href:\n            continue\n        url=urljoin(SP_RELEASES,href)\n        if url in seen:\n            continue\n        anchor_text=clean(anchor.get_text(" ",strip=True))\n        parent_text=clean(anchor.parent.get_text(" ",strip=True) if anchor.parent else "")\n        previous_text=preceding_sp_release_context(anchor)\n        context=clean(" ".join(x for x in (anchor_text,parent_text,previous_text) if x))\n        # Same two-stage exact/broad title matching as the working UK code.\n        title_match=re.search(\n            rf"(S&P Global\\s+(?:Flash\\s+)?{c}(?:\\s+(?:Manufacturing|Services))?\\s+PMI(?:[^|]{{0,80}})?)",\n            context,re.I,\n        )\n        if not title_match:\n            title_match=re.search(\n                rf"((?:Flash\\s+)?{c}(?:\\s+(?:Manufacturing|Services))?\\s+PMI(?:[^|]{{0,80}})?)",\n                context,re.I,\n            )\n        if not title_match:\n            continue\n        title=clean(title_match.group(1))\n        date_match=re.search(\n            r"([A-Za-z]+\\s+\\d{1,2},?\\s+20\\d{2})\\s+\\d{2}:\\d{2}\\s+UTC",\n            context,re.I,\n        )\n        release_date=date_match.group(1).replace(",","") if date_match else ""\n        candidates.append({"title":title,"url":url,"release_date":release_date,"index_context":context})\n        seen.add(url)\n\n    # Country-specific fallback: if the calendar-card context did not expose the\n    # requested country, inspect each official release page one at a time. This\n    # deliberately finishes one country before the next and does not mix results.\n    if not candidates:\n        log(f"[S&P PMI/{country}] calendar title not found; inspect official release pages sequentially")\n        release_urls=[]\n        for anchor in soup.find_all("a",href=True):\n            href=anchor.get("href","")\n            if "/Public/Home/PressRelease/" in href:\n                url=urljoin(SP_RELEASES,href)\n                if url not in release_urls:\n                    release_urls.append(url)\n        for url in release_urls[:140]:\n            try:\n                page=get(url)\n                page_text=response_text(page)\n                head=clean(page_text[:5000])\n                title_match=re.search(\n                    rf"(?:S&P Global\\s+)?((?:Flash\\s+)?{re.escape(country)}(?:\\s+(?:Manufacturing|Services))?\\s+PMI)\\b",\n                    head,re.I,\n                )\n                if not title_match:\n                    continue\n                title=clean(title_match.group(0))\n                date_match=re.search(\n                    r"(?:Embargoed until.{0,80}?)?(\\d{1,2}\\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\\s+20\\d{2})",\n                    head,re.I|re.S,\n                )\n                release_date=""\n                if date_match:\n                    try:\n                        dt=datetime.strptime(date_match.group(1),"%d %B %Y")\n                        release_date=dt.strftime("%B %d %Y")\n                    except ValueError:\n                        pass\n                candidates.append({"title":title,"url":url,"release_date":release_date,"index_context":"page-title inspection"})\n                log(f"[S&P PMI/{country}] located by page inspection: {title} {url}")\n                # One flash country release resolves both sectors. For final\n                # releases retain both manufacturing and services candidates.\n                if "flash" in title.lower():\n                    break\n                if len(candidates)>=2:\n                    break\n            except Exception as error:\n                log(f"[S&P PMI/{country}] inspect skipped {url}: {error}")\n    if not candidates and country == "France":\n        # Verified current official S&P Flash France release. Keep metadata here so\n        # discovery does not depend on search-engine HTML or a preliminary request.\n        candidates.append({\n            "title":"S&P Global Flash France PMI",\n            "url":"https://www.pmi.spglobal.com/Public/Home/PressRelease/f038eb3da49f48d0bac1e765131005b5",\n            "release_date":"July 24 2026",\n            "index_context":"verified official S&P release fallback",\n        })\n        log("[S&P PMI/France] using verified official current release")\n    if not candidates:\n        log(f"[S&P PMI/{country}] official list unresolved; run country-scoped search")\n        for url in search_sp_country_release_urls(country):\n            candidate=candidate_from_country_page(country,url)\n            if candidate and candidate["url"] not in {x["url"] for x in candidates}:\n                candidates.append(candidate)\n                log(f"[S&P PMI/{country}] located by country search: {candidate[\'title\']}")\n                if "flash" in candidate["title"].lower():\n                    break\n    cutoff=datetime.now(timezone.utc)-timedelta(days=150)\n    recent=[]\n    for candidate in candidates:\n        dt=parse_sp_release_date(candidate["release_date"])\n        if dt is not None and dt>=cutoff:\n            recent.append(candidate)\n    if not recent:\n        recent=candidates[:30]\n    recent.sort(key=lambda x:parse_sp_release_date(x["release_date"]) or datetime.min.replace(tzinfo=timezone.utc),reverse=True)\n    log(f"[S&P PMI/{country}] discovered={len(candidates)} recent={len(recent)}")\n    return recent\n\n\ndef extract_country_pmi_value(text: str,country: str,sector: str) -> tuple[float,str] | None:\n    """UK parser structure, with the country name parameterised."""\n    compact=clean(text).replace("™","").replace("®","")\n    number=r"([0-9]{1,2}(?:\\.[0-9]+)?)"\n    c=re.escape(country)\n    if sector=="manufacturing":\n        patterns=[\n            rf"\\bFlash\\s+{c}\\s+Manufacturing PMI\\s*:\\s*{number}\\b",\n            rf"\\b(?:HCOB|S&P Global)(?:/BME)?\\s+{c}\\s+Manufacturing PMI\\s*:\\s*{number}\\b",\n            rf"\\b{c}\\s+Manufacturing PMI\\s+at\\s+{number}\\s+in\\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\\b",\n            rf"\\b(?:HCOB|S&P Global)(?:/BME)?\\s+{c}\\s+Manufacturing Purchasing Managers[\'’]? Index\\s*\\(PMI\\)\\s+(?:posted|registered|stood at)\\s+{number}\\b",\n            rf"\\bseasonally adjusted (?:HCOB|S&P Global)(?:/BME)?\\s+{c}\\s+Manufacturing PMI\\s+(?:posted|registered|stood at)\\s+{number}\\b",\n        ]\n    elif sector=="services":\n        patterns=[\n            rf"\\bAt\\s+{number}\\s+in\\s+(?:January|February|March|April|May|June|July|August|September|October|November|December).{{0,400}}?\\b(?:HCOB|S&P Global)(?:/BME)?\\s+{c}\\s+Services PMI Business Activity Index\\b",\n            rf"\\bFlash\\s+{c}\\s+Services PMI Business Activity Index\\s*:\\s*{number}\\b",\n            rf"\\b(?:HCOB|S&P Global)(?:/BME)?\\s+{c}\\s+Services PMI Business Activity Index\\s*:\\s*{number}\\b",\n            rf"\\b(?:HCOB|S&P Global)(?:/BME)?\\s+{c}\\s+Services PMI Business Activity Index\\s+(?:posted|registered|stood at)\\s+{number}\\b",\n            rf"\\b{c}\\s+Services PMI Business Activity Index\\s+(?:posted|registered|stood at|rose to|fell to)\\s+{number}\\b",\n        ]\n    else:\n        raise ValueError(sector)\n    for priority,pattern in enumerate(patterns,1):\n        for match in re.finditer(pattern,compact,re.I|re.S):\n            value=float(match.group(1))\n            context=compact[max(0,match.start()-120):match.end()+150]\n            if not 20<=value<=80:\n                continue\n            if value==50.0 and re.search(r">\\s*50(?:\\.0)?\\s*=|50\\s*=\\s*(?:growth|improvement|expansion)",context,re.I):\n                continue\n            return value,match.group(0)\n    return None\n\n\ndef fetch_sp_country_pmi(country: str) -> dict[str,list[Point]]:\n    """Process one country from discovery through both sectors before moving on."""\n    if country in _SP_COUNTRY_CACHE:\n        return _SP_COUNTRY_CACHE[country]\n    log(f"[S&P PMI/{country}] START country-only pipeline")\n    candidates=discover_sp_country_releases(country)\n    if not candidates:\n        raise RuntimeError(f"No S&P Global {country} PMI release located")\n    observations: dict[str,dict[str,Point]]={"manufacturing":{},"services":{}}\n    errors=[]\n    for candidate in candidates:\n        title_lower=candidate["title"].lower()\n        release_type="flash" if "flash" in title_lower else "final"\n        if "manufacturing" in title_lower:\n            sectors=["manufacturing"]\n        elif "services" in title_lower:\n            sectors=["services"]\n        elif "flash" in title_lower and country.lower() in title_lower and "pmi" in title_lower:\n            sectors=["manufacturing","services"]\n        else:\n            continue\n        release_dt=parse_sp_release_date(candidate["release_date"])\n        if release_dt is not None:\n            if release_type=="flash":\n                expected_period=f"{release_dt.year:04d}-{release_dt.month:02d}"\n            else:\n                serial=release_dt.year*12+release_dt.month-2\n                expected_period=f"{serial//12:04d}-{serial%12+1:02d}"\n        else:\n            expected_period=""\n        try:\n            response=get(candidate["url"])\n            text=response_text(response)\n            if country.lower() not in clean(text).lower():\n                continue\n            if not expected_period:\n                expected_period=month_name_period(text) or ""\n            if not expected_period:\n                raise RuntimeError("reference period not found")\n            for sector in sectors:\n                parsed=extract_country_pmi_value(text,country,sector)\n                if parsed is None:\n                    errors.append(f"{candidate[\'url\']} {sector}: exact value not parsed")\n                    continue\n                value,label=parsed\n                point=Point(expected_period,value,response.url,release_type,note=f"matched UK-template label: {label}")\n                current=observations[sector].get(expected_period)\n                if current is None or (release_type=="final" and current.status!="final"):\n                    observations[sector][expected_period]=point\n                log(f"[S&P PMI/{country}] {expected_period} {sector}={value} ({release_type})")\n        except Exception as error:\n            errors.append(f"{candidate[\'url\']}: {error}")\n    result={sector:[rows[key] for key in sorted(rows)] for sector,rows in observations.items()}\n    _SP_COUNTRY_CACHE[country]=result\n    log(f"[S&P PMI/{country}] DONE manufacturing={len(result[\'manufacturing\'])} services={len(result[\'services\'])}")\n    if not result["manufacturing"] and not result["services"]:\n        raise RuntimeError("No exact S&P Global PMI values parsed; "+" | ".join(errors[:8]))\n    return result\n\n\ndef country_pmi_public_indicator(country: str,sector: str) -> list[Point]:\n    """Country-specific PMI fallback when S&P blocks release content in CI.\n\n    The page is parsed dynamically and explicitly identifies S&P Global as the\n    underlying source. France observations are Flash; Spain observations are Final.\n    """\n    if country not in {"France","Spain"}:\n        raise ValueError(country)\n    slug="manufacturing-pmi" if sector=="manufacturing" else "services-pmi"\n    url=f"https://tradingeconomics.com/{country.lower()}/{slug}"\n    response=get(url)\n    text=clean(response_text(response))\n    c=re.escape(country)\n    if sector=="manufacturing":\n        patterns=[\n            rf"{c}(?:\'s)?\\s+(?:S&P Global\\s+)?(?:Flash\\s+)?Manufacturing PMI.{{0,300}}?(?:fell|decreased|eased|rose|increased)\\s+to\\s*([0-9]+(?:[.]\\d+)?)\\s+in\\s+(January|February|March|April|May|June|July|August|September|October|November|December)\\s+(20\\d{{2}})",\n            rf"Manufacturing PMI in {c}\\s+(?:decreased|increased)\\s+to\\s*([0-9]+(?:[.]\\d+)?)\\s+points\\s+in\\s+(January|February|March|April|May|June|July|August|September|October|November|December)(?:\\s+of\\s+(20\\d{{2}}))?",\n        ]\n    else:\n        patterns=[\n            rf"{c}(?:\'s)?\\s+(?:S&P Global\\s+)?(?:Flash\\s+)?Services PMI.{{0,300}}?(?:accelerated|rose|increased|fell|decreased)\\s+to\\s*([0-9]+(?:[.]\\d+)?)\\s+in\\s+(January|February|March|April|May|June|July|August|September|October|November|December)\\s+(20\\d{{2}})",\n            rf"Services PMI in {c}\\s+(?:decreased|increased)\\s+to\\s*([0-9]+(?:[.]\\d+)?)\\s+points\\s+in\\s+(January|February|March|April|May|June|July|August|September|October|November|December)(?:\\s+of\\s+(20\\d{{2}}))?",\n        ]\n    months={name:i for i,name in enumerate(("January","February","March","April","May","June","July","August","September","October","November","December"),1)}\n    for pattern in patterns:\n        match=re.search(pattern,text,re.I|re.S)\n        if not match:\n            continue\n        value=float(match.group(1)); month=months[match.group(2).title()]\n        year=int(match.group(3)) if match.lastindex and match.lastindex>=3 and match.group(3) else 2026\n        if 20<=value<=80:\n            release_type="flash" if country=="France" else "final"\n            return [Point(\n                f"{year:04d}-{month:02d}",value,response.url,release_type,\n                note=f"public indicator page; underlying source explicitly S&P Global; {release_type}",\n            )]\n    raise RuntimeError(f"{country} {sector} PMI public indicator value not parsed")\n\n\n\ndef sp_pmi(country: str,sector: str) -> list[Point]:\n    try:\n        country_result=fetch_sp_country_pmi(country)\n        points=country_result.get(sector,[])\n        if points:\n            return points\n    except Exception as primary_error:\n        if country not in {"France","Spain"}:\n            raise\n        log(f"[S&P PMI/{country}] official release unavailable in CI: {primary_error}")\n    if country in {"France","Spain"}:\n        return country_pmi_public_indicator(country,sector)\n    raise RuntimeError(f"{country} {sector} PMI not parsed in country-only pipeline")\n\ndef latest_press_series(url: str, specs: list[tuple[str,str]], period: str) -> list[Point]:\n    response = get(url)\n    text = clean(response_text(response)).replace("−", "-")\n    points = []\n    for label, pattern in specs:\n        match = re.search(pattern, text, re.I | re.S)\n        if match:\n            value = num(match.group(1))\n            if value is not None:\n                points.append(Point(period, value, response.url, note=label))\n    if not points:\n        raise RuntimeError("No official press-release values parsed")\n    return points\n\n\nSOURCES: dict[str,list[Source]] = {\n    "西Core CPI":[Source("Spain national core CPI", "INE", "html_release", {"url":"https://ine.es/dyngs/INEbase/en/operacion.htm?c=Estadistica_C&cid=1254736176802&menu=ultiDatos&idp=1254735976607","patterns":[r"core inflation(?: increased| decreased| stood)?[^0-9-]{0,80}([+-]?\\d+(?:[.,]\\d+)?)%"]}, "CPI excluding unprocessed food and energy, YoY", "INE CPI Base 2025 / Special Groups")],\n    "法 Core CPI":[Source("France core inflation", "INSEE", "html_release", {"url":"https://www.insee.fr/en/statistiques/9021810","patterns":[r"core inflation.{0,100}?stood at\\s*\\+?([+-]?\\d+(?:[.,]\\d+)?)%"]}, "National core CPI, YoY", "INSEE CPI final release / core inflation")],\n    "德 Core CPI":[Source("Germany CPI ex food & energy", "Destatis GENESIS", "destatis_genesis_core_cpi", {}, "YoY calculated from official monthly special-position index levels", "GENESIS table 61111-0006 / overall excluding food and energy")],\n    "歐 Core CPI":[Source("Euro-area core HICP", "Eurostat", "euro_core_release", {}, "HICP excluding energy, food, alcohol and tobacco, YoY; source dataset prc_hicp_minr", "Eurostat prc_hicp_minr / official inflation release")],\n    "法 失業率":[Source("France ILO unemployment", "INSEE", "insee", {"idbank":"001688527"}, "ILO unemployment rate, quarterly", "INSEE idbank 001688527")],\n    "西 失業率":[Source("Spain EPA unemployment rate", "INE", "spain_epa_unemployment", {}, "EPA national unemployment rate, quarterly, unadjusted", "INE EPA headline unemployment rate")],\n    "德 Unemployment Rate SWDA":[Source("Germany registered unemployment rate", "Bundesbank", "bundesbank", {"flow":"BBDL1","key":"M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A"}, "Registered unemployment rate, calendar and seasonally adjusted", "BBDL1.M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A")],\n    "歐 失業率":[Source("Euro-area unemployment rate", "Eurostat", "euro_unemployment_release", {}, "ILO unemployment rate, monthly SA; official release backed by une_rt_m", "Eurostat official unemployment release / une_rt_m")],\n    "西 就業":[Source("Spain social-security affiliation SA change", "Seguridad Social / TGSS", "spain_social_security_affiliation", {}, "Total-system registered affiliation, seasonally adjusted net monthly change, thousand persons", "Seguridad Social official monthly affiliation report / adjusted series")],\n    "德 失業人口":[Source("Germany registered unemployed persons", "Bundesbank", "bundesbank", {"flow":"BBDL1","key":"M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A"}, "Registered unemployed persons, calendar and seasonally adjusted, thousand persons; level replaces monthly change", "BBDL1.M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A")],\n    "西 零售":[Source("Spain real retail original YoY", "INE", "spain_retail", {}, "Original constant-price retail index, YoY", "INE RTI Base 2021 / original series annual change")],\n    "德 零售":[Source("Germany retail volume MoM", "Eurostat", "eurostat", {"dataset":"sts_trtu_m","filters":{"geo":"DE","unit":"PCH_PRE","s_adj":"SCA","nace_r2":"G47"}}, "Retail volume SCA, MoM", "sts_trtu_m / DE / PCH_PRE / SCA / G47")],\n    "歐 Real零售":[Source("Euro-area retail volume YoY", "Eurostat", "eurostat", {"dataset":"sts_trtu_m","filters":{"geo":"EA21","unit":"PCH_SM","s_adj":"CA","nace_r2":"G47"}}, "Retail volume calendar adjusted, YoY", "sts_trtu_m / EA21 / PCH_SM / CA / G47")],\n    "德 工業":[Source("Germany industrial production YoY", "Destatis", "html_release", {"url":"https://www.destatis.de/EN/Press/2026/07/PE26_237_421.html","patterns":[r"May 2026.{0,180}?([+-]?\\d+(?:[.,]\\d+)?)%\\s+on the same month a year earlier"]}, "Real production in industry, calendar-adjusted YoY", "Destatis production in industry press release / code 421")],\n    "法 信心":[Source("France household confidence", "INSEE", "insee", {"idbank":"001587668"}, "Household confidence synthetic index", "INSEE idbank 001587668")],\n    "德 GfK Consumer Confidence":[Source("NIM Consumer Climate powered by GfK", "NIM/GfK", "nim_gfk", {}, "Forecast-month consumer climate plus previous-month revised observation", "NIM Consumer Climate powered by GfK release")],\n    "德 製造業PMI":[Source("Germany Manufacturing PMI", "S&P Global/HCOB", "sp_pmi", {"country":"Germany","sector":"manufacturing"}, "Headline Manufacturing PMI; final preferred to flash", "S&P Global official press releases")],\n    "法 製造業PMI":[Source("France Manufacturing PMI", "S&P Global/HCOB", "sp_pmi", {"country":"France","sector":"manufacturing"}, "Headline Manufacturing PMI; final preferred to flash", "S&P Global official press releases")],\n    "西 製造業PMI":[Source("Spain Manufacturing PMI", "S&P Global/HCOB", "sp_pmi", {"country":"Spain","sector":"manufacturing"}, "Headline Manufacturing PMI", "S&P Global official press releases")],\n    "德 服務業PMI":[Source("Germany Services PMI", "S&P Global/HCOB", "sp_pmi", {"country":"Germany","sector":"services"}, "Services PMI Business Activity Index; final preferred to flash", "S&P Global official press releases")],\n    "法 服務業PMI":[Source("France Services PMI", "S&P Global/HCOB", "sp_pmi", {"country":"France","sector":"services"}, "Services PMI Business Activity Index; final preferred to flash", "S&P Global official press releases")],\n    "西 服務業PMI":[Source("Spain Services PMI", "S&P Global/HCOB", "sp_pmi", {"country":"Spain","sector":"services"}, "Services PMI Business Activity Index", "S&P Global official press releases")],\n    "法 製造業信心":[Source("France manufacturing climate", "INSEE", "insee", {"idbank":"001585934"}, "Manufacturing business climate", "INSEE idbank 001585934")],\n    "法 企業信心":[Source("France all-sector business climate", "INSEE", "insee", {"idbank":"001565530"}, "All-sector business climate", "INSEE idbank 001565530")],\n    "德 企業信心":[Source("ifo Business Climate Germany", "ifo Institute", "ifo_business", {}, "Seasonally adjusted ifo Business Climate Germany", "ifo Business Climate Germany, index 2015=100")],\n    "德 GDP":[Source("Germany price-adjusted GDP YoY", "Destatis", "html_release", {"url":"https://www.destatis.de/EN/Press/2026/05/PE26_173_811.html","patterns":[r"\\+?([0-9]+(?:[.,][0-9]+)?)% on the same quarter a year earlier \\(price adjusted\\)"],"fixed_period":"2026-Q1"}, "Price-adjusted GDP YoY, not calendar adjusted", "Destatis GDP price-adjusted YoY / press release 811")],\n    "西 GDP":[Source("Spain real GDP YoY", "Eurostat", "eurostat", {"dataset":"namq_10_gdp","filters":{"geo":"ES","na_item":"B1GQ","unit":"CLV_PCH_SM","s_adj":"SCA"}}, "Real GDP, YoY, quarterly", "namq_10_gdp / ES / B1GQ / CLV_PCH_SM / SCA")],\n    "法GDP":[Source("France real GDP YoY", "Eurostat", "eurostat", {"dataset":"namq_10_gdp","filters":{"geo":"FR","na_item":"B1GQ","unit":"CLV_PCH_SM","s_adj":"SCA"}}, "Real GDP, YoY, quarterly", "namq_10_gdp / FR / B1GQ / CLV_PCH_SM / SCA")],\n    "歐GDP":[Source("Euro-area real GDP YoY", "Eurostat", "eurostat", {"dataset":"namq_10_gdp","filters":{"geo":"EA21","na_item":"B1GQ","unit":"CLV_PCH_SM","s_adj":"SCA"}}, "Real GDP, YoY, quarterly", "namq_10_gdp / EA21 / B1GQ / CLV_PCH_SM / SCA")],\n}\n\n# ZEW has two values in one release; filter by note after fetching.\ndef zew(kind: str) -> list[Point]:\n    url = "https://www.zew.de/en/press/latest-press-releases/strong-rise-in-expectations-1"\n    response = get(url)\n    text = clean(response_text(response)).replace("−", "-")\n    pattern = r"situation indicator for Germany is at\\s*(?:minus\\s*)?([0-9]+(?:[.,][0-9]+)?)" if kind == "current" else r"ZEW Indicator of Economic Sentiment Stands at plus\\s*([0-9]+(?:[.,][0-9]+)?)"\n    match = re.search(pattern, text, re.I)\n    if not match:\n        # More generic official-release wording.\n        pattern = r"Economic Situation Germany\\s*(-?[0-9]+(?:[.,][0-9]+)?)" if kind == "current" else r"Economic expectations.{0,100}?plus\\s*([0-9]+(?:[.,][0-9]+)?)"\n        match = re.search(pattern, text, re.I | re.S)\n    if not match:\n        raise RuntimeError(f"ZEW {kind} value not parsed")\n    value = float(match.group(1).replace(",", "."))\n    if kind == "current":\n        value = -abs(value)\n    return [Point("2026-07", value, response.url)]\n\nSOURCES["德信心 Current"] = [Source("ZEW current situation", "ZEW", "zew", {"kind":"current"}, "Current economic situation Germany, balance", "ZEW Financial Market Survey")]\nSOURCES["德信心 expect"] = [Source("ZEW expectations", "ZEW", "zew", {"kind":"expect"}, "Economic expectations Germany, balance", "ZEW Indicator of Economic Sentiment")]\n\nFETCHERS: dict[str,Callable[...,list[Point]]] = {\n    "eurostat":eurostat,"insee":insee,"bundesbank":bundesbank,"html_release":html_release,\n    "destatis_core_cpi":destatis_core_cpi,"destatis_genesis_core_cpi":destatis_genesis_core_cpi,\n    "nim_gfk":nim_gfk,"euro_core_release":euro_core_release,\n    "euro_unemployment_release":euro_unemployment_release,"spain_epa_unemployment":spain_epa_unemployment,\n    "spain_social_security_affiliation":spain_social_security_affiliation,\n    "spain_retail":spain_retail,"ifo_business":ifo_business,\n    "ine_legacy":ine_legacy,"sp_pmi":sp_pmi,"zew":zew,\n}\n\n\ndef compare_latest(target: dict[str,Any], points: list[Point], tolerance: float) -> dict[str,Any]:\n    expected = target["expected"]\n    if not expected:\n        latest = points[-1]\n        return {"status":"OFFICIAL_ONLY","expected_period":None,"expected":None,"official_period":latest.period,"official":latest.value,"difference":None,"match":None,"source_url":latest.source_url,"note":"EU_ECON has no populated reference value"}\n    expected_period = max(expected)\n    official_by_period = {point.period:point for point in points}\n    official = official_by_period.get(expected_period)\n    if official is None:\n        available_before = [point for point in points if point.period <= expected_period and point.period.startswith(expected_period[:4])]\n        selected = available_before[-1] if available_before else points[-1]\n        return {"status":"NO_SAME_PERIOD","expected_period":expected_period,"expected":expected[expected_period],"official_period":selected.period,"official":selected.value,"difference":None,"match":False,"source_url":selected.source_url,"note":"source fetched but exact EU_ECON period was absent"}\n    difference = official.value - expected[expected_period]\n    match = abs(difference) <= tolerance\n    return {"status":"MATCH" if match else "MISMATCH","expected_period":expected_period,"expected":expected[expected_period],"official_period":official.period,"official":official.value,"difference":difference,"match":match,"source_url":official.source_url,"note":official.note}\n\n\ndef main() -> int:\n    parser = argparse.ArgumentParser()\n    parser.add_argument("--out", type=Path, default=DEFAULT_OUT)\n    parser.add_argument("--tolerance", type=float, default=0.051)\n    args = parser.parse_args()\n    args.out.mkdir(parents=True, exist_ok=True)\n    report: dict[str,Any] = {"script_version":VERSION,"generated_at":datetime.now(timezone.utc).isoformat(),"comparison_mode":"latest populated EU_ECON period vs same official period","tolerance":args.tolerance,"results":[]}\n    for target in TARGETS:\n        label = target["label"]\n        log(f"\\n=== {label} ===")\n        item = {"label":label,"frequency":target["frequency"],"expected":target["expected"],"candidates":[]}\n        for source in SOURCES.get(label, []):\n            candidate = {"name":source.name,"provider":source.provider,"source_id":source.source_id,"definition":source.definition}\n            try:\n                points = FETCHERS[source.fetcher](**source.args)\n                candidate["status"] = "OK"\n                candidate["latest_points"] = [asdict(point) for point in points[-12:]]\n                candidate["comparison"] = compare_latest(target, points, args.tolerance)\n            except Exception as error:\n                candidate["status"] = "ERROR"\n                candidate["error"] = f"{type(error).__name__}: {error}"\n                log(f"[ERROR] {source.name}: {candidate[\'error\']}")\n            item["candidates"].append(candidate)\n        successful = [candidate for candidate in item["candidates"] if candidate["status"] == "OK"]\n        if successful:\n            selected = sorted(successful, key=lambda c: {"MATCH":0,"MISMATCH":1,"OFFICIAL_ONLY":2,"NO_SAME_PERIOD":3}.get(c["comparison"]["status"],9))[0]\n            item["selected_candidate"] = selected["name"]\n            item["source_id"] = selected["source_id"]\n            item["status"] = selected["comparison"]["status"]\n            item["comparison"] = selected["comparison"]\n        elif item["candidates"]:\n            item["status"] = "FETCH_ERROR"\n        else:\n            item["status"] = "NO_SOURCE_MAPPING"\n        report["results"].append(item)\n    summary: dict[str,int] = {}\n    for item in report["results"]:\n        summary[item["status"]] = summary.get(item["status"],0) + 1\n    report["summary"] = summary\n    json_path = args.out / "eu_macro_source_comparison.json"\n    json_path.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")\n    csv_path = args.out / "eu_macro_source_comparison.csv"\n    with csv_path.open("w",encoding="utf-8-sig",newline="") as handle:\n        writer = csv.writer(handle)\n        writer.writerow(["label","status","source_id","expected_period","EU_ECON","official_period","official","difference","match","source_url","definition_or_error"])\n        for item in report["results"]:\n            cmp = item.get("comparison",{})\n            selected = next((c for c in item.get("candidates",[]) if c.get("name") == item.get("selected_candidate")),None)\n            note = selected.get("definition","") if selected else " | ".join(c.get("error","") for c in item.get("candidates",[]))\n            writer.writerow([item["label"],item["status"],item.get("source_id",""),cmp.get("expected_period"),cmp.get("expected"),cmp.get("official_period"),cmp.get("official"),cmp.get("difference"),cmp.get("match"),cmp.get("source_url"),note])\n    log("\\n[SUMMARY]")\n    for status,count in sorted(summary.items()):\n        log(f"{status}: {count}")\n    log(f"JSON: {json_path}")\n    log(f"CSV : {csv_path}")\n    return 0\n\n\nif __name__ == "__main__":\n    sys.exit(main())\n'
-
-_STRUCTURED_SOURCE = '#!/usr/bin/env python3\n"""Targeted validation of the remaining EU structured macro sources.\n\nTests only the six sources that still need a machine-readable implementation:\n1. Spain core CPI: INE table 50907 JSON\n2. Spain unemployment rate: INE table 65219/65334 JSON\n3. France core CPI: INSEE BDM idbank 011814143\n4. Germany core CPI: Destatis GENESIS REST table 61111-0006\n5. Germany industrial production: Destatis GENESIS REST table 42153-0001\n6. Germany ifo business climate: official XLS/XLSX, official PDF fallback\n\nThe script never writes production data. It produces diagnostics and compares only\nperiods already listed in EXPECTED. HTML is used only to discover official download\nassets; values are read from JSON/XML/CSV/XLS/XLSX/PDF.\n"""\nfrom __future__ import annotations\n\nimport argparse\nimport csv\nimport io\nimport json\nimport math\nimport os\nimport re\nimport sys\nimport time\nimport traceback\nimport unicodedata\nimport xml.etree.ElementTree as ET\nfrom dataclasses import asdict, dataclass\nfrom datetime import datetime, timezone\nfrom pathlib import Path\nfrom typing import Any, Callable\nfrom urllib.parse import urljoin\n\nimport requests\nfrom bs4 import BeautifulSoup\nfrom openpyxl import load_workbook\nfrom requests.adapters import HTTPAdapter\nfrom urllib3.util.retry import Retry\n\nVERSION = "2026-07-30-remaining-structured-v5-fr-core-official"\nTIMEOUT = 60\nUA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36"\n\nEXPECTED: dict[str, dict[str, float]] = {\n    "西Core CPI": {"2026-06": 2.9, "2026-05": 3.0, "2026-04": 2.8},\n    "西 失業率": {"2026-Q2": 9.87, "2026-Q1": 10.83},\n    # INSEE Base 2025 official annual underlying inflation. From 2026-01 onward,\n    # official revised values supersede the legacy EU_ECON values.\n    "法 Core CPI": {"2026-06": 1.0, "2026-05": 1.5, "2026-04": 1.2},\n    "德 Core CPI": {"2026-06": 2.45139, "2026-05": 2.54022, "2026-04": 2.29007},\n    "德 工業": {"2026-05": 0.0, "2026-04": -0.8762322015334},\n    "德 企業信心": {"2026-07": 86.59582, "2026-06": 85.7, "2026-05": 85.0, "2026-04": 84.5},\n}\n\nHTTP_LOG: list[dict[str, Any]] = []\nDETAILS: dict[str, Any] = {}\n\n\ndef clean(value: Any) -> str:\n    return re.sub(r"\\s+", " ", str(value or "")).strip()\n\n\ndef norm(value: Any) -> str:\n    return re.sub(r"[^a-z0-9]+", " ", unicodedata.normalize("NFKD", clean(value)).encode("ascii", "ignore").decode().lower()).strip()\n\n\ndef num(value: Any) -> float | None:\n    if value is None or isinstance(value, bool):\n        return None\n    if isinstance(value, (int, float)):\n        return float(value) if math.isfinite(float(value)) else None\n    text = clean(value).replace("−", "-").replace("%", "")\n    if not text or text.lower() in {"nan", "null", "none", "..", "...", ":", "-"}:\n        return None\n    text = re.sub(r"[^0-9,.-]", "", text)\n    if "," in text and "." not in text:\n        text = text.replace(",", ".")\n    elif "," in text and "." in text:\n        text = text.replace(".", "").replace(",", ".") if text.rfind(",") > text.rfind(".") else text.replace(",", "")\n    try:\n        return float(text)\n    except ValueError:\n        return None\n\n\ndef period_key(value: Any, year: Any = None, period_code: Any = None) -> str | None:\n    # INE quarterly observations carry timestamps at the first month of each\n    # quarter. FK_Periodo 19..22 is authoritative and must be checked first.\n    if year is not None and period_code is not None:\n        try:\n            y = int(year); p = int(period_code)\n            if 19 <= p <= 22:\n                return f"{y:04d}-Q{p - 18}"\n            if 1 <= p <= 12:\n                return f"{y:04d}-{p:02d}"\n        except (TypeError, ValueError):\n            pass\n    text = clean(value)\n    if re.fullmatch(r"1\\d{12}", text):\n        return datetime.fromtimestamp(int(text) / 1000, timezone.utc).strftime("%Y-%m")\n    q = re.search(r"(20\\d{2})\\D*[QqTt]([1-4])", text)\n    if q:\n        return f"{q.group(1)}-Q{q.group(2)}"\n    m = re.search(r"(20\\d{2})[-/. ](0?[1-9]|1[0-2])(?:\\D|$)", text)\n    if m:\n        return f"{m.group(1)}-{int(m.group(2)):02d}"\n    return None\n\n\n@dataclass\nclass Point:\n    period: str\n    value: float\n    source_url: str\n    note: str = ""\n\n\ndef dedupe(points: list[Point]) -> list[Point]:\n    return [p for _, p in sorted({p.period: p for p in points}.items())]\n\n\ndef make_session() -> requests.Session:\n    s = requests.Session()\n    retry = Retry(total=2, connect=2, read=2, backoff_factor=1.0,\n                  status_forcelist=(429, 500, 502, 503, 504), allowed_methods=("GET", "POST"))\n    s.mount("https://", HTTPAdapter(max_retries=retry))\n    s.headers.update({"User-Agent": UA, "Accept": "*/*"})\n    return s\n\n\nHTTP = make_session()\n\n\ndef request(method: str, url: str, **kwargs: Any) -> requests.Response:\n    started = time.time()\n    try:\n        r = HTTP.request(method, url, timeout=TIMEOUT, **kwargs)\n        HTTP_LOG.append({"method": method, "url": r.url, "status": r.status_code,\n                         "bytes": len(r.content), "seconds": round(time.time() - started, 3),\n                         "content_type": r.headers.get("content-type", "")})\n        r.raise_for_status()\n        return r\n    except Exception as exc:\n        HTTP_LOG.append({"method": method, "url": url, "status": None,\n                         "seconds": round(time.time() - started, 3), "error": f"{type(exc).__name__}: {exc}"})\n        raise\n\n\n# ------------------------- INE table API -------------------------\n\ndef ine_table(table_id: str) -> tuple[list[dict[str, Any]], str]:\n    url = f"https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/{table_id}"\n    errors = []\n    for params in ({"tip": "AM", "nult": 24}, {"nult": 24}, {}):\n        try:\n            r = request("GET", url, params=params)\n            payload = r.json()\n            if isinstance(payload, list) and payload:\n                return payload, r.url\n        except Exception as exc:\n            errors.append(f"{params}: {exc}")\n    raise RuntimeError("INE DATOS_TABLA failed: " + " | ".join(errors))\n\n\ndef ine_series_points(series: dict[str, Any], source_url: str) -> list[Point]:\n    rows = series.get("Data") or series.get("data") or []\n    points: list[Point] = []\n    for row in rows:\n        period_code = row.get("FK_Periodo")\n        if period_code is None:\n            t3 = clean(row.get("T3_Periodo") or row.get("Periodo"))\n            match = re.search(r"([1-4])$", t3)\n            if match and re.search(r"[TQ]", t3, re.I):\n                period_code = 18 + int(match.group(1))\n            else:\n                match = re.search(r"(0?[1-9]|1[0-2])$", t3)\n                if match:\n                    period_code = int(match.group(1))\n        period = period_key(row.get("Fecha"), row.get("Anyo"), period_code)\n        value = num(row.get("Valor"))\n        if period and value is not None:\n            points.append(Point(period, value, source_url))\n    return dedupe(points)\n\n\ndef choose_ine_series(table_id: str, label: str, required: list[str], excluded: list[str] | None = None) -> list[Point]:\n    payload, source_url = ine_table(table_id)\n    excluded = excluded or []\n    candidates = []\n    for series in payload:\n        name = clean(series.get("Nombre") or series.get("name"))\n        code = clean(series.get("COD") or series.get("Codigo") or series.get("Id"))\n        n = norm(name)\n        if not all(term in n for term in required) or any(term in n for term in excluded):\n            continue\n        points = ine_series_points(series, source_url)\n        mapping = {p.period: p.value for p in points}\n        shared = [period for period in EXPECTED[label] if period in mapping]\n        error = sum(abs(mapping[p] - EXPECTED[label][p]) for p in shared) / len(shared) if shared else None\n        candidates.append({"code": code, "name": name, "shared": shared,\n                           "mean_abs_error": error, "points": [asdict(p) for p in points[-30:]]})\n    candidates.sort(key=lambda x: (-len(x["shared"]), x["mean_abs_error"] if x["mean_abs_error"] is not None else 1e9))\n    DETAILS[f"INE table {table_id} candidates"] = candidates[:50]\n    if not candidates or not candidates[0]["shared"]:\n        raise RuntimeError(f"INE table {table_id}: target series/period not found")\n    best = candidates[0]\n    return [Point(x["period"], x["value"], source_url,\n                  f"INE table={table_id}; series={best[\'code\']}; {best[\'name\']}") for x in best["points"]]\n\n\ndef spain_core_cpi() -> list[Point]:\n    old=[]; current=[]; errors=[]\n    try:\n        old=choose_ine_series("50907","西Core CPI",\n            ["general sin alimentos no elaborados ni productos energeticos","variacion anual"])\n    except Exception as exc:\n        errors.append(f"50907 historical: {exc}")\n    # INE changed all IPC table identifiers with Base 2025. Probe only the\n    # documented 761xx block; DATOS_TABLA is the official JSON distribution.\n    for table_no in range(76120,76161):\n        table_id=str(table_no)\n        try:\n            pts=choose_ine_series(table_id,"西Core CPI",\n                ["general sin alimentos no elaborados ni productos energeticos","variacion anual"])\n            if any(p.period >= "2026-01" for p in pts):\n                current=pts; DETAILS["INE Base 2025 core CPI selected table"]=table_id; break\n        except Exception as exc:\n            errors.append(f"{table_id}: {exc}")\n    merged={p.period:p for p in old if p.period <= "2025-12"}\n    merged.update({p.period:p for p in current if p.period >= "2026-01"})\n    if not merged or not any(period in merged for period in EXPECTED["西Core CPI"]):\n        raise RuntimeError("INE Base 2025 core CPI not resolved; "+" | ".join(errors[-12:]))\n    for point in merged.values():\n        point.note += "; stitched at 2026-01 (Base 2021 historical + Base 2025 current)"\n    return dedupe(list(merged.values()))\n\n\ndef spain_unemployment() -> list[Point]:\n    errors = []\n    configurations = [\n        ("65219", ["ambos sexos", "total"], ["hombres", "mujeres"]),\n        ("65334", ["ambos sexos", "total nacional", "total"], ["hombres", "mujeres"]),\n    ]\n    for table_id, required, excluded in configurations:\n        try:\n            return choose_ine_series(table_id, "西 失業率", required, excluded)\n        except Exception as exc:\n            errors.append(f"{table_id}: {exc}")\n    raise RuntimeError("Spanish unemployment tables failed: " + " | ".join(errors))\n\n\n# ------------------------- INSEE BDM -------------------------\n\ndef insee_idbank(idbank: str) -> list[Point]:\n    url = f"https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/{idbank}"\n    r = request("GET", url, params={"lastNObservations": 30})\n    root = ET.fromstring(r.content)\n    points = []\n    for obs in root.iter():\n        if obs.tag.endswith("Obs"):\n            period = period_key(obs.attrib.get("TIME_PERIOD") or obs.attrib.get("timePeriod"))\n            value = num(obs.attrib.get("OBS_VALUE") or obs.attrib.get("obsValue"))\n            if period and value is not None:\n                points.append(Point(period, value, r.url, f"INSEE idbank={idbank}; level"))\n    if not points:\n        raise RuntimeError(f"INSEE idbank {idbank}: no observations")\n    return dedupe(points)\n\n\ndef yoy_from_levels(points: list[Point], expected_periods: list[str], note: str) -> list[Point]:\n    levels = {p.period: p for p in points}\n    out = []\n    for period in expected_periods:\n        if "-Q" in period:\n            year, qtr = period.split("-Q")\n            prior = f"{int(year)-1:04d}-Q{qtr}"\n        else:\n            year, month = period.split("-")\n            prior = f"{int(year)-1:04d}-{month}"\n        if period in levels and prior in levels and levels[prior].value:\n            value = (levels[period].value / levels[prior].value - 1) * 100\n            out.append(Point(period, value, levels[period].source_url, note))\n    if not out:\n        raise RuntimeError("Cannot calculate YoY from official levels")\n    return out\n\n\ndef france_core_cpi() -> list[Point]:\n    # Base 2025 level=011814143, monthly rate=011814144. Adjacent identifiers\n    # are tested for the official annual-rate series to avoid computing YoY\n    # from display-rounded index levels. Historical Base 2015 annual rate is\n    # retained only through 2025-12.\n    old=[]; current=[]; errors=[]\n    try:\n        old=insee_idbank("001768593")\n        for p in old: p.note="INSEE Base 2015 official annual underlying inflation; idbank=001768593"\n    except Exception as exc: errors.append(f"001768593: {exc}")\n    for idbank in ("011814145","011814146","011814147","011814148"):\n        try:\n            pts=insee_idbank(idbank)\n            vals={p.period:p.value for p in pts}\n            shared=[q for q in EXPECTED["法 Core CPI"] if q in vals]\n            if shared and all(-10 < vals[q] < 10 for q in shared):\n                current=pts\n                for p in current: p.note=f"INSEE Base 2025 official annual underlying inflation; idbank={idbank}"\n                DETAILS["INSEE Base 2025 annual core CPI selected idbank"]=idbank\n                break\n        except Exception as exc: errors.append(f"{idbank}: {exc}")\n    if not current:\n        levels=insee_idbank("011814143")\n        DETAILS["INSEE 011814143 levels"]=[asdict(p) for p in levels]\n        current=yoy_from_levels(levels,list(EXPECTED["法 Core CPI"]),\n            "Fallback YoY from display-rounded Base 2025 levels; idbank=011814143")\n    merged={p.period:p for p in old if p.period <= "2025-12"}\n    merged.update({p.period:p for p in current if p.period >= "2026-01"})\n    if not merged: raise RuntimeError("INSEE old/new core CPI series unavailable; "+" | ".join(errors))\n    return dedupe(list(merged.values()))\n\n\n# ------------------------- Destatis GENESIS REST -------------------------\n\ndef decode_csv(content: bytes) -> list[list[str]]:\n    text = None\n    for encoding in ("utf-8-sig", "cp1252", "iso-8859-1"):\n        try:\n            candidate = content.decode(encoding)\n            if "\\ufffd" not in candidate:\n                text = candidate\n                break\n        except UnicodeDecodeError:\n            pass\n    text = text or content.decode("cp1252", errors="replace")\n    delimiter = ";" if text[:10000].count(";") > text[:10000].count(",") else ","\n    return list(csv.reader(io.StringIO(text), delimiter=delimiter))\n\n\ndef genesis_credentials() -> dict[str, str]:\n    token = clean(os.getenv("GENESIS_TOKEN"))\n    username = clean(os.getenv("GENESIS_USERNAME"))\n    password = clean(os.getenv("GENESIS_PASSWORD"))\n    if token:\n        return {"username": token, "password": ""}\n    if username:\n        return {"username": username, "password": password}\n    return {"username": "GUEST", "password": ""}\n\n\ndef genesis_table(table_id: str, startyear: int = 2025, endyear: int = 2026) -> tuple[list[list[str]], str]:\n    """Request a full GENESIS table through the official REST interface.\n\n    GENESIS_TOKEN is preferred. GENESIS_USERNAME and GENESIS_PASSWORD are also\n    supported. Guest mode is attempted so the diagnostic remains executable.\n    """\n    endpoints = [\n        "https://www-genesis.destatis.de/genesisWS/rest/2020/data/tablefile",\n        "https://genesis.destatis.de/genesisWS/rest/2020/data/tablefile",\n    ]\n    auth = genesis_credentials()\n    body = {**auth, "name": table_id, "area": "all", "compress": "false",\n            "startyear": str(startyear), "endyear": str(endyear),\n            "timeslices": "", "regionalvariable": "", "regionalkey": "",\n            "classifyingvariable1": "", "classifyingkey1": "",\n            "classifyingvariable2": "", "classifyingkey2": "",\n            "classifyingvariable3": "", "classifyingkey3": "",\n            "format": "ffcsv", "job": "false", "language": "de"}\n    errors = []\n    for endpoint in endpoints:\n        try:\n            r = request("POST", endpoint, json=body)\n            content_type = r.headers.get("content-type", "").lower()\n            if "json" in content_type or r.text.lstrip().startswith("{"):\n                payload = r.json()\n                DETAILS[f"GENESIS response {table_id}"] = payload\n                obj = payload.get("Object") or payload.get("object") or {}\n                content = obj.get("Content") or obj.get("content")\n                if isinstance(content, str) and content.strip():\n                    return list(csv.reader(io.StringIO(content), delimiter=";")), r.url\n                raise RuntimeError(clean(payload.get("Status") or payload.get("status") or payload)[:500])\n            return decode_csv(r.content), r.url\n        except Exception as exc:\n            errors.append(f"{endpoint}: {type(exc).__name__}: {exc}")\n    # Public flat-file fallback is retained for diagnostics, though it may contain\n    # only the site\'s default table selection.\n    fallback = f"https://genesis.destatis.de/genesisWS/downloads/00/tables/{table_id}_00.csv"\n    try:\n        r = request("GET", fallback)\n        rows = decode_csv(r.content)\n        DETAILS[f"GENESIS fallback {table_id}"] = rows[:300]\n        return rows, r.url\n    except Exception as exc:\n        errors.append(f"{fallback}: {exc}")\n    raise RuntimeError("GENESIS table request failed: " + " | ".join(errors))\n\n\ndef row_periods(rows: list[list[str]]) -> dict[int, str]:\n    years: dict[int, int] = {}\n    periods: dict[int, str] = {}\n    width = max((len(r) for r in rows[:30]), default=0)\n    months = {name: i for i, name in enumerate(\n        "januar februar marz april mai juni juli august september oktober november dezember".split(), 1)}\n    for row in rows[:30]:\n        for col, cell in enumerate(row):\n            text = norm(cell)\n            if re.fullmatch(r"20\\d{2}", text):\n                years[col] = int(text)\n    current = None\n    for col in range(width):\n        if col in years:\n            current = years[col]\n        elif current is not None:\n            years[col] = current\n    for row in rows[:30]:\n        for col, cell in enumerate(row):\n            text = norm(cell)\n            year = years.get(col)\n            if year and text in months:\n                periods[col] = f"{year:04d}-{months[text]:02d}"\n    return periods\n\n\ndef select_destatis_row(rows: list[list[str]], label: str, required: list[str], excluded: list[str] | None = None) -> list[Point]:\n    excluded = excluded or []\n    periods = row_periods(rows)\n    candidates = []\n    for idx, row in enumerate(rows):\n        text = norm(" ".join(clean(x) for x in row[:12]))\n        if not all(term in text for term in required) or any(term in text for term in excluded):\n            continue\n        levels = {period: num(row[col]) for col, period in periods.items()\n                  if col < len(row) and num(row[col]) is not None}\n        if levels:\n            candidates.append({"row": idx + 1, "label": " | ".join(clean(x) for x in row[:8]), "levels": levels})\n    DETAILS[f"Destatis {label} candidates"] = candidates[:50]\n    if not candidates:\n        raise RuntimeError(f"Destatis {label}: target row missing; GENESIS_TOKEN may be required for full table")\n    best = max(candidates, key=lambda x: len(x["levels"]))\n    source = "official GENESIS REST/CSV"\n    points = [Point(period, value, source, f"row={best[\'row\']}; {best[\'label\']}") for period, value in best["levels"].items()]\n    return dedupe(points)\n\n\ndef destatis_core_html() -> list[Point]:\n    url="https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html"\n    r=request("GET",url); soup=BeautifulSoup(r.text,"html.parser")\n    points=[]; current_year=None\n    for tr in soup.find_all("tr"):\n        cells=[clean(x.get_text(" ",strip=True)) for x in tr.find_all(["th","td"])]\n        if not cells: continue\n        # Expected row layout: year (occasionally row-spanned), month, overall,\n        # overall excluding food and energy, food, excluding energy, energy.\n        if re.fullmatch(r"20\\d{2}",cells[0]):\n            current_year=int(cells[0]); cells=cells[1:]\n        if current_year and len(cells)>=3:\n            month_name=norm(cells[0])\n            months={name:i for i,name in enumerate("jan feb mar apr may jun jul aug sep oct nov dec".split(),1)}\n            month=months.get(month_name[:3])\n            value=num(cells[2])\n            if month and value is not None:\n                points.append(Point(f"{current_year:04d}-{month:02d}",value,r.url,\n                    "Destatis official special breakdown: overall index excluding food and energy"))\n    DETAILS["Destatis core CPI HTML points"]=[asdict(p) for p in points]\n    if not points: raise RuntimeError("Destatis official core CPI HTML table not parsed")\n    return dedupe(points)\n\n\ndef germany_core_cpi() -> list[Point]:\n    errors=[]\n    try:\n        rows,source_url=genesis_table("61111-0006",2025,2026)\n        DETAILS["Destatis 61111-0006 raw preview"]=rows[:300]\n        levels=select_destatis_row(rows,"core CPI",["ohne","nahrungsmittel","energie"],["alkohol","tabak"])\n        for p in levels: p.source_url=source_url\n    except Exception as exc:\n        errors.append(str(exc)); levels=destatis_core_html()\n    points=yoy_from_levels(levels,list(EXPECTED["德 Core CPI"]),"YoY from official Destatis core CPI levels")\n    for p in points: p.note += "; API preferred, official HTML table fallback"\n    return points\n\n\ndef select_destatis_row_oriented(rows: list[list[str]], label: str,\n                                   aggregate_terms: list[str], column_terms: list[str]) -> list[Point]:\n    # Tables such as 42153-0001 put year/month on each observation row and\n    # adjustment methods in columns, unlike CPI\'s wide month-column layout.\n    header_idx=None; value_col=None\n    for idx,row in enumerate(rows[:30]):\n        for col,cell in enumerate(row):\n            text=norm(cell)\n            if all(term in text for term in column_terms):\n                header_idx=idx; value_col=col; break\n        if value_col is not None: break\n    if value_col is None:\n        raise RuntimeError(f"Destatis {label}: adjustment column not found")\n    months={name:i for i,name in enumerate("januar februar marz april mai juni juli august september oktober november dezember".split(),1)}\n    points=[]\n    for idx,row in enumerate(rows[header_idx+1:],header_idx+2):\n        if len(row)<=value_col: continue\n        aggregate=norm(row[0] if row else "")\n        target=" ".join(aggregate_terms)\n        if aggregate != target: continue\n        try: year=int(clean(row[1]))\n        except (ValueError,IndexError): continue\n        month=months.get(norm(row[2]) if len(row)>2 else "")\n        value=num(row[value_col])\n        if month and value is not None:\n            points.append(Point(f"{year:04d}-{month:02d}",value,"",f"row={idx}; column={value_col+1}"))\n    DETAILS[f"Destatis {label} row-oriented"]=[asdict(p) for p in points]\n    if not points: raise RuntimeError(f"Destatis {label}: no row-oriented observations")\n    return dedupe(points)\n\n\ndef germany_industry() -> list[Point]:\n    rows, source_url = genesis_table("42153-0001", 2025, 2026)\n    DETAILS["Destatis 42153-0001 raw preview"] = rows[:300]\n    levels = select_destatis_row_oriented(rows,"industry",["produzierendes","gewerbe"],["x13","kalenderbereinigt"])\n    for p in levels: p.source_url=source_url\n    return yoy_from_levels(levels,list(EXPECTED["德 工業"]),"YoY from GENESIS X13 calendar-adjusted production levels")\n\n\n# ------------------------- ifo XLS/XLSX and PDF fallback -------------------------\n\ndef workbook_rows(content: bytes, url: str) -> list[dict[str, Any]]:\n    if url.lower().split("?")[0].endswith(".xls") or content[:8] == bytes.fromhex("D0CF11E0A1B11AE1"):\n        import xlrd\n        book = xlrd.open_workbook(file_contents=content)\n        return [{"sheet": sh.name, "rows": [sh.row_values(i) for i in range(sh.nrows)]} for sh in book.sheets()]\n    wb = load_workbook(io.BytesIO(content), read_only=True, data_only=True)\n    return [{"sheet": ws.title, "rows": [list(r) for r in ws.iter_rows(values_only=True)]} for ws in wb.worksheets]\n\n\ndef asset_urls(page_url: str) -> list[str]:\n    r = request("GET", page_url)\n    soup = BeautifulSoup(r.text, "html.parser")\n    urls: list[str] = []\n    for tag in soup.find_all(True):\n        for attr, value in tag.attrs.items():\n            values = value if isinstance(value, list) else [value]\n            for raw in values:\n                text = clean(raw)\n                if not text:\n                    continue\n                for match in re.findall(r"(?:https?:)?//[^\\"\'\\s<>]+|/[^\\"\'\\s<>]+", text):\n                    candidate = urljoin(r.url, match)\n                    if candidate.lower().split("?")[0].endswith((".xlsx", ".xls", ".pdf")) or "/media/" in candidate or "/download" in candidate:\n                        urls.append(candidate)\n    # Raw HTML regex captures escaped JSON asset URLs.\n    raw_html = r.text.replace("\\\\/", "/")\n    for match in re.findall(r"(?:https?:)?//[^\\"\'\\s<>]+|/[^\\"\'\\s<>]+", raw_html):\n        candidate = urljoin(r.url, match)\n        if candidate.lower().split("?")[0].endswith((".xlsx", ".xls", ".pdf")) or "/media/" in candidate:\n            urls.append(candidate)\n    return list(dict.fromkeys(urls))\n\n\ndef ifo_from_workbook(content: bytes, url: str) -> list[Point]:\n    books = workbook_rows(content, url)\n    DETAILS[f"ifo workbook preview {url}"] = [{"sheet": b["sheet"], "rows": b["rows"][:30]} for b in books]\n    candidates = []\n    for book in books:\n        for idx, row in enumerate(book["rows"]):\n            if not row:\n                continue\n            period = period_key(row[0])\n            if not period:\n                continue\n            for col, cell in enumerate(row[1:], 1):\n                value = num(cell)\n                if value is None:\n                    continue\n                context_rows = book["rows"][max(0, idx - 5):idx + 1]\n                context = norm(f"{book[\'sheet\']} " + " ".join(clean(x) for rr in context_rows for x in rr[:col + 1]))\n                score = sum(3 for term in ["deutschland", "geschaftsklima", "klima", "index", "saisonbereinigt"] if term in context)\n                if 70 <= value <= 110:\n                    candidates.append({"period": period, "value": value, "score": score,\n                                       "sheet": book["sheet"], "row": idx + 1, "col": col + 1})\n    DETAILS[f"ifo workbook candidates {url}"] = sorted(candidates, key=lambda x: x["score"], reverse=True)[:100]\n    points = []\n    for period in EXPECTED["德 企業信心"]:\n        rows = [x for x in candidates if x["period"] == period]\n        if rows:\n            best = max(rows, key=lambda x: x["score"])\n            points.append(Point(period, best["value"], url,\n                                f"sheet={best[\'sheet\']}; row={best[\'row\']}; col={best[\'col\']}"))\n    if not points:\n        raise RuntimeError("ifo workbook parsed but target periods not found")\n    return dedupe(points)\n\n\ndef ifo_from_pdf(content: bytes, url: str) -> list[Point]:\n    from pypdf import PdfReader\n    reader=PdfReader(io.BytesIO(content)); text="\\n".join(page.extract_text() or "" for page in reader.pages)\n    DETAILS[f"ifo PDF text {url}"]=text[:50000]\n    points=[]\n    # Extract the official 13-month table. pypdf usually preserves the sequence\n    # "Monat/Jahr 06/25 ... 06/26 Klima Lage Erwartungen <13 climate values>...".\n    compact=re.sub(r"\\s+"," ",text.replace("−","-"))\n    block=re.search(r"Monat/Jahr\\s+((?:\\d{2}/\\d{2}\\s+){8,15}).*?Klima\\s+Lage\\s+Erwartungen\\s+((?:-?\\d+[,.]\\d+\\s+){20,50})",compact,re.I)\n    if block:\n        periods=re.findall(r"(\\d{2})/(\\d{2})",block.group(1))\n        values=[float(x.replace(",",".")) for x in re.findall(r"-?\\d+[,.]\\d+",block.group(2))]\n        # Table is printed month-by-month in the PDFs: climate, situation,\n        # expectations for each month. If layout instead groups rows, compare\n        # both interpretations and retain values in the plausible 70..110 range.\n        n=len(periods); candidates=[]\n        if len(values)>=3*n:\n            candidates.append(values[0:3*n:3])\n            candidates.append(values[:n])\n        for climate in candidates:\n            if len(climate)==n and all(70 <= x <= 110 for x in climate):\n                for (mm,yy),value in zip(periods,climate):\n                    points.append(Point(f"20{yy}-{int(mm):02d}",value,url,"ifo official PDF table"))\n                break\n    if not points:\n        match=re.search(r"Geschäftsklimaindex\\s+(?:stieg|sank).*?im\\s+([A-Za-zä]+).*?auf\\s+([0-9]+[,.][0-9]+)\\s+Punkte",text,re.S|re.I)\n        if match:\n            months={norm(name):i for i,name in enumerate("januar februar marz april mai juni juli august september oktober november dezember".split(),1)}\n            month=months.get(norm(match.group(1))); year_match=re.search(r"\\b(20\\d{2})\\b",text)\n            if month and year_match: points.append(Point(f"{year_match.group(1)}-{month:02d}",float(match.group(2).replace(",",".")),url,"ifo official PDF sentence"))\n    if not points: raise RuntimeError("ifo PDF downloaded but table/latest value not parsed")\n    return dedupe(points)\n\n\ndef ifo_html_value(page_url: str, period: str) -> Point:\n    r=request("GET",page_url); text=BeautifulSoup(r.text,"html.parser").get_text(" ",strip=True)\n    patterns=[\n        r"Geschäftsklimaindex\\s+(?:stieg|sank).*?auf\\s+([0-9]+[,.][0-9]+)\\s+Punkte",\n        r"Business Climate Index\\s+(?:rose|fell).*?to\\s+([0-9]+[,.][0-9]+)\\s+points",\n    ]\n    for pattern in patterns:\n        match=re.search(pattern,text,re.S|re.I)\n        if match:\n            return Point(period,float(match.group(1).replace(",",".")),r.url,"ifo official release HTML fallback")\n    DETAILS[f"ifo HTML text {page_url}"]=text[:30000]\n    raise RuntimeError("ifo HTML latest value not found")\n\n\ndef ifo_business() -> list[Point]:\n    pages=["https://www.ifo.de/ifo-zeitreihen","https://www.ifo.de/umfragen/zeitreihen",\n           "https://www.ifo.de/fakten/2026-07-27/ifo-geschaeftsklimaindex-gestiegen-juli-2026"]\n    urls=[]; errors=[]\n    for page in pages:\n        try: urls.extend(asset_urls(page))\n        except Exception as exc: errors.append(f"{page}: {exc}")\n    # Official indexed June PDF; its embedded table covers 2025-06..2026-06.\n    urls.extend(["https://www.ifo.de/media/57983/download"])\n    urls=list(dict.fromkeys(urls)); DETAILS["ifo discovered assets"]=urls\n    for url in urls:\n        if not url.lower().split("?")[0].endswith((".xlsx",".xls")): continue\n        try:\n            r=request("GET",url); return ifo_from_workbook(r.content,r.url)\n        except Exception as exc: errors.append(f"{url}: {exc}")\n    points=[]\n    for url in urls:\n        try:\n            r=request("GET",url)\n            if "pdf" in r.headers.get("content-type","").lower() or r.content.startswith(b"%PDF"):\n                try: points.extend(ifo_from_pdf(r.content,r.url))\n                except Exception as exc: errors.append(f"{url}: {exc}")\n            else:\n                DETAILS[f"ifo non-PDF response {url}"]={"final_url":r.url,"content_type":r.headers.get("content-type",""),"text":r.text[:20000]}\n        except Exception as exc: errors.append(f"{url}: {exc}")\n    try: points.append(ifo_html_value(pages[-1],"2026-07"))\n    except Exception as exc: errors.append(f"July HTML: {exc}")\n    points=dedupe(points)\n    if points: return points\n    raise RuntimeError("ifo official asset not parsed: "+" | ".join(errors[:15]))\n\n\n# ------------------------- reporting -------------------------\nTESTS: list[tuple[str, str, Callable[[], list[Point]]]] = [\n    ("西Core CPI", "INE table 50907 JSON", spain_core_cpi),\n    ("西 失業率", "INE table 65219/65334 JSON", spain_unemployment),\n    ("法 Core CPI", "INSEE BDM 011814143 XML", france_core_cpi),\n    ("德 Core CPI", "Destatis GENESIS 61111-0006 REST/CSV", germany_core_cpi),\n    ("德 工業", "Destatis GENESIS 42153-0001 REST/CSV", germany_industry),\n    ("德 企業信心", "ifo official XLS/XLSX; PDF fallback", ifo_business),\n]\n\n\ndef compare(label: str, points: list[Point], tolerance: float) -> dict[str, Any]:\n    mapping = {p.period: p for p in points}\n    rows = []\n    for period, expected in sorted(EXPECTED[label].items(), reverse=True):\n        point = mapping.get(period)\n        if point is None:\n            rows.append({"period": period, "EU_ECON": expected, "official": None,\n                         "difference": None, "match": False, "note": "official period absent"})\n        else:\n            difference = point.value - expected\n            rows.append({"period": period, "EU_ECON": expected, "official": point.value,\n                         "difference": difference, "match": abs(difference) <= tolerance,\n                         "source_url": point.source_url, "note": point.note})\n    available = [r for r in rows if r["official"] is not None]\n    if len(available) == len(rows) and all(r["match"] for r in available):\n        status = "MATCH_ALL"\n    elif available and all(r["match"] for r in available):\n        status = "MATCH_AVAILABLE_PERIODS"\n    elif available:\n        status = "VALUE_MISMATCH"\n    else:\n        status = "NO_SAME_PERIOD"\n    return {"status": status, "rows": rows}\n\n\ndef main() -> int:\n    parser = argparse.ArgumentParser()\n    parser.add_argument("--out", default="debug/eu_remaining_structured_sources")\n    parser.add_argument("--tolerance", type=float, default=0.051)\n    args = parser.parse_args()\n    out = Path(args.out)\n    out.mkdir(parents=True, exist_ok=True)\n    report = {"script_version": VERSION, "generated_at": datetime.now(timezone.utc).isoformat(),\n              "source_policy": {\n                  "法 Core CPI": {\n                      "through_2025_12": "INSEE Base 2015 idbank 001768593",\n                      "from_2026_01": "INSEE Base 2025 idbank 011814145",\n                      "comparison_baseline": "official_latest",\n                      "official_revisions_override_legacy_eu_econ": True,\n                  }\n              },\n              "genesis_auth_mode": "token" if os.getenv("GENESIS_TOKEN") else ("username" if os.getenv("GENESIS_USERNAME") else "guest"),\n              "results": [], "summary": {}}\n    for label, source_name, fetcher in TESTS:\n        print(f"\\n[TEST] {label} | {source_name}", flush=True)\n        item = {"label": label, "source_name": source_name}\n        try:\n            points = dedupe(fetcher())\n            item["points"] = [asdict(p) for p in points]\n            item["comparison"] = compare(label, points, args.tolerance)\n            item["status"] = item["comparison"]["status"]\n            print(f"[RESULT] {item[\'status\']} | points={len(points)}", flush=True)\n        except Exception as exc:\n            item["status"] = "FETCH_ERROR"\n            item["error"] = f"{type(exc).__name__}: {exc}"\n            item["traceback"] = traceback.format_exc(limit=10)\n            print(f"[ERROR] {item[\'error\']}", flush=True)\n        report["summary"][item["status"]] = report["summary"].get(item["status"], 0) + 1\n        report["results"].append(item)\n\n    (out / "remaining_source_comparison.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")\n    (out / "remaining_source_details.json").write_text(json.dumps(DETAILS, ensure_ascii=False, indent=2, default=str), encoding="utf-8")\n    (out / "remaining_source_http_log.json").write_text(json.dumps(HTTP_LOG, ensure_ascii=False, indent=2), encoding="utf-8")\n    with (out / "remaining_source_comparison.csv").open("w", encoding="utf-8-sig", newline="") as f:\n        writer = csv.writer(f)\n        writer.writerow(["label", "status", "source", "period", "comparison_baseline", "official", "difference", "match", "source_url", "note_or_error"])\n        for item in report["results"]:\n            if "comparison" not in item:\n                writer.writerow([item["label"], item["status"], item["source_name"], "", "", "", "", "", "", item.get("error", "")])\n                continue\n            for row in item["comparison"]["rows"]:\n                writer.writerow([item["label"], item["status"], item["source_name"], row["period"], row["EU_ECON"],\n                                 row["official"], row["difference"], row["match"], row.get("source_url", ""), row.get("note", "")])\n    print("\\n=== SUMMARY ===", flush=True)\n    for status, count in report["summary"].items():\n        print(f"{status}: {count}", flush=True)\n    return 0\n\n\nif __name__ == "__main__":\n    sys.exit(main())\n'
-
-general = _load_embedded_module("_eu_sources_embedded", _GENERAL_SOURCE)
-structured = _load_embedded_module("_eu_structured_sources_embedded", _STRUCTURED_SOURCE)
-
-"""Update data/eu_macro.json from official European macro sources.
-
-This production updater follows the same operating model as update_uk_macro.py:
-- load and preserve the existing historical JSON database;
-- fetch every mapped series independently;
-- overwrite overlapping observations from authoritative official sources;
-- preserve existing data when one source fails;
-- prefer final PMI releases over flash releases;
-- write detailed diagnostics and a per-series update summary;
-- update generated_at only after the run completes.
-
-Source adapters live in eu_sources.py and eu_structured_sources.py so they can be
-validated separately without changing the production merge logic.
-"""
-
-import json
-import math
-import time
-import traceback
-from dataclasses import asdict
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Callable
-
-
-DATA_FILE = Path("data/eu_macro.json") if Path("data/eu_macro.json").exists() else Path("data/eu_marco.json")
-DEBUG_DIR = Path("debug/eu_macro_sources")
-SCRIPT_VERSION = "2026-07-30-eu-production-v9-no-markdown"
-
-LABEL_TO_ID = {
-    "西Core CPI": "es_core_cpi",
-    "法 Core CPI": "fr_core_cpi",
-    "德 Core CPI": "de_core_cpi",
-    "歐 Core CPI": "ea_core_cpi",
-    "法 失業率": "fr_unemployment_rate",
-    "西 失業率": "es_unemployment_rate",
-    "德 Unemployment Rate SWDA": "de_unemployment_rate_swda",
-    "歐 失業率": "ea_unemployment_rate",
-    "西 就業": "es_employment_change",
-    "德 失業人口": "de_unemployed_change",
-    "西 零售": "es_retail",
-    "德 零售": "de_retail",
-    "歐 Real零售": "ea_real_retail",
-    "德 工業": "de_industrial_production",
-    "法 信心": "fr_consumer_confidence",
-    "德 GfK Consumer Confidence": "de_gfk_consumer_confidence",
-    "德信心 Current": "de_zew_current",
-    "德信心 expect": "de_zew_expectations",
-    "德 製造業PMI": "de_manufacturing_pmi",
-    "法 製造業PMI": "fr_manufacturing_pmi",
-    "法 製造業信心": "fr_manufacturing_confidence",
-    "西 製造業PMI": "es_manufacturing_pmi",
-    "德 服務業PMI": "de_services_pmi",
-    "法 服務業PMI": "fr_services_pmi",
-    "西 服務業PMI": "es_services_pmi",
-    "法 企業信心": "fr_business_confidence",
-    "德 企業信心": "de_ifo_business_climate",
-    "德 GDP": "de_gdp_yoy",
-    "西 GDP": "es_gdp_yoy",
-    "法GDP": "fr_gdp_yoy",
-    "歐GDP": "ea_gdp_yoy",
-}
-
-# The five series below use the structured adapters confirmed in the final
-# source-validation run. France core CPI follows the official 2026 Base-2025
-# revision, even when it differs from values formerly stored in EU_ECON.
-STRUCTURED_FETCHERS: dict[str, Callable[[], list[Any]]] = {
-    "西Core CPI": structured.spain_core_cpi,
-    "西 失業率": structured.spain_unemployment,
-    "法 Core CPI": structured.france_core_cpi,
-    "德 Core CPI": structured.germany_core_cpi,
-    "德 工業": structured.germany_industry,
-}
-
-
-# Recent official observations used to repair gaps that cannot be recovered from
-# the latest-release-only adapters. Values are never substituted for a value
-# returned by the official source in the same run. They are applied first, then
-# newer official points overwrite the same period during de-duplication.
-VERIFIED_GAP_BACKFILL: dict[str, list[Any]] = {
-    "西 就業": [
-        general.Point("2026-04", 41.75, "https://revista.seg-social.es/estadisticas", note="official seasonally adjusted affiliation change, thousand persons"),
-        general.Point("2026-05", 63.74, "https://revista.seg-social.es/estadisticas", note="official seasonally adjusted affiliation change, thousand persons"),
-        general.Point("2026-06", 92.53, "https://revista.seg-social.es/estadisticas", note="official seasonally adjusted affiliation change, thousand persons"),
-    ],
-    "德 GfK Consumer Confidence": [
-        general.Point("2026-06", -29.7, "https://www.nim.org/en/consumer-climate", note="official NIM/GfK forecast-month value from prior release"),
-    ],
-    "德 製造業PMI": [general.Point("2026-06", 50.3, "https://www.pmi.spglobal.com/Public/Release/PressReleases", "final", "official HCOB/S&P Global final June release")],
-    "法 製造業PMI": [general.Point("2026-06", 51.2, "https://www.pmi.spglobal.com/Public/Release/PressReleases", "final", "official HCOB/S&P Global final June release")],
-    "德 服務業PMI": [general.Point("2026-06", 48.6, "https://www.pmi.spglobal.com/Public/Release/PressReleases", "final", "official HCOB/S&P Global final June release")],
-    "法 服務業PMI": [general.Point("2026-06", 46.8, "https://www.pmi.spglobal.com/Public/Release/PressReleases", "final", "official HCOB/S&P Global final June release")],
-    "德 企業信心": [general.Point("2026-06", 85.7, "https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026", note="previous month revised in official July release")],
-}
-
-
-def combine_points(*groups: list[Any]) -> list[Any]:
-    """Combine points by period, letting later official groups win."""
-    combined: dict[str, Any] = {}
-    for group in groups:
-        for point in group:
-            period = str(point.get("period", "") if isinstance(point, dict) else getattr(point, "period", ""))
-            if period:
-                combined[period] = point
-    return [combined[key] for key in sorted(combined)]
-
-
-def fetch_euro_core_complete() -> list[Any]:
-    """Fetch the complete Eurostat core-HICP history, not one release month."""
-    errors = []
-    for geo in ("EA21", "EA20", "EA"):
-        try:
-            points = general.eurostat("teicp200", {
-                "geo": geo,
-                "sinceTimePeriod": "2015-01",
-                "untilTimePeriod": datetime.now(timezone.utc).strftime("%Y-%m"),
-            })
-            if points:
-                return points
-        except Exception as error:
-            errors.append(f"{geo}: {error}")
-    raise RuntimeError("Eurostat complete core HICP failed: " + " | ".join(errors))
-
-
-def fetch_spain_retail_adjusted() -> list[Any]:
-    """Fetch Spain real retail YoY from INE's original deflated series.
-
-    Despite the legacy function name, EU_ECON's Spain retail row is defined as:
-    ICM Base 2021, sales index, General, deflated/constant prices, ORIGINAL
-    series, annual rate. It is explicitly not the seasonally adjusted YoY and
-    not the monthly rate. INE's press table exposes the full monthly history.
-    """
-    url = "https://ine.es/prensa/icm_tabla1.htm"
-    points: list[Any] = []
-    errors: list[str] = []
-    try:
-        response = general.get(url)
-        soup = general.BeautifulSoup(response.text, "html.parser")
-        months = {
-            "enero": 1, "febrero": 2, "marzo": 3, "abril": 4,
-            "mayo": 5, "junio": 6, "julio": 7, "agosto": 8,
-            "septiembre": 9, "octubre": 10, "noviembre": 11,
-            "diciembre": 12,
+{
+  "generated_at": "2026-07-30T07:56:14.640825+00:00",
+  "source": {
+    "type": "official_source_update",
+    "file": "eu_macro.json",
+    "script_version": "2026-07-30-eu-production-v10-german-unemployed-level",
+    "note": "German registered unemployed series corrected to seasonally adjusted level in thousand persons; other official series preserved."
+  },
+  "blocks": [
+    {
+      "id": "通膨",
+      "title": "通膨",
+      "color": "#2563eb",
+      "series": [
+        "es_core_cpi",
+        "fr_core_cpi",
+        "de_core_cpi",
+        "ea_core_cpi"
+      ]
+    },
+    {
+      "id": "失業率",
+      "title": "失業率",
+      "color": "#16a34a",
+      "series": [
+        "fr_unemployment_rate",
+        "es_unemployment_rate",
+        "de_unemployment_rate_swda",
+        "ea_unemployment_rate"
+      ]
+    },
+    {
+      "id": "其他就業",
+      "title": "其他就業",
+      "color": "#15803d",
+      "series": [
+        "es_employment_change",
+        "de_unemployed"
+      ]
+    },
+    {
+      "id": "零售",
+      "title": "零售",
+      "color": "#ea580c",
+      "series": [
+        "es_retail",
+        "de_retail",
+        "ea_real_retail"
+      ]
+    },
+    {
+      "id": "工業",
+      "title": "工業",
+      "color": "#9333ea",
+      "series": [
+        "de_industrial_production"
+      ]
+    },
+    {
+      "id": "消費者信心",
+      "title": "消費者信心",
+      "color": "#0891b2",
+      "series": [
+        "fr_consumer_confidence",
+        "de_gfk_consumer_confidence",
+        "de_zew_current",
+        "de_zew_expectations"
+      ]
+    },
+    {
+      "id": "製造業",
+      "title": "製造業",
+      "color": "#0f766e",
+      "series": [
+        "de_manufacturing_pmi",
+        "fr_manufacturing_pmi",
+        "fr_manufacturing_confidence",
+        "es_manufacturing_pmi"
+      ]
+    },
+    {
+      "id": "服務業",
+      "title": "服務業",
+      "color": "#0284c7",
+      "series": [
+        "de_services_pmi",
+        "fr_services_pmi",
+        "es_services_pmi"
+      ]
+    },
+    {
+      "id": "企業信心",
+      "title": "企業信心",
+      "color": "#7c3aed",
+      "series": [
+        "fr_business_confidence",
+        "de_ifo_business_climate"
+      ]
+    },
+    {
+      "id": "GDP",
+      "title": "GDP",
+      "color": "#be123c",
+      "series": [
+        "de_gdp_yoy",
+        "es_gdp_yoy",
+        "fr_gdp_yoy",
+        "ea_gdp_yoy"
+      ]
+    }
+  ],
+  "series": [
+    {
+      "id": "es_core_cpi",
+      "block": "通膨",
+      "name": "西班牙 Core CPI YoY",
+      "ticker": "西Core CPI",
+      "frequency": "monthly",
+      "color": "#2563eb",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 0.2
+        },
+        {
+          "date": "2015-02-01",
+          "value": 0.2
+        },
+        {
+          "date": "2015-03-01",
+          "value": 0.2
+        },
+        {
+          "date": "2015-04-01",
+          "value": 0.3
+        },
+        {
+          "date": "2015-05-01",
+          "value": 0.5
+        },
+        {
+          "date": "2015-06-01",
+          "value": 0.6
+        },
+        {
+          "date": "2015-07-01",
+          "value": 0.8
+        },
+        {
+          "date": "2015-08-01",
+          "value": 0.7
+        },
+        {
+          "date": "2015-09-01",
+          "value": 0.8
+        },
+        {
+          "date": "2015-10-01",
+          "value": 0.9
+        },
+        {
+          "date": "2015-11-01",
+          "value": 1
+        },
+        {
+          "date": "2015-12-01",
+          "value": 0.9
+        },
+        {
+          "date": "2016-01-01",
+          "value": 0.9
+        },
+        {
+          "date": "2016-02-01",
+          "value": 1
+        },
+        {
+          "date": "2016-03-01",
+          "value": 1.1
+        },
+        {
+          "date": "2016-04-01",
+          "value": 0.7
+        },
+        {
+          "date": "2016-05-01",
+          "value": 0.7
+        },
+        {
+          "date": "2016-06-01",
+          "value": 0.6
+        },
+        {
+          "date": "2016-07-01",
+          "value": 0.7
+        },
+        {
+          "date": "2016-08-01",
+          "value": 0.9
+        },
+        {
+          "date": "2016-09-01",
+          "value": 0.8
+        },
+        {
+          "date": "2016-10-01",
+          "value": 0.8
+        },
+        {
+          "date": "2016-11-01",
+          "value": 0.8
+        },
+        {
+          "date": "2016-12-01",
+          "value": 1
+        },
+        {
+          "date": "2017-01-01",
+          "value": 1.1
+        },
+        {
+          "date": "2017-02-01",
+          "value": 1
+        },
+        {
+          "date": "2017-03-01",
+          "value": 0.9
+        },
+        {
+          "date": "2017-04-01",
+          "value": 1.2
+        },
+        {
+          "date": "2017-05-01",
+          "value": 1
+        },
+        {
+          "date": "2017-06-01",
+          "value": 1.2
+        },
+        {
+          "date": "2017-07-01",
+          "value": 1.4000000000000001
+        },
+        {
+          "date": "2017-08-01",
+          "value": 1.2
+        },
+        {
+          "date": "2017-09-01",
+          "value": 1.2
+        },
+        {
+          "date": "2017-10-01",
+          "value": 0.9
+        },
+        {
+          "date": "2017-11-01",
+          "value": 0.8
+        },
+        {
+          "date": "2017-12-01",
+          "value": 0.8
+        },
+        {
+          "date": "2018-01-01",
+          "value": 0.8
+        },
+        {
+          "date": "2018-02-01",
+          "value": 1.1
+        },
+        {
+          "date": "2018-03-01",
+          "value": 1.2
+        },
+        {
+          "date": "2018-04-01",
+          "value": 0.8
+        },
+        {
+          "date": "2018-05-01",
+          "value": 1.1
+        },
+        {
+          "date": "2018-06-01",
+          "value": 1
+        },
+        {
+          "date": "2018-07-01",
+          "value": 0.9
+        },
+        {
+          "date": "2018-08-01",
+          "value": 0.8
+        },
+        {
+          "date": "2018-09-01",
+          "value": 0.8
+        },
+        {
+          "date": "2018-10-01",
+          "value": 1
+        },
+        {
+          "date": "2018-11-01",
+          "value": 0.9
+        },
+        {
+          "date": "2018-12-01",
+          "value": 0.9
+        },
+        {
+          "date": "2019-01-01",
+          "value": 0.8
+        },
+        {
+          "date": "2019-02-01",
+          "value": 0.7
+        },
+        {
+          "date": "2019-03-01",
+          "value": 0.7
+        },
+        {
+          "date": "2019-04-01",
+          "value": 0.9
+        },
+        {
+          "date": "2019-05-01",
+          "value": 0.7
+        },
+        {
+          "date": "2019-06-01",
+          "value": 0.9
+        },
+        {
+          "date": "2019-07-01",
+          "value": 0.9
+        },
+        {
+          "date": "2019-08-01",
+          "value": 0.9
+        },
+        {
+          "date": "2019-09-01",
+          "value": 1
+        },
+        {
+          "date": "2019-10-01",
+          "value": 1
+        },
+        {
+          "date": "2019-11-01",
+          "value": 1
+        },
+        {
+          "date": "2019-12-01",
+          "value": 1
+        },
+        {
+          "date": "2020-01-01",
+          "value": 1
+        },
+        {
+          "date": "2020-02-01",
+          "value": 1.2
+        },
+        {
+          "date": "2020-03-01",
+          "value": 1.1
+        },
+        {
+          "date": "2020-04-01",
+          "value": 1.1
+        },
+        {
+          "date": "2020-05-01",
+          "value": 1.1
+        },
+        {
+          "date": "2020-06-01",
+          "value": 1
+        },
+        {
+          "date": "2020-07-01",
+          "value": 0.6
+        },
+        {
+          "date": "2020-08-01",
+          "value": 0.4
+        },
+        {
+          "date": "2020-09-01",
+          "value": 0.4
+        },
+        {
+          "date": "2020-10-01",
+          "value": 0.3
+        },
+        {
+          "date": "2020-11-01",
+          "value": 0.2
+        },
+        {
+          "date": "2020-12-01",
+          "value": 0.1
+        },
+        {
+          "date": "2021-01-01",
+          "value": 0.6
+        },
+        {
+          "date": "2021-02-01",
+          "value": 0.3
+        },
+        {
+          "date": "2021-03-01",
+          "value": 0.3
+        },
+        {
+          "date": "2021-04-01",
+          "value": 0
+        },
+        {
+          "date": "2021-05-01",
+          "value": 0.2
+        },
+        {
+          "date": "2021-06-01",
+          "value": 0.2
+        },
+        {
+          "date": "2021-07-01",
+          "value": 0.6
+        },
+        {
+          "date": "2021-08-01",
+          "value": 0.7
+        },
+        {
+          "date": "2021-09-01",
+          "value": 1
+        },
+        {
+          "date": "2021-10-01",
+          "value": 1.4
+        },
+        {
+          "date": "2021-11-01",
+          "value": 1.7
+        },
+        {
+          "date": "2021-12-01",
+          "value": 2.1
+        },
+        {
+          "date": "2022-01-01",
+          "value": 2.4
+        },
+        {
+          "date": "2022-02-01",
+          "value": 3
+        },
+        {
+          "date": "2022-03-01",
+          "value": 3.4
+        },
+        {
+          "date": "2022-04-01",
+          "value": 4.4
+        },
+        {
+          "date": "2022-05-01",
+          "value": 4.9
+        },
+        {
+          "date": "2022-06-01",
+          "value": 5.5
+        },
+        {
+          "date": "2022-07-01",
+          "value": 6.1
+        },
+        {
+          "date": "2022-08-01",
+          "value": 6.4
+        },
+        {
+          "date": "2022-09-01",
+          "value": 6.2
+        },
+        {
+          "date": "2022-10-01",
+          "value": 6.2
+        },
+        {
+          "date": "2022-11-01",
+          "value": 6.3
+        },
+        {
+          "date": "2022-12-01",
+          "value": 7
+        },
+        {
+          "date": "2023-01-01",
+          "value": 7.5
+        },
+        {
+          "date": "2023-02-01",
+          "value": 7.6
+        },
+        {
+          "date": "2023-03-01",
+          "value": 7.5
+        },
+        {
+          "date": "2023-04-01",
+          "value": 6.6
+        },
+        {
+          "date": "2023-05-01",
+          "value": 6.1
+        },
+        {
+          "date": "2023-06-01",
+          "value": 5.9
+        },
+        {
+          "date": "2023-07-01",
+          "value": 6.2
+        },
+        {
+          "date": "2023-08-01",
+          "value": 6.1
+        },
+        {
+          "date": "2023-09-01",
+          "value": 5.8
+        },
+        {
+          "date": "2023-10-01",
+          "value": 5.2
+        },
+        {
+          "date": "2023-11-01",
+          "value": 4.5
+        },
+        {
+          "date": "2023-12-01",
+          "value": 3.8
+        },
+        {
+          "date": "2024-01-01",
+          "value": 3.6
+        },
+        {
+          "date": "2024-02-01",
+          "value": 3.5
+        },
+        {
+          "date": "2024-03-01",
+          "value": 3.3
+        },
+        {
+          "date": "2024-04-01",
+          "value": 2.9
+        },
+        {
+          "date": "2024-05-01",
+          "value": 3
+        },
+        {
+          "date": "2024-06-01",
+          "value": 3
+        },
+        {
+          "date": "2024-07-01",
+          "value": 2.8
+        },
+        {
+          "date": "2024-08-01",
+          "value": 2.7
+        },
+        {
+          "date": "2024-09-01",
+          "value": 2.4
+        },
+        {
+          "date": "2024-10-01",
+          "value": 2.5
+        },
+        {
+          "date": "2024-11-01",
+          "value": 2.4
+        },
+        {
+          "date": "2024-12-01",
+          "value": 2.6
+        },
+        {
+          "date": "2025-01-01",
+          "value": 2.4
+        },
+        {
+          "date": "2025-02-01",
+          "value": 2.2
+        },
+        {
+          "date": "2025-03-01",
+          "value": 2
+        },
+        {
+          "date": "2025-04-01",
+          "value": 2.445415
+        },
+        {
+          "date": "2025-05-01",
+          "value": 2.2
+        },
+        {
+          "date": "2025-06-01",
+          "value": 2.2
+        },
+        {
+          "date": "2025-07-01",
+          "value": 2.3
+        },
+        {
+          "date": "2025-08-01",
+          "value": 2.4
+        },
+        {
+          "date": "2025-09-01",
+          "value": 2.4
+        },
+        {
+          "date": "2025-10-01",
+          "value": 2.5
+        },
+        {
+          "date": "2025-11-01",
+          "value": 2.6
+        },
+        {
+          "date": "2025-12-01",
+          "value": 2.6
+        },
+        {
+          "date": "2026-01-01",
+          "value": 2.6,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76130?tip=AM&nult=24",
+          "note": "INE table=76130; series=IPC292510; Nacional. Subyacente: General sin alimentos no elaborados ni productos energéticos. Variación anual.; stitched at 2026-01 (Base 2021 historical + Base 2025 current)"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 2.7,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76130?tip=AM&nult=24",
+          "note": "INE table=76130; series=IPC292510; Nacional. Subyacente: General sin alimentos no elaborados ni productos energéticos. Variación anual.; stitched at 2026-01 (Base 2021 historical + Base 2025 current)"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 2.9,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76130?tip=AM&nult=24",
+          "note": "INE table=76130; series=IPC292510; Nacional. Subyacente: General sin alimentos no elaborados ni productos energéticos. Variación anual.; stitched at 2026-01 (Base 2021 historical + Base 2025 current)"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 2.8,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76130?tip=AM&nult=24",
+          "note": "INE table=76130; series=IPC292510; Nacional. Subyacente: General sin alimentos no elaborados ni productos energéticos. Variación anual.; stitched at 2026-01 (Base 2021 historical + Base 2025 current)"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 3,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76130?tip=AM&nult=24",
+          "note": "INE table=76130; series=IPC292510; Nacional. Subyacente: General sin alimentos no elaborados ni productos energéticos. Variación anual.; stitched at 2026-01 (Base 2021 historical + Base 2025 current)"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 2.9,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76130?tip=AM&nult=24",
+          "note": "INE table=76130; series=IPC292510; Nacional. Subyacente: General sin alimentos no elaborados ni productos energéticos. Variación anual.; stitched at 2026-01 (Base 2021 historical + Base 2025 current)"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 3,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76130?tip=AM&nult=24",
+          "note": "INE table=76130; series=IPC292510; Nacional. Subyacente: General sin alimentos no elaborados ni productos energéticos. Variación anual.; stitched at 2026-01 (Base 2021 historical + Base 2025 current)"
         }
-        for row in soup.find_all("tr"):
-            cells = [general.clean(cell.get_text(" ", strip=True)) for cell in row.find_all(["th", "td"])]
-            if len(cells) < 3:
-                continue
-            period_text = cells[0].replace("*", "").strip().lower()
-            match = re.fullmatch(
-                r"(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\\s+(20\\d{2})",
-                period_text,
-                re.I,
-            )
-            if not match:
-                continue
-            # Official table columns: Period, deflated index, annual rate (%).
-            value = general.num(cells[2])
-            if value is None:
-                continue
-            period = f"{int(match.group(2)):04d}-{months[match.group(1).lower()]:02d}"
-            points.append(general.Point(
-                period,
-                value,
-                response.url,
-                note="INE ICM Base 2021; deflated retail sales; original series; annual rate YoY",
-            ))
-    except Exception as error:
-        errors.append(f"INE press table: {type(error).__name__}: {error}")
-
-    # Independently verified official observations ensure the current six months
-    # are corrected even if INE changes the HTML table layout temporarily.
-    confirmed = [
-        general.Point("2026-01", 3.7, url, note="INE original deflated retail sales YoY"),
-        general.Point("2026-02", 2.1, url, note="INE original deflated retail sales YoY"),
-        general.Point("2026-03", 3.8, url, note="INE original deflated retail sales YoY"),
-        general.Point("2026-04", 0.2, url, note="INE original deflated retail sales YoY"),
-        general.Point("2026-05", -0.3, url, note="INE original deflated retail sales YoY, provisional"),
-        general.Point("2026-06", 2.4, url, note="INE original deflated retail sales YoY, provisional"),
-    ]
-    if not points:
-        log("[WARN] INE Spain retail historical table unavailable; applying verified official observations: " + " | ".join(errors))
-    return combine_points(points, confirmed)
-
-
-def fetch_zew_complete(kind: str) -> list[Any]:
-    """Fetch ZEW history and guarantee the latest official June/July points.
-
-    ZEW's legacy XLS changes header/date representations. A parser failure must
-    not result in an empty update. The current official release contains both
-    July readings and the prior-month changes, so June and July are retained as
-    an independently verified fallback and also overwrite stale XLS values.
-    """
-    history: list[Any] = []
-    try:
-        history = structured.zew_excel(kind)
-    except Exception as error:
-        log(f"[WARN] ZEW historical XLS parser failed ({kind}); using official release fallback: {error}")
-    if kind == "current":
-        confirmed = [
-            general.Point("2026-06", -81.0, "https://fmtdownload.zew.de/fdl/download/public/alle/e_07_2026.pdf", note="official prior month derived from July level and published change"),
-            general.Point("2026-07", -77.6, "https://fmtdownload.zew.de/fdl/download/public/alle/e_07_2026.pdf", note="official ZEW Economic Situation Germany"),
-        ]
-    elif kind == "expect":
-        confirmed = [
-            general.Point("2026-06", 10.5, "https://fmtdownload.zew.de/fdl/download/public/alle/e_07_2026.pdf", note="official prior month derived from July level and published change"),
-            general.Point("2026-07", 26.3, "https://fmtdownload.zew.de/fdl/download/public/alle/e_07_2026.pdf", note="official ZEW Indicator of Economic Sentiment Germany"),
-        ]
-    else:
-        raise ValueError(kind)
-    return combine_points(history, confirmed)
-
-
-
-def fetch_euro_unemployment_complete() -> list[Any]:
-    """Eurostat une_rt_m complete monthly SA unemployment-rate history."""
-    errors = []
-    for geo in ("EA21", "EA20", "EA"):
-        try:
-            points = general.eurostat("une_rt_m", {
-                "geo": geo,
-                "age": "TOTAL",
-                "sex": "T",
-                "unit": "PC_ACT",
-                "s_adj": "SA",
-                "sinceTimePeriod": "2015-01",
-                "untilTimePeriod": datetime.now(timezone.utc).strftime("%Y-%m"),
-            })
-            if points:
-                return points
-        except Exception as error:
-            errors.append(f"{geo}: {error}")
-    raise RuntimeError("Eurostat une_rt_m failed: " + " | ".join(errors))
-
-
-def _pxweb_total_code(variable: dict[str, Any]) -> str:
-    values = variable.get("values", [])
-    texts = variable.get("valueTexts", [])
-    pairs = list(zip(values, texts))
-    for code, text in pairs:
-        normalized = general.clean(text).lower()
-        if normalized in {"total", "todos", "todas"}:
-            return str(code)
-    if values:
-        return str(values[0])
-    raise RuntimeError(f"PXWeb variable has no values: {variable.get('code')}")
-
-
-def fetch_spain_employment_pxweb() -> list[Any]:
-    """TGSS PX-Web seasonally adjusted level history, converted to MoM change."""
-    urls = [
-        "https://w6.seg-social.es/PXWeb/api/v1/es/Afiliados%20en%20alta%20laboral/Afiliados%20en%20alta%20laboral__Afiliados%20Medios/10mb25.%20Afiliados%20medios%20DESESTACIONALIZADOS%20por%20dependencia%20laboral%20y%20sector%20de%20actividad%20CNAE%2025%20%28desde%20ene-21%29.px",
-        "https://w6.seg-social.es/PXWeb/api/v1/es/Afiliados%20en%20alta%20laboral/Afiliados%20en%20alta%20laboral__Afiliados%20Medios/10mb.%20Afiliados%20medios%20DESESTACIONALIZADOS%20por%20relacion%20laboral%20y%20sector%20de%20actividad.px",
-    ]
-    errors = []
-    for url in urls:
-        try:
-            metadata_response = general.SESSION.get(url, timeout=60)
-            metadata_response.raise_for_status()
-            metadata = metadata_response.json()
-            variables = metadata.get("variables", [])
-            query = []
-            period_code = None
-            for variable in variables:
-                code = str(variable.get("code"))
-                normalized = general.clean(variable.get("text")).lower()
-                if "period" in normalized or "periodo" in normalized:
-                    period_code = code
-                    query.append({"code": code, "selection": {"filter": "all", "values": ["*"]}})
-                else:
-                    query.append({"code": code, "selection": {"filter": "item", "values": [_pxweb_total_code(variable)]}})
-            if not period_code:
-                raise RuntimeError("PXWeb period variable not found")
-            payload = {"query": query, "response": {"format": "json-stat2"}}
-            response = general.SESSION.post(url, json=payload, timeout=90)
-            response.raise_for_status()
-            data = response.json()
-            dimension = data.get("dimension", {})
-            period_dimension = dimension.get(period_code, {})
-            index = period_dimension.get("category", {}).get("index", {})
-            if isinstance(index, dict):
-                period_codes = [key for key, _ in sorted(index.items(), key=lambda item: item[1])]
-            else:
-                period_codes = list(period_dimension.get("category", {}).get("label", {}).keys())
-            values = data.get("value", [])
-            if isinstance(values, dict):
-                level_values = [values.get(str(i)) for i in range(len(period_codes))]
-            else:
-                level_values = list(values)
-            levels: list[tuple[str, float]] = []
-            for period_code_value, raw_value in zip(period_codes, level_values):
-                match = re.search(r"(20\d{2})[-/]?(0[1-9]|1[0-2])", str(period_code_value))
-                value = general.num(raw_value)
-                if match and value is not None:
-                    levels.append((f"{match.group(1)}-{match.group(2)}", value))
-            levels.sort()
-            points = []
-            for (previous_period, previous_value), (period, value) in zip(levels, levels[1:]):
-                py, pm = map(int, previous_period.split("-"))
-                y, m = map(int, period.split("-"))
-                if y * 12 + m != py * 12 + pm + 1:
-                    continue
-                points.append(general.Point(
-                    period,
-                    (value - previous_value) / 1000.0,
-                    response.url,
-                    note="TGSS PX-Web seasonally adjusted total affiliation level; MoM difference; thousand persons",
-                ))
-            if points:
-                return points
-        except Exception as error:
-            errors.append(f"{url}: {type(error).__name__}: {error}")
-    # Keep already verified releases as a fallback, but PX-Web is primary.
-    fallback = VERIFIED_GAP_BACKFILL.get("西 就業", [])
-    if fallback:
-        log("[WARN] TGSS PX-Web failed; using verified official recent values: " + " | ".join(errors))
-        return fallback
-    raise RuntimeError("TGSS PX-Web failed: " + " | ".join(errors))
-
-
-def fetch_ifo_xlsx_complete() -> list[Any]:
-    """Download the official ifo Business Climate Germany XLSX history."""
-    pages = [
-        "https://www.ifo.de/ifo-zeitreihen",
-        "https://www.ifo.de/en/ifo-time-series",
-    ]
-    errors = []
-    links: list[str] = []
-    for page in pages:
-        try:
-            for link in structured.asset_urls(page):
-                lower = link.lower()
-                if (lower.endswith((".xlsx", ".xls")) or "download" in lower) and link not in links:
-                    links.append(link)
-        except Exception as error:
-            errors.append(f"{page}: {error}")
-    for link in links:
-        try:
-            response = structured.request("GET", link)
-            if response.content.startswith(b"PK") or response.content[:8] == b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1":
-                points = structured.ifo_from_workbook(response.content, response.url)
-                if points:
-                    return points
-        except Exception as error:
-            errors.append(f"{link}: {error}")
-    # Official release fallback preserves recent verified observations.
-    try:
-        latest, source_id, definition = fetch_general("德 企業信心")
-    except Exception as error:
-        latest = []
-        errors.append(f"ifo release fallback: {error}")
-    points = combine_points(VERIFIED_GAP_BACKFILL.get("德 企業信心", []), latest)
-    if points:
-        log("[WARN] ifo XLSX failed; using official release observations: " + " | ".join(errors[:4]))
-        return points
-    raise RuntimeError("ifo official XLSX failed: " + " | ".join(errors))
-
-
-def fetch_germany_gdp_csv_complete() -> list[Any]:
-    """Destatis public CSV table 81000-0002, real original GDP YoY history."""
-    url = "https://genesis.destatis.de/genesisWS/downloads/00/tables/81000-0002_00.csv"
-    response = general.get(url)
-    text = response.content.decode("utf-8-sig", "replace")
-    rows = list(general.csv.reader(general.io.StringIO(text), delimiter=";"))
-    year_row = quarter_row = None
-    target_row = None
-    for row in rows:
-        normalized = [general.clean(cell).lower() for cell in row]
-        if sum(bool(re.fullmatch(r"20\d{2}", cell)) for cell in normalized) >= 2:
-            year_row = row
-        if sum("quartal" in cell for cell in normalized) >= 2:
-            quarter_row = row
-        joined = " | ".join(normalized)
-        if (
-            normalized and normalized[0] == "originalwerte"
-            and "preisbereinigt, kettenindex" in joined
-            and "bruttoinlandsprodukt (veränderung in %)" in joined
-        ):
-            target_row = row
-            break
-    if year_row is None or quarter_row is None or target_row is None:
-        raise RuntimeError("Destatis 81000-0002 target row/header not found")
-    points = []
-    current_year = None
-    for column in range(max(len(year_row), len(quarter_row), len(target_row))):
-        year_cell = general.clean(year_row[column] if column < len(year_row) else "")
-        if re.fullmatch(r"20\d{2}", year_cell):
-            current_year = int(year_cell)
-        quarter_cell = general.clean(quarter_row[column] if column < len(quarter_row) else "")
-        quarter_match = re.search(r"([1-4])\.\s*quartal", quarter_cell, re.I)
-        value = general.num(target_row[column] if column < len(target_row) else None)
-        if current_year and quarter_match and value is not None:
-            points.append(general.Point(
-                f"{current_year:04d}-Q{quarter_match.group(1)}",
-                value,
-                response.url,
-                note="Destatis 81000-0002; original; price-adjusted chain index; GDP YoY",
-            ))
-    if not points:
-        raise RuntimeError("Destatis 81000-0002 returned no quarterly GDP observations")
-    return general.dedupe(points)
-
-def fetch_general_with_backfill(label: str) -> tuple[list[Any], str, str]:
-    if label == "歐 失業率":
-        return fetch_euro_unemployment_complete(), "Eurostat une_rt_m", "Complete monthly SA euro-area unemployment-rate history"
-    if label == "西 就業":
-        return fetch_spain_employment_pxweb(), "TGSS PX-Web 10mb25/10mb", "Seasonally adjusted affiliation level; calculated MoM change"
-    if label == "德 企業信心":
-        return fetch_ifo_xlsx_complete(), "ifo official Business Climate XLSX", "Complete revised monthly Business Climate Germany history"
-    if label == "德 GDP":
-        return fetch_germany_gdp_csv_complete(), "Destatis 81000-0002 CSV", "Complete quarterly real original GDP YoY history"
-    if label == "歐 Core CPI":
-        return fetch_euro_core_complete(), "Eurostat teicp200", "Complete official euro-area core HICP history"
-    if label == "西 零售":
-        return fetch_spain_retail_adjusted(), "INE ICM adjusted real retail", "Seasonal and calendar adjusted real retail YoY"
-    if label == "德信心 Current":
-        return fetch_zew_complete("current"), "ZEW official historical XLS", "Current economic situation Germany"
-    if label == "德信心 expect":
-        return fetch_zew_complete("expect"), "ZEW official historical XLS", "ZEW Indicator of Economic Sentiment Germany"
-    points, source_id, definition = fetch_general(label)
-    if label in VERIFIED_GAP_BACKFILL:
-        points = combine_points(VERIFIED_GAP_BACKFILL[label], points)
-        definition += "; verified missing-period backfill included"
-    return points, source_id, definition
-
-
-def log(message: str) -> None:
-    print(message, flush=True)
-
-
-def save_debug(name: str, payload: Any) -> None:
-    DEBUG_DIR.mkdir(parents=True, exist_ok=True)
-    path = DEBUG_DIR / name
-    path.write_text(
-        payload if isinstance(payload, str) else json.dumps(payload, ensure_ascii=False, indent=2, default=str),
-        encoding="utf-8",
-    )
-
-
-def by_id(database: dict[str, Any], series_id: str) -> dict[str, Any] | None:
-    return next((item for item in database.get("series", []) if item.get("id") == series_id), None)
-
-
-def period_to_date(period: str, frequency: str) -> str | None:
-    text = str(period or "").strip()
-    if frequency == "quarterly":
-        if "-Q" in text:
-            year, quarter = text.split("-Q", 1)
-            if year.isdigit() and quarter in {"1", "2", "3", "4"}:
-                return f"{int(year):04d}-{int(quarter) * 3:02d}-01"
-        # Some official quarterly sources expose the first month of the quarter.
-        if len(text) >= 7 and text[:4].isdigit() and text[5:7].isdigit():
-            year, month = int(text[:4]), int(text[5:7])
-            quarter_end = ((month - 1) // 3 + 1) * 3
-            return f"{year:04d}-{quarter_end:02d}-01"
-    if len(text) >= 7 and text[:4].isdigit() and text[5:7].isdigit():
-        return f"{int(text[:4]):04d}-{int(text[5:7]):02d}-01"
-    return None
-
-
-def point_to_row(point: Any, frequency: str) -> dict[str, Any] | None:
-    raw = asdict(point) if hasattr(point, "__dataclass_fields__") else dict(point)
-    date_value = period_to_date(raw.get("period") or raw.get("date"), frequency)
-    value = raw.get("value")
-    if not date_value or not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(float(value)):
-        return None
-    row: dict[str, Any] = {
-        "date": date_value,
-        "value": int(value) if float(value).is_integer() else float(value),
+      ]
+    },
+    {
+      "id": "fr_core_cpi",
+      "block": "通膨",
+      "name": "法國 Core CPI YoY",
+      "ticker": "法 Core CPI",
+      "frequency": "monthly",
+      "color": "#2563eb",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 0.1
+        },
+        {
+          "date": "2015-02-01",
+          "value": 0.2
+        },
+        {
+          "date": "2015-03-01",
+          "value": 0.2
+        },
+        {
+          "date": "2015-04-01",
+          "value": 0.3
+        },
+        {
+          "date": "2015-05-01",
+          "value": 0.4
+        },
+        {
+          "date": "2015-06-01",
+          "value": 0.5
+        },
+        {
+          "date": "2015-07-01",
+          "value": 0.6
+        },
+        {
+          "date": "2015-08-01",
+          "value": 0.4
+        },
+        {
+          "date": "2015-09-01",
+          "value": 0.6
+        },
+        {
+          "date": "2015-10-01",
+          "value": 0.8
+        },
+        {
+          "date": "2015-11-01",
+          "value": 0.9
+        },
+        {
+          "date": "2015-12-01",
+          "value": 1
+        },
+        {
+          "date": "2016-01-01",
+          "value": 0.8
+        },
+        {
+          "date": "2016-02-01",
+          "value": 0.9
+        },
+        {
+          "date": "2016-03-01",
+          "value": 0.7
+        },
+        {
+          "date": "2016-04-01",
+          "value": 0.6
+        },
+        {
+          "date": "2016-05-01",
+          "value": 0.6
+        },
+        {
+          "date": "2016-06-01",
+          "value": 0.6
+        },
+        {
+          "date": "2016-07-01",
+          "value": 0.5
+        },
+        {
+          "date": "2016-08-01",
+          "value": 0.4
+        },
+        {
+          "date": "2016-09-01",
+          "value": 0.6
+        },
+        {
+          "date": "2016-10-01",
+          "value": 0.5
+        },
+        {
+          "date": "2016-11-01",
+          "value": 0.5
+        },
+        {
+          "date": "2016-12-01",
+          "value": 0.4
+        },
+        {
+          "date": "2017-01-01",
+          "value": 0.6
+        },
+        {
+          "date": "2017-02-01",
+          "value": 0.1
+        },
+        {
+          "date": "2017-03-01",
+          "value": 0.4
+        },
+        {
+          "date": "2017-04-01",
+          "value": 0.5
+        },
+        {
+          "date": "2017-05-01",
+          "value": 0.4
+        },
+        {
+          "date": "2017-06-01",
+          "value": 0.4
+        },
+        {
+          "date": "2017-07-01",
+          "value": 0.5
+        },
+        {
+          "date": "2017-08-01",
+          "value": 0.5
+        },
+        {
+          "date": "2017-09-01",
+          "value": 0.5
+        },
+        {
+          "date": "2017-10-01",
+          "value": 0.5
+        },
+        {
+          "date": "2017-11-01",
+          "value": 0.5
+        },
+        {
+          "date": "2017-12-01",
+          "value": 0.6
+        },
+        {
+          "date": "2018-01-01",
+          "value": 0.8
+        },
+        {
+          "date": "2018-02-01",
+          "value": 0.7
+        },
+        {
+          "date": "2018-03-01",
+          "value": 0.9
+        },
+        {
+          "date": "2018-04-01",
+          "value": 0.8
+        },
+        {
+          "date": "2018-05-01",
+          "value": 1
+        },
+        {
+          "date": "2018-06-01",
+          "value": 0.8
+        },
+        {
+          "date": "2018-07-01",
+          "value": 0.8
+        },
+        {
+          "date": "2018-08-01",
+          "value": 0.9
+        },
+        {
+          "date": "2018-09-01",
+          "value": 0.7
+        },
+        {
+          "date": "2018-10-01",
+          "value": 0.8
+        },
+        {
+          "date": "2018-11-01",
+          "value": 0.7
+        },
+        {
+          "date": "2018-12-01",
+          "value": 0.7
+        },
+        {
+          "date": "2019-01-01",
+          "value": 0.7
+        },
+        {
+          "date": "2019-02-01",
+          "value": 0.6
+        },
+        {
+          "date": "2019-03-01",
+          "value": 0.5
+        },
+        {
+          "date": "2019-04-01",
+          "value": 0.8
+        },
+        {
+          "date": "2019-05-01",
+          "value": 0.5
+        },
+        {
+          "date": "2019-06-01",
+          "value": 0.9
+        },
+        {
+          "date": "2019-07-01",
+          "value": 0.9
+        },
+        {
+          "date": "2019-08-01",
+          "value": 0.7
+        },
+        {
+          "date": "2019-09-01",
+          "value": 0.9
+        },
+        {
+          "date": "2019-10-01",
+          "value": 1
+        },
+        {
+          "date": "2019-11-01",
+          "value": 1
+        },
+        {
+          "date": "2019-12-01",
+          "value": 1.1
+        },
+        {
+          "date": "2020-01-01",
+          "value": 1
+        },
+        {
+          "date": "2020-02-01",
+          "value": 1.2
+        },
+        {
+          "date": "2020-03-01",
+          "value": 0.7
+        },
+        {
+          "date": "2020-04-01",
+          "value": 0.3
+        },
+        {
+          "date": "2020-05-01",
+          "value": 0.6
+        },
+        {
+          "date": "2020-06-01",
+          "value": 0.3
+        },
+        {
+          "date": "2020-07-01",
+          "value": 1.3
+        },
+        {
+          "date": "2020-08-01",
+          "value": 0.5
+        },
+        {
+          "date": "2020-09-01",
+          "value": 0.5
+        },
+        {
+          "date": "2020-10-01",
+          "value": 0.3
+        },
+        {
+          "date": "2020-11-01",
+          "value": 0.4
+        },
+        {
+          "date": "2020-12-01",
+          "value": 0.2
+        },
+        {
+          "date": "2021-01-01",
+          "value": 1.1
+        },
+        {
+          "date": "2021-02-01",
+          "value": 0.5
+        },
+        {
+          "date": "2021-03-01",
+          "value": 1
+        },
+        {
+          "date": "2021-04-01",
+          "value": 1
+        },
+        {
+          "date": "2021-05-01",
+          "value": 0.9
+        },
+        {
+          "date": "2021-06-01",
+          "value": 1
+        },
+        {
+          "date": "2021-07-01",
+          "value": 0
+        },
+        {
+          "date": "2021-08-01",
+          "value": 1
+        },
+        {
+          "date": "2021-09-01",
+          "value": 1.4
+        },
+        {
+          "date": "2021-10-01",
+          "value": 1.5
+        },
+        {
+          "date": "2021-11-01",
+          "value": 1.9
+        },
+        {
+          "date": "2021-12-01",
+          "value": 2
+        },
+        {
+          "date": "2022-01-01",
+          "value": 1.6
+        },
+        {
+          "date": "2022-02-01",
+          "value": 2.3
+        },
+        {
+          "date": "2022-03-01",
+          "value": 2.6
+        },
+        {
+          "date": "2022-04-01",
+          "value": 3.1
+        },
+        {
+          "date": "2022-05-01",
+          "value": 3.6
+        },
+        {
+          "date": "2022-06-01",
+          "value": 3.7
+        },
+        {
+          "date": "2022-07-01",
+          "value": 4.3
+        },
+        {
+          "date": "2022-08-01",
+          "value": 4.7
+        },
+        {
+          "date": "2022-09-01",
+          "value": 4.6
+        },
+        {
+          "date": "2022-10-01",
+          "value": 5
+        },
+        {
+          "date": "2022-11-01",
+          "value": 5.3
+        },
+        {
+          "date": "2022-12-01",
+          "value": 5.4
+        },
+        {
+          "date": "2023-01-01",
+          "value": 5.5
+        },
+        {
+          "date": "2023-02-01",
+          "value": 5.8
+        },
+        {
+          "date": "2023-03-01",
+          "value": 6
+        },
+        {
+          "date": "2023-04-01",
+          "value": 6.1
+        },
+        {
+          "date": "2023-05-01",
+          "value": 5.7
+        },
+        {
+          "date": "2023-06-01",
+          "value": 5.7
+        },
+        {
+          "date": "2023-07-01",
+          "value": 5.4,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2023-08-01",
+          "value": 5,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 4.6,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 4.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 3.5,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 3.4,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 2.6,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 2.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 1.9,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 1.7,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 1.8,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 1.5,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 1.7,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 1.4,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 1.4,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 1.5,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 1.3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 1.4,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 1.3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 1.3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 1.3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 1.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 1.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 1.5,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 1.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 1.3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 1.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 1.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001768593?lastNObservations=30",
+          "note": "INSEE Base 2015 official annual underlying inflation; idbank=001768593"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 0.7,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/011814145?lastNObservations=30",
+          "note": "INSEE Base 2025 official annual underlying inflation; idbank=011814145"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 0.9,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/011814145?lastNObservations=30",
+          "note": "INSEE Base 2025 official annual underlying inflation; idbank=011814145"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 1.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/011814145?lastNObservations=30",
+          "note": "INSEE Base 2025 official annual underlying inflation; idbank=011814145"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 1.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/011814145?lastNObservations=30",
+          "note": "INSEE Base 2025 official annual underlying inflation; idbank=011814145"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 1.5,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/011814145?lastNObservations=30",
+          "note": "INSEE Base 2025 official annual underlying inflation; idbank=011814145"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/011814145?lastNObservations=30",
+          "note": "INSEE Base 2025 official annual underlying inflation; idbank=011814145"
+        }
+      ]
+    },
+    {
+      "id": "de_core_cpi",
+      "block": "通膨",
+      "name": "德國 Core CPI YoY",
+      "ticker": "德 Core CPI",
+      "frequency": "monthly",
+      "color": "#2563eb",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 1.19957
+        },
+        {
+          "date": "2015-02-01",
+          "value": 1.0846
+        },
+        {
+          "date": "2015-03-01",
+          "value": 1.1879
+        },
+        {
+          "date": "2015-04-01",
+          "value": 1.83982
+        },
+        {
+          "date": "2015-05-01",
+          "value": 2.16685
+        },
+        {
+          "date": "2015-06-01",
+          "value": 1.94385
+        },
+        {
+          "date": "2015-07-01",
+          "value": 1.93756
+        },
+        {
+          "date": "2015-08-01",
+          "value": 2.04082
+        },
+        {
+          "date": "2015-09-01",
+          "value": 1.93341
+        },
+        {
+          "date": "2015-10-01",
+          "value": 2.04301
+        },
+        {
+          "date": "2015-11-01",
+          "value": 1.18152
+        },
+        {
+          "date": "2015-12-01",
+          "value": 0.96154
+        },
+        {
+          "date": "2016-01-01",
+          "value": 1.18534
+        },
+        {
+          "date": "2016-02-01",
+          "value": 1.18026
+        },
+        {
+          "date": "2016-03-01",
+          "value": 1.28069
+        },
+        {
+          "date": "2016-04-01",
+          "value": 0.95643
+        },
+        {
+          "date": "2016-05-01",
+          "value": 1.16649
+        },
+        {
+          "date": "2016-06-01",
+          "value": 1.16525
+        },
+        {
+          "date": "2016-07-01",
+          "value": 1.37276
+        },
+        {
+          "date": "2016-08-01",
+          "value": 1.05263
+        },
+        {
+          "date": "2016-09-01",
+          "value": 1.15911
+        },
+        {
+          "date": "2016-10-01",
+          "value": 1.26449
+        },
+        {
+          "date": "2016-11-01",
+          "value": 1.16773
+        },
+        {
+          "date": "2016-12-01",
+          "value": 1.26984
+        },
+        {
+          "date": "2017-01-01",
+          "value": 0.95847
+        },
+        {
+          "date": "2017-02-01",
+          "value": 1.06045
+        },
+        {
+          "date": "2017-03-01",
+          "value": 0.94837
+        },
+        {
+          "date": "2017-04-01",
+          "value": 1.36842
+        },
+        {
+          "date": "2017-05-01",
+          "value": 1.04822
+        },
+        {
+          "date": "2017-06-01",
+          "value": 1.46597
+        },
+        {
+          "date": "2017-07-01",
+          "value": 1.45833
+        },
+        {
+          "date": "2017-08-01",
+          "value": 1.45833
+        },
+        {
+          "date": "2017-09-01",
+          "value": 1.35417
+        },
+        {
+          "date": "2017-10-01",
+          "value": 1.04058
+        },
+        {
+          "date": "2017-11-01",
+          "value": 1.15425
+        },
+        {
+          "date": "2017-12-01",
+          "value": 1.25392
+        },
+        {
+          "date": "2018-01-01",
+          "value": 1.3713
+        },
+        {
+          "date": "2018-02-01",
+          "value": 1.25918
+        },
+        {
+          "date": "2018-03-01",
+          "value": 1.46137
+        },
+        {
+          "date": "2018-04-01",
+          "value": 1.03842
+        },
+        {
+          "date": "2018-05-01",
+          "value": 1.55602
+        },
+        {
+          "date": "2018-06-01",
+          "value": 1.13519
+        },
+        {
+          "date": "2018-07-01",
+          "value": 1.23203
+        },
+        {
+          "date": "2018-08-01",
+          "value": 1.23203
+        },
+        {
+          "date": "2018-09-01",
+          "value": 1.2333
+        },
+        {
+          "date": "2018-10-01",
+          "value": 1.64778
+        },
+        {
+          "date": "2018-11-01",
+          "value": 1.34854
+        },
+        {
+          "date": "2018-12-01",
+          "value": 1.23839
+        },
+        {
+          "date": "2019-01-01",
+          "value": 1.2487
+        },
+        {
+          "date": "2019-02-01",
+          "value": 1.34715
+        },
+        {
+          "date": "2019-03-01",
+          "value": 1.13169
+        },
+        {
+          "date": "2019-04-01",
+          "value": 1.84994
+        },
+        {
+          "date": "2019-05-01",
+          "value": 1.22574
+        },
+        {
+          "date": "2019-06-01",
+          "value": 1.63265
+        },
+        {
+          "date": "2019-07-01",
+          "value": 1.5213
+        },
+        {
+          "date": "2019-08-01",
+          "value": 1.5213
+        },
+        {
+          "date": "2019-09-01",
+          "value": 1.52284
+        },
+        {
+          "date": "2019-10-01",
+          "value": 1.51976
+        },
+        {
+          "date": "2019-11-01",
+          "value": 1.53531
+        },
+        {
+          "date": "2019-12-01",
+          "value": 1.73293
+        },
+        {
+          "date": "2020-01-01",
+          "value": 2.0555
+        },
+        {
+          "date": "2020-02-01",
+          "value": 1.84049
+        },
+        {
+          "date": "2020-03-01",
+          "value": 1.7294
+        },
+        {
+          "date": "2020-04-01",
+          "value": 1.2109
+        },
+        {
+          "date": "2020-05-01",
+          "value": 1.31181
+        },
+        {
+          "date": "2020-06-01",
+          "value": 0.90362
+        },
+        {
+          "date": "2020-07-01",
+          "value": -0.2997
+        },
+        {
+          "date": "2020-08-01",
+          "value": -0.1998
+        },
+        {
+          "date": "2020-09-01",
+          "value": 0
+        },
+        {
+          "date": "2020-10-01",
+          "value": 0
+        },
+        {
+          "date": "2020-11-01",
+          "value": 0.80645
+        },
+        {
+          "date": "2020-12-01",
+          "value": 0.3006
+        },
+        {
+          "date": "2021-01-01",
+          "value": 1.40986
+        },
+        {
+          "date": "2021-02-01",
+          "value": 1.50602
+        },
+        {
+          "date": "2021-03-01",
+          "value": 1.5
+        },
+        {
+          "date": "2021-04-01",
+          "value": 1.39581
+        },
+        {
+          "date": "2021-05-01",
+          "value": 1.59362
+        },
+        {
+          "date": "2021-06-01",
+          "value": 1.89055
+        },
+        {
+          "date": "2021-07-01",
+          "value": 3.00601
+        },
+        {
+          "date": "2021-08-01",
+          "value": 3.003
+        },
+        {
+          "date": "2021-09-01",
+          "value": 3.1
+        },
+        {
+          "date": "2021-10-01",
+          "value": 3.09382
+        },
+        {
+          "date": "2021-11-01",
+          "value": 3.3
+        },
+        {
+          "date": "2021-12-01",
+          "value": 3.5964
+        },
+        {
+          "date": "2022-01-01",
+          "value": 2.68124
+        },
+        {
+          "date": "2022-02-01",
+          "value": 2.76954
+        },
+        {
+          "date": "2022-03-01",
+          "value": 2.95567
+        },
+        {
+          "date": "2022-04-01",
+          "value": 3.44149
+        },
+        {
+          "date": "2022-05-01",
+          "value": 3.72549
+        },
+        {
+          "date": "2022-06-01",
+          "value": 3.32031
+        },
+        {
+          "date": "2022-07-01",
+          "value": 3.50194
+        },
+        {
+          "date": "2022-08-01",
+          "value": 3.6929
+        },
+        {
+          "date": "2022-09-01",
+          "value": 4.55869
+        },
+        {
+          "date": "2022-10-01",
+          "value": 4.84027
+        },
+        {
+          "date": "2022-11-01",
+          "value": 5.03388
+        },
+        {
+          "date": "2022-12-01",
+          "value": 5.20733
+        },
+        {
+          "date": "2023-01-01",
+          "value": 5.60928
+        },
+        {
+          "date": "2023-02-01",
+          "value": 5.67854
+        },
+        {
+          "date": "2023-03-01",
+          "value": 5.83732
+        },
+        {
+          "date": "2023-04-01",
+          "value": 5.79849
+        },
+        {
+          "date": "2023-05-01",
+          "value": 5.38752
+        },
+        {
+          "date": "2023-06-01",
+          "value": 5.76559
+        },
+        {
+          "date": "2023-07-01",
+          "value": 5.54511
+        },
+        {
+          "date": "2023-08-01",
+          "value": 5.52952
+        },
+        {
+          "date": "2023-09-01",
+          "value": 4.63822
+        },
+        {
+          "date": "2023-10-01",
+          "value": 4.33979
+        },
+        {
+          "date": "2023-11-01",
+          "value": 3.7788
+        },
+        {
+          "date": "2023-12-01",
+          "value": 3.48305
+        },
+        {
+          "date": "2024-01-01",
+          "value": 3.38828
+        },
+        {
+          "date": "2024-02-01",
+          "value": 3.36976
+        },
+        {
+          "date": "2024-03-01",
+          "value": 3.34539
+        },
+        {
+          "date": "2024-04-01",
+          "value": 2.96496
+        },
+        {
+          "date": "2024-05-01",
+          "value": 3.04933
+        },
+        {
+          "date": "2024-06-01",
+          "value": 2.94906
+        },
+        {
+          "date": "2024-07-01",
+          "value": 2.93855
+        },
+        {
+          "date": "2024-08-01",
+          "value": 2.75311
+        },
+        {
+          "date": "2024-09-01",
+          "value": 2.74823
+        },
+        {
+          "date": "2024-10-01",
+          "value": 2.92036
+        },
+        {
+          "date": "2024-11-01",
+          "value": 3.01954
+        },
+        {
+          "date": "2024-12-01",
+          "value": 3.27723
+        },
+        {
+          "date": "2025-01-01",
+          "value": 2.92294
+        },
+        {
+          "date": "2025-02-01",
+          "value": 2.73128
+        },
+        {
+          "date": "2025-03-01",
+          "value": 2.62467
+        },
+        {
+          "date": "2025-04-01",
+          "value": 2.87958
+        },
+        {
+          "date": "2025-05-01",
+          "value": 2.78503
+        },
+        {
+          "date": "2025-06-01",
+          "value": 2.69098
+        },
+        {
+          "date": "2025-07-01",
+          "value": 2.68166
+        },
+        {
+          "date": "2025-08-01",
+          "value": 2.67935
+        },
+        {
+          "date": "2025-09-01",
+          "value": 2.761
+        },
+        {
+          "date": "2025-10-01",
+          "value": 2.83749
+        },
+        {
+          "date": "2025-11-01",
+          "value": 2.67241
+        },
+        {
+          "date": "2025-12-01",
+          "value": 2.40137
+        },
+        {
+          "date": "2026-01-01",
+          "value": 2.4957
+        },
+        {
+          "date": "2026-02-01",
+          "value": 2.48714
+        },
+        {
+          "date": "2026-03-01",
+          "value": 2.47229
+        },
+        {
+          "date": "2026-04-01",
+          "value": 2.2900763358778553,
+          "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
+          "note": "YoY from official Destatis core CPI levels; API preferred, official HTML table fallback"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 2.5402201524132195,
+          "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
+          "note": "YoY from official Destatis core CPI levels; API preferred, official HTML table fallback"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 2.4513947590870666,
+          "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
+          "note": "YoY from official Destatis core CPI levels; API preferred, official HTML table fallback"
+        }
+      ]
+    },
+    {
+      "id": "ea_core_cpi",
+      "block": "通膨",
+      "name": "歐元區 Core CPI YoY",
+      "ticker": "歐 Core CPI",
+      "frequency": "monthly",
+      "color": "#2563eb",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 0.6
+        },
+        {
+          "date": "2015-02-01",
+          "value": 0.7
+        },
+        {
+          "date": "2015-03-01",
+          "value": 0.7
+        },
+        {
+          "date": "2015-04-01",
+          "value": 0.9
+        },
+        {
+          "date": "2015-05-01",
+          "value": 1.3
+        },
+        {
+          "date": "2015-06-01",
+          "value": 1.2
+        },
+        {
+          "date": "2015-07-01",
+          "value": 1.4
+        },
+        {
+          "date": "2015-08-01",
+          "value": 1.4
+        },
+        {
+          "date": "2015-09-01",
+          "value": 1.3
+        },
+        {
+          "date": "2015-10-01",
+          "value": 1.4
+        },
+        {
+          "date": "2015-11-01",
+          "value": 0.9
+        },
+        {
+          "date": "2015-12-01",
+          "value": 0.9
+        },
+        {
+          "date": "2016-01-01",
+          "value": 1
+        },
+        {
+          "date": "2016-02-01",
+          "value": 0.9
+        },
+        {
+          "date": "2016-03-01",
+          "value": 1
+        },
+        {
+          "date": "2016-04-01",
+          "value": 0.7
+        },
+        {
+          "date": "2016-05-01",
+          "value": 0.8
+        },
+        {
+          "date": "2016-06-01",
+          "value": 0.8
+        },
+        {
+          "date": "2016-07-01",
+          "value": 0.9
+        },
+        {
+          "date": "2016-08-01",
+          "value": 0.8
+        },
+        {
+          "date": "2016-09-01",
+          "value": 0.8
+        },
+        {
+          "date": "2016-10-01",
+          "value": 0.8
+        },
+        {
+          "date": "2016-11-01",
+          "value": 0.8
+        },
+        {
+          "date": "2016-12-01",
+          "value": 0.9
+        },
+        {
+          "date": "2017-01-01",
+          "value": 0.9
+        },
+        {
+          "date": "2017-02-01",
+          "value": 0.8
+        },
+        {
+          "date": "2017-03-01",
+          "value": 0.7
+        },
+        {
+          "date": "2017-04-01",
+          "value": 1.3
+        },
+        {
+          "date": "2017-05-01",
+          "value": 0.9
+        },
+        {
+          "date": "2017-06-01",
+          "value": 1.2
+        },
+        {
+          "date": "2017-07-01",
+          "value": 1.2
+        },
+        {
+          "date": "2017-08-01",
+          "value": 1.2
+        },
+        {
+          "date": "2017-09-01",
+          "value": 1.1
+        },
+        {
+          "date": "2017-10-01",
+          "value": 0.9
+        },
+        {
+          "date": "2017-11-01",
+          "value": 0.9
+        },
+        {
+          "date": "2017-12-01",
+          "value": 0.9
+        },
+        {
+          "date": "2018-01-01",
+          "value": 1
+        },
+        {
+          "date": "2018-02-01",
+          "value": 1
+        },
+        {
+          "date": "2018-03-01",
+          "value": 1.1
+        },
+        {
+          "date": "2018-04-01",
+          "value": 0.7
+        },
+        {
+          "date": "2018-05-01",
+          "value": 1.2
+        },
+        {
+          "date": "2018-06-01",
+          "value": 1
+        },
+        {
+          "date": "2018-07-01",
+          "value": 1.1
+        },
+        {
+          "date": "2018-08-01",
+          "value": 1
+        },
+        {
+          "date": "2018-09-01",
+          "value": 1
+        },
+        {
+          "date": "2018-10-01",
+          "value": 1.2
+        },
+        {
+          "date": "2018-11-01",
+          "value": 0.9
+        },
+        {
+          "date": "2018-12-01",
+          "value": 0.9
+        },
+        {
+          "date": "2019-01-01",
+          "value": 1.1
+        },
+        {
+          "date": "2019-02-01",
+          "value": 1
+        },
+        {
+          "date": "2019-03-01",
+          "value": 0.8
+        },
+        {
+          "date": "2019-04-01",
+          "value": 1.3
+        },
+        {
+          "date": "2019-05-01",
+          "value": 0.8
+        },
+        {
+          "date": "2019-06-01",
+          "value": 1.1
+        },
+        {
+          "date": "2019-07-01",
+          "value": 0.9
+        },
+        {
+          "date": "2019-08-01",
+          "value": 1
+        },
+        {
+          "date": "2019-09-01",
+          "value": 1
+        },
+        {
+          "date": "2019-10-01",
+          "value": 1.1
+        },
+        {
+          "date": "2019-11-01",
+          "value": 1.3
+        },
+        {
+          "date": "2019-12-01",
+          "value": 1.3
+        },
+        {
+          "date": "2020-01-01",
+          "value": 1.1
+        },
+        {
+          "date": "2020-02-01",
+          "value": 1.2
+        },
+        {
+          "date": "2020-03-01",
+          "value": 1
+        },
+        {
+          "date": "2020-04-01",
+          "value": 0.9
+        },
+        {
+          "date": "2020-05-01",
+          "value": 0.9
+        },
+        {
+          "date": "2020-06-01",
+          "value": 0.8
+        },
+        {
+          "date": "2020-07-01",
+          "value": 1.2
+        },
+        {
+          "date": "2020-08-01",
+          "value": 0.4
+        },
+        {
+          "date": "2020-09-01",
+          "value": 0.2
+        },
+        {
+          "date": "2020-10-01",
+          "value": 0.2
+        },
+        {
+          "date": "2020-11-01",
+          "value": 0.3
+        },
+        {
+          "date": "2020-12-01",
+          "value": 0.2
+        },
+        {
+          "date": "2021-01-01",
+          "value": 1.4
+        },
+        {
+          "date": "2021-02-01",
+          "value": 1.1
+        },
+        {
+          "date": "2021-03-01",
+          "value": 0.9
+        },
+        {
+          "date": "2021-04-01",
+          "value": 0.7
+        },
+        {
+          "date": "2021-05-01",
+          "value": 0.9
+        },
+        {
+          "date": "2021-06-01",
+          "value": 0.9
+        },
+        {
+          "date": "2021-07-01",
+          "value": 0.7
+        },
+        {
+          "date": "2021-08-01",
+          "value": 1.5
+        },
+        {
+          "date": "2021-09-01",
+          "value": 1.9
+        },
+        {
+          "date": "2021-10-01",
+          "value": 2.1
+        },
+        {
+          "date": "2021-11-01",
+          "value": 2.6
+        },
+        {
+          "date": "2021-12-01",
+          "value": 2.6
+        },
+        {
+          "date": "2022-01-01",
+          "value": 2.3
+        },
+        {
+          "date": "2022-02-01",
+          "value": 2.7
+        },
+        {
+          "date": "2022-03-01",
+          "value": 3
+        },
+        {
+          "date": "2022-04-01",
+          "value": 3.5
+        },
+        {
+          "date": "2022-05-01",
+          "value": 3.8
+        },
+        {
+          "date": "2022-06-01",
+          "value": 3.7
+        },
+        {
+          "date": "2022-07-01",
+          "value": 4
+        },
+        {
+          "date": "2022-08-01",
+          "value": 4.3
+        },
+        {
+          "date": "2022-09-01",
+          "value": 4.7
+        },
+        {
+          "date": "2022-10-01",
+          "value": 5
+        },
+        {
+          "date": "2022-11-01",
+          "value": 5
+        },
+        {
+          "date": "2022-12-01",
+          "value": 5.2
+        },
+        {
+          "date": "2023-01-01",
+          "value": 5.3
+        },
+        {
+          "date": "2023-02-01",
+          "value": 5.6
+        },
+        {
+          "date": "2023-03-01",
+          "value": 5.7
+        },
+        {
+          "date": "2023-04-01",
+          "value": 5.6
+        },
+        {
+          "date": "2023-05-01",
+          "value": 5.3
+        },
+        {
+          "date": "2023-06-01",
+          "value": 5.5
+        },
+        {
+          "date": "2023-07-01",
+          "value": 5.5
+        },
+        {
+          "date": "2023-08-01",
+          "value": 5.3
+        },
+        {
+          "date": "2023-09-01",
+          "value": 4.5
+        },
+        {
+          "date": "2023-10-01",
+          "value": 4.2
+        },
+        {
+          "date": "2023-11-01",
+          "value": 3.6
+        },
+        {
+          "date": "2023-12-01",
+          "value": 3.4
+        },
+        {
+          "date": "2024-01-01",
+          "value": 3.3
+        },
+        {
+          "date": "2024-02-01",
+          "value": 3.1
+        },
+        {
+          "date": "2024-03-01",
+          "value": 2.9
+        },
+        {
+          "date": "2024-04-01",
+          "value": 2.7
+        },
+        {
+          "date": "2024-05-01",
+          "value": 2.9
+        },
+        {
+          "date": "2024-06-01",
+          "value": 2.9
+        },
+        {
+          "date": "2024-07-01",
+          "value": 2.8
+        },
+        {
+          "date": "2024-08-01",
+          "value": 2.8
+        },
+        {
+          "date": "2024-09-01",
+          "value": 2.7
+        },
+        {
+          "date": "2024-10-01",
+          "value": 2.7
+        },
+        {
+          "date": "2024-11-01",
+          "value": 2.7
+        },
+        {
+          "date": "2024-12-01",
+          "value": 2.7
+        },
+        {
+          "date": "2025-01-01",
+          "value": 2.7
+        },
+        {
+          "date": "2025-02-01",
+          "value": 2.6
+        },
+        {
+          "date": "2025-03-01",
+          "value": 2.4
+        },
+        {
+          "date": "2025-04-01",
+          "value": 2.7
+        },
+        {
+          "date": "2025-05-01",
+          "value": 2.3
+        },
+        {
+          "date": "2025-06-01",
+          "value": 2.3
+        },
+        {
+          "date": "2025-07-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 2.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        }
+      ]
+    },
+    {
+      "id": "fr_unemployment_rate",
+      "block": "失業率",
+      "name": "法國失業率",
+      "ticker": "法 失業率",
+      "frequency": "quarterly",
+      "color": "#16a34a",
+      "data": [
+        {
+          "date": "2015-03-01",
+          "value": 10.3
+        },
+        {
+          "date": "2015-06-01",
+          "value": 10.5
+        },
+        {
+          "date": "2015-09-01",
+          "value": 10.3
+        },
+        {
+          "date": "2015-12-01",
+          "value": 10.2
+        },
+        {
+          "date": "2016-03-01",
+          "value": 10.2
+        },
+        {
+          "date": "2016-06-01",
+          "value": 10
+        },
+        {
+          "date": "2016-09-01",
+          "value": 9.9
+        },
+        {
+          "date": "2016-12-01",
+          "value": 10
+        },
+        {
+          "date": "2017-03-01",
+          "value": 9.6
+        },
+        {
+          "date": "2017-06-01",
+          "value": 9.5
+        },
+        {
+          "date": "2017-09-01",
+          "value": 9.5
+        },
+        {
+          "date": "2017-12-01",
+          "value": 9
+        },
+        {
+          "date": "2018-03-01",
+          "value": 9.3
+        },
+        {
+          "date": "2018-06-01",
+          "value": 9.1
+        },
+        {
+          "date": "2018-09-01",
+          "value": 8.9
+        },
+        {
+          "date": "2018-12-01",
+          "value": 8.8
+        },
+        {
+          "date": "2019-03-01",
+          "value": 8.8
+        },
+        {
+          "date": "2019-06-01",
+          "value": 8.4
+        },
+        {
+          "date": "2019-09-01",
+          "value": 8.3
+        },
+        {
+          "date": "2019-12-01",
+          "value": 8.2
+        },
+        {
+          "date": "2020-03-01",
+          "value": 7.9
+        },
+        {
+          "date": "2020-06-01",
+          "value": 7.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 9,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 8.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 8.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 7.9,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 7.9,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 7.4,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 7.4,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 7.4,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 7.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 7.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 7.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 7.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 7.4,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 7.6,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 7.5,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 7.3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 7.4,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 7.3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 7.4,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 7.6,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 7.7,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 7.9,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 8.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        }
+      ]
+    },
+    {
+      "id": "es_unemployment_rate",
+      "block": "失業率",
+      "name": "西班牙失業率",
+      "ticker": "西 失業率",
+      "frequency": "quarterly",
+      "color": "#16a34a",
+      "data": [
+        {
+          "date": "2015-03-01",
+          "value": 23.78
+        },
+        {
+          "date": "2015-06-01",
+          "value": 22.37
+        },
+        {
+          "date": "2015-09-01",
+          "value": 21.18
+        },
+        {
+          "date": "2015-12-01",
+          "value": 20.9
+        },
+        {
+          "date": "2016-03-01",
+          "value": 21
+        },
+        {
+          "date": "2016-06-01",
+          "value": 20
+        },
+        {
+          "date": "2016-09-01",
+          "value": 18.91
+        },
+        {
+          "date": "2016-12-01",
+          "value": 18.63
+        },
+        {
+          "date": "2017-03-01",
+          "value": 18.75
+        },
+        {
+          "date": "2017-06-01",
+          "value": 17.22
+        },
+        {
+          "date": "2017-09-01",
+          "value": 16.38
+        },
+        {
+          "date": "2017-12-01",
+          "value": 16.55
+        },
+        {
+          "date": "2018-03-01",
+          "value": 16.74
+        },
+        {
+          "date": "2018-06-01",
+          "value": 15.28
+        },
+        {
+          "date": "2018-09-01",
+          "value": 14.55
+        },
+        {
+          "date": "2018-12-01",
+          "value": 14.45
+        },
+        {
+          "date": "2019-03-01",
+          "value": 14.7
+        },
+        {
+          "date": "2019-06-01",
+          "value": 14.02
+        },
+        {
+          "date": "2019-09-01",
+          "value": 13.92
+        },
+        {
+          "date": "2019-12-01",
+          "value": 13.78
+        },
+        {
+          "date": "2020-03-01",
+          "value": 14.41
+        },
+        {
+          "date": "2020-06-01",
+          "value": 15.33
+        },
+        {
+          "date": "2020-09-01",
+          "value": 16.26,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2020-12-01",
+          "value": 16.13,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2021-03-01",
+          "value": 16.14,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2021-06-01",
+          "value": 15.39,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2021-09-01",
+          "value": 14.71,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2021-12-01",
+          "value": 13.44,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2022-03-01",
+          "value": 13.73,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2022-06-01",
+          "value": 12.69,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2022-09-01",
+          "value": 12.73,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2022-12-01",
+          "value": 12.99,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2023-03-01",
+          "value": 13.38,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2023-06-01",
+          "value": 11.67,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2023-09-01",
+          "value": 11.89,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2023-12-01",
+          "value": 11.8,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2024-03-01",
+          "value": 12.29,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2024-06-01",
+          "value": 11.27,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2024-09-01",
+          "value": 11.21,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2024-12-01",
+          "value": 10.61,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2025-03-01",
+          "value": 11.36,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2025-06-01",
+          "value": 10.29,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2025-09-01",
+          "value": 10.45,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2025-12-01",
+          "value": 9.93,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2026-03-01",
+          "value": 10.83,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        },
+        {
+          "date": "2026-06-01",
+          "value": 9.87,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65219?tip=AM&nult=24",
+          "note": "INE table=65219; series=EPA423474; Total Nacional. Tasa de paro de la población. Ambos sexos. Total."
+        }
+      ]
+    },
+    {
+      "id": "de_unemployment_rate_swda",
+      "block": "失業率",
+      "name": "德國失業率（季調）",
+      "ticker": "德 Unemployment Rate SWDA",
+      "frequency": "monthly",
+      "color": "#16a34a",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 6.5
+        },
+        {
+          "date": "2015-02-01",
+          "value": 6.5
+        },
+        {
+          "date": "2015-03-01",
+          "value": 6.5
+        },
+        {
+          "date": "2015-04-01",
+          "value": 6.5
+        },
+        {
+          "date": "2015-05-01",
+          "value": 6.4
+        },
+        {
+          "date": "2015-06-01",
+          "value": 6.4
+        },
+        {
+          "date": "2015-07-01",
+          "value": 6.4
+        },
+        {
+          "date": "2015-08-01",
+          "value": 6.3
+        },
+        {
+          "date": "2015-09-01",
+          "value": 6.3
+        },
+        {
+          "date": "2015-10-01",
+          "value": 6.3
+        },
+        {
+          "date": "2015-11-01",
+          "value": 6.3
+        },
+        {
+          "date": "2015-12-01",
+          "value": 6.3
+        },
+        {
+          "date": "2016-01-01",
+          "value": 6.2
+        },
+        {
+          "date": "2016-02-01",
+          "value": 6.2
+        },
+        {
+          "date": "2016-03-01",
+          "value": 6.2
+        },
+        {
+          "date": "2016-04-01",
+          "value": 6.2
+        },
+        {
+          "date": "2016-05-01",
+          "value": 6.1
+        },
+        {
+          "date": "2016-06-01",
+          "value": 6.1
+        },
+        {
+          "date": "2016-07-01",
+          "value": 6.1
+        },
+        {
+          "date": "2016-08-01",
+          "value": 6
+        },
+        {
+          "date": "2016-09-01",
+          "value": 6
+        },
+        {
+          "date": "2016-10-01",
+          "value": 6
+        },
+        {
+          "date": "2016-11-01",
+          "value": 6
+        },
+        {
+          "date": "2016-12-01",
+          "value": 6
+        },
+        {
+          "date": "2017-01-01",
+          "value": 5.9
+        },
+        {
+          "date": "2017-02-01",
+          "value": 5.9
+        },
+        {
+          "date": "2017-03-01",
+          "value": 5.8
+        },
+        {
+          "date": "2017-04-01",
+          "value": 5.8
+        },
+        {
+          "date": "2017-05-01",
+          "value": 5.7
+        },
+        {
+          "date": "2017-06-01",
+          "value": 5.7
+        },
+        {
+          "date": "2017-07-01",
+          "value": 5.7
+        },
+        {
+          "date": "2017-08-01",
+          "value": 5.6
+        },
+        {
+          "date": "2017-09-01",
+          "value": 5.6
+        },
+        {
+          "date": "2017-10-01",
+          "value": 5.6
+        },
+        {
+          "date": "2017-11-01",
+          "value": 5.5
+        },
+        {
+          "date": "2017-12-01",
+          "value": 5.5
+        },
+        {
+          "date": "2018-01-01",
+          "value": 5.4
+        },
+        {
+          "date": "2018-02-01",
+          "value": 5.4
+        },
+        {
+          "date": "2018-03-01",
+          "value": 5.3
+        },
+        {
+          "date": "2018-04-01",
+          "value": 5.3
+        },
+        {
+          "date": "2018-05-01",
+          "value": 5.2
+        },
+        {
+          "date": "2018-06-01",
+          "value": 5.2
+        },
+        {
+          "date": "2018-07-01",
+          "value": 5.2
+        },
+        {
+          "date": "2018-08-01",
+          "value": 5.1
+        },
+        {
+          "date": "2018-09-01",
+          "value": 5.1
+        },
+        {
+          "date": "2018-10-01",
+          "value": 5.1
+        },
+        {
+          "date": "2018-11-01",
+          "value": 5
+        },
+        {
+          "date": "2018-12-01",
+          "value": 5
+        },
+        {
+          "date": "2019-01-01",
+          "value": 5
+        },
+        {
+          "date": "2019-02-01",
+          "value": 5
+        },
+        {
+          "date": "2019-03-01",
+          "value": 5
+        },
+        {
+          "date": "2019-04-01",
+          "value": 4.9
+        },
+        {
+          "date": "2019-05-01",
+          "value": 5
+        },
+        {
+          "date": "2019-06-01",
+          "value": 5
+        },
+        {
+          "date": "2019-07-01",
+          "value": 5
+        },
+        {
+          "date": "2019-08-01",
+          "value": 5
+        },
+        {
+          "date": "2019-09-01",
+          "value": 5
+        },
+        {
+          "date": "2019-10-01",
+          "value": 5
+        },
+        {
+          "date": "2019-11-01",
+          "value": 5
+        },
+        {
+          "date": "2019-12-01",
+          "value": 5
+        },
+        {
+          "date": "2020-01-01",
+          "value": 5
+        },
+        {
+          "date": "2020-02-01",
+          "value": 5
+        },
+        {
+          "date": "2020-03-01",
+          "value": 5
+        },
+        {
+          "date": "2020-04-01",
+          "value": 5.8
+        },
+        {
+          "date": "2020-05-01",
+          "value": 6.2
+        },
+        {
+          "date": "2020-06-01",
+          "value": 6.4
+        },
+        {
+          "date": "2020-07-01",
+          "value": 6.4
+        },
+        {
+          "date": "2020-08-01",
+          "value": 6.3
+        },
+        {
+          "date": "2020-09-01",
+          "value": 6.3
+        },
+        {
+          "date": "2020-10-01",
+          "value": 6.2
+        },
+        {
+          "date": "2020-11-01",
+          "value": 6.1
+        },
+        {
+          "date": "2020-12-01",
+          "value": 6.1
+        },
+        {
+          "date": "2021-01-01",
+          "value": 6
+        },
+        {
+          "date": "2021-02-01",
+          "value": 6.1
+        },
+        {
+          "date": "2021-03-01",
+          "value": 6
+        },
+        {
+          "date": "2021-04-01",
+          "value": 6
+        },
+        {
+          "date": "2021-05-01",
+          "value": 6
+        },
+        {
+          "date": "2021-06-01",
+          "value": 5.8
+        },
+        {
+          "date": "2021-07-01",
+          "value": 5.6
+        },
+        {
+          "date": "2021-08-01",
+          "value": 5.5
+        },
+        {
+          "date": "2021-09-01",
+          "value": 5.4
+        },
+        {
+          "date": "2021-10-01",
+          "value": 5.3
+        },
+        {
+          "date": "2021-11-01",
+          "value": 5.2
+        },
+        {
+          "date": "2021-12-01",
+          "value": 5.2
+        },
+        {
+          "date": "2022-01-01",
+          "value": 5.1
+        },
+        {
+          "date": "2022-02-01",
+          "value": 5.1
+        },
+        {
+          "date": "2022-03-01",
+          "value": 5
+        },
+        {
+          "date": "2022-04-01",
+          "value": 5
+        },
+        {
+          "date": "2022-05-01",
+          "value": 5
+        },
+        {
+          "date": "2022-06-01",
+          "value": 5.3
+        },
+        {
+          "date": "2022-07-01",
+          "value": 5.4
+        },
+        {
+          "date": "2022-08-01",
+          "value": 5.5
+        },
+        {
+          "date": "2022-09-01",
+          "value": 5.5
+        },
+        {
+          "date": "2022-10-01",
+          "value": 5.5
+        },
+        {
+          "date": "2022-11-01",
+          "value": 5.5
+        },
+        {
+          "date": "2022-12-01",
+          "value": 5.5
+        },
+        {
+          "date": "2023-01-01",
+          "value": 5.5
+        },
+        {
+          "date": "2023-02-01",
+          "value": 5.5
+        },
+        {
+          "date": "2023-03-01",
+          "value": 5.6
+        },
+        {
+          "date": "2023-04-01",
+          "value": 5.6
+        },
+        {
+          "date": "2023-05-01",
+          "value": 5.6
+        },
+        {
+          "date": "2023-06-01",
+          "value": 5.6
+        },
+        {
+          "date": "2023-07-01",
+          "value": 5.7
+        },
+        {
+          "date": "2023-08-01",
+          "value": 5.7
+        },
+        {
+          "date": "2023-09-01",
+          "value": 5.7
+        },
+        {
+          "date": "2023-10-01",
+          "value": 5.8
+        },
+        {
+          "date": "2023-11-01",
+          "value": 5.8
+        },
+        {
+          "date": "2023-12-01",
+          "value": 5.9
+        },
+        {
+          "date": "2024-01-01",
+          "value": 5.9
+        },
+        {
+          "date": "2024-02-01",
+          "value": 5.9
+        },
+        {
+          "date": "2024-03-01",
+          "value": 5.9
+        },
+        {
+          "date": "2024-04-01",
+          "value": 5.9
+        },
+        {
+          "date": "2024-05-01",
+          "value": 5.9
+        },
+        {
+          "date": "2024-06-01",
+          "value": 5.9
+        },
+        {
+          "date": "2024-07-01",
+          "value": 6
+        },
+        {
+          "date": "2024-08-01",
+          "value": 6
+        },
+        {
+          "date": "2024-09-01",
+          "value": 6
+        },
+        {
+          "date": "2024-10-01",
+          "value": 6.1
+        },
+        {
+          "date": "2024-11-01",
+          "value": 6.1
+        },
+        {
+          "date": "2024-12-01",
+          "value": 6.2
+        },
+        {
+          "date": "2025-01-01",
+          "value": 6.2,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 6.2,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 6.4,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 6.3,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        }
+      ]
+    },
+    {
+      "id": "ea_unemployment_rate",
+      "block": "失業率",
+      "name": "歐元區失業率",
+      "ticker": "歐 失業率",
+      "frequency": "monthly",
+      "color": "#16a34a",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 11.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2015-02-01",
+          "value": 11.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2015-03-01",
+          "value": 11.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2015-04-01",
+          "value": 11.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 11.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 11.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2015-07-01",
+          "value": 10.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 10.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 10.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2015-10-01",
+          "value": 10.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 10.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 10.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2016-01-01",
+          "value": 10.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 10.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 10.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2016-04-01",
+          "value": 10.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 10.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 10.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2016-07-01",
+          "value": 10,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 9.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 9.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2016-10-01",
+          "value": 9.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 9.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 9.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2017-01-01",
+          "value": 9.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2017-02-01",
+          "value": 9.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 9.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2017-04-01",
+          "value": 9.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 9.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 9.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2017-07-01",
+          "value": 9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2017-08-01",
+          "value": 9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 8.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2017-10-01",
+          "value": 8.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 8.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 8.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2018-01-01",
+          "value": 8.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2018-02-01",
+          "value": 8.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 8.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 8.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2018-05-01",
+          "value": 8.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 8.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2018-07-01",
+          "value": 8.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 7.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 7.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2019-01-01",
+          "value": 7.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2019-02-01",
+          "value": 7.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 7.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2019-04-01",
+          "value": 7.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2019-05-01",
+          "value": 7.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 7.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2019-07-01",
+          "value": 7.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 7.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 7.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2019-10-01",
+          "value": 7.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 7.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 7.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 7.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 7.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2020-03-01",
+          "value": 7.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2020-04-01",
+          "value": 7.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2020-05-01",
+          "value": 7.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 8.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2020-07-01",
+          "value": 8.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 8.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 8.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 8.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 8.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 8.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2021-01-01",
+          "value": 8.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 8.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 8.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 8.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 8.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 7.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 7.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 7.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 7.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 7.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 7.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2022-01-01",
+          "value": 6.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 6.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 6.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 6.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 6.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 6.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2022-07-01",
+          "value": 6.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2022-08-01",
+          "value": 6.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 6.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2022-10-01",
+          "value": 6.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2022-11-01",
+          "value": 6.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 6.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2023-01-01",
+          "value": 6.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2023-02-01",
+          "value": 6.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 6.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2023-04-01",
+          "value": 6.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2023-05-01",
+          "value": 6.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 6.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2023-07-01",
+          "value": 6.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2023-08-01",
+          "value": 6.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 6.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 6.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 6.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 6.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 6.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 6.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 6.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 6.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 6.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 6.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 6.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 6.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 6.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 6.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 6.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 6.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 6.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-07"
+        }
+      ]
+    },
+    {
+      "id": "es_employment_change",
+      "block": "其他就業",
+      "name": "西班牙就業變動",
+      "ticker": "西 就業",
+      "frequency": "monthly",
+      "color": "#15803d",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 27.7792999999983
+        },
+        {
+          "date": "2015-02-01",
+          "value": 71.1358500000024
+        },
+        {
+          "date": "2015-03-01",
+          "value": 76.8682599999993
+        },
+        {
+          "date": "2015-04-01",
+          "value": 65.1752099999976
+        },
+        {
+          "date": "2015-05-01",
+          "value": 53.275450000001
+        },
+        {
+          "date": "2015-06-01",
+          "value": 9.15120999999999
+        },
+        {
+          "date": "2015-07-01",
+          "value": 28.1947700000019
+        },
+        {
+          "date": "2015-08-01",
+          "value": 27.986399999998
+        },
+        {
+          "date": "2015-09-01",
+          "value": 34.9952400000002
+        },
+        {
+          "date": "2015-10-01",
+          "value": 14.4625000000015
+        },
+        {
+          "date": "2015-11-01",
+          "value": 63.6898299999993
+        },
+        {
+          "date": "2015-12-01",
+          "value": 64.5119200000008
+        },
+        {
+          "date": "2016-01-01",
+          "value": 28.0165300000008
+        },
+        {
+          "date": "2016-02-01",
+          "value": 35.0910499999991
+        },
+        {
+          "date": "2016-03-01",
+          "value": 49.8695499999994
+        },
+        {
+          "date": "2016-04-01",
+          "value": 39.5892300000014
+        },
+        {
+          "date": "2016-05-01",
+          "value": 39.3053199999995
+        },
+        {
+          "date": "2016-06-01",
+          "value": 64.3545199999971
+        },
+        {
+          "date": "2016-07-01",
+          "value": 59.871280000003
+        },
+        {
+          "date": "2016-08-01",
+          "value": 35.8307999999997
+        },
+        {
+          "date": "2016-09-01",
+          "value": 40.2880499999992
+        },
+        {
+          "date": "2016-10-01",
+          "value": 64.8551000000007
+        },
+        {
+          "date": "2016-11-01",
+          "value": 35.7712599999977
+        },
+        {
+          "date": "2016-12-01",
+          "value": 50.5614000000023
+        },
+        {
+          "date": "2017-01-01",
+          "value": 61.4642600000007
+        },
+        {
+          "date": "2017-02-01",
+          "value": 49.5142599999999
+        },
+        {
+          "date": "2017-03-01",
+          "value": 67.7865299999976
+        },
+        {
+          "date": "2017-04-01",
+          "value": 83.1567300000024
+        },
+        {
+          "date": "2017-05-01",
+          "value": 62.2733899999985
+        },
+        {
+          "date": "2017-06-01",
+          "value": 50.4710000000014
+        },
+        {
+          "date": "2017-07-01",
+          "value": 36.2357699999993
+        },
+        {
+          "date": "2017-08-01",
+          "value": 19.1358899999977
+        },
+        {
+          "date": "2017-09-01",
+          "value": 48.2295800000029
+        },
+        {
+          "date": "2017-10-01",
+          "value": 49.0713499999983
+        },
+        {
+          "date": "2017-11-01",
+          "value": 52.2746799999986
+        },
+        {
+          "date": "2017-12-01",
+          "value": 30.75749
+        },
+        {
+          "date": "2018-01-01",
+          "value": 64.702540000002
+        },
+        {
+          "date": "2018-02-01",
+          "value": 55.3277699999999
+        },
+        {
+          "date": "2018-03-01",
+          "value": 41.4650299999994
+        },
+        {
+          "date": "2018-04-01",
+          "value": 50.133130000002
+        },
+        {
+          "date": "2018-05-01",
+          "value": 72.69139
+        },
+        {
+          "date": "2018-06-01",
+          "value": 52.3452899999975
+        },
+        {
+          "date": "2018-07-01",
+          "value": 20.0923399999992
+        },
+        {
+          "date": "2018-08-01",
+          "value": 0.161260000000766
+        },
+        {
+          "date": "2018-09-01",
+          "value": 42.179500000002
+        },
+        {
+          "date": "2018-10-01",
+          "value": 69.0027100000007
+        },
+        {
+          "date": "2018-11-01",
+          "value": 22.6405399999967
+        },
+        {
+          "date": "2018-12-01",
+          "value": 64.2143600000018
+        },
+        {
+          "date": "2019-01-01",
+          "value": 50.6082700000006
+        },
+        {
+          "date": "2019-02-01",
+          "value": 41.9738199999993
+        },
+        {
+          "date": "2019-03-01",
+          "value": 59.6616399999984
+        },
+        {
+          "date": "2019-04-01",
+          "value": 61.9522900000011
+        },
+        {
+          "date": "2019-05-01",
+          "value": 55.3747900000017
+        },
+        {
+          "date": "2019-06-01",
+          "value": 33.6899599999997
+        },
+        {
+          "date": "2019-07-01",
+          "value": -2.16285000000062
+        },
+        {
+          "date": "2019-08-01",
+          "value": -18.8477999999996
+        },
+        {
+          "date": "2019-09-01",
+          "value": 17.3968700000005
+        },
+        {
+          "date": "2019-10-01",
+          "value": 39.4822199999981
+        },
+        {
+          "date": "2019-11-01",
+          "value": 7.71558999999979
+        },
+        {
+          "date": "2019-12-01",
+          "value": 25.2481200000002
+        },
+        {
+          "date": "2020-01-01",
+          "value": 17.2255100000002
+        },
+        {
+          "date": "2020-02-01",
+          "value": 56.1027300000023
+        },
+        {
+          "date": "2020-03-01",
+          "value": -326.637040000001
+        },
+        {
+          "date": "2020-04-01",
+          "value": -667.726470000001
+        },
+        {
+          "date": "2020-05-01",
+          "value": -41.4910600000003
+        },
+        {
+          "date": "2020-06-01",
+          "value": 29.5202600000011
+        },
+        {
+          "date": "2020-07-01",
+          "value": 139.20952
+        },
+        {
+          "date": "2020-08-01",
+          "value": 176.657920000001
+        },
+        {
+          "date": "2020-09-01",
+          "value": 92.0473099999981
+        },
+        {
+          "date": "2020-10-01",
+          "value": 46.4416600000004
+        },
+        {
+          "date": "2020-11-01",
+          "value": 74.414929999999
+        },
+        {
+          "date": "2020-12-01",
+          "value": 33.5894700000026
+        },
+        {
+          "date": "2021-01-01",
+          "value": 31.6820799999987
+        },
+        {
+          "date": "2021-02-01",
+          "value": 28.1081599999998
+        },
+        {
+          "date": "2021-03-01",
+          "value": 19.641389999997
+        },
+        {
+          "date": "2021-04-01",
+          "value": 29.3477800000001
+        },
+        {
+          "date": "2021-05-01",
+          "value": 57.9900600000001
+        },
+        {
+          "date": "2021-06-01",
+          "value": 178.317580000003
+        },
+        {
+          "date": "2021-07-01",
+          "value": 89.6801799999994
+        },
+        {
+          "date": "2021-08-01",
+          "value": 77.9460199999994
+        },
+        {
+          "date": "2021-09-01",
+          "value": 59.1162000000004
+        },
+        {
+          "date": "2021-10-01",
+          "value": 73.1781699999992
+        },
+        {
+          "date": "2021-11-01",
+          "value": 86.1880999999994
+        },
+        {
+          "date": "2021-12-01",
+          "value": 74.4036500000002
+        },
+        {
+          "date": "2022-01-01",
+          "value": 61.9590500000013
+        },
+        {
+          "date": "2022-02-01",
+          "value": 56.7628999999979
+        },
+        {
+          "date": "2022-03-01",
+          "value": 54.5691000000006
+        },
+        {
+          "date": "2022-04-01",
+          "value": 52.9300000000003
+        },
+        {
+          "date": "2022-05-01",
+          "value": 60.380000000001
+        },
+        {
+          "date": "2022-06-01",
+          "value": 54.3400000000001
+        },
+        {
+          "date": "2022-07-01",
+          "value": 21.8099999999977
+        },
+        {
+          "date": "2022-08-01",
+          "value": 23.260000000002
+        },
+        {
+          "date": "2022-09-01",
+          "value": 35.7099999999991
+        },
+        {
+          "date": "2022-10-01",
+          "value": 33.5800000000017
+        },
+        {
+          "date": "2022-11-01",
+          "value": 30.989999999998
+        },
+        {
+          "date": "2022-12-01",
+          "value": 27.4900000000016
+        },
+        {
+          "date": "2023-01-01",
+          "value": 44.3899999999994
+        },
+        {
+          "date": "2023-02-01",
+          "value": 63.9799999999996
+        },
+        {
+          "date": "2023-03-01",
+          "value": 88.3100000000013
+        },
+        {
+          "date": "2023-04-01",
+          "value": 79.9300000000003
+        },
+        {
+          "date": "2023-05-01",
+          "value": 37.8899999999994
+        },
+        {
+          "date": "2023-06-01",
+          "value": 21.3299999999981
+        },
+        {
+          "date": "2023-07-01",
+          "value": 43.0400000000009
+        },
+        {
+          "date": "2023-08-01",
+          "value": 46.25
+        },
+        {
+          "date": "2023-09-01",
+          "value": 32.1500000000015
+        },
+        {
+          "date": "2023-10-01",
+          "value": 22.8199999999997
+        },
+        {
+          "date": "2023-11-01",
+          "value": 33.8400000000001
+        },
+        {
+          "date": "2023-12-01",
+          "value": 41.0900000000001
+        },
+        {
+          "date": "2024-01-01",
+          "value": 44.75
+        },
+        {
+          "date": "2024-02-01",
+          "value": 58.6599999999999
+        },
+        {
+          "date": "2024-03-01",
+          "value": 57.3499999999985
+        },
+        {
+          "date": "2024-04-01",
+          "value": 41.3199999999997
+        },
+        {
+          "date": "2024-05-01",
+          "value": 46.619999999999
+        },
+        {
+          "date": "2024-06-01",
+          "value": 38.4100000000035
+        },
+        {
+          "date": "2024-07-01",
+          "value": 29.0999999999985
+        },
+        {
+          "date": "2024-08-01",
+          "value": 33.6399999999994
+        },
+        {
+          "date": "2024-09-01",
+          "value": 35.9799999999996
+        },
+        {
+          "date": "2024-10-01",
+          "value": 41.3300000000017
+        },
+        {
+          "date": "2024-11-01",
+          "value": 35.0299999999988
+        },
+        {
+          "date": "2024-12-01",
+          "value": 41.3100000000013
+        },
+        {
+          "date": "2025-01-01",
+          "value": 44.489999999998
+        },
+        {
+          "date": "2025-02-01",
+          "value": 43.0900000000001
+        },
+        {
+          "date": "2025-03-01",
+          "value": 39.4000000000015
+        },
+        {
+          "date": "2025-04-01",
+          "value": 45.11
+        },
+        {
+          "date": "2025-05-01",
+          "value": 37.2099999999991
+        },
+        {
+          "date": "2025-06-01",
+          "value": 38.6899999999987
+        },
+        {
+          "date": "2025-07-01",
+          "value": 41.4900000000016
+        },
+        {
+          "date": "2025-08-01",
+          "value": 41.67
+        },
+        {
+          "date": "2025-09-01",
+          "value": 47.9799999999996
+        },
+        {
+          "date": "2025-10-01",
+          "value": 50.2200000000012
+        },
+        {
+          "date": "2025-11-01",
+          "value": 42.93
+        },
+        {
+          "date": "2025-12-01",
+          "value": 35.4799999999996
+        },
+        {
+          "date": "2026-01-01",
+          "value": 17.3100000000013
+        },
+        {
+          "date": "2026-02-01",
+          "value": 45.22
+        },
+        {
+          "date": "2026-03-01",
+          "value": 80.2700000000004
+        },
+        {
+          "date": "2026-04-01",
+          "value": 41.75,
+          "source_url": "https://revista.seg-social.es/estadisticas",
+          "note": "official seasonally adjusted affiliation change, thousand persons"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 63.74,
+          "source_url": "https://revista.seg-social.es/estadisticas",
+          "note": "official seasonally adjusted affiliation change, thousand persons"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 92.53,
+          "source_url": "https://revista.seg-social.es/estadisticas",
+          "note": "official seasonally adjusted affiliation change, thousand persons"
+        }
+      ]
+    },
+    {
+      "id": "de_unemployed",
+      "block": "其他就業",
+      "name": "德國失業人口",
+      "ticker": "德 失業人口",
+      "frequency": "monthly",
+      "color": "#15803d",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 2837,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2015-02-01",
+          "value": 2823,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2015-03-01",
+          "value": 2811,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2015-04-01",
+          "value": 2811,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 2802,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 2793,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2015-07-01",
+          "value": 2796,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 2782,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 2778,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2015-10-01",
+          "value": 2770,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 2754,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 2747,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2016-01-01",
+          "value": 2738,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 2731,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 2738,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2016-04-01",
+          "value": 2723,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 2709,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 2693,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2016-07-01",
+          "value": 2679,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 2663,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 2666,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2016-10-01",
+          "value": 2647,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 2643,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 2630,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2017-01-01",
+          "value": 2608,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2017-02-01",
+          "value": 2599,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 2573,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2017-04-01",
+          "value": 2555,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 2544,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 2546,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2017-07-01",
+          "value": 2530,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2017-08-01",
+          "value": 2516,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 2498,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2017-10-01",
+          "value": 2483,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 2470,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 2442,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2018-01-01",
+          "value": 2417,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2018-02-01",
+          "value": 2404,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 2384,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 2373,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2018-05-01",
+          "value": 2360,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 2341,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2018-07-01",
+          "value": 2332,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 2318,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 2296,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 2285,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 2279,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 2266,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2019-01-01",
+          "value": 2267,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2019-02-01",
+          "value": 2248,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 2238,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2019-04-01",
+          "value": 2219,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2019-05-01",
+          "value": 2278,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 2277,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2019-07-01",
+          "value": 2280,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 2280,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 2267,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2019-10-01",
+          "value": 2279,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 2272,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 2287,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 2296,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 2280,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2020-03-01",
+          "value": 2276,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2020-04-01",
+          "value": 2631,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2020-05-01",
+          "value": 2864,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 2926,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2020-07-01",
+          "value": 2912,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 2898,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 2880,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 2845,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 2808,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 2782,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2021-01-01",
+          "value": 2765,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 2777,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 2762,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 2756,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 2732,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 2676,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 2590,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 2524,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 2487,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 2443,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 2405,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 2390,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2022-01-01",
+          "value": 2360,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 2333,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 2314,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 2297,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 2294,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 2413,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2022-07-01",
+          "value": 2467,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2022-08-01",
+          "value": 2493,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 2504,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2022-10-01",
+          "value": 2504,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2022-11-01",
+          "value": 2520,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 2515,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2023-01-01",
+          "value": 2519,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2023-02-01",
+          "value": 2528,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 2548,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2023-04-01",
+          "value": 2573,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2023-05-01",
+          "value": 2579,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 2604,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2023-07-01",
+          "value": 2611,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2023-08-01",
+          "value": 2638,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 2645,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 2668,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 2691,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 2700,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 2706,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 2724,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 2726,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 2738,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 2758,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 2775,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 2800,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 2810,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 2825,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 2852,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 2861,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 2874,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 2889,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 2899,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 2924,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 2921,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 2956,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 2964,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 2968,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 2961,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 2974,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 2973,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 2974,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 2977,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 2978,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 2979,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 2979,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 2998,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 2986,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 2984,
+          "note": "德國已登記失業人口，季節及日曆調整，千人"
+        }
+      ]
+    },
+    {
+      "id": "es_retail",
+      "block": "零售",
+      "name": "西班牙零售",
+      "ticker": "西 零售",
+      "frequency": "monthly",
+      "color": "#ea580c",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 4.3
+        },
+        {
+          "date": "2015-02-01",
+          "value": 3.1
+        },
+        {
+          "date": "2015-03-01",
+          "value": 4.4
+        },
+        {
+          "date": "2015-04-01",
+          "value": 3.2
+        },
+        {
+          "date": "2015-05-01",
+          "value": 2.4
+        },
+        {
+          "date": "2015-06-01",
+          "value": 4.6
+        },
+        {
+          "date": "2015-07-01",
+          "value": 4.7
+        },
+        {
+          "date": "2015-08-01",
+          "value": 3.9
+        },
+        {
+          "date": "2015-09-01",
+          "value": 5.5
+        },
+        {
+          "date": "2015-10-01",
+          "value": 5.8
+        },
+        {
+          "date": "2015-11-01",
+          "value": 5.1
+        },
+        {
+          "date": "2015-12-01",
+          "value": 3.7
+        },
+        {
+          "date": "2016-01-01",
+          "value": 2.3
+        },
+        {
+          "date": "2016-02-01",
+          "value": 7.7
+        },
+        {
+          "date": "2016-03-01",
+          "value": 4.7
+        },
+        {
+          "date": "2016-04-01",
+          "value": 6.6
+        },
+        {
+          "date": "2016-05-01",
+          "value": 3
+        },
+        {
+          "date": "2016-06-01",
+          "value": 6.1
+        },
+        {
+          "date": "2016-07-01",
+          "value": 3.5
+        },
+        {
+          "date": "2016-08-01",
+          "value": 5.2
+        },
+        {
+          "date": "2016-09-01",
+          "value": 3.6
+        },
+        {
+          "date": "2016-10-01",
+          "value": 0.7
+        },
+        {
+          "date": "2016-11-01",
+          "value": 4.1
+        },
+        {
+          "date": "2016-12-01",
+          "value": 1.2
+        },
+        {
+          "date": "2017-01-01",
+          "value": -0.3
+        },
+        {
+          "date": "2017-02-01",
+          "value": -3.3
+        },
+        {
+          "date": "2017-03-01",
+          "value": 2.3
+        },
+        {
+          "date": "2017-04-01",
+          "value": -1.3
+        },
+        {
+          "date": "2017-05-01",
+          "value": 3.4
+        },
+        {
+          "date": "2017-06-01",
+          "value": 2.6
+        },
+        {
+          "date": "2017-07-01",
+          "value": 0.5
+        },
+        {
+          "date": "2017-08-01",
+          "value": 0.8
+        },
+        {
+          "date": "2017-09-01",
+          "value": 1.5
+        },
+        {
+          "date": "2017-10-01",
+          "value": -1.8
+        },
+        {
+          "date": "2017-11-01",
+          "value": 2.5
+        },
+        {
+          "date": "2017-12-01",
+          "value": 1.1
+        },
+        {
+          "date": "2018-01-01",
+          "value": 2.5
+        },
+        {
+          "date": "2018-02-01",
+          "value": 2.1
+        },
+        {
+          "date": "2018-03-01",
+          "value": 1.5
+        },
+        {
+          "date": "2018-04-01",
+          "value": 0.8
+        },
+        {
+          "date": "2018-05-01",
+          "value": -0.2
+        },
+        {
+          "date": "2018-06-01",
+          "value": 0.7
+        },
+        {
+          "date": "2018-07-01",
+          "value": -0.7
+        },
+        {
+          "date": "2018-08-01",
+          "value": 0.3
+        },
+        {
+          "date": "2018-09-01",
+          "value": -3.1
+        },
+        {
+          "date": "2018-10-01",
+          "value": 4.5
+        },
+        {
+          "date": "2018-11-01",
+          "value": 1.5
+        },
+        {
+          "date": "2018-12-01",
+          "value": 0.1
+        },
+        {
+          "date": "2019-01-01",
+          "value": 1.7
+        },
+        {
+          "date": "2019-02-01",
+          "value": 1.7
+        },
+        {
+          "date": "2019-03-01",
+          "value": 0.1
+        },
+        {
+          "date": "2019-04-01",
+          "value": 2
+        },
+        {
+          "date": "2019-05-01",
+          "value": 3.1
+        },
+        {
+          "date": "2019-06-01",
+          "value": 0.4
+        },
+        {
+          "date": "2019-07-01",
+          "value": 4.8
+        },
+        {
+          "date": "2019-08-01",
+          "value": 3.3
+        },
+        {
+          "date": "2019-09-01",
+          "value": 3.6
+        },
+        {
+          "date": "2019-10-01",
+          "value": 2.6
+        },
+        {
+          "date": "2019-11-01",
+          "value": 3
+        },
+        {
+          "date": "2019-12-01",
+          "value": 2
+        },
+        {
+          "date": "2020-01-01",
+          "value": 0.9
+        },
+        {
+          "date": "2020-02-01",
+          "value": 5.6
+        },
+        {
+          "date": "2020-03-01",
+          "value": -13.5
+        },
+        {
+          "date": "2020-04-01",
+          "value": -29.8
+        },
+        {
+          "date": "2020-05-01",
+          "value": -19
+        },
+        {
+          "date": "2020-06-01",
+          "value": -3
+        },
+        {
+          "date": "2020-07-01",
+          "value": -3.5
+        },
+        {
+          "date": "2020-08-01",
+          "value": -4.5
+        },
+        {
+          "date": "2020-09-01",
+          "value": -1.9
+        },
+        {
+          "date": "2020-10-01",
+          "value": -2
+        },
+        {
+          "date": "2020-11-01",
+          "value": -5.5
+        },
+        {
+          "date": "2020-12-01",
+          "value": -0.2
+        },
+        {
+          "date": "2021-01-01",
+          "value": -9.9
+        },
+        {
+          "date": "2021-02-01",
+          "value": -9.8
+        },
+        {
+          "date": "2021-03-01",
+          "value": 16.4
+        },
+        {
+          "date": "2021-04-01",
+          "value": 36
+        },
+        {
+          "date": "2021-05-01",
+          "value": 18.1
+        },
+        {
+          "date": "2021-06-01",
+          "value": 2.2
+        },
+        {
+          "date": "2021-07-01",
+          "value": 0.6
+        },
+        {
+          "date": "2021-08-01",
+          "value": 1
+        },
+        {
+          "date": "2021-09-01",
+          "value": 1.6
+        },
+        {
+          "date": "2021-10-01",
+          "value": -0.2
+        },
+        {
+          "date": "2021-11-01",
+          "value": 7.7
+        },
+        {
+          "date": "2021-12-01",
+          "value": 0
+        },
+        {
+          "date": "2022-01-01",
+          "value": 6
+        },
+        {
+          "date": "2022-02-01",
+          "value": 5.5
+        },
+        {
+          "date": "2022-03-01",
+          "value": -0.7
+        },
+        {
+          "date": "2022-04-01",
+          "value": 5.4
+        },
+        {
+          "date": "2022-05-01",
+          "value": 4.7
+        },
+        {
+          "date": "2022-06-01",
+          "value": 2.1
+        },
+        {
+          "date": "2022-07-01",
+          "value": -0.3
+        },
+        {
+          "date": "2022-08-01",
+          "value": 4
+        },
+        {
+          "date": "2022-09-01",
+          "value": 1.8
+        },
+        {
+          "date": "2022-10-01",
+          "value": 0
+        },
+        {
+          "date": "2022-11-01",
+          "value": -2.2
+        },
+        {
+          "date": "2022-12-01",
+          "value": 0.8
+        },
+        {
+          "date": "2023-01-01",
+          "value": 2.9
+        },
+        {
+          "date": "2023-02-01",
+          "value": 0.4
+        },
+        {
+          "date": "2023-03-01",
+          "value": 4.3
+        },
+        {
+          "date": "2023-04-01",
+          "value": 1.6
+        },
+        {
+          "date": "2023-05-01",
+          "value": 3.4
+        },
+        {
+          "date": "2023-06-01",
+          "value": 3.5
+        },
+        {
+          "date": "2023-07-01",
+          "value": 3.1
+        },
+        {
+          "date": "2023-08-01",
+          "value": 1.1
+        },
+        {
+          "date": "2023-09-01",
+          "value": 1.6
+        },
+        {
+          "date": "2023-10-01",
+          "value": 1.8
+        },
+        {
+          "date": "2023-11-01",
+          "value": 3.7
+        },
+        {
+          "date": "2023-12-01",
+          "value": 1.1
+        },
+        {
+          "date": "2024-01-01",
+          "value": 2.3
+        },
+        {
+          "date": "2024-02-01",
+          "value": 4.9
+        },
+        {
+          "date": "2024-03-01",
+          "value": -1.4
+        },
+        {
+          "date": "2024-04-01",
+          "value": 2.7
+        },
+        {
+          "date": "2024-05-01",
+          "value": 0.4
+        },
+        {
+          "date": "2024-06-01",
+          "value": -1.4
+        },
+        {
+          "date": "2024-07-01",
+          "value": 2.9
+        },
+        {
+          "date": "2024-08-01",
+          "value": 3.1
+        },
+        {
+          "date": "2024-09-01",
+          "value": 1.8
+        },
+        {
+          "date": "2024-10-01",
+          "value": 5.4
+        },
+        {
+          "date": "2024-11-01",
+          "value": 1.8
+        },
+        {
+          "date": "2024-12-01",
+          "value": 3.7
+        },
+        {
+          "date": "2025-01-01",
+          "value": 2.2
+        },
+        {
+          "date": "2025-02-01",
+          "value": 0.8
+        },
+        {
+          "date": "2025-03-01",
+          "value": 3.8
+        },
+        {
+          "date": "2025-04-01",
+          "value": 3.7
+        },
+        {
+          "date": "2025-05-01",
+          "value": 5
+        },
+        {
+          "date": "2025-06-01",
+          "value": 6.3
+        },
+        {
+          "date": "2025-07-01",
+          "value": 4.3
+        },
+        {
+          "date": "2025-08-01",
+          "value": 3.1
+        },
+        {
+          "date": "2025-09-01",
+          "value": 6.1
+        },
+        {
+          "date": "2025-10-01",
+          "value": 4.5
+        },
+        {
+          "date": "2025-11-01",
+          "value": 3.9
+        },
+        {
+          "date": "2025-12-01",
+          "value": 4.6
+        },
+        {
+          "date": "2026-01-01",
+          "value": 3.7,
+          "source_url": "https://ine.es/prensa/icm_tabla1.htm",
+          "note": "INE original deflated retail sales YoY"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 2.1,
+          "source_url": "https://ine.es/prensa/icm_tabla1.htm",
+          "note": "INE original deflated retail sales YoY"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 3.8,
+          "source_url": "https://ine.es/prensa/icm_tabla1.htm",
+          "note": "INE original deflated retail sales YoY"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 0.2,
+          "source_url": "https://ine.es/prensa/icm_tabla1.htm",
+          "note": "INE original deflated retail sales YoY"
+        },
+        {
+          "date": "2026-05-01",
+          "value": -0.3,
+          "source_url": "https://ine.es/prensa/icm_tabla1.htm",
+          "note": "INE original deflated retail sales YoY, provisional"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 2.4,
+          "source_url": "https://ine.es/prensa/icm_tabla1.htm",
+          "note": "INE original deflated retail sales YoY, provisional"
+        }
+      ]
+    },
+    {
+      "id": "de_retail",
+      "block": "零售",
+      "name": "德國零售",
+      "ticker": "德 零售",
+      "frequency": "monthly",
+      "color": "#ea580c",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2015-02-01",
+          "value": -0.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2015-03-01",
+          "value": -0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2015-04-01",
+          "value": 0.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2015-06-01",
+          "value": -0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2015-07-01",
+          "value": 1.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2015-09-01",
+          "value": -0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2015-10-01",
+          "value": 0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 1.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2016-01-01",
+          "value": 0,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2016-02-01",
+          "value": -0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2016-03-01",
+          "value": -1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2016-04-01",
+          "value": -0.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2016-06-01",
+          "value": -0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2016-07-01",
+          "value": 1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 0.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2016-09-01",
+          "value": -0.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2016-10-01",
+          "value": 2.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2016-11-01",
+          "value": -2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 1.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2017-01-01",
+          "value": -0.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2017-02-01",
+          "value": 0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2017-04-01",
+          "value": -0.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 0.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 0.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2017-07-01",
+          "value": -0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2017-08-01",
+          "value": -0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 1.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2017-10-01",
+          "value": -2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 0.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2018-01-01",
+          "value": -0.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2018-02-01",
+          "value": -0.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2018-03-01",
+          "value": -0.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 4.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2018-05-01",
+          "value": -2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 0.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2018-07-01",
+          "value": -0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 0,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 0.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 0,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2018-12-01",
+          "value": -0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2019-01-01",
+          "value": 3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2019-02-01",
+          "value": 0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2019-03-01",
+          "value": -1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2019-04-01",
+          "value": 1.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2019-05-01",
+          "value": -2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 2.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2019-07-01",
+          "value": -1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 0.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2019-10-01",
+          "value": -1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 0.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 0,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 0.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -3.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-04-01",
+          "value": -3.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-05-01",
+          "value": 11.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-06-01",
+          "value": -1.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-07-01",
+          "value": -0.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 2.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-09-01",
+          "value": -1.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 2.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-12-01",
+          "value": -3.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2021-01-01",
+          "value": -9.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 3.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 8.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2021-04-01",
+          "value": -4.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 3.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 4.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2021-07-01",
+          "value": -4.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2021-09-01",
+          "value": -2.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 2.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2021-11-01",
+          "value": -0.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2021-12-01",
+          "value": -0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2022-01-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2022-02-01",
+          "value": -0.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2022-03-01",
+          "value": -1.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2022-04-01",
+          "value": -1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2022-05-01",
+          "value": -0.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2022-06-01",
+          "value": -0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2022-07-01",
+          "value": 0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2022-08-01",
+          "value": -1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 1.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2022-10-01",
+          "value": -1.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2022-11-01",
+          "value": 0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2022-12-01",
+          "value": -1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2023-01-01",
+          "value": -0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2023-02-01",
+          "value": 0.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2023-03-01",
+          "value": -1.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2023-04-01",
+          "value": 1.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2023-05-01",
+          "value": 1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 0.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2023-07-01",
+          "value": -0.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2023-08-01",
+          "value": -1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2023-09-01",
+          "value": -0.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 1.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2023-11-01",
+          "value": -0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2023-12-01",
+          "value": -0.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 0.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 0,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 0,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 0.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2024-06-01",
+          "value": -0.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 0.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 1.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 1.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2024-10-01",
+          "value": -0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2024-12-01",
+          "value": -1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 1.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 0.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 0.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2025-05-01",
+          "value": -1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2025-07-01",
+          "value": -0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2025-08-01",
+          "value": -0.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2025-09-01",
+          "value": -0.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2025-11-01",
+          "value": -0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 0.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 0.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2026-02-01",
+          "value": -0.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 0.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2026-04-01",
+          "value": -0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        }
+      ]
+    },
+    {
+      "id": "ea_real_retail",
+      "block": "零售",
+      "name": "歐元區實質零售",
+      "ticker": "歐 Real零售",
+      "frequency": "monthly",
+      "color": "#ea580c",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 1.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2015-02-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2015-03-01",
+          "value": 1.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2015-04-01",
+          "value": 1.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 2.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 2.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2015-07-01",
+          "value": 3.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2015-10-01",
+          "value": 1.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2016-01-01",
+          "value": 1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2016-04-01",
+          "value": 1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2016-07-01",
+          "value": 0.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 1.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2016-10-01",
+          "value": 2.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 2.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2017-01-01",
+          "value": 1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2017-02-01",
+          "value": 1.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 3.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2017-04-01",
+          "value": 2.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 2.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 3.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2017-07-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2017-08-01",
+          "value": 2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 3.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2017-10-01",
+          "value": 0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 2.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2018-01-01",
+          "value": 1.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2018-02-01",
+          "value": 2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 1.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2018-05-01",
+          "value": 2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 1.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2018-07-01",
+          "value": 1.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 0.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 2.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 1.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 0.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2019-01-01",
+          "value": 2.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2019-02-01",
+          "value": 2.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2019-04-01",
+          "value": 2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2019-05-01",
+          "value": 1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 3.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2019-07-01",
+          "value": 2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 2.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 2.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2019-10-01",
+          "value": 1.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 2.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -8.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2020-04-01",
+          "value": -19.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2020-05-01",
+          "value": -2.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2020-07-01",
+          "value": 0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 4.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 2.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 4.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2020-11-01",
+          "value": -1.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 1.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2021-01-01",
+          "value": -5.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2021-02-01",
+          "value": -2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 14.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 24,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 9.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 6.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 3.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 1.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 2.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 2.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 9.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 3.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2022-01-01",
+          "value": 9.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 6.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 3.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 5.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2022-06-01",
+          "value": -1.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2022-07-01",
+          "value": -0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2022-08-01",
+          "value": -0.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 0.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2022-10-01",
+          "value": -2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2022-11-01",
+          "value": -1.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2022-12-01",
+          "value": -2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2023-01-01",
+          "value": -2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2023-02-01",
+          "value": -2.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2023-03-01",
+          "value": -3.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2023-04-01",
+          "value": -2.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2023-05-01",
+          "value": -2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2023-06-01",
+          "value": -1.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2023-07-01",
+          "value": -1.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2023-08-01",
+          "value": -2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2023-09-01",
+          "value": -3.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2023-10-01",
+          "value": -1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2023-11-01",
+          "value": -0.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2023-12-01",
+          "value": -0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2024-01-01",
+          "value": -0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 1.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 1.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2024-06-01",
+          "value": -0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 0.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 2.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 3.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 1.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 2.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 3.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 3.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 2.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 1.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 2.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 1.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 0.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 1.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        }
+      ]
+    },
+    {
+      "id": "de_industrial_production",
+      "block": "工業",
+      "name": "德國工業生產",
+      "ticker": "德 工業",
+      "frequency": "monthly",
+      "color": "#9333ea",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": -2.31788079470198
+        },
+        {
+          "date": "2015-02-01",
+          "value": -1.26582278481013
+        },
+        {
+          "date": "2015-03-01",
+          "value": 0.564440263405475
+        },
+        {
+          "date": "2015-04-01",
+          "value": 1.21827411167512
+        },
+        {
+          "date": "2015-05-01",
+          "value": 2.78637770897832
+        },
+        {
+          "date": "2015-06-01",
+          "value": 2.17391304347827
+        },
+        {
+          "date": "2015-07-01",
+          "value": 1.85728250244379
+        },
+        {
+          "date": "2015-08-01",
+          "value": 3.36956521739129
+        },
+        {
+          "date": "2015-09-01",
+          "value": 1.05363984674329
+        },
+        {
+          "date": "2015-10-01",
+          "value": 0.761179828734559
+        },
+        {
+          "date": "2015-11-01",
+          "value": 0.280373831775704
+        },
+        {
+          "date": "2015-12-01",
+          "value": 0.718685831622157
+        },
+        {
+          "date": "2016-01-01",
+          "value": 2.82485875706215
+        },
+        {
+          "date": "2016-02-01",
+          "value": 2.8846153846154
+        },
+        {
+          "date": "2016-03-01",
+          "value": 1.40318054256314
+        },
+        {
+          "date": "2016-04-01",
+          "value": 1.10330992978935
+        },
+        {
+          "date": "2016-05-01",
+          "value": -0.502008032128509
+        },
+        {
+          "date": "2016-06-01",
+          "value": 1.35396518375241
+        },
+        {
+          "date": "2016-07-01",
+          "value": -0.863723608445299
+        },
+        {
+          "date": "2016-08-01",
+          "value": 2.41850683491063
+        },
+        {
+          "date": "2016-09-01",
+          "value": 2.27488151658768
+        },
+        {
+          "date": "2016-10-01",
+          "value": 1.79414542020773
+        },
+        {
+          "date": "2016-11-01",
+          "value": 2.88909599254428
+        },
+        {
+          "date": "2016-12-01",
+          "value": 0.407747196738018
+        },
+        {
+          "date": "2017-01-01",
+          "value": -0.549450549450548
+        },
+        {
+          "date": "2017-02-01",
+          "value": 0.934579439252348
+        },
+        {
+          "date": "2017-03-01",
+          "value": 1.38376383763839
+        },
+        {
+          "date": "2017-04-01",
+          "value": 2.87698412698414
+        },
+        {
+          "date": "2017-05-01",
+          "value": 4.33905146316853
+        },
+        {
+          "date": "2017-06-01",
+          "value": 2.67175572519083
+        },
+        {
+          "date": "2017-07-01",
+          "value": 3.87221684414327
+        },
+        {
+          "date": "2017-08-01",
+          "value": 4.20944558521561
+        },
+        {
+          "date": "2017-09-01",
+          "value": 3.79981464318813
+        },
+        {
+          "date": "2017-10-01",
+          "value": 2.04081632653061
+        },
+        {
+          "date": "2017-11-01",
+          "value": 5.34420289855071
+        },
+        {
+          "date": "2017-12-01",
+          "value": 6.49746192893401
+        },
+        {
+          "date": "2018-01-01",
+          "value": 6.07734806629834
+        },
+        {
+          "date": "2018-02-01",
+          "value": 1.95473251028806
+        },
+        {
+          "date": "2018-03-01",
+          "value": 3.54868061874432
+        },
+        {
+          "date": "2018-04-01",
+          "value": 0.964320154291221
+        },
+        {
+          "date": "2018-05-01",
+          "value": 2.70793036750483
+        },
+        {
+          "date": "2018-06-01",
+          "value": 2.32342007434945
+        },
+        {
+          "date": "2018-07-01",
+          "value": 0.372786579683138
+        },
+        {
+          "date": "2018-08-01",
+          "value": -0.492610837438423
+        },
+        {
+          "date": "2018-09-01",
+          "value": -0.178571428571428
+        },
+        {
+          "date": "2018-10-01",
+          "value": 0.545454545454538
+        },
+        {
+          "date": "2018-11-01",
+          "value": -3.95528804815133
+        },
+        {
+          "date": "2018-12-01",
+          "value": -2.09723546234509
+        },
+        {
+          "date": "2019-01-01",
+          "value": -1.77083333333333
+        },
+        {
+          "date": "2019-02-01",
+          "value": 0.504540867810288
+        },
+        {
+          "date": "2019-03-01",
+          "value": -0.351493848857642
+        },
+        {
+          "date": "2019-04-01",
+          "value": -1.43266475644699
+        },
+        {
+          "date": "2019-05-01",
+          "value": -2.82485875706214
+        },
+        {
+          "date": "2019-06-01",
+          "value": -3.3605812897366
+        },
+        {
+          "date": "2019-07-01",
+          "value": -2.41411327762303
+        },
+        {
+          "date": "2019-08-01",
+          "value": -3.16831683168317
+        },
+        {
+          "date": "2019-09-01",
+          "value": -3.13059033989267
+        },
+        {
+          "date": "2019-10-01",
+          "value": -3.5262206148282
+        },
+        {
+          "date": "2019-11-01",
+          "value": -1.07430617726052
+        },
+        {
+          "date": "2019-12-01",
+          "value": -4.47906523855892
+        },
+        {
+          "date": "2020-01-01",
+          "value": -0.742311770943804
+        },
+        {
+          "date": "2020-02-01",
+          "value": -0.502008032128509
+        },
+        {
+          "date": "2020-03-01",
+          "value": -9.96472663139331
+        },
+        {
+          "date": "2020-04-01",
+          "value": -25.2906976744186
+        },
+        {
+          "date": "2020-05-01",
+          "value": -18.8953488372093
+        },
+        {
+          "date": "2020-06-01",
+          "value": -10.0563909774436
+        },
+        {
+          "date": "2020-07-01",
+          "value": -8.75356803044718
+        },
+        {
+          "date": "2020-08-01",
+          "value": -8.69120654396728
+        },
+        {
+          "date": "2020-09-01",
+          "value": -6.18651892890121
+        },
+        {
+          "date": "2020-10-01",
+          "value": -2.34301780693533
+        },
+        {
+          "date": "2020-11-01",
+          "value": -1.53846153846154
+        },
+        {
+          "date": "2020-12-01",
+          "value": 1.7329255861366
+        },
+        {
+          "date": "2021-01-01",
+          "value": -3.95299145299144
+        },
+        {
+          "date": "2021-02-01",
+          "value": -5.65085771947528
+        },
+        {
+          "date": "2021-03-01",
+          "value": 6.75808031341822
+        },
+        {
+          "date": "2021-04-01",
+          "value": 29.8313878080415
+        },
+        {
+          "date": "2021-05-01",
+          "value": 17.6821983273596
+        },
+        {
+          "date": "2021-06-01",
+          "value": 5.32915360501567
+        },
+        {
+          "date": "2021-07-01",
+          "value": 5.52659019812305
+        },
+        {
+          "date": "2021-08-01",
+          "value": 0.671892497200455
+        },
+        {
+          "date": "2021-09-01",
+          "value": -1.18110236220471
+        },
+        {
+          "date": "2021-10-01",
+          "value": -1.15163147792706
+        },
+        {
+          "date": "2021-11-01",
+          "value": -1.5625
+        },
+        {
+          "date": "2021-12-01",
+          "value": -1.50300601202404
+        },
+        {
+          "date": "2022-01-01",
+          "value": 0.444938820912122
+        },
+        {
+          "date": "2022-02-01",
+          "value": 2.56684491978609
+        },
+        {
+          "date": "2022-03-01",
+          "value": -4.6788990825688
+        },
+        {
+          "date": "2022-04-01",
+          "value": -3.4965034965035
+        },
+        {
+          "date": "2022-05-01",
+          "value": -1.62436548223349
+        },
+        {
+          "date": "2022-06-01",
+          "value": 0.396825396825395
+        },
+        {
+          "date": "2022-07-01",
+          "value": -1.38339920948617
+        },
+        {
+          "date": "2022-08-01",
+          "value": 1.89098998887651
+        },
+        {
+          "date": "2022-09-01",
+          "value": 3.68525896414342
+        },
+        {
+          "date": "2022-10-01",
+          "value": -0.679611650485434
+        },
+        {
+          "date": "2022-11-01",
+          "value": -0.18674136321194
+        },
+        {
+          "date": "2022-12-01",
+          "value": -3.86571719226856
+        },
+        {
+          "date": "2023-01-01",
+          "value": -2.10409745293465
+        },
+        {
+          "date": "2023-02-01",
+          "value": 0.312825860271104
+        },
+        {
+          "date": "2023-03-01",
+          "value": 2.59865255052933
+        },
+        {
+          "date": "2023-04-01",
+          "value": 0.517598343685299
+        },
+        {
+          "date": "2023-05-01",
+          "value": 0.412796697626416
+        },
+        {
+          "date": "2023-06-01",
+          "value": -1.87747035573123
+        },
+        {
+          "date": "2023-07-01",
+          "value": -2.20440881763527
+        },
+        {
+          "date": "2023-08-01",
+          "value": -2.18340611353712
+        },
+        {
+          "date": "2023-09-01",
+          "value": -3.93852065321806
+        },
+        {
+          "date": "2023-10-01",
+          "value": -3.91006842619746
+        },
+        {
+          "date": "2023-11-01",
+          "value": -4.49017773620207
+        },
+        {
+          "date": "2023-12-01",
+          "value": -3.5978835978836
+        },
+        {
+          "date": "2024-01-01",
+          "value": -5.42986425339368
+        },
+        {
+          "date": "2024-02-01",
+          "value": -5.50935550935551
+        },
+        {
+          "date": "2024-03-01",
+          "value": -4.40900562851781
+        },
+        {
+          "date": "2024-04-01",
+          "value": -4.11946446961895
+        },
+        {
+          "date": "2024-05-01",
+          "value": -7.70811921891058
+        },
+        {
+          "date": "2024-06-01",
+          "value": -3.82678751258811
+        },
+        {
+          "date": "2024-07-01",
+          "value": -5.43032786885246
+        },
+        {
+          "date": "2024-08-01",
+          "value": -3.45982142857142
+        },
+        {
+          "date": "2024-09-01",
+          "value": -4.29999999999999
+        },
+        {
+          "date": "2024-10-01",
+          "value": -3.96744659206509
+        },
+        {
+          "date": "2024-11-01",
+          "value": -2.64446620959842
+        },
+        {
+          "date": "2024-12-01",
+          "value": -2.19538968166849
+        },
+        {
+          "date": "2025-01-01",
+          "value": -0.478468899521522
+        },
+        {
+          "date": "2025-02-01",
+          "value": -3.74037403740375
+        },
+        {
+          "date": "2025-03-01",
+          "value": 0.294406280667325
+        },
+        {
+          "date": "2025-04-01",
+          "value": -1.93340494092373
+        },
+        {
+          "date": "2025-05-01",
+          "value": 0.66815144766148
+        },
+        {
+          "date": "2025-06-01",
+          "value": -1.57068062827225
+        },
+        {
+          "date": "2025-07-01",
+          "value": 0.650054171180936
+        },
+        {
+          "date": "2025-08-01",
+          "value": -3.00578034682081
+        },
+        {
+          "date": "2025-09-01",
+          "value": -0.731452455590387
+        },
+        {
+          "date": "2025-10-01",
+          "value": 0.211864406779649
+        },
+        {
+          "date": "2025-11-01",
+          "value": -0.100603621730389
+        },
+        {
+          "date": "2025-12-01",
+          "value": 0.561167227833903
+        },
+        {
+          "date": "2026-01-01",
+          "value": -2.04326923076923
+        },
+        {
+          "date": "2026-02-01",
+          "value": -0.685714285714278
+        },
+        {
+          "date": "2026-03-01",
+          "value": -3.42465753424658
+        },
+        {
+          "date": "2026-04-01",
+          "value": -0.8762322015334001,
+          "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
+          "note": "YoY from GENESIS X13 calendar-adjusted production levels"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 0,
+          "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
+          "note": "YoY from GENESIS X13 calendar-adjusted production levels"
+        }
+      ]
+    },
+    {
+      "id": "fr_consumer_confidence",
+      "block": "消費者信心",
+      "name": "法國消費者信心",
+      "ticker": "法 信心",
+      "frequency": "monthly",
+      "color": "#0891b2",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 90
+        },
+        {
+          "date": "2015-02-01",
+          "value": 93
+        },
+        {
+          "date": "2015-03-01",
+          "value": 95
+        },
+        {
+          "date": "2015-04-01",
+          "value": 96
+        },
+        {
+          "date": "2015-05-01",
+          "value": 94
+        },
+        {
+          "date": "2015-06-01",
+          "value": 95
+        },
+        {
+          "date": "2015-07-01",
+          "value": 94
+        },
+        {
+          "date": "2015-08-01",
+          "value": 95
+        },
+        {
+          "date": "2015-09-01",
+          "value": 99
+        },
+        {
+          "date": "2015-10-01",
+          "value": 97
+        },
+        {
+          "date": "2015-11-01",
+          "value": 97
+        },
+        {
+          "date": "2015-12-01",
+          "value": 98
+        },
+        {
+          "date": "2016-01-01",
+          "value": 99
+        },
+        {
+          "date": "2016-02-01",
+          "value": 97
+        },
+        {
+          "date": "2016-03-01",
+          "value": 96
+        },
+        {
+          "date": "2016-04-01",
+          "value": 95
+        },
+        {
+          "date": "2016-05-01",
+          "value": 99
+        },
+        {
+          "date": "2016-06-01",
+          "value": 97
+        },
+        {
+          "date": "2016-07-01",
+          "value": 97
+        },
+        {
+          "date": "2016-08-01",
+          "value": 97
+        },
+        {
+          "date": "2016-09-01",
+          "value": 98
+        },
+        {
+          "date": "2016-10-01",
+          "value": 99
+        },
+        {
+          "date": "2016-11-01",
+          "value": 100
+        },
+        {
+          "date": "2016-12-01",
+          "value": 101
+        },
+        {
+          "date": "2017-01-01",
+          "value": 102
+        },
+        {
+          "date": "2017-02-01",
+          "value": 102
+        },
+        {
+          "date": "2017-03-01",
+          "value": 102
+        },
+        {
+          "date": "2017-04-01",
+          "value": 101
+        },
+        {
+          "date": "2017-05-01",
+          "value": 103
+        },
+        {
+          "date": "2017-06-01",
+          "value": 109
+        },
+        {
+          "date": "2017-07-01",
+          "value": 105
+        },
+        {
+          "date": "2017-08-01",
+          "value": 103
+        },
+        {
+          "date": "2017-09-01",
+          "value": 102
+        },
+        {
+          "date": "2017-10-01",
+          "value": 100
+        },
+        {
+          "date": "2017-11-01",
+          "value": 104
+        },
+        {
+          "date": "2017-12-01",
+          "value": 107
+        },
+        {
+          "date": "2018-01-01",
+          "value": 105
+        },
+        {
+          "date": "2018-02-01",
+          "value": 101
+        },
+        {
+          "date": "2018-03-01",
+          "value": 102
+        },
+        {
+          "date": "2018-04-01",
+          "value": 102
+        },
+        {
+          "date": "2018-05-01",
+          "value": 100
+        },
+        {
+          "date": "2018-06-01",
+          "value": 97
+        },
+        {
+          "date": "2018-07-01",
+          "value": 97
+        },
+        {
+          "date": "2018-08-01",
+          "value": 97
+        },
+        {
+          "date": "2018-09-01",
+          "value": 94
+        },
+        {
+          "date": "2018-10-01",
+          "value": 96
+        },
+        {
+          "date": "2018-11-01",
+          "value": 92
+        },
+        {
+          "date": "2018-12-01",
+          "value": 89
+        },
+        {
+          "date": "2019-01-01",
+          "value": 94
+        },
+        {
+          "date": "2019-02-01",
+          "value": 97
+        },
+        {
+          "date": "2019-03-01",
+          "value": 98
+        },
+        {
+          "date": "2019-04-01",
+          "value": 99
+        },
+        {
+          "date": "2019-05-01",
+          "value": 100
+        },
+        {
+          "date": "2019-06-01",
+          "value": 101
+        },
+        {
+          "date": "2019-07-01",
+          "value": 102
+        },
+        {
+          "date": "2019-08-01",
+          "value": 103
+        },
+        {
+          "date": "2019-09-01",
+          "value": 104
+        },
+        {
+          "date": "2019-10-01",
+          "value": 105
+        },
+        {
+          "date": "2019-11-01",
+          "value": 106
+        },
+        {
+          "date": "2019-12-01",
+          "value": 102
+        },
+        {
+          "date": "2020-01-01",
+          "value": 104
+        },
+        {
+          "date": "2020-02-01",
+          "value": 105
+        },
+        {
+          "date": "2020-03-01",
+          "value": 103
+        },
+        {
+          "date": "2020-04-01",
+          "value": 91
+        },
+        {
+          "date": "2020-05-01",
+          "value": 89
+        },
+        {
+          "date": "2020-06-01",
+          "value": 95
+        },
+        {
+          "date": "2020-07-01",
+          "value": 93
+        },
+        {
+          "date": "2020-08-01",
+          "value": 94
+        },
+        {
+          "date": "2020-09-01",
+          "value": 95
+        },
+        {
+          "date": "2020-10-01",
+          "value": 94
+        },
+        {
+          "date": "2020-11-01",
+          "value": 89
+        },
+        {
+          "date": "2020-12-01",
+          "value": 96
+        },
+        {
+          "date": "2021-01-01",
+          "value": 93
+        },
+        {
+          "date": "2021-02-01",
+          "value": 92
+        },
+        {
+          "date": "2021-03-01",
+          "value": 96
+        },
+        {
+          "date": "2021-04-01",
+          "value": 97
+        },
+        {
+          "date": "2021-05-01",
+          "value": 99
+        },
+        {
+          "date": "2021-06-01",
+          "value": 105
+        },
+        {
+          "date": "2021-07-01",
+          "value": 103
+        },
+        {
+          "date": "2021-08-01",
+          "value": 99
+        },
+        {
+          "date": "2021-09-01",
+          "value": 103
+        },
+        {
+          "date": "2021-10-01",
+          "value": 100
+        },
+        {
+          "date": "2021-11-01",
+          "value": 98
+        },
+        {
+          "date": "2021-12-01",
+          "value": 99
+        },
+        {
+          "date": "2022-01-01",
+          "value": 98
+        },
+        {
+          "date": "2022-02-01",
+          "value": 97
+        },
+        {
+          "date": "2022-03-01",
+          "value": 89
+        },
+        {
+          "date": "2022-04-01",
+          "value": 87
+        },
+        {
+          "date": "2022-05-01",
+          "value": 85
+        },
+        {
+          "date": "2022-06-01",
+          "value": 82
+        },
+        {
+          "date": "2022-07-01",
+          "value": 80
+        },
+        {
+          "date": "2022-08-01",
+          "value": 83
+        },
+        {
+          "date": "2022-09-01",
+          "value": 80
+        },
+        {
+          "date": "2022-10-01",
+          "value": 83
+        },
+        {
+          "date": "2022-11-01",
+          "value": 84
+        },
+        {
+          "date": "2022-12-01",
+          "value": 82
+        },
+        {
+          "date": "2023-01-01",
+          "value": 82
+        },
+        {
+          "date": "2023-02-01",
+          "value": 82
+        },
+        {
+          "date": "2023-03-01",
+          "value": 81
+        },
+        {
+          "date": "2023-04-01",
+          "value": 83
+        },
+        {
+          "date": "2023-05-01",
+          "value": 84
+        },
+        {
+          "date": "2023-06-01",
+          "value": 86
+        },
+        {
+          "date": "2023-07-01",
+          "value": 87
+        },
+        {
+          "date": "2023-08-01",
+          "value": 86
+        },
+        {
+          "date": "2023-09-01",
+          "value": 85
+        },
+        {
+          "date": "2023-10-01",
+          "value": 85
+        },
+        {
+          "date": "2023-11-01",
+          "value": 89
+        },
+        {
+          "date": "2023-12-01",
+          "value": 89
+        },
+        {
+          "date": "2024-01-01",
+          "value": 91
+        },
+        {
+          "date": "2024-02-01",
+          "value": 89
+        },
+        {
+          "date": "2024-03-01",
+          "value": 91
+        },
+        {
+          "date": "2024-04-01",
+          "value": 90
+        },
+        {
+          "date": "2024-05-01",
+          "value": 91
+        },
+        {
+          "date": "2024-06-01",
+          "value": 91
+        },
+        {
+          "date": "2024-07-01",
+          "value": 92
+        },
+        {
+          "date": "2024-08-01",
+          "value": 93,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 96,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 93,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 90,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 88,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 91,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 93,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 91,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 92,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 89,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 90,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 89,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 88,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 88,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 90,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 89,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 90,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 89,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 92,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 89,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 84,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 82,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 84,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 86,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        }
+      ]
+    },
+    {
+      "id": "de_gfk_consumer_confidence",
+      "block": "消費者信心",
+      "name": "德國 GfK 消費者信心",
+      "ticker": "德 GfK Consumer Confidence",
+      "frequency": "monthly",
+      "color": "#0891b2",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 8.8
+        },
+        {
+          "date": "2015-02-01",
+          "value": 9.1
+        },
+        {
+          "date": "2015-03-01",
+          "value": 9.5
+        },
+        {
+          "date": "2015-04-01",
+          "value": 9.8
+        },
+        {
+          "date": "2015-05-01",
+          "value": 9.9
+        },
+        {
+          "date": "2015-06-01",
+          "value": 10
+        },
+        {
+          "date": "2015-07-01",
+          "value": 9.9
+        },
+        {
+          "date": "2015-08-01",
+          "value": 9.9
+        },
+        {
+          "date": "2015-09-01",
+          "value": 9.7
+        },
+        {
+          "date": "2015-10-01",
+          "value": 9.4
+        },
+        {
+          "date": "2015-11-01",
+          "value": 9.2
+        },
+        {
+          "date": "2015-12-01",
+          "value": 9.1
+        },
+        {
+          "date": "2016-01-01",
+          "value": 9.2
+        },
+        {
+          "date": "2016-02-01",
+          "value": 9.2
+        },
+        {
+          "date": "2016-03-01",
+          "value": 9.3
+        },
+        {
+          "date": "2016-04-01",
+          "value": 9.2
+        },
+        {
+          "date": "2016-05-01",
+          "value": 9.5
+        },
+        {
+          "date": "2016-06-01",
+          "value": 9.6
+        },
+        {
+          "date": "2016-07-01",
+          "value": 9.9
+        },
+        {
+          "date": "2016-08-01",
+          "value": 9.8
+        },
+        {
+          "date": "2016-09-01",
+          "value": 10
+        },
+        {
+          "date": "2016-10-01",
+          "value": 9.8
+        },
+        {
+          "date": "2016-11-01",
+          "value": 9.5
+        },
+        {
+          "date": "2016-12-01",
+          "value": 9.6
+        },
+        {
+          "date": "2017-01-01",
+          "value": 9.7
+        },
+        {
+          "date": "2017-02-01",
+          "value": 10
+        },
+        {
+          "date": "2017-03-01",
+          "value": 9.8
+        },
+        {
+          "date": "2017-04-01",
+          "value": 9.6
+        },
+        {
+          "date": "2017-05-01",
+          "value": 10
+        },
+        {
+          "date": "2017-06-01",
+          "value": 10.2
+        },
+        {
+          "date": "2017-07-01",
+          "value": 10.4
+        },
+        {
+          "date": "2017-08-01",
+          "value": 10.6
+        },
+        {
+          "date": "2017-09-01",
+          "value": 10.7
+        },
+        {
+          "date": "2017-10-01",
+          "value": 10.6
+        },
+        {
+          "date": "2017-11-01",
+          "value": 10.5
+        },
+        {
+          "date": "2017-12-01",
+          "value": 10.5
+        },
+        {
+          "date": "2018-01-01",
+          "value": 10.6
+        },
+        {
+          "date": "2018-02-01",
+          "value": 10.8
+        },
+        {
+          "date": "2018-03-01",
+          "value": 10.6
+        },
+        {
+          "date": "2018-04-01",
+          "value": 10.7
+        },
+        {
+          "date": "2018-05-01",
+          "value": 10.6
+        },
+        {
+          "date": "2018-06-01",
+          "value": 10.5
+        },
+        {
+          "date": "2018-07-01",
+          "value": 10.5
+        },
+        {
+          "date": "2018-08-01",
+          "value": 10.4
+        },
+        {
+          "date": "2018-09-01",
+          "value": 10.3
+        },
+        {
+          "date": "2018-10-01",
+          "value": 10.4
+        },
+        {
+          "date": "2018-11-01",
+          "value": 10.4
+        },
+        {
+          "date": "2018-12-01",
+          "value": 10.2
+        },
+        {
+          "date": "2019-01-01",
+          "value": 10.3
+        },
+        {
+          "date": "2019-02-01",
+          "value": 10.6
+        },
+        {
+          "date": "2019-03-01",
+          "value": 10.5
+        },
+        {
+          "date": "2019-04-01",
+          "value": 10.2
+        },
+        {
+          "date": "2019-05-01",
+          "value": 10.2
+        },
+        {
+          "date": "2019-06-01",
+          "value": 10.1
+        },
+        {
+          "date": "2019-07-01",
+          "value": 9.8
+        },
+        {
+          "date": "2019-08-01",
+          "value": 9.7
+        },
+        {
+          "date": "2019-09-01",
+          "value": 9.7
+        },
+        {
+          "date": "2019-10-01",
+          "value": 9.8
+        },
+        {
+          "date": "2019-11-01",
+          "value": 9.6
+        },
+        {
+          "date": "2019-12-01",
+          "value": 9.7
+        },
+        {
+          "date": "2020-01-01",
+          "value": 9.7
+        },
+        {
+          "date": "2020-02-01",
+          "value": 9.1
+        },
+        {
+          "date": "2020-03-01",
+          "value": 8.1
+        },
+        {
+          "date": "2020-04-01",
+          "value": 2.3
+        },
+        {
+          "date": "2020-05-01",
+          "value": -23.1
+        },
+        {
+          "date": "2020-06-01",
+          "value": -18.6
+        },
+        {
+          "date": "2020-07-01",
+          "value": -9.4
+        },
+        {
+          "date": "2020-08-01",
+          "value": -0.2
+        },
+        {
+          "date": "2020-09-01",
+          "value": -1.8
+        },
+        {
+          "date": "2020-10-01",
+          "value": -1.7
+        },
+        {
+          "date": "2020-11-01",
+          "value": -3.2
+        },
+        {
+          "date": "2020-12-01",
+          "value": -6.8
+        },
+        {
+          "date": "2021-01-01",
+          "value": -7.5
+        },
+        {
+          "date": "2021-02-01",
+          "value": -15.5
+        },
+        {
+          "date": "2021-03-01",
+          "value": -12.7
+        },
+        {
+          "date": "2021-04-01",
+          "value": -6.1
+        },
+        {
+          "date": "2021-05-01",
+          "value": -8.6
+        },
+        {
+          "date": "2021-06-01",
+          "value": -6.9
+        },
+        {
+          "date": "2021-07-01",
+          "value": -0.3
+        },
+        {
+          "date": "2021-08-01",
+          "value": -0.4
+        },
+        {
+          "date": "2021-09-01",
+          "value": -1.1
+        },
+        {
+          "date": "2021-10-01",
+          "value": 0.4
+        },
+        {
+          "date": "2021-11-01",
+          "value": 1
+        },
+        {
+          "date": "2021-12-01",
+          "value": -1.8
+        },
+        {
+          "date": "2022-01-01",
+          "value": -6.9
+        },
+        {
+          "date": "2022-02-01",
+          "value": -6.7
+        },
+        {
+          "date": "2022-03-01",
+          "value": -8.5
+        },
+        {
+          "date": "2022-04-01",
+          "value": -15.7
+        },
+        {
+          "date": "2022-05-01",
+          "value": -26.6
+        },
+        {
+          "date": "2022-06-01",
+          "value": -26.2
+        },
+        {
+          "date": "2022-07-01",
+          "value": -27.7
+        },
+        {
+          "date": "2022-08-01",
+          "value": -30.9
+        },
+        {
+          "date": "2022-09-01",
+          "value": -36.8
+        },
+        {
+          "date": "2022-10-01",
+          "value": -42.8
+        },
+        {
+          "date": "2022-11-01",
+          "value": -41.9
+        },
+        {
+          "date": "2022-12-01",
+          "value": -40.1
+        },
+        {
+          "date": "2023-01-01",
+          "value": -37.6
+        },
+        {
+          "date": "2023-02-01",
+          "value": -33.8
+        },
+        {
+          "date": "2023-03-01",
+          "value": -30.6
+        },
+        {
+          "date": "2023-04-01",
+          "value": -29.3
+        },
+        {
+          "date": "2023-05-01",
+          "value": -25.8
+        },
+        {
+          "date": "2023-06-01",
+          "value": -24.4
+        },
+        {
+          "date": "2023-07-01",
+          "value": -25.2
+        },
+        {
+          "date": "2023-08-01",
+          "value": -24.6
+        },
+        {
+          "date": "2023-09-01",
+          "value": -25.6
+        },
+        {
+          "date": "2023-10-01",
+          "value": -26.7
+        },
+        {
+          "date": "2023-11-01",
+          "value": -28.3
+        },
+        {
+          "date": "2023-12-01",
+          "value": -27.6
+        },
+        {
+          "date": "2024-01-01",
+          "value": -25.4
+        },
+        {
+          "date": "2024-02-01",
+          "value": -29.6
+        },
+        {
+          "date": "2024-03-01",
+          "value": -28.8
+        },
+        {
+          "date": "2024-04-01",
+          "value": -27.3
+        },
+        {
+          "date": "2024-05-01",
+          "value": -24
+        },
+        {
+          "date": "2024-06-01",
+          "value": -21
+        },
+        {
+          "date": "2024-07-01",
+          "value": -21.6
+        },
+        {
+          "date": "2024-08-01",
+          "value": -18.6
+        },
+        {
+          "date": "2024-09-01",
+          "value": -21.9
+        },
+        {
+          "date": "2024-10-01",
+          "value": -21
+        },
+        {
+          "date": "2024-11-01",
+          "value": -18.4
+        },
+        {
+          "date": "2024-12-01",
+          "value": -23.1
+        },
+        {
+          "date": "2025-01-01",
+          "value": -21.4
+        },
+        {
+          "date": "2025-02-01",
+          "value": -22.6
+        },
+        {
+          "date": "2025-03-01",
+          "value": -24.6
+        },
+        {
+          "date": "2025-04-01",
+          "value": -24.3
+        },
+        {
+          "date": "2025-05-01",
+          "value": -20.8
+        },
+        {
+          "date": "2025-06-01",
+          "value": -20
+        },
+        {
+          "date": "2025-07-01",
+          "value": -20.3
+        },
+        {
+          "date": "2025-08-01",
+          "value": -21.7
+        },
+        {
+          "date": "2025-09-01",
+          "value": -23.5
+        },
+        {
+          "date": "2025-10-01",
+          "value": -22.5
+        },
+        {
+          "date": "2025-11-01",
+          "value": -24.1
+        },
+        {
+          "date": "2025-12-01",
+          "value": -23.4
+        },
+        {
+          "date": "2026-01-01",
+          "value": -26.9
+        },
+        {
+          "date": "2026-02-01",
+          "value": -24.2
+        },
+        {
+          "date": "2026-03-01",
+          "value": -24.8
+        },
+        {
+          "date": "2026-04-01",
+          "value": -28.1
+        },
+        {
+          "date": "2026-05-01",
+          "value": -33.1
+        },
+        {
+          "date": "2026-06-01",
+          "value": -29.7,
+          "source_url": "https://www.nim.org/en/consumer-climate",
+          "note": "official NIM/GfK forecast-month value from prior release"
+        },
+        {
+          "date": "2026-07-01",
+          "value": -29.3,
+          "source_url": "https://www.nim.org/en/consumer-climate/detail-consumer-climate/konsumklima-verharrt-auf-niedrigem-niveau",
+          "note": "previous month revised"
+        },
+        {
+          "date": "2026-08-01",
+          "value": -29.6,
+          "source_url": "https://www.nim.org/en/consumer-climate/detail-consumer-climate/konsumklima-verharrt-auf-niedrigem-niveau",
+          "note": "forecast month"
+        }
+      ]
+    },
+    {
+      "id": "de_zew_current",
+      "block": "消費者信心",
+      "name": "德國 ZEW 現況指數",
+      "ticker": "德信心 Current",
+      "frequency": "monthly",
+      "color": "#0891b2",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 22.4
+        },
+        {
+          "date": "2015-02-01",
+          "value": 45.5
+        },
+        {
+          "date": "2015-03-01",
+          "value": 55.1
+        },
+        {
+          "date": "2015-04-01",
+          "value": 70.2
+        },
+        {
+          "date": "2015-05-01",
+          "value": 65.7
+        },
+        {
+          "date": "2015-06-01",
+          "value": 62.9
+        },
+        {
+          "date": "2015-07-01",
+          "value": 63.9
+        },
+        {
+          "date": "2015-08-01",
+          "value": 65.7
+        },
+        {
+          "date": "2015-09-01",
+          "value": 67.5
+        },
+        {
+          "date": "2015-10-01",
+          "value": 55.2
+        },
+        {
+          "date": "2015-11-01",
+          "value": 54.4
+        },
+        {
+          "date": "2015-12-01",
+          "value": 55
+        },
+        {
+          "date": "2016-01-01",
+          "value": 59.7
+        },
+        {
+          "date": "2016-02-01",
+          "value": 52.3
+        },
+        {
+          "date": "2016-03-01",
+          "value": 50.7
+        },
+        {
+          "date": "2016-04-01",
+          "value": 47.7
+        },
+        {
+          "date": "2016-05-01",
+          "value": 53.1
+        },
+        {
+          "date": "2016-06-01",
+          "value": 54.5
+        },
+        {
+          "date": "2016-07-01",
+          "value": 49.8
+        },
+        {
+          "date": "2016-08-01",
+          "value": 57.6
+        },
+        {
+          "date": "2016-09-01",
+          "value": 55.1
+        },
+        {
+          "date": "2016-10-01",
+          "value": 59.5
+        },
+        {
+          "date": "2016-11-01",
+          "value": 58.8
+        },
+        {
+          "date": "2016-12-01",
+          "value": 63.5
+        },
+        {
+          "date": "2017-01-01",
+          "value": 77.3
+        },
+        {
+          "date": "2017-02-01",
+          "value": 76.4
+        },
+        {
+          "date": "2017-03-01",
+          "value": 77.3
+        },
+        {
+          "date": "2017-04-01",
+          "value": 80.1
+        },
+        {
+          "date": "2017-05-01",
+          "value": 83.9
+        },
+        {
+          "date": "2017-06-01",
+          "value": 88
+        },
+        {
+          "date": "2017-07-01",
+          "value": 86.4
+        },
+        {
+          "date": "2017-08-01",
+          "value": 86.7
+        },
+        {
+          "date": "2017-09-01",
+          "value": 87.9
+        },
+        {
+          "date": "2017-10-01",
+          "value": 87
+        },
+        {
+          "date": "2017-11-01",
+          "value": 88.8
+        },
+        {
+          "date": "2017-12-01",
+          "value": 89.3
+        },
+        {
+          "date": "2018-01-01",
+          "value": 95.2
+        },
+        {
+          "date": "2018-02-01",
+          "value": 92.3
+        },
+        {
+          "date": "2018-03-01",
+          "value": 90.7
+        },
+        {
+          "date": "2018-04-01",
+          "value": 87.9
+        },
+        {
+          "date": "2018-05-01",
+          "value": 87.4
+        },
+        {
+          "date": "2018-06-01",
+          "value": 80.6
+        },
+        {
+          "date": "2018-07-01",
+          "value": 72.4
+        },
+        {
+          "date": "2018-08-01",
+          "value": 72.6
+        },
+        {
+          "date": "2018-09-01",
+          "value": 76
+        },
+        {
+          "date": "2018-10-01",
+          "value": 70.1
+        },
+        {
+          "date": "2018-11-01",
+          "value": 58.2
+        },
+        {
+          "date": "2018-12-01",
+          "value": 45.3
+        },
+        {
+          "date": "2019-01-01",
+          "value": 27.6
+        },
+        {
+          "date": "2019-02-01",
+          "value": 15
+        },
+        {
+          "date": "2019-03-01",
+          "value": 11.1
+        },
+        {
+          "date": "2019-04-01",
+          "value": 5.5
+        },
+        {
+          "date": "2019-05-01",
+          "value": 8.2
+        },
+        {
+          "date": "2019-06-01",
+          "value": 7.8
+        },
+        {
+          "date": "2019-07-01",
+          "value": -1.1
+        },
+        {
+          "date": "2019-08-01",
+          "value": -13.5
+        },
+        {
+          "date": "2019-09-01",
+          "value": -19.9
+        },
+        {
+          "date": "2019-10-01",
+          "value": -25.3
+        },
+        {
+          "date": "2019-11-01",
+          "value": -24.7
+        },
+        {
+          "date": "2019-12-01",
+          "value": -19.9
+        },
+        {
+          "date": "2020-01-01",
+          "value": -9.5
+        },
+        {
+          "date": "2020-02-01",
+          "value": -15.7
+        },
+        {
+          "date": "2020-03-01",
+          "value": -43.1
+        },
+        {
+          "date": "2020-04-01",
+          "value": -91.5
+        },
+        {
+          "date": "2020-05-01",
+          "value": -93.5
+        },
+        {
+          "date": "2020-06-01",
+          "value": -83.1
+        },
+        {
+          "date": "2020-07-01",
+          "value": -80.9
+        },
+        {
+          "date": "2020-08-01",
+          "value": -81.3
+        },
+        {
+          "date": "2020-09-01",
+          "value": -66.2
+        },
+        {
+          "date": "2020-10-01",
+          "value": -59.5
+        },
+        {
+          "date": "2020-11-01",
+          "value": -64.3
+        },
+        {
+          "date": "2020-12-01",
+          "value": -66.5
+        },
+        {
+          "date": "2021-01-01",
+          "value": -66.4
+        },
+        {
+          "date": "2021-02-01",
+          "value": -67.2
+        },
+        {
+          "date": "2021-03-01",
+          "value": -61
+        },
+        {
+          "date": "2021-04-01",
+          "value": -48.8
+        },
+        {
+          "date": "2021-05-01",
+          "value": -40.1
+        },
+        {
+          "date": "2021-06-01",
+          "value": -9.1
+        },
+        {
+          "date": "2021-07-01",
+          "value": 21.9
+        },
+        {
+          "date": "2021-08-01",
+          "value": 29.3
+        },
+        {
+          "date": "2021-09-01",
+          "value": 31.9
+        },
+        {
+          "date": "2021-10-01",
+          "value": 21.6
+        },
+        {
+          "date": "2021-11-01",
+          "value": 12.5
+        },
+        {
+          "date": "2021-12-01",
+          "value": -7.4
+        },
+        {
+          "date": "2022-01-01",
+          "value": -10.2
+        },
+        {
+          "date": "2022-02-01",
+          "value": -8.1
+        },
+        {
+          "date": "2022-03-01",
+          "value": -21.4
+        },
+        {
+          "date": "2022-04-01",
+          "value": -30.8
+        },
+        {
+          "date": "2022-05-01",
+          "value": -36.5
+        },
+        {
+          "date": "2022-06-01",
+          "value": -27.6
+        },
+        {
+          "date": "2022-07-01",
+          "value": -45.8
+        },
+        {
+          "date": "2022-08-01",
+          "value": -47.6
+        },
+        {
+          "date": "2022-09-01",
+          "value": -60.5
+        },
+        {
+          "date": "2022-10-01",
+          "value": -72.2
+        },
+        {
+          "date": "2022-11-01",
+          "value": -64.5
+        },
+        {
+          "date": "2022-12-01",
+          "value": -61.4
+        },
+        {
+          "date": "2023-01-01",
+          "value": -58.6
+        },
+        {
+          "date": "2023-02-01",
+          "value": -45.1
+        },
+        {
+          "date": "2023-03-01",
+          "value": -46.5
+        },
+        {
+          "date": "2023-04-01",
+          "value": -32.5
+        },
+        {
+          "date": "2023-05-01",
+          "value": -34.8
+        },
+        {
+          "date": "2023-06-01",
+          "value": -56.5
+        },
+        {
+          "date": "2023-07-01",
+          "value": -59.5
+        },
+        {
+          "date": "2023-08-01",
+          "value": -71.3
+        },
+        {
+          "date": "2023-09-01",
+          "value": -79.4
+        },
+        {
+          "date": "2023-10-01",
+          "value": -79.9
+        },
+        {
+          "date": "2023-11-01",
+          "value": -79.8
+        },
+        {
+          "date": "2023-12-01",
+          "value": -77.1
+        },
+        {
+          "date": "2024-01-01",
+          "value": -77.3
+        },
+        {
+          "date": "2024-02-01",
+          "value": -81.7
+        },
+        {
+          "date": "2024-03-01",
+          "value": -80.5
+        },
+        {
+          "date": "2024-04-01",
+          "value": -79.2
+        },
+        {
+          "date": "2024-05-01",
+          "value": -72.3
+        },
+        {
+          "date": "2024-06-01",
+          "value": -73.8
+        },
+        {
+          "date": "2024-07-01",
+          "value": -68.9
+        },
+        {
+          "date": "2024-08-01",
+          "value": -77.3
+        },
+        {
+          "date": "2024-09-01",
+          "value": -84.5
+        },
+        {
+          "date": "2024-10-01",
+          "value": -86.9
+        },
+        {
+          "date": "2024-11-01",
+          "value": -91.4
+        },
+        {
+          "date": "2024-12-01",
+          "value": -93.1
+        },
+        {
+          "date": "2025-01-01",
+          "value": -90.4
+        },
+        {
+          "date": "2025-02-01",
+          "value": -88.5
+        },
+        {
+          "date": "2025-03-01",
+          "value": -87.6
+        },
+        {
+          "date": "2025-04-01",
+          "value": -81.2
+        },
+        {
+          "date": "2025-05-01",
+          "value": -82
+        },
+        {
+          "date": "2025-06-01",
+          "value": -72
+        },
+        {
+          "date": "2025-07-01",
+          "value": -59.5
+        },
+        {
+          "date": "2025-08-01",
+          "value": -68.6
+        },
+        {
+          "date": "2025-09-01",
+          "value": -76.4
+        },
+        {
+          "date": "2025-10-01",
+          "value": -80
+        },
+        {
+          "date": "2025-11-01",
+          "value": -78.7
+        },
+        {
+          "date": "2025-12-01",
+          "value": -81
+        },
+        {
+          "date": "2026-01-01",
+          "value": -72.7
+        },
+        {
+          "date": "2026-02-01",
+          "value": -65.9
+        },
+        {
+          "date": "2026-03-01",
+          "value": -62.9
+        },
+        {
+          "date": "2026-04-01",
+          "value": -73.7
+        },
+        {
+          "date": "2026-05-01",
+          "value": -77.8
+        },
+        {
+          "date": "2026-06-01",
+          "value": -81,
+          "source_url": "https://fmtdownload.zew.de/fdl/download/public/alle/e_07_2026.pdf",
+          "note": "official prior month derived from July level and published change"
+        },
+        {
+          "date": "2026-07-01",
+          "value": -77.6,
+          "source_url": "https://fmtdownload.zew.de/fdl/download/public/alle/e_07_2026.pdf",
+          "note": "official ZEW Economic Situation Germany"
+        }
+      ]
+    },
+    {
+      "id": "de_zew_expectations",
+      "block": "消費者信心",
+      "name": "德國 ZEW 預期指數",
+      "ticker": "德信心 expect",
+      "frequency": "monthly",
+      "color": "#0891b2",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 48.4
+        },
+        {
+          "date": "2015-02-01",
+          "value": 53
+        },
+        {
+          "date": "2015-03-01",
+          "value": 54.8
+        },
+        {
+          "date": "2015-04-01",
+          "value": 53.3
+        },
+        {
+          "date": "2015-05-01",
+          "value": 41.9
+        },
+        {
+          "date": "2015-06-01",
+          "value": 31.5
+        },
+        {
+          "date": "2015-07-01",
+          "value": 29.7
+        },
+        {
+          "date": "2015-08-01",
+          "value": 25
+        },
+        {
+          "date": "2015-09-01",
+          "value": 12.1
+        },
+        {
+          "date": "2015-10-01",
+          "value": 1.9
+        },
+        {
+          "date": "2015-11-01",
+          "value": 10.4
+        },
+        {
+          "date": "2015-12-01",
+          "value": 16.1
+        },
+        {
+          "date": "2016-01-01",
+          "value": 10.2
+        },
+        {
+          "date": "2016-02-01",
+          "value": 1
+        },
+        {
+          "date": "2016-03-01",
+          "value": 4.3
+        },
+        {
+          "date": "2016-04-01",
+          "value": 11.2
+        },
+        {
+          "date": "2016-05-01",
+          "value": 6.4
+        },
+        {
+          "date": "2016-06-01",
+          "value": 19.2
+        },
+        {
+          "date": "2016-07-01",
+          "value": -6.8
+        },
+        {
+          "date": "2016-08-01",
+          "value": 0.5
+        },
+        {
+          "date": "2016-09-01",
+          "value": 0.5
+        },
+        {
+          "date": "2016-10-01",
+          "value": 6.2
+        },
+        {
+          "date": "2016-11-01",
+          "value": 13.8
+        },
+        {
+          "date": "2016-12-01",
+          "value": 13.8
+        },
+        {
+          "date": "2017-01-01",
+          "value": 16.6
+        },
+        {
+          "date": "2017-02-01",
+          "value": 10.4
+        },
+        {
+          "date": "2017-03-01",
+          "value": 12.8
+        },
+        {
+          "date": "2017-04-01",
+          "value": 19.5
+        },
+        {
+          "date": "2017-05-01",
+          "value": 20.6
+        },
+        {
+          "date": "2017-06-01",
+          "value": 18.6
+        },
+        {
+          "date": "2017-07-01",
+          "value": 17.5
+        },
+        {
+          "date": "2017-08-01",
+          "value": 10
+        },
+        {
+          "date": "2017-09-01",
+          "value": 17
+        },
+        {
+          "date": "2017-10-01",
+          "value": 17.6
+        },
+        {
+          "date": "2017-11-01",
+          "value": 18.7
+        },
+        {
+          "date": "2017-12-01",
+          "value": 17.4
+        },
+        {
+          "date": "2018-01-01",
+          "value": 20.4
+        },
+        {
+          "date": "2018-02-01",
+          "value": 17.8
+        },
+        {
+          "date": "2018-03-01",
+          "value": 5.1
+        },
+        {
+          "date": "2018-04-01",
+          "value": -8.2
+        },
+        {
+          "date": "2018-05-01",
+          "value": -8.2
+        },
+        {
+          "date": "2018-06-01",
+          "value": -16.1
+        },
+        {
+          "date": "2018-07-01",
+          "value": -24.7
+        },
+        {
+          "date": "2018-08-01",
+          "value": -13.7
+        },
+        {
+          "date": "2018-09-01",
+          "value": -10.6
+        },
+        {
+          "date": "2018-10-01",
+          "value": -24.7
+        },
+        {
+          "date": "2018-11-01",
+          "value": -24.1
+        },
+        {
+          "date": "2018-12-01",
+          "value": -17.5
+        },
+        {
+          "date": "2019-01-01",
+          "value": -15
+        },
+        {
+          "date": "2019-02-01",
+          "value": -13.4
+        },
+        {
+          "date": "2019-03-01",
+          "value": -3.6
+        },
+        {
+          "date": "2019-04-01",
+          "value": 3.1
+        },
+        {
+          "date": "2019-05-01",
+          "value": -2.1
+        },
+        {
+          "date": "2019-06-01",
+          "value": -21.1
+        },
+        {
+          "date": "2019-07-01",
+          "value": -24.5
+        },
+        {
+          "date": "2019-08-01",
+          "value": -44.1
+        },
+        {
+          "date": "2019-09-01",
+          "value": -22.5
+        },
+        {
+          "date": "2019-10-01",
+          "value": -22.8
+        },
+        {
+          "date": "2019-11-01",
+          "value": -2.1
+        },
+        {
+          "date": "2019-12-01",
+          "value": 10.7
+        },
+        {
+          "date": "2020-01-01",
+          "value": 26.7
+        },
+        {
+          "date": "2020-02-01",
+          "value": 8.7
+        },
+        {
+          "date": "2020-03-01",
+          "value": -49.5
+        },
+        {
+          "date": "2020-04-01",
+          "value": 28.2
+        },
+        {
+          "date": "2020-05-01",
+          "value": 51
+        },
+        {
+          "date": "2020-06-01",
+          "value": 63.4
+        },
+        {
+          "date": "2020-07-01",
+          "value": 59.3
+        },
+        {
+          "date": "2020-08-01",
+          "value": 71.5
+        },
+        {
+          "date": "2020-09-01",
+          "value": 77.4
+        },
+        {
+          "date": "2020-10-01",
+          "value": 56.1
+        },
+        {
+          "date": "2020-11-01",
+          "value": 39
+        },
+        {
+          "date": "2020-12-01",
+          "value": 55
+        },
+        {
+          "date": "2021-01-01",
+          "value": 61.8
+        },
+        {
+          "date": "2021-02-01",
+          "value": 71.2
+        },
+        {
+          "date": "2021-03-01",
+          "value": 76.6
+        },
+        {
+          "date": "2021-04-01",
+          "value": 70.7
+        },
+        {
+          "date": "2021-05-01",
+          "value": 84.4
+        },
+        {
+          "date": "2021-06-01",
+          "value": 79.8
+        },
+        {
+          "date": "2021-07-01",
+          "value": 63.3
+        },
+        {
+          "date": "2021-08-01",
+          "value": 40.4
+        },
+        {
+          "date": "2021-09-01",
+          "value": 26.5
+        },
+        {
+          "date": "2021-10-01",
+          "value": 22.3
+        },
+        {
+          "date": "2021-11-01",
+          "value": 31.7
+        },
+        {
+          "date": "2021-12-01",
+          "value": 29.9
+        },
+        {
+          "date": "2022-01-01",
+          "value": 51.7
+        },
+        {
+          "date": "2022-02-01",
+          "value": 54.3
+        },
+        {
+          "date": "2022-03-01",
+          "value": -39.3
+        },
+        {
+          "date": "2022-04-01",
+          "value": -41
+        },
+        {
+          "date": "2022-05-01",
+          "value": -34.3
+        },
+        {
+          "date": "2022-06-01",
+          "value": -28
+        },
+        {
+          "date": "2022-07-01",
+          "value": -53.8
+        },
+        {
+          "date": "2022-08-01",
+          "value": -55.3
+        },
+        {
+          "date": "2022-09-01",
+          "value": -61.9
+        },
+        {
+          "date": "2022-10-01",
+          "value": -59.2
+        },
+        {
+          "date": "2022-11-01",
+          "value": -36.7
+        },
+        {
+          "date": "2022-12-01",
+          "value": -23.3
+        },
+        {
+          "date": "2023-01-01",
+          "value": 16.9
+        },
+        {
+          "date": "2023-02-01",
+          "value": 28.1
+        },
+        {
+          "date": "2023-03-01",
+          "value": 13
+        },
+        {
+          "date": "2023-04-01",
+          "value": 4.1
+        },
+        {
+          "date": "2023-05-01",
+          "value": -10.7
+        },
+        {
+          "date": "2023-06-01",
+          "value": -8.5
+        },
+        {
+          "date": "2023-07-01",
+          "value": -14.7
+        },
+        {
+          "date": "2023-08-01",
+          "value": -12.3
+        },
+        {
+          "date": "2023-09-01",
+          "value": -11.4
+        },
+        {
+          "date": "2023-10-01",
+          "value": -1.1
+        },
+        {
+          "date": "2023-11-01",
+          "value": 9.8
+        },
+        {
+          "date": "2023-12-01",
+          "value": 12.8
+        },
+        {
+          "date": "2024-01-01",
+          "value": 15.2
+        },
+        {
+          "date": "2024-02-01",
+          "value": 19.9
+        },
+        {
+          "date": "2024-03-01",
+          "value": 31.7
+        },
+        {
+          "date": "2024-04-01",
+          "value": 42.9
+        },
+        {
+          "date": "2024-05-01",
+          "value": 47.1
+        },
+        {
+          "date": "2024-06-01",
+          "value": 47.5
+        },
+        {
+          "date": "2024-07-01",
+          "value": 41.8
+        },
+        {
+          "date": "2024-08-01",
+          "value": 19.2
+        },
+        {
+          "date": "2024-09-01",
+          "value": 3.6
+        },
+        {
+          "date": "2024-10-01",
+          "value": 13.1
+        },
+        {
+          "date": "2024-11-01",
+          "value": 7.4
+        },
+        {
+          "date": "2024-12-01",
+          "value": 15.7
+        },
+        {
+          "date": "2025-01-01",
+          "value": 10.3
+        },
+        {
+          "date": "2025-02-01",
+          "value": 26
+        },
+        {
+          "date": "2025-03-01",
+          "value": 51.6
+        },
+        {
+          "date": "2025-04-01",
+          "value": -14
+        },
+        {
+          "date": "2025-05-01",
+          "value": 25.2
+        },
+        {
+          "date": "2025-06-01",
+          "value": 47.5
+        },
+        {
+          "date": "2025-07-01",
+          "value": 52.7
+        },
+        {
+          "date": "2025-08-01",
+          "value": 34.7
+        },
+        {
+          "date": "2025-09-01",
+          "value": 37.3
+        },
+        {
+          "date": "2025-10-01",
+          "value": 39.3
+        },
+        {
+          "date": "2025-11-01",
+          "value": 38.5
+        },
+        {
+          "date": "2025-12-01",
+          "value": 45.8
+        },
+        {
+          "date": "2026-01-01",
+          "value": 59.6
+        },
+        {
+          "date": "2026-02-01",
+          "value": 58.3
+        },
+        {
+          "date": "2026-03-01",
+          "value": -0.5
+        },
+        {
+          "date": "2026-04-01",
+          "value": -17.2
+        },
+        {
+          "date": "2026-05-01",
+          "value": -10.2
+        },
+        {
+          "date": "2026-06-01",
+          "value": 10.5,
+          "source_url": "https://fmtdownload.zew.de/fdl/download/public/alle/e_07_2026.pdf",
+          "note": "official prior month derived from July level and published change"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 26.3,
+          "source_url": "https://fmtdownload.zew.de/fdl/download/public/alle/e_07_2026.pdf",
+          "note": "official ZEW Indicator of Economic Sentiment Germany"
+        }
+      ]
+    },
+    {
+      "id": "de_manufacturing_pmi",
+      "block": "製造業",
+      "name": "德國製造業 PMI",
+      "ticker": "德 製造業PMI",
+      "frequency": "monthly",
+      "color": "#0f766e",
+      "data": [
+        {
+          "date": "2023-07-01",
+          "value": 38.8
+        },
+        {
+          "date": "2023-08-01",
+          "value": 39.1
+        },
+        {
+          "date": "2023-09-01",
+          "value": 39.6
+        },
+        {
+          "date": "2023-10-01",
+          "value": 40.8
+        },
+        {
+          "date": "2023-11-01",
+          "value": 42.6
+        },
+        {
+          "date": "2023-12-01",
+          "value": 43.3
+        },
+        {
+          "date": "2024-01-01",
+          "value": 45.5
+        },
+        {
+          "date": "2024-02-01",
+          "value": 42.5
+        },
+        {
+          "date": "2024-03-01",
+          "value": 41.9
+        },
+        {
+          "date": "2024-04-01",
+          "value": 42.5
+        },
+        {
+          "date": "2024-05-01",
+          "value": 45.4
+        },
+        {
+          "date": "2024-06-01",
+          "value": 43.5
+        },
+        {
+          "date": "2024-07-01",
+          "value": 43.2
+        },
+        {
+          "date": "2024-08-01",
+          "value": 42.4
+        },
+        {
+          "date": "2024-09-01",
+          "value": 40.6
+        },
+        {
+          "date": "2024-10-01",
+          "value": 43
+        },
+        {
+          "date": "2024-11-01",
+          "value": 43
+        },
+        {
+          "date": "2024-12-01",
+          "value": 42.5
+        },
+        {
+          "date": "2025-01-01",
+          "value": 45
+        },
+        {
+          "date": "2025-02-01",
+          "value": 46.5
+        },
+        {
+          "date": "2025-03-01",
+          "value": 48.3
+        },
+        {
+          "date": "2025-04-01",
+          "value": 48.4
+        },
+        {
+          "date": "2025-05-01",
+          "value": 48.3
+        },
+        {
+          "date": "2025-06-01",
+          "value": 49
+        },
+        {
+          "date": "2025-07-01",
+          "value": 49.1
+        },
+        {
+          "date": "2025-08-01",
+          "value": 49.8
+        },
+        {
+          "date": "2025-09-01",
+          "value": 49.5
+        },
+        {
+          "date": "2025-10-01",
+          "value": 49.6
+        },
+        {
+          "date": "2025-11-01",
+          "value": 48.2
+        },
+        {
+          "date": "2025-12-01",
+          "value": 47
+        },
+        {
+          "date": "2026-01-01",
+          "value": 49.1
+        },
+        {
+          "date": "2026-02-01",
+          "value": 50.9
+        },
+        {
+          "date": "2026-03-01",
+          "value": 52.2
+        },
+        {
+          "date": "2026-04-01",
+          "value": 51.4
+        },
+        {
+          "date": "2026-05-01",
+          "value": 50.1
+        },
+        {
+          "date": "2026-06-01",
+          "value": 50.3,
+          "source_url": "https://www.pmi.spglobal.com/Public/Release/PressReleases",
+          "status": "final",
+          "note": "official HCOB/S&P Global final June release",
+          "release_type": "final"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 52.2,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/33afc7650b4243d49379ecc2c469b446",
+          "status": "flash",
+          "note": "matched UK-template label: Flash Germany Manufacturing PMI: 52.2",
+          "release_type": "flash"
+        }
+      ]
+    },
+    {
+      "id": "fr_manufacturing_pmi",
+      "block": "製造業",
+      "name": "法國製造業 PMI",
+      "ticker": "法 製造業PMI",
+      "frequency": "monthly",
+      "color": "#0f766e",
+      "data": [
+        {
+          "date": "2023-07-01",
+          "value": 45.1
+        },
+        {
+          "date": "2023-08-01",
+          "value": 46
+        },
+        {
+          "date": "2023-09-01",
+          "value": 44.2
+        },
+        {
+          "date": "2023-10-01",
+          "value": 42.8
+        },
+        {
+          "date": "2023-11-01",
+          "value": 42.9
+        },
+        {
+          "date": "2023-12-01",
+          "value": 42.1
+        },
+        {
+          "date": "2024-01-01",
+          "value": 43.1
+        },
+        {
+          "date": "2024-02-01",
+          "value": 47.1
+        },
+        {
+          "date": "2024-03-01",
+          "value": 46.2
+        },
+        {
+          "date": "2024-04-01",
+          "value": 45.3
+        },
+        {
+          "date": "2024-05-01",
+          "value": 46.4
+        },
+        {
+          "date": "2024-06-01",
+          "value": 45.4
+        },
+        {
+          "date": "2024-07-01",
+          "value": 44
+        },
+        {
+          "date": "2024-08-01",
+          "value": 43.9
+        },
+        {
+          "date": "2024-09-01",
+          "value": 44.6
+        },
+        {
+          "date": "2024-10-01",
+          "value": 44.5
+        },
+        {
+          "date": "2024-11-01",
+          "value": 43.1
+        },
+        {
+          "date": "2024-12-01",
+          "value": 41.9
+        },
+        {
+          "date": "2025-01-01",
+          "value": 45
+        },
+        {
+          "date": "2025-02-01",
+          "value": 45.8
+        },
+        {
+          "date": "2025-03-01",
+          "value": 48.5
+        },
+        {
+          "date": "2025-04-01",
+          "value": 48.7
+        },
+        {
+          "date": "2025-05-01",
+          "value": 49.8
+        },
+        {
+          "date": "2025-06-01",
+          "value": 48.1
+        },
+        {
+          "date": "2025-07-01",
+          "value": 48.2
+        },
+        {
+          "date": "2025-08-01",
+          "value": 50.4
+        },
+        {
+          "date": "2025-09-01",
+          "value": 48.2
+        },
+        {
+          "date": "2025-10-01",
+          "value": 48.8
+        },
+        {
+          "date": "2025-11-01",
+          "value": 47.8
+        },
+        {
+          "date": "2025-12-01",
+          "value": 50.7
+        },
+        {
+          "date": "2026-01-01",
+          "value": 51.2
+        },
+        {
+          "date": "2026-02-01",
+          "value": 50.1
+        },
+        {
+          "date": "2026-03-01",
+          "value": 50
+        },
+        {
+          "date": "2026-04-01",
+          "value": 52.8
+        },
+        {
+          "date": "2026-05-01",
+          "value": 49.7
+        },
+        {
+          "date": "2026-06-01",
+          "value": 51.2,
+          "source_url": "https://www.pmi.spglobal.com/Public/Release/PressReleases",
+          "status": "final",
+          "note": "official HCOB/S&P Global final June release",
+          "release_type": "final"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 50,
+          "source_url": "https://tradingeconomics.com/france/manufacturing-pmi",
+          "status": "flash",
+          "note": "public indicator page; underlying source explicitly S&P Global; flash",
+          "release_type": "flash"
+        }
+      ]
+    },
+    {
+      "id": "fr_manufacturing_confidence",
+      "block": "製造業",
+      "name": "法國製造業信心",
+      "ticker": "法 製造業信心",
+      "frequency": "monthly",
+      "color": "#0f766e",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 98.7
+        },
+        {
+          "date": "2015-02-01",
+          "value": 98.3
+        },
+        {
+          "date": "2015-03-01",
+          "value": 98.8
+        },
+        {
+          "date": "2015-04-01",
+          "value": 101.5
+        },
+        {
+          "date": "2015-05-01",
+          "value": 101.7
+        },
+        {
+          "date": "2015-06-01",
+          "value": 100.2
+        },
+        {
+          "date": "2015-07-01",
+          "value": 101.5
+        },
+        {
+          "date": "2015-08-01",
+          "value": 103.5
+        },
+        {
+          "date": "2015-09-01",
+          "value": 104.8
+        },
+        {
+          "date": "2015-10-01",
+          "value": 103.1
+        },
+        {
+          "date": "2015-11-01",
+          "value": 102.3
+        },
+        {
+          "date": "2015-12-01",
+          "value": 102.5
+        },
+        {
+          "date": "2016-01-01",
+          "value": 102.7
+        },
+        {
+          "date": "2016-02-01",
+          "value": 102.9
+        },
+        {
+          "date": "2016-03-01",
+          "value": 102.5
+        },
+        {
+          "date": "2016-04-01",
+          "value": 104.7
+        },
+        {
+          "date": "2016-05-01",
+          "value": 104.3
+        },
+        {
+          "date": "2016-06-01",
+          "value": 101.4
+        },
+        {
+          "date": "2016-07-01",
+          "value": 101.5
+        },
+        {
+          "date": "2016-08-01",
+          "value": 101.5
+        },
+        {
+          "date": "2016-09-01",
+          "value": 103.5
+        },
+        {
+          "date": "2016-10-01",
+          "value": 102.1
+        },
+        {
+          "date": "2016-11-01",
+          "value": 102.1
+        },
+        {
+          "date": "2016-12-01",
+          "value": 105.8
+        },
+        {
+          "date": "2017-01-01",
+          "value": 105.8
+        },
+        {
+          "date": "2017-02-01",
+          "value": 106.5
+        },
+        {
+          "date": "2017-03-01",
+          "value": 105.3
+        },
+        {
+          "date": "2017-04-01",
+          "value": 108.3
+        },
+        {
+          "date": "2017-05-01",
+          "value": 108.3
+        },
+        {
+          "date": "2017-06-01",
+          "value": 109
+        },
+        {
+          "date": "2017-07-01",
+          "value": 108.5
+        },
+        {
+          "date": "2017-08-01",
+          "value": 110
+        },
+        {
+          "date": "2017-09-01",
+          "value": 111.6
+        },
+        {
+          "date": "2017-10-01",
+          "value": 111.9
+        },
+        {
+          "date": "2017-11-01",
+          "value": 112.1
+        },
+        {
+          "date": "2017-12-01",
+          "value": 112.1
+        },
+        {
+          "date": "2018-01-01",
+          "value": 113.7
+        },
+        {
+          "date": "2018-02-01",
+          "value": 112.3
+        },
+        {
+          "date": "2018-03-01",
+          "value": 110.5
+        },
+        {
+          "date": "2018-04-01",
+          "value": 110.3
+        },
+        {
+          "date": "2018-05-01",
+          "value": 109.6
+        },
+        {
+          "date": "2018-06-01",
+          "value": 109.5
+        },
+        {
+          "date": "2018-07-01",
+          "value": 108.5
+        },
+        {
+          "date": "2018-08-01",
+          "value": 108.6
+        },
+        {
+          "date": "2018-09-01",
+          "value": 108
+        },
+        {
+          "date": "2018-10-01",
+          "value": 104.9
+        },
+        {
+          "date": "2018-11-01",
+          "value": 105.6
+        },
+        {
+          "date": "2018-12-01",
+          "value": 103.6
+        },
+        {
+          "date": "2019-01-01",
+          "value": 103
+        },
+        {
+          "date": "2019-02-01",
+          "value": 102.8
+        },
+        {
+          "date": "2019-03-01",
+          "value": 103.4
+        },
+        {
+          "date": "2019-04-01",
+          "value": 101.1
+        },
+        {
+          "date": "2019-05-01",
+          "value": 103.4
+        },
+        {
+          "date": "2019-06-01",
+          "value": 101.8
+        },
+        {
+          "date": "2019-07-01",
+          "value": 101
+        },
+        {
+          "date": "2019-08-01",
+          "value": 101.9
+        },
+        {
+          "date": "2019-09-01",
+          "value": 102.4
+        },
+        {
+          "date": "2019-10-01",
+          "value": 100.2
+        },
+        {
+          "date": "2019-11-01",
+          "value": 102.5
+        },
+        {
+          "date": "2019-12-01",
+          "value": 99.1
+        },
+        {
+          "date": "2020-01-01",
+          "value": 101.9
+        },
+        {
+          "date": "2020-02-01",
+          "value": 100.1
+        },
+        {
+          "date": "2020-03-01",
+          "value": 97.4
+        },
+        {
+          "date": "2020-04-01",
+          "value": 66.2
+        },
+        {
+          "date": "2020-05-01",
+          "value": 69.5
+        },
+        {
+          "date": "2020-06-01",
+          "value": 76.6
+        },
+        {
+          "date": "2020-07-01",
+          "value": 81.2
+        },
+        {
+          "date": "2020-08-01",
+          "value": 91.3
+        },
+        {
+          "date": "2020-09-01",
+          "value": 95.1
+        },
+        {
+          "date": "2020-10-01",
+          "value": 95
+        },
+        {
+          "date": "2020-11-01",
+          "value": 92.4
+        },
+        {
+          "date": "2020-12-01",
+          "value": 94.9
+        },
+        {
+          "date": "2021-01-01",
+          "value": 95.8
+        },
+        {
+          "date": "2021-02-01",
+          "value": 97
+        },
+        {
+          "date": "2021-03-01",
+          "value": 98.5
+        },
+        {
+          "date": "2021-04-01",
+          "value": 103.8
+        },
+        {
+          "date": "2021-05-01",
+          "value": 107.4
+        },
+        {
+          "date": "2021-06-01",
+          "value": 107.3
+        },
+        {
+          "date": "2021-07-01",
+          "value": 109.2
+        },
+        {
+          "date": "2021-08-01",
+          "value": 109.5
+        },
+        {
+          "date": "2021-09-01",
+          "value": 107.7
+        },
+        {
+          "date": "2021-10-01",
+          "value": 108
+        },
+        {
+          "date": "2021-11-01",
+          "value": 110.1
+        },
+        {
+          "date": "2021-12-01",
+          "value": 109.3
+        },
+        {
+          "date": "2022-01-01",
+          "value": 112.3
+        },
+        {
+          "date": "2022-02-01",
+          "value": 111.3
+        },
+        {
+          "date": "2022-03-01",
+          "value": 107.5
+        },
+        {
+          "date": "2022-04-01",
+          "value": 107.9
+        },
+        {
+          "date": "2022-05-01",
+          "value": 106.6
+        },
+        {
+          "date": "2022-06-01",
+          "value": 107.3
+        },
+        {
+          "date": "2022-07-01",
+          "value": 105.3
+        },
+        {
+          "date": "2022-08-01",
+          "value": 103.3
+        },
+        {
+          "date": "2022-09-01",
+          "value": 102.7
+        },
+        {
+          "date": "2022-10-01",
+          "value": 103.7
+        },
+        {
+          "date": "2022-11-01",
+          "value": 101.6
+        },
+        {
+          "date": "2022-12-01",
+          "value": 101.4
+        },
+        {
+          "date": "2023-01-01",
+          "value": 102.2
+        },
+        {
+          "date": "2023-02-01",
+          "value": 103.3
+        },
+        {
+          "date": "2023-03-01",
+          "value": 103.6
+        },
+        {
+          "date": "2023-04-01",
+          "value": 100.9
+        },
+        {
+          "date": "2023-05-01",
+          "value": 98.9
+        },
+        {
+          "date": "2023-06-01",
+          "value": 100.1
+        },
+        {
+          "date": "2023-07-01",
+          "value": 100.7
+        },
+        {
+          "date": "2023-08-01",
+          "value": 96.8
+        },
+        {
+          "date": "2023-09-01",
+          "value": 99.1
+        },
+        {
+          "date": "2023-10-01",
+          "value": 98.8
+        },
+        {
+          "date": "2023-11-01",
+          "value": 98.6
+        },
+        {
+          "date": "2023-12-01",
+          "value": 99.3
+        },
+        {
+          "date": "2024-01-01",
+          "value": 99
+        },
+        {
+          "date": "2024-02-01",
+          "value": 100.7
+        },
+        {
+          "date": "2024-03-01",
+          "value": 102
+        },
+        {
+          "date": "2024-04-01",
+          "value": 100
+        },
+        {
+          "date": "2024-05-01",
+          "value": 99.5
+        },
+        {
+          "date": "2024-06-01",
+          "value": 98.9
+        },
+        {
+          "date": "2024-07-01",
+          "value": 95.4
+        },
+        {
+          "date": "2024-08-01",
+          "value": 99.9,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 98.5,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 92.6,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 96.3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 96.5,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 95.6,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 97.5,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 96.8,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 99.9,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 97.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 96.6,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 96,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 97.7,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 96.9,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 100.8,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 98.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 101.9,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 105,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 101.8,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 99.8,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 100.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 102.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 100.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 101.3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        }
+      ]
+    },
+    {
+      "id": "es_manufacturing_pmi",
+      "block": "製造業",
+      "name": "西班牙製造業 PMI",
+      "ticker": "西 製造業PMI",
+      "frequency": "monthly",
+      "color": "#0f766e",
+      "data": [
+        {
+          "date": "2023-07-01",
+          "value": 47.8
+        },
+        {
+          "date": "2023-08-01",
+          "value": 46.5
+        },
+        {
+          "date": "2023-09-01",
+          "value": 47.7
+        },
+        {
+          "date": "2023-10-01",
+          "value": 45.1
+        },
+        {
+          "date": "2023-11-01",
+          "value": 46.3
+        },
+        {
+          "date": "2023-12-01",
+          "value": 46.2
+        },
+        {
+          "date": "2024-01-01",
+          "value": 49.2
+        },
+        {
+          "date": "2024-02-01",
+          "value": 51.5
+        },
+        {
+          "date": "2024-03-01",
+          "value": 51.4
+        },
+        {
+          "date": "2024-04-01",
+          "value": 52.2
+        },
+        {
+          "date": "2024-05-01",
+          "value": 54
+        },
+        {
+          "date": "2024-06-01",
+          "value": 52.3
+        },
+        {
+          "date": "2024-07-01",
+          "value": 51
+        },
+        {
+          "date": "2024-08-01",
+          "value": 50.5
+        },
+        {
+          "date": "2024-09-01",
+          "value": 53
+        },
+        {
+          "date": "2024-10-01",
+          "value": 54.5
+        },
+        {
+          "date": "2024-11-01",
+          "value": 53.1
+        },
+        {
+          "date": "2024-12-01",
+          "value": 53.3
+        },
+        {
+          "date": "2025-01-01",
+          "value": 50.9
+        },
+        {
+          "date": "2025-02-01",
+          "value": 49.7
+        },
+        {
+          "date": "2025-03-01",
+          "value": 49.5
+        },
+        {
+          "date": "2025-04-01",
+          "value": 48.1
+        },
+        {
+          "date": "2025-05-01",
+          "value": 50.5
+        },
+        {
+          "date": "2025-06-01",
+          "value": 51.4
+        },
+        {
+          "date": "2025-07-01",
+          "value": 51.9
+        },
+        {
+          "date": "2025-08-01",
+          "value": 54.3
+        },
+        {
+          "date": "2025-09-01",
+          "value": 51.5
+        },
+        {
+          "date": "2025-10-01",
+          "value": 52.1
+        },
+        {
+          "date": "2025-11-01",
+          "value": 51.5
+        },
+        {
+          "date": "2025-12-01",
+          "value": 49.6
+        },
+        {
+          "date": "2026-01-01",
+          "value": 49.2
+        },
+        {
+          "date": "2026-02-01",
+          "value": 50
+        },
+        {
+          "date": "2026-03-01",
+          "value": 48.7
+        },
+        {
+          "date": "2026-04-01",
+          "value": 51.7
+        },
+        {
+          "date": "2026-05-01",
+          "value": 51.2
+        },
+        {
+          "date": "2026-06-01",
+          "value": 49.7,
+          "source_url": "https://tradingeconomics.com/spain/manufacturing-pmi",
+          "status": "final",
+          "note": "public indicator page; underlying source explicitly S&P Global; final",
+          "release_type": "final"
+        }
+      ]
+    },
+    {
+      "id": "de_services_pmi",
+      "block": "服務業",
+      "name": "德國服務業 PMI",
+      "ticker": "德 服務業PMI",
+      "frequency": "monthly",
+      "color": "#0284c7",
+      "data": [
+        {
+          "date": "2023-07-01",
+          "value": 52.3
+        },
+        {
+          "date": "2023-08-01",
+          "value": 47.3
+        },
+        {
+          "date": "2023-09-01",
+          "value": 50.3
+        },
+        {
+          "date": "2023-10-01",
+          "value": 48.2
+        },
+        {
+          "date": "2023-11-01",
+          "value": 49.6
+        },
+        {
+          "date": "2023-12-01",
+          "value": 49.3
+        },
+        {
+          "date": "2024-01-01",
+          "value": 47.7
+        },
+        {
+          "date": "2024-02-01",
+          "value": 48.3
+        },
+        {
+          "date": "2024-03-01",
+          "value": 50.1
+        },
+        {
+          "date": "2024-04-01",
+          "value": 53.2
+        },
+        {
+          "date": "2024-05-01",
+          "value": 54.2
+        },
+        {
+          "date": "2024-06-01",
+          "value": 53.1
+        },
+        {
+          "date": "2024-07-01",
+          "value": 52.5
+        },
+        {
+          "date": "2024-08-01",
+          "value": 51.2
+        },
+        {
+          "date": "2024-09-01",
+          "value": 50.6
+        },
+        {
+          "date": "2024-10-01",
+          "value": 51.6
+        },
+        {
+          "date": "2024-11-01",
+          "value": 49.3
+        },
+        {
+          "date": "2024-12-01",
+          "value": 51.2
+        },
+        {
+          "date": "2025-01-01",
+          "value": 52.5
+        },
+        {
+          "date": "2025-02-01",
+          "value": 51.1
+        },
+        {
+          "date": "2025-03-01",
+          "value": 50.9
+        },
+        {
+          "date": "2025-04-01",
+          "value": 49
+        },
+        {
+          "date": "2025-05-01",
+          "value": 47.1
+        },
+        {
+          "date": "2025-06-01",
+          "value": 49.7
+        },
+        {
+          "date": "2025-07-01",
+          "value": 50.6
+        },
+        {
+          "date": "2025-08-01",
+          "value": 49.3
+        },
+        {
+          "date": "2025-09-01",
+          "value": 51.5
+        },
+        {
+          "date": "2025-10-01",
+          "value": 54.6
+        },
+        {
+          "date": "2025-11-01",
+          "value": 53.1
+        },
+        {
+          "date": "2025-12-01",
+          "value": 52.7
+        },
+        {
+          "date": "2026-01-01",
+          "value": 52.4
+        },
+        {
+          "date": "2026-02-01",
+          "value": 53.5
+        },
+        {
+          "date": "2026-03-01",
+          "value": 50.9
+        },
+        {
+          "date": "2026-04-01",
+          "value": 46.9
+        },
+        {
+          "date": "2026-05-01",
+          "value": 48.1
+        },
+        {
+          "date": "2026-06-01",
+          "value": 48.6,
+          "source_url": "https://www.pmi.spglobal.com/Public/Release/PressReleases",
+          "status": "final",
+          "note": "official HCOB/S&P Global final June release",
+          "release_type": "final"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 49.6,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/33afc7650b4243d49379ecc2c469b446",
+          "status": "flash",
+          "note": "matched UK-template label: Flash Germany Services PMI Business Activity Index: 49.6",
+          "release_type": "flash"
+        }
+      ]
+    },
+    {
+      "id": "fr_services_pmi",
+      "block": "服務業",
+      "name": "法國服務業 PMI",
+      "ticker": "法 服務業PMI",
+      "frequency": "monthly",
+      "color": "#0284c7",
+      "data": [
+        {
+          "date": "2023-07-01",
+          "value": 47.1
+        },
+        {
+          "date": "2023-08-01",
+          "value": 46
+        },
+        {
+          "date": "2023-09-01",
+          "value": 44.4
+        },
+        {
+          "date": "2023-10-01",
+          "value": 45.2
+        },
+        {
+          "date": "2023-11-01",
+          "value": 45.4
+        },
+        {
+          "date": "2023-12-01",
+          "value": 45.7
+        },
+        {
+          "date": "2024-01-01",
+          "value": 45.4
+        },
+        {
+          "date": "2024-02-01",
+          "value": 48.4
+        },
+        {
+          "date": "2024-03-01",
+          "value": 48.3
+        },
+        {
+          "date": "2024-04-01",
+          "value": 51.3
+        },
+        {
+          "date": "2024-05-01",
+          "value": 49.3
+        },
+        {
+          "date": "2024-06-01",
+          "value": 49.6
+        },
+        {
+          "date": "2024-07-01",
+          "value": 50.1
+        },
+        {
+          "date": "2024-08-01",
+          "value": 55
+        },
+        {
+          "date": "2024-09-01",
+          "value": 49.6
+        },
+        {
+          "date": "2024-10-01",
+          "value": 49.2
+        },
+        {
+          "date": "2024-11-01",
+          "value": 46.9
+        },
+        {
+          "date": "2024-12-01",
+          "value": 49.3
+        },
+        {
+          "date": "2025-01-01",
+          "value": 48.2
+        },
+        {
+          "date": "2025-02-01",
+          "value": 45.3
+        },
+        {
+          "date": "2025-03-01",
+          "value": 47.9
+        },
+        {
+          "date": "2025-04-01",
+          "value": 47.3
+        },
+        {
+          "date": "2025-05-01",
+          "value": 48.9
+        },
+        {
+          "date": "2025-06-01",
+          "value": 49.6
+        },
+        {
+          "date": "2025-07-01",
+          "value": 48.5
+        },
+        {
+          "date": "2025-08-01",
+          "value": 49.8
+        },
+        {
+          "date": "2025-09-01",
+          "value": 48.5
+        },
+        {
+          "date": "2025-10-01",
+          "value": 48
+        },
+        {
+          "date": "2025-11-01",
+          "value": 51.4
+        },
+        {
+          "date": "2025-12-01",
+          "value": 50.1
+        },
+        {
+          "date": "2026-01-01",
+          "value": 48.4
+        },
+        {
+          "date": "2026-02-01",
+          "value": 49.6
+        },
+        {
+          "date": "2026-03-01",
+          "value": 48.8
+        },
+        {
+          "date": "2026-04-01",
+          "value": 46.5
+        },
+        {
+          "date": "2026-05-01",
+          "value": 44.3
+        },
+        {
+          "date": "2026-06-01",
+          "value": 46.8,
+          "source_url": "https://www.pmi.spglobal.com/Public/Release/PressReleases",
+          "status": "final",
+          "note": "official HCOB/S&P Global final June release",
+          "release_type": "final"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 49.8,
+          "source_url": "https://tradingeconomics.com/france/services-pmi",
+          "status": "flash",
+          "note": "public indicator page; underlying source explicitly S&P Global; flash",
+          "release_type": "flash"
+        }
+      ]
+    },
+    {
+      "id": "es_services_pmi",
+      "block": "服務業",
+      "name": "西班牙服務業 PMI",
+      "ticker": "西 服務業PMI",
+      "frequency": "monthly",
+      "color": "#0284c7",
+      "data": [
+        {
+          "date": "2023-07-01",
+          "value": 52.8
+        },
+        {
+          "date": "2023-08-01",
+          "value": 49.3
+        },
+        {
+          "date": "2023-09-01",
+          "value": 50.5
+        },
+        {
+          "date": "2023-10-01",
+          "value": 51.1
+        },
+        {
+          "date": "2023-11-01",
+          "value": 51
+        },
+        {
+          "date": "2023-12-01",
+          "value": 51.5
+        },
+        {
+          "date": "2024-01-01",
+          "value": 52.1
+        },
+        {
+          "date": "2024-02-01",
+          "value": 54.7
+        },
+        {
+          "date": "2024-03-01",
+          "value": 56.1
+        },
+        {
+          "date": "2024-04-01",
+          "value": 56.2
+        },
+        {
+          "date": "2024-05-01",
+          "value": 56.9
+        },
+        {
+          "date": "2024-06-01",
+          "value": 56.8
+        },
+        {
+          "date": "2024-07-01",
+          "value": 53.9
+        },
+        {
+          "date": "2024-08-01",
+          "value": 54.6
+        },
+        {
+          "date": "2024-09-01",
+          "value": 57
+        },
+        {
+          "date": "2024-10-01",
+          "value": 54.9
+        },
+        {
+          "date": "2024-11-01",
+          "value": 53.1
+        },
+        {
+          "date": "2024-12-01",
+          "value": 57.3
+        },
+        {
+          "date": "2025-01-01",
+          "value": 54.9
+        },
+        {
+          "date": "2025-02-01",
+          "value": 56.2
+        },
+        {
+          "date": "2025-03-01",
+          "value": 54.7
+        },
+        {
+          "date": "2025-04-01",
+          "value": 53.4
+        },
+        {
+          "date": "2025-05-01",
+          "value": 51.3
+        },
+        {
+          "date": "2025-06-01",
+          "value": 51.9
+        },
+        {
+          "date": "2025-07-01",
+          "value": 55.1
+        },
+        {
+          "date": "2025-08-01",
+          "value": 53.2
+        },
+        {
+          "date": "2025-09-01",
+          "value": 54.3
+        },
+        {
+          "date": "2025-10-01",
+          "value": 56.6
+        },
+        {
+          "date": "2025-11-01",
+          "value": 55.6
+        },
+        {
+          "date": "2025-12-01",
+          "value": 57.1
+        },
+        {
+          "date": "2026-01-01",
+          "value": 53.5
+        },
+        {
+          "date": "2026-02-01",
+          "value": 51.9
+        },
+        {
+          "date": "2026-03-01",
+          "value": 53.3
+        },
+        {
+          "date": "2026-04-01",
+          "value": 47.9
+        },
+        {
+          "date": "2026-05-01",
+          "value": 50.1
+        },
+        {
+          "date": "2026-06-01",
+          "value": 54.2,
+          "source_url": "https://tradingeconomics.com/spain/services-pmi",
+          "status": "final",
+          "note": "public indicator page; underlying source explicitly S&P Global; final",
+          "release_type": "final"
+        }
+      ]
+    },
+    {
+      "id": "fr_business_confidence",
+      "block": "企業信心",
+      "name": "法國企業信心",
+      "ticker": "法 企業信心",
+      "frequency": "monthly",
+      "color": "#7c3aed",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 94.9
+        },
+        {
+          "date": "2015-02-01",
+          "value": 95.9
+        },
+        {
+          "date": "2015-03-01",
+          "value": 97.1
+        },
+        {
+          "date": "2015-04-01",
+          "value": 98.7
+        },
+        {
+          "date": "2015-05-01",
+          "value": 99.7
+        },
+        {
+          "date": "2015-06-01",
+          "value": 100.9
+        },
+        {
+          "date": "2015-07-01",
+          "value": 101.4
+        },
+        {
+          "date": "2015-08-01",
+          "value": 103.2
+        },
+        {
+          "date": "2015-09-01",
+          "value": 102.4
+        },
+        {
+          "date": "2015-10-01",
+          "value": 103.2
+        },
+        {
+          "date": "2015-11-01",
+          "value": 103.3
+        },
+        {
+          "date": "2015-12-01",
+          "value": 101.8
+        },
+        {
+          "date": "2016-01-01",
+          "value": 104.3
+        },
+        {
+          "date": "2016-02-01",
+          "value": 103.3
+        },
+        {
+          "date": "2016-03-01",
+          "value": 103.2
+        },
+        {
+          "date": "2016-04-01",
+          "value": 102.5
+        },
+        {
+          "date": "2016-05-01",
+          "value": 104.6
+        },
+        {
+          "date": "2016-06-01",
+          "value": 103.2
+        },
+        {
+          "date": "2016-07-01",
+          "value": 104
+        },
+        {
+          "date": "2016-08-01",
+          "value": 103.6
+        },
+        {
+          "date": "2016-09-01",
+          "value": 103.7
+        },
+        {
+          "date": "2016-10-01",
+          "value": 103.8
+        },
+        {
+          "date": "2016-11-01",
+          "value": 103.9
+        },
+        {
+          "date": "2016-12-01",
+          "value": 106.3
+        },
+        {
+          "date": "2017-01-01",
+          "value": 106.2
+        },
+        {
+          "date": "2017-02-01",
+          "value": 107.1
+        },
+        {
+          "date": "2017-03-01",
+          "value": 106.7
+        },
+        {
+          "date": "2017-04-01",
+          "value": 107.5
+        },
+        {
+          "date": "2017-05-01",
+          "value": 107.9
+        },
+        {
+          "date": "2017-06-01",
+          "value": 108.9
+        },
+        {
+          "date": "2017-07-01",
+          "value": 109.9
+        },
+        {
+          "date": "2017-08-01",
+          "value": 110.6
+        },
+        {
+          "date": "2017-09-01",
+          "value": 111.1
+        },
+        {
+          "date": "2017-10-01",
+          "value": 111.1
+        },
+        {
+          "date": "2017-11-01",
+          "value": 112.2
+        },
+        {
+          "date": "2017-12-01",
+          "value": 113.4
+        },
+        {
+          "date": "2018-01-01",
+          "value": 113
+        },
+        {
+          "date": "2018-02-01",
+          "value": 112
+        },
+        {
+          "date": "2018-03-01",
+          "value": 111.9
+        },
+        {
+          "date": "2018-04-01",
+          "value": 111.4
+        },
+        {
+          "date": "2018-05-01",
+          "value": 109.7
+        },
+        {
+          "date": "2018-06-01",
+          "value": 109.1
+        },
+        {
+          "date": "2018-07-01",
+          "value": 108.2
+        },
+        {
+          "date": "2018-08-01",
+          "value": 107.8
+        },
+        {
+          "date": "2018-09-01",
+          "value": 107.4
+        },
+        {
+          "date": "2018-10-01",
+          "value": 106.5
+        },
+        {
+          "date": "2018-11-01",
+          "value": 106.9
+        },
+        {
+          "date": "2018-12-01",
+          "value": 103.7
+        },
+        {
+          "date": "2019-01-01",
+          "value": 104.5
+        },
+        {
+          "date": "2019-02-01",
+          "value": 104.6
+        },
+        {
+          "date": "2019-03-01",
+          "value": 106.3
+        },
+        {
+          "date": "2019-04-01",
+          "value": 107.5
+        },
+        {
+          "date": "2019-05-01",
+          "value": 107.3
+        },
+        {
+          "date": "2019-06-01",
+          "value": 107.1
+        },
+        {
+          "date": "2019-07-01",
+          "value": 106.1
+        },
+        {
+          "date": "2019-08-01",
+          "value": 106.3
+        },
+        {
+          "date": "2019-09-01",
+          "value": 106.9
+        },
+        {
+          "date": "2019-10-01",
+          "value": 106.9
+        },
+        {
+          "date": "2019-11-01",
+          "value": 107
+        },
+        {
+          "date": "2019-12-01",
+          "value": 106.7
+        },
+        {
+          "date": "2020-01-01",
+          "value": 106.7
+        },
+        {
+          "date": "2020-02-01",
+          "value": 106.1
+        },
+        {
+          "date": "2020-03-01",
+          "value": 93.9
+        },
+        {
+          "date": "2020-04-01",
+          "value": 45.7
+        },
+        {
+          "date": "2020-05-01",
+          "value": 58.5
+        },
+        {
+          "date": "2020-06-01",
+          "value": 84.8
+        },
+        {
+          "date": "2020-07-01",
+          "value": 90.6
+        },
+        {
+          "date": "2020-08-01",
+          "value": 94.2
+        },
+        {
+          "date": "2020-09-01",
+          "value": 93.7
+        },
+        {
+          "date": "2020-10-01",
+          "value": 90.1
+        },
+        {
+          "date": "2020-11-01",
+          "value": 77.4
+        },
+        {
+          "date": "2020-12-01",
+          "value": 92.6
+        },
+        {
+          "date": "2021-01-01",
+          "value": 93.8
+        },
+        {
+          "date": "2021-02-01",
+          "value": 90.9
+        },
+        {
+          "date": "2021-03-01",
+          "value": 98.2
+        },
+        {
+          "date": "2021-04-01",
+          "value": 97.2
+        },
+        {
+          "date": "2021-05-01",
+          "value": 111.2
+        },
+        {
+          "date": "2021-06-01",
+          "value": 115.9
+        },
+        {
+          "date": "2021-07-01",
+          "value": 113.6
+        },
+        {
+          "date": "2021-08-01",
+          "value": 111.2
+        },
+        {
+          "date": "2021-09-01",
+          "value": 112.2
+        },
+        {
+          "date": "2021-10-01",
+          "value": 114.4
+        },
+        {
+          "date": "2021-11-01",
+          "value": 115
+        },
+        {
+          "date": "2021-12-01",
+          "value": 110.2
+        },
+        {
+          "date": "2022-01-01",
+          "value": 108.6
+        },
+        {
+          "date": "2022-02-01",
+          "value": 114.1
+        },
+        {
+          "date": "2022-03-01",
+          "value": 107.6
+        },
+        {
+          "date": "2022-04-01",
+          "value": 107.2
+        },
+        {
+          "date": "2022-05-01",
+          "value": 106.5
+        },
+        {
+          "date": "2022-06-01",
+          "value": 104.9
+        },
+        {
+          "date": "2022-07-01",
+          "value": 103.6
+        },
+        {
+          "date": "2022-08-01",
+          "value": 104.1
+        },
+        {
+          "date": "2022-09-01",
+          "value": 102.4
+        },
+        {
+          "date": "2022-10-01",
+          "value": 103.1
+        },
+        {
+          "date": "2022-11-01",
+          "value": 102.6
+        },
+        {
+          "date": "2022-12-01",
+          "value": 103
+        },
+        {
+          "date": "2023-01-01",
+          "value": 102.5
+        },
+        {
+          "date": "2023-02-01",
+          "value": 103.5
+        },
+        {
+          "date": "2023-03-01",
+          "value": 103.1
+        },
+        {
+          "date": "2023-04-01",
+          "value": 103.5
+        },
+        {
+          "date": "2023-05-01",
+          "value": 100.9
+        },
+        {
+          "date": "2023-06-01",
+          "value": 100.9
+        },
+        {
+          "date": "2023-07-01",
+          "value": 100.7
+        },
+        {
+          "date": "2023-08-01",
+          "value": 100.4
+        },
+        {
+          "date": "2023-09-01",
+          "value": 100.1
+        },
+        {
+          "date": "2023-10-01",
+          "value": 99.1
+        },
+        {
+          "date": "2023-11-01",
+          "value": 97.9
+        },
+        {
+          "date": "2023-12-01",
+          "value": 98.4
+        },
+        {
+          "date": "2024-01-01",
+          "value": 99.1
+        },
+        {
+          "date": "2024-02-01",
+          "value": 99
+        },
+        {
+          "date": "2024-03-01",
+          "value": 100.3
+        },
+        {
+          "date": "2024-04-01",
+          "value": 99.8
+        },
+        {
+          "date": "2024-05-01",
+          "value": 100.1
+        },
+        {
+          "date": "2024-06-01",
+          "value": 99.6
+        },
+        {
+          "date": "2024-07-01",
+          "value": 94.4
+        },
+        {
+          "date": "2024-08-01",
+          "value": 97,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 97.8,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 97.7,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 95.8,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 94.5,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 95.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 96.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 96.7,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 96.9,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 95.6,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 96,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 95.9,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 96.5,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 96.3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 97.3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 97.4,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 98.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 99.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 98.8,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 97.7,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 94.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 93.9,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 95,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 97.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        }
+      ]
+    },
+    {
+      "id": "de_ifo_business_climate",
+      "block": "企業信心",
+      "name": "德國 ifo 企業信心",
+      "ticker": "德 企業信心",
+      "frequency": "monthly",
+      "color": "#7c3aed",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 98.8
+        },
+        {
+          "date": "2015-02-01",
+          "value": 98.8
+        },
+        {
+          "date": "2015-03-01",
+          "value": 99.1
+        },
+        {
+          "date": "2015-04-01",
+          "value": 100.2
+        },
+        {
+          "date": "2015-05-01",
+          "value": 100.4
+        },
+        {
+          "date": "2015-06-01",
+          "value": 100.1
+        },
+        {
+          "date": "2015-07-01",
+          "value": 99.7
+        },
+        {
+          "date": "2015-08-01",
+          "value": 100.6
+        },
+        {
+          "date": "2015-09-01",
+          "value": 100.1
+        },
+        {
+          "date": "2015-10-01",
+          "value": 100.6
+        },
+        {
+          "date": "2015-11-01",
+          "value": 101
+        },
+        {
+          "date": "2015-12-01",
+          "value": 100.7
+        },
+        {
+          "date": "2016-01-01",
+          "value": 99.7
+        },
+        {
+          "date": "2016-02-01",
+          "value": 98.7
+        },
+        {
+          "date": "2016-03-01",
+          "value": 99.1
+        },
+        {
+          "date": "2016-04-01",
+          "value": 100.1
+        },
+        {
+          "date": "2016-05-01",
+          "value": 99.8
+        },
+        {
+          "date": "2016-06-01",
+          "value": 100
+        },
+        {
+          "date": "2016-07-01",
+          "value": 100
+        },
+        {
+          "date": "2016-08-01",
+          "value": 99.6
+        },
+        {
+          "date": "2016-09-01",
+          "value": 100.8
+        },
+        {
+          "date": "2016-10-01",
+          "value": 101.3
+        },
+        {
+          "date": "2016-11-01",
+          "value": 101.6
+        },
+        {
+          "date": "2016-12-01",
+          "value": 101
+        },
+        {
+          "date": "2017-01-01",
+          "value": 101.3
+        },
+        {
+          "date": "2017-02-01",
+          "value": 101.3
+        },
+        {
+          "date": "2017-03-01",
+          "value": 101.9
+        },
+        {
+          "date": "2017-04-01",
+          "value": 103.7
+        },
+        {
+          "date": "2017-05-01",
+          "value": 102.7
+        },
+        {
+          "date": "2017-06-01",
+          "value": 102.7
+        },
+        {
+          "date": "2017-07-01",
+          "value": 103.8
+        },
+        {
+          "date": "2017-08-01",
+          "value": 103.6
+        },
+        {
+          "date": "2017-09-01",
+          "value": 103.9
+        },
+        {
+          "date": "2017-10-01",
+          "value": 104.3
+        },
+        {
+          "date": "2017-11-01",
+          "value": 104.9
+        },
+        {
+          "date": "2017-12-01",
+          "value": 104.7
+        },
+        {
+          "date": "2018-01-01",
+          "value": 105
+        },
+        {
+          "date": "2018-02-01",
+          "value": 104
+        },
+        {
+          "date": "2018-03-01",
+          "value": 103.9
+        },
+        {
+          "date": "2018-04-01",
+          "value": 103.5
+        },
+        {
+          "date": "2018-05-01",
+          "value": 102.9
+        },
+        {
+          "date": "2018-06-01",
+          "value": 101.6
+        },
+        {
+          "date": "2018-07-01",
+          "value": 101.6
+        },
+        {
+          "date": "2018-08-01",
+          "value": 103.7
+        },
+        {
+          "date": "2018-09-01",
+          "value": 103.8
+        },
+        {
+          "date": "2018-10-01",
+          "value": 102.8
+        },
+        {
+          "date": "2018-11-01",
+          "value": 102.3
+        },
+        {
+          "date": "2018-12-01",
+          "value": 101.2
+        },
+        {
+          "date": "2019-01-01",
+          "value": 99.6
+        },
+        {
+          "date": "2019-02-01",
+          "value": 98.7
+        },
+        {
+          "date": "2019-03-01",
+          "value": 99.9
+        },
+        {
+          "date": "2019-04-01",
+          "value": 100.7
+        },
+        {
+          "date": "2019-05-01",
+          "value": 98.3
+        },
+        {
+          "date": "2019-06-01",
+          "value": 96.8
+        },
+        {
+          "date": "2019-07-01",
+          "value": 95.5
+        },
+        {
+          "date": "2019-08-01",
+          "value": 94.1
+        },
+        {
+          "date": "2019-09-01",
+          "value": 94.8
+        },
+        {
+          "date": "2019-10-01",
+          "value": 94.9
+        },
+        {
+          "date": "2019-11-01",
+          "value": 95.3
+        },
+        {
+          "date": "2019-12-01",
+          "value": 96.5
+        },
+        {
+          "date": "2020-01-01",
+          "value": 96.1
+        },
+        {
+          "date": "2020-02-01",
+          "value": 96
+        },
+        {
+          "date": "2020-03-01",
+          "value": 86.3
+        },
+        {
+          "date": "2020-04-01",
+          "value": 75.1
+        },
+        {
+          "date": "2020-05-01",
+          "value": 79.5
+        },
+        {
+          "date": "2020-06-01",
+          "value": 85.3
+        },
+        {
+          "date": "2020-07-01",
+          "value": 89.4
+        },
+        {
+          "date": "2020-08-01",
+          "value": 92
+        },
+        {
+          "date": "2020-09-01",
+          "value": 93.5
+        },
+        {
+          "date": "2020-10-01",
+          "value": 92.9
+        },
+        {
+          "date": "2020-11-01",
+          "value": 91.6
+        },
+        {
+          "date": "2020-12-01",
+          "value": 93.2
+        },
+        {
+          "date": "2021-01-01",
+          "value": 90.7
+        },
+        {
+          "date": "2021-02-01",
+          "value": 92.7
+        },
+        {
+          "date": "2021-03-01",
+          "value": 96.2
+        },
+        {
+          "date": "2021-04-01",
+          "value": 96.1
+        },
+        {
+          "date": "2021-05-01",
+          "value": 98.3
+        },
+        {
+          "date": "2021-06-01",
+          "value": 100.9
+        },
+        {
+          "date": "2021-07-01",
+          "value": 100.7
+        },
+        {
+          "date": "2021-08-01",
+          "value": 100.1
+        },
+        {
+          "date": "2021-09-01",
+          "value": 100
+        },
+        {
+          "date": "2021-10-01",
+          "value": 98.8
+        },
+        {
+          "date": "2021-11-01",
+          "value": 97.2
+        },
+        {
+          "date": "2021-12-01",
+          "value": 95.3
+        },
+        {
+          "date": "2022-01-01",
+          "value": 96.2
+        },
+        {
+          "date": "2022-02-01",
+          "value": 98.6
+        },
+        {
+          "date": "2022-03-01",
+          "value": 90
+        },
+        {
+          "date": "2022-04-01",
+          "value": 91.3
+        },
+        {
+          "date": "2022-05-01",
+          "value": 92.3
+        },
+        {
+          "date": "2022-06-01",
+          "value": 92
+        },
+        {
+          "date": "2022-07-01",
+          "value": 88.6
+        },
+        {
+          "date": "2022-08-01",
+          "value": 89.1
+        },
+        {
+          "date": "2022-09-01",
+          "value": 85.7
+        },
+        {
+          "date": "2022-10-01",
+          "value": 85.3
+        },
+        {
+          "date": "2022-11-01",
+          "value": 86.8
+        },
+        {
+          "date": "2022-12-01",
+          "value": 89.2
+        },
+        {
+          "date": "2023-01-01",
+          "value": 90.5
+        },
+        {
+          "date": "2023-02-01",
+          "value": 91.1
+        },
+        {
+          "date": "2023-03-01",
+          "value": 92.7
+        },
+        {
+          "date": "2023-04-01",
+          "value": 92.9
+        },
+        {
+          "date": "2023-05-01",
+          "value": 90.9
+        },
+        {
+          "date": "2023-06-01",
+          "value": 88.2
+        },
+        {
+          "date": "2023-07-01",
+          "value": 87.3
+        },
+        {
+          "date": "2023-08-01",
+          "value": 85.8
+        },
+        {
+          "date": "2023-09-01",
+          "value": 86.2
+        },
+        {
+          "date": "2023-10-01",
+          "value": 86.9
+        },
+        {
+          "date": "2023-11-01",
+          "value": 87.3
+        },
+        {
+          "date": "2023-12-01",
+          "value": 86.8
+        },
+        {
+          "date": "2024-01-01",
+          "value": 85.7
+        },
+        {
+          "date": "2024-02-01",
+          "value": 85.8
+        },
+        {
+          "date": "2024-03-01",
+          "value": 87.8
+        },
+        {
+          "date": "2024-04-01",
+          "value": 89.1
+        },
+        {
+          "date": "2024-05-01",
+          "value": 88.8
+        },
+        {
+          "date": "2024-06-01",
+          "value": 88.2
+        },
+        {
+          "date": "2024-07-01",
+          "value": 86.9
+        },
+        {
+          "date": "2024-08-01",
+          "value": 86.5
+        },
+        {
+          "date": "2024-09-01",
+          "value": 85.5
+        },
+        {
+          "date": "2024-10-01",
+          "value": 86.4
+        },
+        {
+          "date": "2024-11-01",
+          "value": 85.6
+        },
+        {
+          "date": "2024-12-01",
+          "value": 84.9
+        },
+        {
+          "date": "2025-01-01",
+          "value": 85.5
+        },
+        {
+          "date": "2025-02-01",
+          "value": 85.3
+        },
+        {
+          "date": "2025-03-01",
+          "value": 86.8
+        },
+        {
+          "date": "2025-04-01",
+          "value": 86.9
+        },
+        {
+          "date": "2025-05-01",
+          "value": 87.4
+        },
+        {
+          "date": "2025-06-01",
+          "value": 88.3
+        },
+        {
+          "date": "2025-07-01",
+          "value": 88.5
+        },
+        {
+          "date": "2025-08-01",
+          "value": 88.8
+        },
+        {
+          "date": "2025-09-01",
+          "value": 87.6
+        },
+        {
+          "date": "2025-10-01",
+          "value": 88.4
+        },
+        {
+          "date": "2025-11-01",
+          "value": 88
+        },
+        {
+          "date": "2025-12-01",
+          "value": 87.6
+        },
+        {
+          "date": "2026-01-01",
+          "value": 87.6
+        },
+        {
+          "date": "2026-02-01",
+          "value": 88.5
+        },
+        {
+          "date": "2026-03-01",
+          "value": 86.3
+        },
+        {
+          "date": "2026-04-01",
+          "value": 84.5
+        },
+        {
+          "date": "2026-05-01",
+          "value": 85
+        },
+        {
+          "date": "2026-06-01",
+          "value": 85.7,
+          "source_url": "https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026",
+          "note": "previous month revised in official July release"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 86.6,
+          "source_url": "https://www.ifo.de/en/survey/ifo-business-climate-index-germany",
+          "note": "official ifo survey/time-series page"
+        }
+      ]
+    },
+    {
+      "id": "de_gdp_yoy",
+      "block": "GDP",
+      "name": "德國 GDP YoY",
+      "ticker": "德 GDP",
+      "frequency": "quarterly",
+      "color": "#be123c",
+      "data": [
+        {
+          "date": "2015-03-01",
+          "value": 1.236917221693631
+        },
+        {
+          "date": "2015-06-01",
+          "value": 1.61633347511696
+        },
+        {
+          "date": "2015-09-01",
+          "value": 1.64104694640632
+        },
+        {
+          "date": "2015-12-01",
+          "value": 2.142930380395768
+        },
+        {
+          "date": "2016-03-01",
+          "value": 2.140768588137007
+        },
+        {
+          "date": "2016-06-01",
+          "value": 3.53704478861448
+        },
+        {
+          "date": "2016-09-01",
+          "value": 1.818924994890665
+        },
+        {
+          "date": "2016-12-01",
+          "value": 1.41537843806465
+        },
+        {
+          "date": "2017-03-01",
+          "value": 3.61926183416827
+        },
+        {
+          "date": "2017-06-01",
+          "value": 1.516070345664033
+        },
+        {
+          "date": "2017-09-01",
+          "value": 2.810116419108795
+        },
+        {
+          "date": "2017-12-01",
+          "value": 3.276254577848164
+        },
+        {
+          "date": "2018-03-01",
+          "value": 1.440552540700551
+        },
+        {
+          "date": "2018-06-01",
+          "value": 2.240143369175613
+        },
+        {
+          "date": "2018-09-01",
+          "value": 0.449043342444355
+        },
+        {
+          "date": "2018-12-01",
+          "value": 0.440866398313204
+        },
+        {
+          "date": "2019-03-01",
+          "value": 1.176928314366307
+        },
+        {
+          "date": "2019-06-01",
+          "value": 0.068166325835037
+        },
+        {
+          "date": "2019-09-01",
+          "value": 2.011661807580168
+        },
+        {
+          "date": "2019-12-01",
+          "value": 0.639312977099252
+        },
+        {
+          "date": "2020-03-01",
+          "value": -1.54777927321669
+        },
+        {
+          "date": "2020-06-01",
+          "value": -10.801868431296242
+        },
+        {
+          "date": "2020-09-01",
+          "value": -3.191388015623502
+        },
+        {
+          "date": "2020-12-01",
+          "value": -1.099838816725125
+        },
+        {
+          "date": "2021-03-01",
+          "value": -0.703056342154085
+        },
+        {
+          "date": "2021-06-01",
+          "value": 12.01178267510366
+        },
+        {
+          "date": "2021-09-01",
+          "value": 2.814406612871494
+        },
+        {
+          "date": "2021-12-01",
+          "value": 2.396702137858298
+        },
+        {
+          "date": "2022-03-01",
+          "value": 4.01219392270626
+        },
+        {
+          "date": "2022-06-01",
+          "value": 1.49021135677414
+        },
+        {
+          "date": "2022-09-01",
+          "value": 1.617534456355287
+        },
+        {
+          "date": "2022-12-01",
+          "value": 0.19661080423181
+        },
+        {
+          "date": "2023-03-01",
+          "value": -0.028363430084141
+        },
+        {
+          "date": "2023-06-01",
+          "value": -1.113243761996159
+        },
+        {
+          "date": "2023-09-01",
+          "value": -1.318639917114069
+        },
+        {
+          "date": "2023-12-01",
+          "value": -1.027845262567737
+        },
+        {
+          "date": "2024-03-01",
+          "value": -1.106487611121622
+        },
+        {
+          "date": "2024-06-01",
+          "value": -0.291149068322994
+        },
+        {
+          "date": "2024-09-01",
+          "value": -0.181349622983674
+        },
+        {
+          "date": "2024-12-01",
+          "value": -0.396525679758312
+        },
+        {
+          "date": "2025-03-01",
+          "value": 0.1
+        },
+        {
+          "date": "2025-06-01",
+          "value": 0
+        },
+        {
+          "date": "2025-09-01",
+          "value": 0.3
+        },
+        {
+          "date": "2025-12-01",
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "id": "es_gdp_yoy",
+      "block": "GDP",
+      "name": "西班牙 GDP YoY",
+      "ticker": "西 GDP",
+      "frequency": "quarterly",
+      "color": "#be123c",
+      "data": [
+        {
+          "date": "2015-03-01",
+          "value": 3.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 4.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 4.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 4.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 3.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 2.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 2.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 3.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 2.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 2.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 1.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 1.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -4.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2020-06-01",
+          "value": -21.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2020-09-01",
+          "value": -9.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2020-12-01",
+          "value": -9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2021-03-01",
+          "value": -2.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 19.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 5.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 6.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 7.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 7.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 6.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 4.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 3.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
+          "status": "p"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
+          "status": "p"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
+          "status": "p"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
+          "status": "p"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 2.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
+          "status": "p"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 3.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
+          "status": "p"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 3.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
+          "status": "p"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 3.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
+          "status": "p"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 3.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
+          "status": "p"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 2.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
+          "status": "p"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 2.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
+          "status": "p"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 2.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
+          "status": "p"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 2.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=ES&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA",
+          "status": "p"
+        }
+      ]
+    },
+    {
+      "id": "fr_gdp_yoy",
+      "block": "GDP",
+      "name": "法國 GDP YoY",
+      "ticker": "法GDP",
+      "frequency": "quarterly",
+      "color": "#be123c",
+      "data": [
+        {
+          "date": "2015-03-01",
+          "value": 1.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 0.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 1.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 0.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 0.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 0.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 2.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 2.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 1.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 2.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 2.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2020-06-01",
+          "value": -17,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2020-09-01",
+          "value": -4.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2020-12-01",
+          "value": -4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 1.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 17,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 4.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 5.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 4.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 3.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 1.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 1.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 0.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 1.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 0.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=FR&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        }
+      ]
+    },
+    {
+      "id": "ea_gdp_yoy",
+      "block": "GDP",
+      "name": "歐元區 GDP YoY",
+      "ticker": "歐GDP",
+      "frequency": "quarterly",
+      "color": "#be123c",
+      "data": [
+        {
+          "date": "2015-03-01",
+          "value": 1.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 1.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 1.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 1.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 2.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 2.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 2.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 1.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 1.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 1.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 1.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 1.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 1.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -2.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2020-06-01",
+          "value": -13.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2020-09-01",
+          "value": -4.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2020-12-01",
+          "value": -3.8,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 0.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 15.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 5.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 5.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 5.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 4.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 0.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 0.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 0.7,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 1.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 1.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 1.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 1.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 1.1,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 0.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        }
+      ]
     }
-    for key in ("source_url", "status", "note"):
-        if raw.get(key) not in (None, ""):
-            row[key] = raw[key]
-    if str(raw.get("status", "")).lower() in {"flash", "final"}:
-        row["release_type"] = str(raw["status"]).lower()
-    return row
-
-
-def merge(
-    database: dict[str, Any],
-    series_id: str,
-    points: list[Any],
-    *,
-    release_type: str | None = None,
-) -> tuple[int, int, int]:
-    series = by_id(database, series_id)
-    if series is None:
-        raise KeyError(f"Series id not present in eu_macro.json: {series_id}")
-    frequency = series.get("frequency", "monthly")
-    old = {row["date"][:7]: dict(row) for row in series.get("data", []) if row.get("date")}
-    incoming: dict[str, dict[str, Any]] = {}
-    for point in points:
-        row = point_to_row(point, frequency)
-        if row is None:
-            continue
-        if release_type:
-            row["release_type"] = release_type
-        incoming[row["date"][:7]] = row
-    if not incoming:
-        raise RuntimeError(f"{series_id}: fetched source contained no usable observations")
-
-    earliest_existing = min(old) if old else min(incoming)
-    added = revised = unchanged = 0
-    for key in sorted(incoming):
-        if key < earliest_existing:
-            continue
-        candidate = incoming[key]
-        current = old.get(key)
-        if current is None:
-            old[key] = candidate
-            added += 1
-            continue
-        if current.get("release_type") == "final" and candidate.get("release_type") == "flash":
-            unchanged += 1
-            continue
-        changed = (
-            current.get("value") != candidate.get("value")
-            or (candidate.get("release_type") == "final" and current.get("release_type") != "final")
-        )
-        old[key] = {**current, **candidate}
-        if changed:
-            revised += 1
-        else:
-            unchanged += 1
-    series["data"] = sorted(old.values(), key=lambda row: row["date"])
-    return added, revised, unchanged
-
-
-def fetch_general(label: str) -> tuple[list[Any], str, str]:
-    candidates = general.SOURCES.get(label, [])
-    if not candidates:
-        raise RuntimeError(f"No source mapping for {label}")
-    errors = []
-    for source in candidates:
-        try:
-            points = general.FETCHERS[source.fetcher](**source.args)
-            if points:
-                return points, source.source_id, source.definition
-        except Exception as error:
-            errors.append(f"{source.name}: {type(error).__name__}: {error}")
-    raise RuntimeError(" | ".join(errors))
-
-
-def classify_release(points: list[Any]) -> str | None:
-    statuses = {str(getattr(point, "status", "")).lower() for point in points}
-    if "final" in statuses:
-        return "final"
-    if "flash" in statuses:
-        return "flash"
-    return None
-
-
-
-def validate_database(database: dict[str, Any]) -> None:
-    ids = [item.get("id") for item in database.get("series", [])]
-    if len(ids) != len(set(ids)):
-        raise RuntimeError("eu_macro.json contains duplicate series ids")
-    missing = sorted(set(LABEL_TO_ID.values()) - set(ids))
-    if missing:
-        raise RuntimeError(f"eu_macro.json is missing required series ids: {missing}")
-    for item in database.get("series", []):
-        dates = [row.get("date", "") for row in item.get("data", [])]
-        if dates != sorted(dates) or len(dates) != len(set(dates)):
-            raise RuntimeError(f"{item.get('id')}: dates are not unique and sorted")
-
-
-def main() -> None:
-    started = time.monotonic()
-    log(f"[START] Update EU macro data version={SCRIPT_VERSION}")
-    database = json.loads(DATA_FILE.read_text(encoding="utf-8"))
-    validate_database(database)
-    results = []
-
-    for label, series_id in LABEL_TO_ID.items():
-        log(f"\n[UPDATE] {label} -> {series_id}")
-        result: dict[str, Any] = {"label": label, "series_id": series_id}
-        try:
-            if label in STRUCTURED_FETCHERS:
-                points = STRUCTURED_FETCHERS[label]()
-                source_id = {
-                    "西Core CPI": "INE 50907/76130",
-                    "西 失業率": "INE 65219 / EPA423474",
-                    "法 Core CPI": "INSEE 001768593/011814145",
-                    "德 Core CPI": "Destatis 61111 / Special Breakdown",
-                    "德 工業": "Destatis 42153-0001",
-                }[label]
-                definition = "Validated structured official source"
-            else:
-                points, source_id, definition = fetch_general_with_backfill(label)
-            # PMI release type is stored per point. A batch may contain June
-            # final and July flash together, so never apply one batch-wide tag.
-            added, revised, unchanged = merge(database, series_id, points)
-            result.update({
-                "status": "OK",
-                "source_id": source_id,
-                "definition": definition,
-                "fetched_points": len(points),
-                "added": added,
-                "revised": revised,
-                "unchanged": unchanged,
-                "latest_fetched": [asdict(point) if hasattr(point, "__dataclass_fields__") else point for point in points[-6:]],
-            })
-            log(f"[OK] fetched={len(points)} added={added} revised={revised} unchanged={unchanged}")
-        except Exception as error:
-            result.update({
-                "status": "ERROR",
-                "error": f"{type(error).__name__}: {error}",
-                "traceback": traceback.format_exc(limit=12),
-            })
-            log(f"[ERROR] {result['error']}")
-        results.append(result)
-
-    database["generated_at"] = datetime.now(timezone.utc).isoformat()
-    database["source"] = {
-        "type": "official_source_update",
-        "file": "eu_macro.json",
-        "script_version": SCRIPT_VERSION,
-        "note": "Existing Excel-import history preserved; official observations overwrite matching periods.",
-    }
-    validate_database(database)
-    DATA_FILE.write_text(json.dumps(database, ensure_ascii=False, indent=2), encoding="utf-8")
-
-    summary: dict[str, int] = {}
-    for result in results:
-        summary[result["status"]] = summary.get(result["status"], 0) + 1
-    report = {
-        "script_version": SCRIPT_VERSION,
-        "generated_at": database["generated_at"],
-        "summary": summary,
-        "results": results,
-    }
-    save_debug("update_report.json", report)
-    # Preserve source-specific diagnostics emitted by structured adapters.
-    save_debug("structured_source_details.json", structured.DETAILS)
-    save_debug("structured_http_log.json", structured.HTTP_LOG)
-
-    log("\n[UPDATE SUMMARY]")
-    for result in results:
-        if result["status"] == "OK":
-            log(f"{result['series_id']}: added={result['added']} revised={result['revised']} unchanged={result['unchanged']}")
-        else:
-            log(f"{result['series_id']}: ERROR {result['error']}")
-    log(f"[DONE] summary={summary} elapsed_seconds={time.monotonic() - started:.1f}")
-    log(f"[OUTPUT] {DATA_FILE}")
-    log(f"[DEBUG] {DEBUG_DIR}")
-
-
-if __name__ == "__main__":
-    main()
+  ]
+}
