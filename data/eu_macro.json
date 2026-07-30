@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-07-30T04:02:25.705029+00:00",
+  "generated_at": "2026-07-30T05:47:45.648115+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
-    "script_version": "2026-07-30-eu-production-v3-commit-markdown",
+    "script_version": "2026-07-30-eu-production-v4-wide-markdown",
     "note": "Existing Excel-import history preserved; official observations overwrite matching periods."
   },
   "blocks": [
