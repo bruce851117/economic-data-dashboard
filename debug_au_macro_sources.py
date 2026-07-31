@@ -30,7 +30,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-31-au-source-validation-v12-wpi-series-westpac-pdf"
+VERSION = "2026-07-31-au-source-validation-v13-expected-leave-table17"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -104,10 +104,18 @@ def period_key(value: Any) -> str | None:
     quarterly = re.fullmatch(r"((?:19|20)\d{2})[- ]?[Qq]([1-4])", text)
     if quarterly:
         return f"{quarterly.group(1)}-Q{quarterly.group(2)}"
+    named_quarter = re.fullmatch(
+        r"(Mar|Jun|Sep|Dec)(?:ember)?(?:[- ]+Qtr)?[- ]+((?:19|20)\d{2})",
+        text,
+        re.I,
+    )
+    if named_quarter:
+        quarter_map = {"mar": 1, "jun": 2, "sep": 3, "dec": 4}
+        return f"{int(named_quarter.group(2)):04d}-Q{quarter_map[named_quarter.group(1)[:3].lower()]}"
     # ABS labels such as Jun-2026 or May-26.
     month_map = {name.lower(): index for index, name in enumerate(
         "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(), 1)}
-    named = re.fullmatch(r"([A-Za-z]{3})[- ](20\d{2}|\d{2})", text)
+    named = re.fullmatch(r"([A-Za-z]{3})[- ]((?:19|20)\d{2}|\d{2})", text)
     if named and named.group(1).lower() in month_map:
         year = int(named.group(2))
         if year < 100:
@@ -452,6 +460,126 @@ def fetch_abs_workbook_candidate(
     raise RuntimeError("ABS national accounts workbook attempts failed: " + " | ".join(errors))
 
 
+def fetch_expected_to_leave_total() -> tuple[list[Point], dict[str, Any]]:
+    latest_pages = [
+        "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/latest-release",
+        "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/latest-release",
+    ]
+    fallback_url = "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx"
+    candidates: list[str] = []
+    discovery: list[dict[str, Any]] = []
+    for page_url in latest_pages:
+        try:
+            page = get(page_url)
+            soup = BeautifulSoup(page.text, "html.parser")
+            found = []
+            for anchor_tag in soup.find_all("a", href=True):
+                href = anchor_tag.get("href", "")
+                context = clean(" ".join([
+                    anchor_tag.get_text(" ", strip=True),
+                    anchor_tag.parent.get_text(" ", strip=True) if anchor_tag.parent else "",
+                ]))
+                if (
+                    href.lower().endswith(("6291017.xlsx", "6291017.xls"))
+                    or ("Table 17" in context and href.lower().endswith((".xlsx", ".xls")))
+                ):
+                    url = urljoin(page.url, href)
+                    if url not in candidates:
+                        candidates.append(url)
+                        found.append(url)
+            discovery.append({"page": page.url, "found": found})
+        except Exception as error:
+            discovery.append({"page": page_url, "error": f"{type(error).__name__}: {error}"})
+    if fallback_url not in candidates:
+        candidates.append(fallback_url)
+
+    errors: list[str] = []
+    for workbook_url in candidates:
+        try:
+            response = get(workbook_url)
+            (OUT / "abs_6291017_table17_raw.xlsx").write_bytes(response.content)
+            books = workbook_rows(response.content)
+            ranked: list[dict[str, Any]] = []
+            for book in books:
+                rows = book["rows"]
+                # ABS Data1 layout: dates generally run down the first column,
+                # while each statistical series occupies one value column.
+                max_cols = max((len(row) for row in rows), default=0)
+                for value_col in range(1, max_cols):
+                    header_cells = []
+                    for row in rows[:25]:
+                        if value_col < len(row) and row[value_col] is not None:
+                            header_cells.append(clean(row[value_col]))
+                    header = clean(" ".join(header_cells))
+                    header_norm = norm(header)
+                    if "expect" not in header_norm or "leave" not in header_norm:
+                        continue
+                    total_score = 2 if re.search(r"\btotal\b", header_norm) else 0
+                    person_score = 1 if any(term in header_norm for term in ("employed persons", "persons", "workers")) else 0
+                    values: dict[str, float] = {}
+                    for row in rows:
+                        period = None
+                        for cell in row[: min(6, len(row))]:
+                            period = period_key(cell)
+                            if period:
+                                break
+                        if period and value_col < len(row):
+                            value = number(row[value_col])
+                            if value is not None:
+                                values[period] = value
+                    if values:
+                        ranked.append({
+                            "sheet": book["sheet"], "value_col": value_col + 1,
+                            "header": header, "score": total_score + person_score,
+                            "values": values,
+                        })
+                # Also support row-oriented tables by finding descriptive rows.
+                for row_index, row in enumerate(rows):
+                    row_label = norm(" ".join(clean(cell) for cell in row[:20] if cell is not None))
+                    if "expect" not in row_label or "leave" not in row_label:
+                        continue
+                    values: dict[str, float] = {}
+                    for col_index, cell in enumerate(row):
+                        value = number(cell)
+                        if value is None:
+                            continue
+                        # Search nearby header rows for the period corresponding to this column.
+                        period = None
+                        for header_index in range(max(0, row_index - 12), row_index):
+                            if col_index < len(rows[header_index]):
+                                period = period_key(rows[header_index][col_index])
+                                if period:
+                                    break
+                        if period:
+                            values[period] = value
+                    if values:
+                        ranked.append({
+                            "sheet": book["sheet"], "row": row_index + 1,
+                            "header": clean(" ".join(clean(cell) for cell in row[:20] if cell is not None)),
+                            "score": 2 if "total" in row_label else 0,
+                            "values": values,
+                        })
+            ranked.sort(key=lambda item: (-item["score"], -len(item["values"])))
+            if not ranked:
+                raise RuntimeError("Table 17 downloaded, but no Expects to leave series with dated values was found")
+            best = ranked[0]
+            points = [
+                Point(period, value, response.url, note=f"Table 17; Expects to leave; Total; {best.get('sheet')}")
+                for period, value in sorted(best["values"].items())
+            ]
+            return points, {
+                "request_url": response.url,
+                "discovery": discovery,
+                "selected": {key: value for key, value in best.items() if key != "values"},
+                "candidate_count": len(ranked),
+                "candidates": [{key: value for key, value in item.items() if key != "values"} for item in ranked[:30]],
+                "note": "ABS Table 17, Employed persons by expectations of future employment and current job duration; selected Expects to leave x Total",
+            }
+        except Exception as error:
+            errors.append(f"{workbook_url}: {type(error).__name__}: {error}")
+    raise RuntimeError("ABS Table 17 attempts failed: " + " | ".join(errors))
+
+
 def fetch_wpi_including_bonuses_yoy(series_id: str = "A2615579C") -> tuple[list[Point], dict[str, Any]]:
     landing_url = "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/latest-release#data-downloads"
     page = get(landing_url)
@@ -789,21 +917,7 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "時薪YoY":
         return fetch_wpi_including_bonuses_yoy("A2615579C")
     if label == "預計離職":
-        # Table 7 is an official structured PJSM workbook. With no populated
-        # AU_ECON reference value, expose workbook candidates rather than guess.
-        url = "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/participation-job-search-and-mobility-australia/feb-2025/62230_Table07.xlsx"
-        response = get(url)
-        (OUT / "abs_job_mobility_table07_raw.xlsx").write_bytes(response.content)
-        books = workbook_rows(response.content)
-        candidates = []
-        points = []
-        for book in books:
-            rows = book["rows"]
-            for row_index, row in enumerate(rows):
-                text = norm(" ".join(clean(cell) for cell in row if cell is not None))
-                if any(term in text for term in ("expect to leave", "expected to leave", "intends to leave", "intention to leave")):
-                    candidates.append({"sheet": book["sheet"], "row": row_index + 1, "preview": [clean(cell) for cell in row[:20]]})
-        return points, {"request_url": response.url, "candidate_rows": candidates, "note": "Official ABS XLSX downloaded; definition requires AU_ECON reference value"}
+        return fetch_expected_to_leave_total()
     if label == "CPI YoY":
         return fetch_abs_target("CPI_MONTHLY", "2025-01", ["all groups", "australia", "annual"], ["trimmed", "quarterly"], target.expected)
     if label == "Trimmed Mean YoY":
