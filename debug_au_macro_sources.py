@@ -31,7 +31,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-31-au-source-validation-v15-exact-series-flexible-xls"
+VERSION = "2026-07-31-au-source-validation-v16-data-sheet-series"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -376,11 +376,14 @@ def exact_series_from_workbook(content: bytes, series_id: str, source_url: str, 
                         value = number(data_row[value_col])
                         if value is not None:
                             values[period] = value
+                # ABS repeats each Series ID in the Index sheet and in Data1.
+                # The Index occurrence only contains metadata, so keep scanning
+                # until the occurrence followed by dated observations is found.
                 if not values:
-                    raise RuntimeError(f"Series {series_id} found at {book['sheet']} row {id_row + 1}, but no dated values followed")
+                    continue
                 points = [Point(period, value, source_url, note=f"sheet={book['sheet']}; series={series_id}") for period, value in sorted(values.items())]
                 return points, {"sheet": book["sheet"], "series_id": series_id, "series_id_row": id_row + 1, "value_col": value_col + 1, "observation_count": len(values)}
-    raise RuntimeError(f"Series ID {series_id} not found in downloaded workbook")
+    raise RuntimeError(f"Series ID {series_id} was found only in metadata sheets or had no dated observations")
 
 
 def fetch_anz_job_ads(expected: dict[str, float]) -> tuple[list[Point], dict[str, Any]]:
