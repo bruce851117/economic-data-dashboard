@@ -30,7 +30,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-31-au-source-validation-v11-uk-pmi-flow"
+VERSION = "2026-07-31-au-source-validation-v12-wpi-series-westpac-pdf"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -452,6 +452,95 @@ def fetch_abs_workbook_candidate(
     raise RuntimeError("ABS national accounts workbook attempts failed: " + " | ".join(errors))
 
 
+def fetch_wpi_including_bonuses_yoy(series_id: str = "A2615579C") -> tuple[list[Point], dict[str, Any]]:
+    landing_url = "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/latest-release#data-downloads"
+    page = get(landing_url)
+    (OUT / "abs_wpi_latest_release.html").write_bytes(page.content)
+    soup = BeautifulSoup(page.text, "html.parser")
+    workbook_url = ""
+    for anchor in soup.find_all("a", href=True):
+        context = clean(" ".join([
+            anchor.get_text(" ", strip=True),
+            anchor.parent.get_text(" ", strip=True) if anchor.parent else "",
+        ]))
+        href = anchor.get("href", "")
+        if "Table 7b" in context and href.lower().endswith(".xlsx"):
+            workbook_url = urljoin(page.url, href)
+            break
+    if not workbook_url:
+        # ABS table filenames are stable within each release, but discovery is
+        # primary so the reference-period folder can change automatically.
+        release_match = re.search(r'href="([^"]+/wage-price-index-australia/[^/]+/634507b\.xlsx)"', page.text, re.I)
+        if release_match:
+            workbook_url = urljoin(page.url, html.unescape(release_match.group(1)))
+    if not workbook_url:
+        raise RuntimeError("ABS WPI Table 7b download link not found on official release page")
+
+    response = get(workbook_url)
+    (OUT / "abs_wpi_table_7b_raw.xlsx").write_bytes(response.content)
+    books = workbook_rows(response.content)
+    selected: dict[str, Any] | None = None
+    for book in books:
+        rows = book["rows"]
+        for row_index, row in enumerate(rows):
+            for col_index, cell in enumerate(row):
+                if clean(cell).upper() == series_id.upper():
+                    selected = {"sheet": book["sheet"], "rows": rows, "id_row": row_index + 1, "value_col": col_index}
+                    break
+            if selected:
+                break
+        if selected:
+            break
+    if not selected:
+        raise RuntimeError(f"ABS WPI series ID {series_id} not found in Table 7b Data1 workbook")
+
+    levels: dict[str, float] = {}
+    rows = selected["rows"]
+    value_col = selected["value_col"]
+    for row in rows:
+        period = None
+        for cell in row[: min(6, len(row))]:
+            period = period_key(cell)
+            if period:
+                break
+        if period and value_col < len(row):
+            value = number(row[value_col])
+            if value is not None:
+                levels[period] = value
+    ordered = sorted(levels)
+    yoy = {
+        ordered[index]: (levels[ordered[index]] / levels[ordered[index - 4]] - 1.0) * 100.0
+        for index in range(4, len(ordered))
+        if levels[ordered[index - 4]] != 0
+    }
+    if not yoy:
+        raise RuntimeError(f"ABS WPI series {series_id} found but quarterly levels could not be converted to YoY")
+    points = [
+        Point(period, value, response.url, note=f"Table 7b Data1; series={series_id}; index level YoY")
+        for period, value in sorted(yoy.items())
+    ]
+    return points, {
+        "request_url": response.url,
+        "landing_url": landing_url,
+        "sheet": selected["sheet"],
+        "series_id": series_id,
+        "series_id_row": selected["id_row"],
+        "value_col": value_col + 1,
+        "latest_index_levels": [{"period": key, "value": levels[key]} for key in ordered[-12:]],
+        "note": "Official ABS Table 7b hourly rates of pay including bonuses, original; YoY calculated from A2615579C quarterly index levels",
+    }
+
+
+def fetch_westpac_unemployment_expectations() -> tuple[list[Point], dict[str, Any]]:
+    url = "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/07/er20260714BullConsumerSentiment.pdf"
+    patterns = [
+        r"Unemployment Expectations Index\s+(?:dropped|fell)\s+[0-9]+(?:\.[0-9]+)?%\s+to\s+([0-9]+(?:\.[0-9]+)?)",
+        r"unemployment expectations.{0,240}?to\s+([0-9]+(?:\.[0-9]+)?)\s+in July",
+    ]
+    points = pdf_value(url, patterns, "2026-07", "westpac_consumer_sentiment_july.pdf")
+    return points, {"request_url": url, "note": "Official Westpac-MI Consumer Sentiment Bulletin PDF"}
+
+
 def official_html_value(url: str, patterns: list[str], period: str, raw_name: str) -> list[Point]:
     response = get(url)
     (OUT / raw_name).write_bytes(response.content)
@@ -698,7 +787,7 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "ANZ職缺廣告":
         return fetch_anz_job_ads(target.expected)
     if label == "時薪YoY":
-        return fetch_abs_target("WPI", "2024-Q1", ["private and public", "all industries", "australia", "seasonally adjusted", "percentage change from corresponding quarter"], ["quarterly index"], target.expected)
+        return fetch_wpi_including_bonuses_yoy("A2615579C")
     if label == "預計離職":
         # Table 7 is an official structured PJSM workbook. With no populated
         # AU_ECON reference value, expose workbook candidates rather than guess.
@@ -764,12 +853,7 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
             raise RuntimeError("Westpac official releases failed: " + " | ".join(errors))
         return points, {"note": "Official Westpac releases; full precision history is licensed", "errors": errors}
     if label == "失業預期":
-        points = official_html_value(
-            "https://www.westpac.com.au/news/making-news/2026/06/consumer-sentiment-slips-again-as-cost-of-living-pressures-weigh-on-households/",
-            [r"unemployment expectations.{0,120}?([0-9]+(?:\.\d+)?)"],
-            "2026-06", "westpac_unemployment_expectations_june.html"
-        )
-        return points, {"note": "Latest official release; full history is licensed"}
+        return fetch_westpac_unemployment_expectations()
     if label in {"製造業PMI", "服務業PMI"}:
         return sp_australia_pmi(label)
     if label == "GDP YoY":
