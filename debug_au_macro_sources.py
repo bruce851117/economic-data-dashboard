@@ -29,7 +29,7 @@ from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-31-au-source-validation-v8-official-source-review"
+VERSION = "2026-07-31-au-source-validation-v9-official-workbooks"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -359,6 +359,83 @@ def fetch_anz_job_ads(expected: dict[str, float]) -> tuple[list[Point], dict[str
     return points, {"request_url": response.url, "candidates": [{k: v for k, v in item.items() if k != "values"} for item in candidates[:30]]}
 
 
+def fetch_abs_workbook_candidate(
+    urls: list[str],
+    expected: dict[str, float],
+    raw_name: str,
+    note: str,
+) -> tuple[list[Point], dict[str, Any]]:
+    errors: list[str] = []
+    for url in urls:
+        try:
+            response = get(url)
+            (OUT / raw_name).write_bytes(response.content)
+            books = workbook_rows(response.content)
+            candidates: list[dict[str, Any]] = []
+            for book in books:
+                rows = book["rows"]
+                max_cols = max((len(row) for row in rows), default=0)
+                for date_col in range(max_cols):
+                    dates: dict[int, str] = {}
+                    for row_index, row in enumerate(rows):
+                        if date_col >= len(row):
+                            continue
+                        period = period_key(row[date_col])
+                        if period:
+                            dates[row_index] = period
+                    if not dates:
+                        continue
+                    for value_col in range(max_cols):
+                        values: dict[str, float] = {}
+                        for row_index, period in dates.items():
+                            if value_col < len(rows[row_index]):
+                                value = number(rows[row_index][value_col])
+                                if value is not None:
+                                    values[period] = value
+                        # First compare a directly published YoY column.
+                        common = sorted(set(values) & set(expected))
+                        if common:
+                            diffs = [abs(values[item] - expected[item]) for item in common]
+                            candidates.append({
+                                "sheet": book["sheet"], "date_col": date_col + 1,
+                                "value_col": value_col + 1, "transform": "level",
+                                "matches": len(common), "mae": sum(diffs) / len(diffs),
+                                "values": values,
+                            })
+                        # Also test YoY calculated from quarterly level columns.
+                        ordered = sorted(values)
+                        yoy = {
+                            ordered[index]: (values[ordered[index]] / values[ordered[index - 4]] - 1.0) * 100.0
+                            for index in range(4, len(ordered))
+                            if values[ordered[index - 4]] != 0
+                        }
+                        common_yoy = sorted(set(yoy) & set(expected))
+                        if common_yoy:
+                            diffs = [abs(yoy[item] - expected[item]) for item in common_yoy]
+                            candidates.append({
+                                "sheet": book["sheet"], "date_col": date_col + 1,
+                                "value_col": value_col + 1, "transform": "yoy_pct_q",
+                                "matches": len(common_yoy), "mae": sum(diffs) / len(diffs),
+                                "values": yoy,
+                            })
+            candidates.sort(key=lambda item: (-item["matches"], item["mae"]))
+            if not candidates:
+                raise RuntimeError("workbook contained no quarterly candidate series")
+            best = candidates[0]
+            points = [
+                Point(period, value, response.url, note=f"{note}; sheet={best['sheet']}; col={best['value_col']}; transform={best['transform']}")
+                for period, value in sorted(best["values"].items())
+            ]
+            return points, {
+                "request_url": response.url,
+                "note": note,
+                "candidates": [{key: value for key, value in item.items() if key != "values"} for item in candidates[:50]],
+            }
+        except Exception as error:
+            errors.append(f"{url}: {type(error).__name__}: {error}")
+    raise RuntimeError("ABS national accounts workbook attempts failed: " + " | ".join(errors))
+
+
 def official_html_value(url: str, patterns: list[str], period: str, raw_name: str) -> list[Point]:
     response = get(url)
     (OUT / raw_name).write_bytes(response.content)
@@ -468,7 +545,7 @@ TARGETS = [
 def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     label = target.label
     if label == "就業新增":
-        return fetch_abs_target("LF", "2025-01", ["employed", "persons", "australia", "seasonally adjusted"], ["rate", "hours", "state"], target.expected, "mom_diff_thousands")
+        return fetch_abs_target("LF", "2025-01", ["employed", "persons", "australia", "seasonally adjusted"], ["rate", "hours", "state"], target.expected, "mom_diff")
     if label == "失業率":
         return fetch_abs_target("LF", "2025-01", ["unemployment rate", "australia", "seasonally adjusted"], ["state", "youth"], target.expected)
     if label == "職缺":
@@ -553,9 +630,22 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "GDP YoY":
         return fetch_abs_target("ANA_AGG", "2024-Q1", ["gross domestic product", "chain volume", "index", "seasonally adjusted"], ["per capita", "percentage changes"], target.expected, "yoy_pct_q")
     if label == "GDP私人消費YoY":
-        return fetch_abs_target("ANA_AGG", "2024-Q1", ["household final consumption expenditure", "chain volume", "seasonally adjusted"], [], target.expected)
+        return fetch_abs_workbook_candidate(
+            ["https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx"],
+            target.expected,
+            "abs_5206008_household_consumption.xlsx",
+            "ABS Table 8 Household Final Consumption Expenditure official XLSX",
+        )
     if label == "GDP投資YoY":
-        return fetch_abs_target("ANA_AGG", "2024-Q1", ["gross fixed capital formation", "chain volume", "seasonally adjusted"], [], target.expected)
+        return fetch_abs_workbook_candidate(
+            [
+                "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+                "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xls",
+            ],
+            target.expected,
+            "abs_5206002_expenditure_volume_measures.xlsx",
+            "ABS Table 2 Expenditure on GDP, chain volume measures official workbook",
+        )
     raise RuntimeError(f"No test mapping for {label}")
 
 
