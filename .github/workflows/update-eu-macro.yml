@@ -2,8 +2,7 @@ name: Update EU Macro Data
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "45 8 * * 1-5"
+
 
 permissions:
   contents: write

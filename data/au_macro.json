@@ -1,0 +1,6703 @@
+{
+  "country": "Australia",
+  "source_file": "au_econ.xlsx",
+  "generated_at": "2026-07-31T03:40:54.994498+00:00",
+  "series": [
+    {
+      "id": "auempchg",
+      "name": "就業新增",
+      "frequency": "Monthly",
+      "unit": "千人",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 9.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-02-01",
+          "value": 65.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-03-01",
+          "value": 19.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-04-01",
+          "value": -1.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 41.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": -6.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-07-01",
+          "value": 33.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 4.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 19.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-10-01",
+          "value": 77.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 32.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 14.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-01-01",
+          "value": 4.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 13.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 15.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-04-01",
+          "value": 6.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-05-01",
+          "value": -6.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 21.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-07-01",
+          "value": 33.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-08-01",
+          "value": -40.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": -13.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-10-01",
+          "value": 18.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 26.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 30.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-01-01",
+          "value": 21.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-02-01",
+          "value": -24.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 60.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-04-01",
+          "value": 57.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 31.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 32.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-07-01",
+          "value": 35.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-08-01",
+          "value": 49.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 39.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-10-01",
+          "value": 3.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 43.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 29.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-01-01",
+          "value": 39.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-02-01",
+          "value": -15.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 20.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 18.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-05-01",
+          "value": -8.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 69.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-07-01",
+          "value": 0.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 62.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 15.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 23.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 19.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 25.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-01-01",
+          "value": 44.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-02-01",
+          "value": 10.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 23.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-04-01",
+          "value": 37.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-05-01",
+          "value": 6.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 12.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-07-01",
+          "value": 32.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 45.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 20.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-10-01",
+          "value": -49.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 20.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 49.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 7.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-02-01",
+          "value": -0.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -4.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-04-01",
+          "value": -578.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-05-01",
+          "value": -295.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 228.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-07-01",
+          "value": 136.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 135.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": -32.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 138.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 84.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 55.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-01-01",
+          "value": 43.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 52.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 59.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-04-01",
+          "value": -4.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 90.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 20.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 25.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-08-01",
+          "value": -132.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": -125.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-10-01",
+          "value": -49.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 365.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 83.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-01-01",
+          "value": 65.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 74.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 21.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 62.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 38.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 94.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-07-01",
+          "value": 10.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-08-01",
+          "value": 71.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 8.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-10-01",
+          "value": 39.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-11-01",
+          "value": 68.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": -2.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-01-01",
+          "value": 22.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-02-01",
+          "value": 38.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 90.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-04-01",
+          "value": -0.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-05-01",
+          "value": 89.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 9.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-07-01",
+          "value": -0.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-08-01",
+          "value": 72.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": -5.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 56.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 49.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": -53.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-01-01",
+          "value": -1.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 106.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": -21.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 36.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 31.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 22.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 55.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 32.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 37.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-10-01",
+          "value": -1.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 19.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 47.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 33.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-02-01",
+          "value": -74.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 31.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 104.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": -6.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": -26.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 40.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": -13.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 9.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 33.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-11-01",
+          "value": -38.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 57.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 36.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 22.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 20.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-04-01",
+          "value": -38.6,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "auunemp",
+      "name": "失業率",
+      "frequency": "Monthly",
+      "unit": "%",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 6.3517065,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-02-01",
+          "value": 6.1534393,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-03-01",
+          "value": 6.1032857,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-04-01",
+          "value": 6.1124615,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 5.930874,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 6.0073726,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-07-01",
+          "value": 6.2744531,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 6.0874419,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 6.1743959,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-10-01",
+          "value": 5.9124787,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 5.8505807,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 5.7410701,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-01-01",
+          "value": 6.0412668,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 5.6944879,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 5.6533355,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-04-01",
+          "value": 5.6452025,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 5.7214072,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 5.6949578,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-07-01",
+          "value": 5.6935558,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 5.6150796,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 5.6650763,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-10-01",
+          "value": 5.5972495,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 5.7673703,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 5.8364934,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-01-01",
+          "value": 5.6838697,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-02-01",
+          "value": 5.8933424,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 5.8457463,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-04-01",
+          "value": 5.6086497,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 5.5468256,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 5.6224716,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-07-01",
+          "value": 5.6056425,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-08-01",
+          "value": 5.5298313,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 5.4639216,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-10-01",
+          "value": 5.4042026,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 5.4543832,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 5.6166787,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-01-01",
+          "value": 5.5242204,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-02-01",
+          "value": 5.581643,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 5.5301044,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 5.5441053,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-05-01",
+          "value": 5.4355346,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 5.341531,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-07-01",
+          "value": 5.2947148,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 5.2438151,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 5.0199154,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 5.0024041,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 5.1091307,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 5.0177414,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-01-01",
+          "value": 5.049475,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-02-01",
+          "value": 4.9927445,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 5.0885642,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-04-01",
+          "value": 5.2183059,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-05-01",
+          "value": 5.1956542,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 5.2588971,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-07-01",
+          "value": 5.27564,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 5.2578534,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 5.2291371,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-10-01",
+          "value": 5.3033487,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 5.1727906,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 5.039032,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 5.2488047,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 5.1129664,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": 5.1977728,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-04-01",
+          "value": 6.3000396,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-05-01",
+          "value": 6.9901678,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 7.4211888,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-07-01",
+          "value": 7.4355485,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 6.7940323,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 6.9285402,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 6.9501364,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 6.8117349,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 6.5588376,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-01-01",
+          "value": 6.27618,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 5.8471958,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 5.6726923,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 5.4638603,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 5.1115732,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 5.0206784,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 4.7231231,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 4.5738579,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 4.7062648,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 5.2375077,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 4.634118,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 4.2091494,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-01-01",
+          "value": 4.1658528,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 4.0312021,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 3.982495,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 3.8507828,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 3.9397202,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 3.6018694,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-07-01",
+          "value": 3.4477906,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-08-01",
+          "value": 3.5276056,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 3.603002,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-10-01",
+          "value": 3.4371031,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-11-01",
+          "value": 3.5169992,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 3.5255267,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-01-01",
+          "value": 3.6608092,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-02-01",
+          "value": 3.6097116,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 3.5940567,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-04-01",
+          "value": 3.7026068,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-05-01",
+          "value": 3.586556,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 3.5151971,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-07-01",
+          "value": 3.7150386,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-08-01",
+          "value": 3.6803952,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 3.5642125,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 3.7801965,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 3.9328579,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 3.985756,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 4.0908306,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 3.7392353,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 3.8962398,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 4.0801856,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 3.9998661,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 4.0296561,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 4.1985055,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 4.1281505,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 4.0227871,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 4.0927247,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 3.9369707,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 3.9972501,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 4.1250222,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 4.0715095,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 4.0778075,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 4.053699,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 4.0940002,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 4.3122664,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 4.2456784,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 4.2480821,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 4.4518465,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 4.3331079,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 4.3226083,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 4.116373,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 4.0798679,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 4.3016255,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 4.2783386,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 4.4904846,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "auvacancy",
+      "name": "職缺",
+      "frequency": "Quarterly",
+      "unit": "千人",
+      "data": [
+        {
+          "date": "2015-02-01",
+          "value": 151.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 157.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 161.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 167.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 172.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 171.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 177.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 182.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-02-01",
+          "value": 185.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 185.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-08-01",
+          "value": 200.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 205.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-02-01",
+          "value": 213.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-05-01",
+          "value": 223.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 227.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 232.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-02-01",
+          "value": 232.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-05-01",
+          "value": 227.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 221.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 230.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 227.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-05-01",
+          "value": 128.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 203.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 260.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 287.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 366.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 329.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 406.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 422.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 473.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-08-01",
+          "value": 466.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-11-01",
+          "value": 451.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-02-01",
+          "value": 439.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-05-01",
+          "value": 422.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-08-01",
+          "value": 399.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 385.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 359.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 346.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 332.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 346.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 325.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 336.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 327.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 328.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 336.6,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "auanzjobads",
+      "name": "ANZ職缺廣告數",
+      "frequency": "Monthly",
+      "unit": "Index",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 89.13921344570751,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-02-01",
+          "value": 88.99619258257518,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-03-01",
+          "value": 88.75770313775834,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-04-01",
+          "value": 89.34512755843522,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 90.83080960418228,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 93.03901032286724,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-07-01",
+          "value": 91.87258183615238,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 92.65028838441043,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 95.80988985621863,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-10-01",
+          "value": 95.46476108399918,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 95.66512870660091,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 95.12630693710561,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-01-01",
+          "value": 95.28948107421063,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 96.9535616362434,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 96.76432440173845,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-04-01",
+          "value": 96.38945686437059,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 99.95077461535506,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 99.35626463807725,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-07-01",
+          "value": 99.56130974550706,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 100.29149406360145,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 99.30303603367709,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-10-01",
+          "value": 100.59389250104797,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 101.55043861024866,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 97.78500735681705,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-01-01",
+          "value": 101.61155979998043,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-02-01",
+          "value": 105.93333140808832,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 107.70433902579582,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-04-01",
+          "value": 110.13409303427702,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 109.1148346165477,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 110.89034162395883,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-07-01",
+          "value": 111.90952234962059,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-08-01",
+          "value": 114.02490844025586,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 113.28661235228546,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-10-01",
+          "value": 113.11174462543885,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 113.49753370196913,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 109.55541362871404,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-01-01",
+          "value": 110.17905666208168,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-02-01",
+          "value": 107.7765647452473,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 106.32100141452956,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 105.32495274509373,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-05-01",
+          "value": 106.63570891079057,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 101.34830745287118,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-07-01",
+          "value": 103.50822517068093,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 103.80470610396115,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 104.26967470497881,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 102.88608164091642,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 99.99124374590176,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 97.88583549451934,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-01-01",
+          "value": 104.01142023218955,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-02-01",
+          "value": 101.92080072217652,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 102.588813596096,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-04-01",
+          "value": 103.93731083944118,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-05-01",
+          "value": 99.58822444153571,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 102.58584537348354,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-07-01",
+          "value": 100.30148683752775,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 98.31866340927775,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 98.9851730686657,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-10-01",
+          "value": 97.31215644393306,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 94.86375885445948,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 95.58634618121376,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 94.62861970682292,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 96.71586304978986,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": 87.74955562738198,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-04-01",
+          "value": 49.91850323447344,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-05-01",
+          "value": 46.15640577418181,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 55.88405153760541,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-07-01",
+          "value": 64.67129708309623,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 67.93851296976298,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 71.19120162568042,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 79.58413473274291,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 86.70617767055111,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 92.54698668415378,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-01-01",
+          "value": 94.98569744573456,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 104.24482460908835,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 112.90421463953821,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 117.88647240732546,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 128.11660662284157,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 125.67780490591942,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 126.10270304070363,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 119.77648405550545,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 118.73861850939731,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 129.01865817325157,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 140.02675644923417,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 136.7766786867366,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-01-01",
+          "value": 135.10266251874086,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 153.5651060139914,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 155.55923672051654,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 155.97216350469304,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 155.89918881995925,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 158.6140574950648,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-07-01",
+          "value": 157.0622576362883,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-08-01",
+          "value": 156.9054007385125,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 156.53358022946577,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-10-01",
+          "value": 156.7173168141388,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-11-01",
+          "value": 159.84290603979852,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 154.6093834483256,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-01-01",
+          "value": 153.49278581607265,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-02-01",
+          "value": 152.06256163923894,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 147.37614401456443,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-04-01",
+          "value": 146.48963807708378,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-05-01",
+          "value": 146.6960240659149,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 142.41779093236312,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-07-01",
+          "value": 143.44446374851952,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-08-01",
+          "value": 144.16346089534792,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 142.97259641162276,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 138.70638138806487,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 132.41977569595193,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 131.98061963705428,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 134.8954459896893,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 126.42697605737223,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 125.24635083930306,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 122.67434220727975,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 120.15267379387542,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 116.25899171700425,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 114.24760643569125,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 111.43479864572352,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 116.24143952469721,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 117.9501843620212,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 117.15160641445463,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 116.20920142954694,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 116.19278959259682,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 114.82876657981423,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 115.25982002177184,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 115.42038314320975,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 113.57070385204055,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 115.31669287982665,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 114.75867710328853,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 113.90511460289395,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 111.3975074954002,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 109.72539369794121,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 109.4124272012047,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 107.94231051412082,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 114.66839143648167,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 118.34293478548454,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 114.62640686686296,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 113.79384313637556,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "auwageyoy",
+      "name": "時薪YoY",
+      "frequency": "Quarterly",
+      "unit": "%",
+      "data": [
+        {
+          "date": "2015-03-01",
+          "value": 2.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 2.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 2.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 2.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 2.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 2.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 1.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 1.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 1.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 2.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 2.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 2.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 2.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 2.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 2.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 2.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 2.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 2.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 2.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 2.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": 2.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 1.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 1.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 1.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 1.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 1.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 2.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 2.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 2.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 3.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 3.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 3.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 3.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 3.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 4.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 4.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 4.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 3.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 3.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 3.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 3.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 3.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 3.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 3.5,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "auexitleave",
+      "name": "預計離職",
+      "frequency": "Quarterly",
+      "unit": "千人",
+      "data": [
+        {
+          "date": "2015-03-01",
+          "value": 1184.4356156,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 1143.0243076,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 1108.3753587,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 1151.9215235,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 1141.4251534,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 1122.0868393,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 1110.7494849,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 1125.2139393,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 1142.6299991,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 1116.6195903,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 1127.8267343,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 1182.1372107,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 1189.9836305,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 1163.0611111,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 1155.8883237,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 1207.4536677,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 1171.0040431,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 1147.0559949,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 1181.7668685,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 1192.8109602,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": 1207.8010369,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 979.0420443,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 1097.7251883,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 1202.7951445,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 1241.1923146,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 1207.5166075,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 1235.100218,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 1305.884784,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 1367.9084993,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 1285.0173422,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 1338.7967628,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 1357.5691716,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 1327.4880095,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 1281.5904229,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 1313.3509915,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 1382.8387691,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 1368.5298637,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 1352.0501762,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 1352.295418,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 1318.8729598,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 1323.588736,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 1322.4015594,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 1376.8336786,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 1381.8757991,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "auunempexp",
+      "name": "失業預期",
+      "frequency": "Monthly",
+      "unit": "Index",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 150.6704712149288,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-02-01",
+          "value": 147.8071404470435,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-03-01",
+          "value": 144.0560957625,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-04-01",
+          "value": 156.27186566784258,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 147.2667137811,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 152.82,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-07-01",
+          "value": 150.8032991828,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 147.7246120908,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 156.3182719147443,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-10-01",
+          "value": 134.9170280441,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 139.33846573442435,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 141.6540546443487,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-01-01",
+          "value": 142.66255832275937,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 145.347005051,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 147.3008611698721,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-04-01",
+          "value": 144.6783373038021,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 136.26211862,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 136.179716474,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-07-01",
+          "value": 138.779206557,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 141.15771598,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 138.3674296262813,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-10-01",
+          "value": 138.248495193,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 140.21414762803488,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 139.085984895,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-01-01",
+          "value": 137.96957300007415,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-02-01",
+          "value": 142.271182747,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 137.851995726,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-04-01",
+          "value": 140.33205298061063,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 135.515881282,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 140.30597178466428,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-07-01",
+          "value": 136.032013622,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-08-01",
+          "value": 132.460362511295,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 133.6294200690881,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-10-01",
+          "value": 129.23497577917198,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 130.758100544,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 127.634408001,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-01-01",
+          "value": 122.82143572139684,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-02-01",
+          "value": 120.59947189854283,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 121.83735723025234,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 125.67184913177775,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-05-01",
+          "value": 119.97442182996436,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 126.8524819729774,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-07-01",
+          "value": 125.7915425767317,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 129.30026854604483,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 120.744589238,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 122.8055436188904,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 120.426237776478,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 120.98353451458927,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-01-01",
+          "value": 123.624097686,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-02-01",
+          "value": 119.98041966754236,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 130.6288348161231,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-04-01",
+          "value": 127.39438633485788,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-05-01",
+          "value": 120.85566308868661,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 127.02553562927447,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-07-01",
+          "value": 134.379498365,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 133.2925262734351,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 133.57253320532584,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-10-01",
+          "value": 131.80935255636697,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 136.544370986626,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 138.024185085,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 133.95409556759788,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 134.70666658829848,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": 146.14124223716797,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-04-01",
+          "value": 158.08592997873913,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-05-01",
+          "value": 136.8552611358686,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 127.21252936169952,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-07-01",
+          "value": 142.58794908282357,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 163.382420879,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 139.175707578,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 119.40554685605805,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 126.81224399628087,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 106.297603019,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-01-01",
+          "value": 118.98356661388863,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 114.50324314287195,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 112.049010899,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 118.37073272042099,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 100.22974523462837,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 108.40142334496203,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 109.556402176,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 124.60261947096036,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 120.47658644168096,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 107.1074305138331,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 95.25878168,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 104.102097718,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-01-01",
+          "value": 112.68977021995086,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 102.84768021796799,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 101.76694055874117,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 99.23676828703611,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 109.611857135,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 108.545978217,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-07-01",
+          "value": 109.756292984,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-08-01",
+          "value": 103.40918615,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 99.626615223,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-10-01",
+          "value": 111.255642581,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-11-01",
+          "value": 117.314858186,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 117.945125699,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-01-01",
+          "value": 107.980608095,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-02-01",
+          "value": 119.434008446,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 122.942621702,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-04-01",
+          "value": 118.876611409,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-05-01",
+          "value": 123.168833062,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 131.300023694,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-07-01",
+          "value": 131.226154795,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-08-01",
+          "value": 127.15159675,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 130.775036928,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 127.291081794,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 130.381793902,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 128.877614698,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 130.70409731,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 126.93367124,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 128.141007279,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 124.630473841,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 129.780467245,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 133.063638906,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 128.617378288,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 133.511756706,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 138.442005564,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 129.810024878,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 120.464260789,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 123.710095171,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 127.151909805,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 125.806261775,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 117.876251362,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 123.925064734,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 121.3376195,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 127.376707682,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 128.745061981,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 125.647599292,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 131.412835734,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 127.566312348,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 139.450591851,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 126.825811999,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 129.434113225,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 129.788654743,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 134.737897016,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 147.758450843,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 140.019870279,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "aucpi",
+      "name": "CPI YoY",
+      "frequency": "Monthly",
+      "unit": "%",
+      "data": [
+        {
+          "date": "2025-04-01",
+          "value": 2.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 2.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 1.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 3.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 3.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 3.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 3.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 3.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 3.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 3.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 3.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 4.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 4.2,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "autrimmed",
+      "name": "Trimmed Mean YoY",
+      "frequency": "Monthly",
+      "unit": "%",
+      "data": [
+        {
+          "date": "2025-04-01",
+          "value": 3.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 3.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 2.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 3.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 3.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 3.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 3.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 3.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 3.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 3.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 3.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 3.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 3.4,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "auretail",
+      "name": "家庭支出 MoM",
+      "frequency": "Monthly",
+      "unit": "%",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": -0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-02-01",
+          "value": 1.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-03-01",
+          "value": 0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-04-01",
+          "value": -0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 1.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-07-01",
+          "value": 0.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-08-01",
+          "value": -0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-10-01",
+          "value": 1.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-11-01",
+          "value": -0.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": -0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-01-01",
+          "value": 0.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 0.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-04-01",
+          "value": 1.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 0.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-07-01",
+          "value": -0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": -0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-10-01",
+          "value": 0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 0.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 1.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-01-01",
+          "value": 0.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-02-01",
+          "value": -0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": -0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-04-01",
+          "value": 0.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-07-01",
+          "value": -0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-08-01",
+          "value": -0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 0.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-10-01",
+          "value": 0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 1.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 0.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-01-01",
+          "value": -0.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-02-01",
+          "value": 1.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": -1.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 1.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-05-01",
+          "value": 1.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 1.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-07-01",
+          "value": -1.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 0.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": -0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-01-01",
+          "value": -0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-02-01",
+          "value": -0.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 0.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-04-01",
+          "value": -1.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-05-01",
+          "value": 0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": -0.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-07-01",
+          "value": 0.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 0.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": -0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-10-01",
+          "value": 0.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-11-01",
+          "value": -0.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 1.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-02-01",
+          "value": -2.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -3.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-04-01",
+          "value": -20.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-05-01",
+          "value": 17.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 6.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-07-01",
+          "value": 4.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-08-01",
+          "value": -5.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": -0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 2.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 3.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 0.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-01-01",
+          "value": -1.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-02-01",
+          "value": -1.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 2.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 0.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": -1.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-07-01",
+          "value": -3.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-08-01",
+          "value": -2.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 2.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 6.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 4.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 1.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-01-01",
+          "value": -0.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 4.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 1.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 2.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 1.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 1.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-07-01",
+          "value": 2.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-08-01",
+          "value": 0.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 1.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-10-01",
+          "value": 1.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-11-01",
+          "value": -0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 0.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-01-01",
+          "value": 1.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-02-01",
+          "value": 0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": -0.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-04-01",
+          "value": 1.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-05-01",
+          "value": 0.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 0.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-07-01",
+          "value": 0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-08-01",
+          "value": 0.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 1.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-10-01",
+          "value": -1.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": -0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 1.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-02-01",
+          "value": -0.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": -0.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 0.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 0.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 0.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 0.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 0.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 0.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 0.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 0.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 0.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 0.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 0.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": -0.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 0.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 1.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 0.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": -0.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 0.2,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 0.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 1.7,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "aunabprices",
+      "name": "NAB企業調查 售價",
+      "frequency": "Monthly",
+      "unit": "%",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 0.375922079781993,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-02-01",
+          "value": 0.26877223267299,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-03-01",
+          "value": 0.439909797528564,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-04-01",
+          "value": 0.441342514588104,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 0.386789255940255,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 0.253059587338836,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-07-01",
+          "value": 0.259646839131247,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 0.299290526256191,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 0.309681730469646,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-10-01",
+          "value": 0.429371291046246,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 0.30647597907621,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 0.379662685224432,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-01-01",
+          "value": 0.143135726447812,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 0.194196457368828,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 0.236414885332579,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-04-01",
+          "value": 0.143818398817038,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 0.315039819854007,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 0.288574191632568,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-07-01",
+          "value": 0.259762693692294,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 0.211336912630874,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 0.386983062105702,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-10-01",
+          "value": 0.174053011950136,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 0.317211980178657,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 0.276875632276637,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-01-01",
+          "value": 0.616188325748232,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-02-01",
+          "value": 0.382195374850962,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 0.405807663601155,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-04-01",
+          "value": 0.555886193094948,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 0.421802872718742,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 0.500188403367093,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-07-01",
+          "value": 0.19630131092348,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-08-01",
+          "value": 0.435877249352433,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 0.492794563278732,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-10-01",
+          "value": 0.440884225560477,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 0.375842111697534,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 0.388813028007648,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-01-01",
+          "value": 0.42461365146342,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-02-01",
+          "value": 0.500342936973258,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 0.395544758492793,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 0.46819023532515,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-05-01",
+          "value": 0.542163054135789,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 0.336819055776156,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-07-01",
+          "value": 0.469344436220991,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 0.562982372038617,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 0.503095046715708,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 0.5949855162264,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 0.40982252736645,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 0.365467805045478,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-01-01",
+          "value": 0.449216385062295,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-02-01",
+          "value": 0.368882222994576,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 0.361238032249233,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-04-01",
+          "value": 0.331974711536301,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-05-01",
+          "value": 0.279738163342632,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 0.056125635060433,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-07-01",
+          "value": 0.452968216237869,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 0.284700536554244,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 0.242369147473197,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-10-01",
+          "value": 0.22674676819495,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 0.44930090266707,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 0.359041170698985,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 0.565772357655873,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 0.406102116450519,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -0.217940328480158,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-04-01",
+          "value": -0.426177060335517,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-05-01",
+          "value": -0.380326655921496,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": -0.142491598100375,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-07-01",
+          "value": -0.478910938544079,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-08-01",
+          "value": -0.375800582379897,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": -0.17045732830018,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 0.022527473805541,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-11-01",
+          "value": -0.029870230167271,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 0.239866406734232,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-01-01",
+          "value": 0.37526069105367,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 0.514724541263994,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 0.936970140056469,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 1.12444825769267,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 1.09190846088742,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 1.27634214751502,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 1.01580615226391,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 1.11219926934731,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 1.21924139732916,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 1.24448087406942,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 1.38454758558533,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 1.61618723295261,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-01-01",
+          "value": 1.61476070784421,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 1.69061532956616,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 2.53655618861155,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 2.01588212710623,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 1.8818691284657,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 2.38313382033819,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-07-01",
+          "value": 2.44076057728369,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-08-01",
+          "value": 2.35948437291252,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 2.21374544181664,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-10-01",
+          "value": 2.11528025103,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-11-01",
+          "value": 1.96583025560728,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 1.65998245573922,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-01-01",
+          "value": 1.64216932637484,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-02-01",
+          "value": 1.63576237080326,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 1.42783965734136,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-04-01",
+          "value": 1.27251960270071,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-05-01",
+          "value": 1.28221037268802,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 1.20105307030742,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-07-01",
+          "value": 1.90967304761725,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-08-01",
+          "value": 1.78005509789883,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 1.25789553079147,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 1.20310465703065,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 1.29853900397028,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 0.99399136816347,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 1.142088201327,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 1.30259073490545,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 0.699637305226404,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 0.857797125380721,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 1.01064815913857,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 0.809591689643763,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 0.759760140756399,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 0.808120744120791,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 0.633898121239419,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 0.760726184480016,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 0.721983784914918,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 0.857063081623959,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 0.894225866688399,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 0.589517275828311,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 0.595051651663638,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 0.734086140592755,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 0.474366808378383,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 0.609595878981303,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 0.844644567070698,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 0.794110618436265,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 0.864293036960688,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 0.674457664055928,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 0.706378361891046,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 0.830789642856567,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 0.55652311191612,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 0.765333244168224,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 1.10557018532141,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 1.7962226981322,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "auconsconf",
+      "name": "消費信心",
+      "frequency": "Monthly",
+      "unit": "Index",
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": 93.23243,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-02-01",
+          "value": 100.72515318767437,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-03-01",
+          "value": 99.471572,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-04-01",
+          "value": 96.248929,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 102.36931399175077,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 95.32028,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-07-01",
+          "value": 92.247656,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 99.45778,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 93.868094,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-10-01",
+          "value": 97.822853,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 101.655708,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 100.8404578884635,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-01-01",
+          "value": 97.27799,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 101.32288107893683,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 99.118438,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-04-01",
+          "value": 95.142511,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 103.18412715774255,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 102.16517144143688,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-07-01",
+          "value": 99.104888,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 101.044672245702,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 101.35791,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-10-01",
+          "value": 102.42335690816444,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 101.26818357265309,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 97.335085,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-01-01",
+          "value": 97.42471,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-02-01",
+          "value": 99.636223,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 99.710785,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-04-01",
+          "value": 99.036475,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 97.991373,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 96.23366486,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-07-01",
+          "value": 96.59595,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-08-01",
+          "value": 95.453978,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 97.8675383588,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-10-01",
+          "value": 101.351293,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 99.676513,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 103.27484302713162,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-01-01",
+          "value": 105.13101162623617,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-02-01",
+          "value": 102.7451673173698,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 102.95672238844297,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 102.38162328659467,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-05-01",
+          "value": 101.77824127778923,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 102.13058070513827,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-07-01",
+          "value": 106.06342130475358,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 103.632606,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 100.515308,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 101.49161441972785,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 104.341688,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 104.43352576099335,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-01-01",
+          "value": 99.561347,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-02-01",
+          "value": 103.79647602530622,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 98.823047,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-04-01",
+          "value": 100.65277908367126,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-05-01",
+          "value": 101.27011537156515,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 100.65786145046904,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-07-01",
+          "value": 96.510307,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 99.957,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 98.235337,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-10-01",
+          "value": 92.793562,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 97.000536,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 95.130601,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 93.383087,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 95.524373,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": 91.941549,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-04-01",
+          "value": 75.643764,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-05-01",
+          "value": 88.064114,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 93.651609,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-07-01",
+          "value": 87.921573,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 79.531715,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 93.846666,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 105.021206,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 107.66498013956584,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 112.03854090764484,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-01-01",
+          "value": 106.98592476935983,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 109.06026789740142,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 111.842892,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 118.777301,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 113.12549166285935,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 107.212592,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 108.84704069601602,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 104.09271186115384,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 106.22501528525122,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 104.641999,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 105.29998865209794,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 104.27712422204613,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-01-01",
+          "value": 102.20164011950804,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 100.82395333403616,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 96.621798,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 95.768645,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 90.407506039,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 86.353968,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-07-01",
+          "value": 83.786344,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-08-01",
+          "value": 81.243604,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 84.449643,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-10-01",
+          "value": 83.722715,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-11-01",
+          "value": 77.986702,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 80.293152,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-01-01",
+          "value": 84.293778,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-02-01",
+          "value": 78.450485,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 78.466016,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-04-01",
+          "value": 85.822647,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-05-01",
+          "value": 79.013723,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 79.154202,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-07-01",
+          "value": 81.288565,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-08-01",
+          "value": 80.985591,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 79.740616,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 82.04392,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 79.938551,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 82.069083,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 80.98202,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 86.020159,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 84.438132,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 82.438106,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 82.226527248,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 83.607508,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 82.723727,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 85.040933,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 84.629502,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 89.835574,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 94.620662226,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 92.767244,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 92.140706,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 92.211499,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 95.900151,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 90.141379,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 92.114522,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 92.596262,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 93.135637,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 98.465061,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 95.436784783,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 92.065619,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 103.817646728,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 94.500066931,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 92.908164419,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 90.499084438,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 91.597733,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 80.149166878,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 82.978906,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "aumanpmi",
+      "name": "製造業PMI",
+      "frequency": "Monthly",
+      "unit": "Index",
+      "data": [
+        {
+          "date": "2023-08-01",
+          "value": 49.64,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 48.69,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 48.24,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 47.73,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 47.61,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 50.11,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 47.82,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 47.25,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 49.58,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 49.68,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 47.17,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 47.46,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 48.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 46.75,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 47.26,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 49.42,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 47.82,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 50.21,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 50.37,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 52.06,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 51.73,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 50.96,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 50.64,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 51.27,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 53.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 51.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 49.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 51.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 51.6,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 52.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 51.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 49.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 51.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 50.7,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "auservpmi",
+      "name": "服務業PMI",
+      "frequency": "Monthly",
+      "unit": "Index",
+      "data": [
+        {
+          "date": "2023-08-01",
+          "value": 47.76,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 51.83,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 47.9,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 46.0,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 47.15,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 49.06,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 53.13,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 54.44,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 53.65,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 52.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 51.23,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 50.41,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 52.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 50.46,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 50.98,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 50.51,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 50.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 51.17,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 50.76,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 51.63,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 51.04,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 50.58,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 51.83,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 54.05,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 55.78,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 52.4,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 52.5,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 52.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 51.1,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 56.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 52.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 46.3,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 50.7,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 48.7,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "augdpyoy",
+      "name": "GDP YoY",
+      "frequency": "Quarterly",
+      "unit": "%",
+      "data": [
+        {
+          "date": "2015-03-01",
+          "value": 2.25389,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 1.8671,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 2.44919,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 2.7075,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 2.65332,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 3.20749,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 2.20208,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 2.7559,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 2.14029,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 2.07919,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 3.05622,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 2.27525,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 3.00864,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 3.15586,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 2.57318,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 2.4257,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 2.11554,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 1.67307,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 1.88218,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 2.2234,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": 1.26509,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": -5.85091,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": -3.14489,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": -0.43573,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 1.94018,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 10.20771,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 4.68251,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 4.90935,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 3.64294,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 3.81793,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 6.13461,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 3.26354,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 2.80221,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 2.25708,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 2.17845,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 1.33435,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 1.09878,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 0.89413,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 0.79605,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 1.24455,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 1.26076,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 1.98489,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 2.06251,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 2.50548,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "auconsumptionyoy",
+      "name": "GDP 私人消費 YoY",
+      "frequency": "Quarterly",
+      "unit": "%",
+      "data": [
+        {
+          "date": "2015-03-01",
+          "value": 2.38785,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 2.56961,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 2.56547,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 2.43868,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 2.90466,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 2.7658,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 2.46148,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 2.66112,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 2.34189,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 2.42634,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 2.50522,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 2.79049,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 2.94083,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 3.04437,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 2.49237,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 1.76871,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 1.44979,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 1.08331,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 0.7671,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 0.82938,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -0.86226,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": -13.75923,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": -7.06029,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": -3.07692,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": -0.35494,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 15.37139,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 2.17596,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 3.96435,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 4.99135,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 5.92779,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 12.34942,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 6.5511,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 4.75498,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 3.21305,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 1.99463,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 1.06733,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 0.92288,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 0.18187,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 0.40928,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 1.00023,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 0.94422,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 2.29624,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 2.70551,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 2.48158,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "auinvestmentyoy",
+      "name": "GDP 投資 YoY",
+      "frequency": "Quarterly",
+      "unit": "%",
+      "data": [
+        {
+          "date": "2015-03-01",
+          "value": -3.81454,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": -3.88332,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": -3.97406,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": -3.93136,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": -3.07732,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": -3.08516,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": -3.324,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 0.48907,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 0.55938,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 2.44597,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 7.43036,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 3.98255,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 4.97983,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 3.50065,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 1.27905,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": -0.32392,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": -2.13431,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": -3.40139,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": -2.41106,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": -0.99569,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -0.93404,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": -4.48034,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": -4.36633,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 0.4432,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 5.96552,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 14.70609,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 13.42475,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 8.64717,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 4.28922,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 2.21369,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 1.62528,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 0.94742,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 2.24359,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 5.11392,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 5.8056,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 5.96914,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 3.15664,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 0.95133,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 1.42371,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 1.8221,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 2.48278,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 1.13504,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 2.94709,
+          "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 3.46889,
+          "source": "AU_ECON.xlsx"
+        }
+      ]
+    }
+  ]
+}
