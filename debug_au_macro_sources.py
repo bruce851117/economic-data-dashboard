@@ -29,7 +29,7 @@ from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-30-au-source-validation-v5"
+VERSION = "2026-07-31-au-source-validation-v6"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -156,14 +156,22 @@ def abs_csv(flow: str, start_period: str, *, last_n: int | None = None) -> tuple
         raw_path = OUT / f"abs_{safe_name}_raw.csv"
         raw_path.write_bytes(response.content)
         text = response.content.decode("utf-8-sig", "replace")
-        raw_rows = list(csv.DictReader(io.StringIO(text)))
+        reader = csv.DictReader(io.StringIO(text))
+        raw_rows = list(reader)
+        (OUT / f"abs_{safe_name}_columns.json").write_text(
+            json.dumps({"columns": reader.fieldnames or []}, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
         rows = []
         for raw_row in raw_rows:
             row = {str(key).strip(): value for key, value in raw_row.items() if key is not None}
             # ABS SDMX-CSV responses may label observation columns differently
             # depending on representation. Provide canonical aliases.
             for key, value in list(row.items()):
-                compact = re.sub(r"[^A-Z0-9]", "", key.upper())
+                # labels=both produces headers such as
+                # TIME_PERIOD:Time period and OBS_VALUE:Observation value.
+                component_id = key.split(":", 1)[0].strip()
+                compact = re.sub(r"[^A-Z0-9]", "", component_id.upper())
                 if compact in {"TIMEPERIOD", "TIME", "PERIOD"} and not row.get("TIME_PERIOD"):
                     row["TIME_PERIOD"] = value
                 if compact in {"OBSVALUE", "VALUE", "OBSERVATIONVALUE"} and not row.get("OBS_VALUE"):
@@ -351,7 +359,7 @@ def sp_australia_pmi(label: str) -> tuple[list[Point], dict[str, Any]]:
         names = ["Flash Australia Services PMI Business Activity Index", "Australia Services PMI Business Activity Index"]
     for haystack in (visible, raw):
         for name in names:
-            pattern = re.escape(name) + r".{0,80}?([0-9]+(?:\.[0-9]+)?)\s*\(\s*Jun\s*:?\s*([0-9]+(?:\.[0-9]+)?)\s*\)"
+            pattern = re.escape(name) + r".{0,120}?([0-9]+(?:\.[0-9]+)?)\s*\(\s*Jun\s*:?\s*([0-9]+(?:\.[0-9]+)?)\s*\)"
             match = re.search(pattern, haystack, re.I | re.S)
             if match:
                 return [
