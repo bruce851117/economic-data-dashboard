@@ -29,7 +29,7 @@ from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-31-au-source-validation-v7"
+VERSION = "2026-07-31-au-source-validation-v8-official-source-review"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -379,21 +379,28 @@ def sp_australia_pmi(label: str) -> tuple[list[Point], dict[str, Any]]:
     url = "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df"
     response = get(url)
     (OUT / "sp_global_australia_pmi_july.html").write_bytes(response.content)
-    visible = clean(BeautifulSoup(response.text, "html.parser").get_text(" ", strip=True)).replace("−", "-")
-    raw = html.unescape(response.text).replace("−", "-")
-    if label == "製造業PMI":
-        names = ["Flash Australia Manufacturing PMI", "Australia Manufacturing PMI"]
-    else:
-        names = ["Flash Australia Services PMI Business Activity Index", "Australia Services PMI Business Activity Index"]
+    soup = BeautifulSoup(response.text, "html.parser")
+    visible = html.unescape(soup.get_text(" ", strip=True)).replace("−", "-").replace("®", "")
+    visible = re.sub(r"\s+", " ", visible)
+    raw = html.unescape(response.text).replace("−", "-").replace("®", "")
+    names = (
+        ["Flash Australia Manufacturing PMI", "Australia Manufacturing PMI"]
+        if label == "製造業PMI"
+        else ["Flash Australia Services PMI Business Activity Index", "Australia Services PMI Business Activity Index"]
+    )
     for haystack in (visible, raw):
         for name in names:
-            pattern = re.escape(name) + r".{0,120}?([0-9]+(?:\.[0-9]+)?)\s*\(\s*Jun\s*:?\s*([0-9]+(?:\.[0-9]+)?)\s*\)"
-            match = re.search(pattern, haystack, re.I | re.S)
-            if match:
+            name_match = re.search(re.escape(name), haystack, re.I)
+            if not name_match:
+                continue
+            window = haystack[name_match.end():name_match.end() + 300]
+            current = re.search(r"[:\s>]+([0-9]+(?:\.[0-9]+)?)", window, re.I)
+            previous = re.search(r"Jun\s*:?\s*([0-9]+(?:\.[0-9]+)?)", window, re.I)
+            if current and previous:
                 return [
-                    Point("2026-06", float(match.group(2)), response.url, status="final", note="Previous value in July Flash release"),
-                    Point("2026-07", float(match.group(1)), response.url, status="flash", note="July 2026 Flash"),
-                ], {"note": "Official individual S&P Australia release; current and previous values parsed together"}
+                    Point("2026-06", float(previous.group(1)), response.url, status="final", note="Previous value in July Flash release"),
+                    Point("2026-07", float(current.group(1)), response.url, status="flash", note="July 2026 Flash"),
+                ], {"note": "Official S&P Global individual release; current and previous values parsed together"}
     raise RuntimeError("Official Australia PMI current/previous values not parsed")
 
 def pdf_value(url: str, patterns: list[str], period: str, raw_name: str) -> list[Point]:
@@ -469,7 +476,7 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "ANZ職缺廣告":
         return fetch_anz_job_ads(target.expected)
     if label == "時薪YoY":
-        return fetch_abs_target("WPI", "2024-Q1", ["all sectors", "australia", "seasonally adjusted", "annual"], ["private", "public", "quarterly"], target.expected)
+        return fetch_abs_target("WPI", "2024-Q1", ["private and public", "all industries", "australia", "seasonally adjusted", "percentage change from corresponding quarter"], ["quarterly index"], target.expected)
     if label == "預計離職":
         # Table 7 is an official structured PJSM workbook. With no populated
         # AU_ECON reference value, expose workbook candidates rather than guess.
@@ -496,7 +503,7 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
         releases = [
             ("2026-06", "https://www.nab.com.au/content/dam/nab/documents/news/2026m06-nab-monthly-business-survey-mnb.pdf", "nab_june_2026.pdf"),
             ("2026-05", "https://news.nab.com.au/content/dam/nab-news/documents/economics/nab-monthly-business-survey-may-26.pdf", "nab_may_2026.pdf"),
-            ("2026-04", "https://news.nab.com.au/content/dam/nab-news/documents/economics/nab-monthly-business-survey-april-26.pdf", "nab_april_2026.pdf"),
+            ("2026-04", "https://news.nab.com.au/content/dam/nab-news/documents/economics/202604%20NAB%20Monthly%20Business%20Survey%20April.pdf", "nab_april_2026.pdf"),
         ]
         points = []
         errors = []
@@ -510,12 +517,30 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
             raise RuntimeError("NAB monthly PDFs failed: " + " | ".join(errors))
         return points, {"note": "Official monthly PDFs; no public API/CSV found", "errors": errors}
     if label == "消費信心":
-        points = official_html_value(
-            "https://www.westpac.com.au/news/making-news/2026/06/consumer-sentiment-slips-again-as-cost-of-living-pressures-weigh-on-households/",
-            [r"Consumer Sentiment Index dropped.{0,100}?to\s*([0-9]+(?:\.\d+)?)\s+in June", r"Index.{0,80}?to\s*([0-9]+(?:\.\d+)?)\s+in June"],
-            "2026-06", "westpac_consumer_sentiment_june.html"
-        )
-        return points, {"note": "Latest official release; full history is licensed"}
+        releases = [
+            (
+                "2026-07",
+                "https://www.westpac.com.au/news/making-news/2026/07/feeling-better-but-not-better-off-consumer-sentiment-and-the-cost-of-living-crunch/",
+                [r"Consumer Sentiment Index rose.{0,120}?to\s*([0-9]+(?:\.\d+)?)"],
+                "westpac_consumer_sentiment_july.html",
+            ),
+            (
+                "2026-06",
+                "https://www.westpac.com.au/news/making-news/2026/06/consumer-sentiment-slips-again-as-cost-of-living-pressures-weigh-on-households/",
+                [r"Consumer Sentiment Index dropped.{0,120}?to\s*([0-9]+(?:\.\d+)?)"],
+                "westpac_consumer_sentiment_june.html",
+            ),
+        ]
+        points = []
+        errors = []
+        for period, url, patterns, raw_name in releases:
+            try:
+                points.extend(official_html_value(url, patterns, period, raw_name))
+            except Exception as error:
+                errors.append(f"{period}: {error}")
+        if not points:
+            raise RuntimeError("Westpac official releases failed: " + " | ".join(errors))
+        return points, {"note": "Official Westpac releases; full precision history is licensed", "errors": errors}
     if label == "失業預期":
         points = official_html_value(
             "https://www.westpac.com.au/news/making-news/2026/06/consumer-sentiment-slips-again-as-cost-of-living-pressures-weigh-on-households/",
