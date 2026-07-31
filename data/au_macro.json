@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-07-31T03:40:54.994498+00:00",
+  "generated_at": "2026-07-31T03:59:22.323468+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -616,78 +616,120 @@
         },
         {
           "date": "2025-02-01",
-          "value": -74.8,
-          "source": "AU_ECON.xlsx"
+          "value": -74.82556076000037,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-03-01",
-          "value": 31.1,
-          "source": "AU_ECON.xlsx"
+          "value": 31.057537450000382,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-04-01",
-          "value": 104.0,
-          "source": "AU_ECON.xlsx"
+          "value": 104.04457288999947,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-05-01",
-          "value": -6.3,
-          "source": "AU_ECON.xlsx"
+          "value": -6.280428599999141,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-06-01",
-          "value": -26.8,
-          "source": "AU_ECON.xlsx"
+          "value": -26.78603843000019,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-07-01",
-          "value": 40.5,
-          "source": "AU_ECON.xlsx"
+          "value": 40.54412554999908,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-08-01",
-          "value": -13.1,
-          "source": "AU_ECON.xlsx"
+          "value": -13.051932329999545,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-09-01",
-          "value": 9.9,
-          "source": "AU_ECON.xlsx"
+          "value": 9.946429190000345,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-10-01",
-          "value": 33.6,
-          "source": "AU_ECON.xlsx"
+          "value": 33.645743229999425,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-11-01",
-          "value": -38.1,
-          "source": "AU_ECON.xlsx"
+          "value": -38.136134889999084,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-12-01",
-          "value": 57.7,
-          "source": "AU_ECON.xlsx"
+          "value": 57.713069319999704,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2026-01-01",
-          "value": 36.4,
-          "source": "AU_ECON.xlsx"
+          "value": 36.433740660000694,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2026-02-01",
-          "value": 22.9,
-          "source": "AU_ECON.xlsx"
+          "value": 22.859785229999034,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2026-03-01",
-          "value": 20.3,
-          "source": "AU_ECON.xlsx"
+          "value": 20.346457280000322,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2026-04-01",
-          "value": -38.6,
-          "source": "AU_ECON.xlsx"
+          "value": -38.598929940000744,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 43.99409126000137,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 76.3425194399988,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         }
       ]
     },
@@ -1299,83 +1341,127 @@
         },
         {
           "date": "2025-01-01",
-          "value": 4.1250222,
-          "source": "AU_ECON.xlsx"
+          "value": 4.12502218,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-02-01",
-          "value": 4.0715095,
-          "source": "AU_ECON.xlsx"
+          "value": 4.07150954,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-03-01",
           "value": 4.0778075,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-04-01",
-          "value": 4.053699,
-          "source": "AU_ECON.xlsx"
+          "value": 4.05369904,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-05-01",
-          "value": 4.0940002,
-          "source": "AU_ECON.xlsx"
+          "value": 4.09400022,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-06-01",
-          "value": 4.3122664,
-          "source": "AU_ECON.xlsx"
+          "value": 4.31226639,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-07-01",
-          "value": 4.2456784,
-          "source": "AU_ECON.xlsx"
+          "value": 4.24567843,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-08-01",
           "value": 4.2480821,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-09-01",
-          "value": 4.4518465,
-          "source": "AU_ECON.xlsx"
+          "value": 4.45184649,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-10-01",
-          "value": 4.3331079,
-          "source": "AU_ECON.xlsx"
+          "value": 4.33310794,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-11-01",
-          "value": 4.3226083,
-          "source": "AU_ECON.xlsx"
+          "value": 4.32260832,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-12-01",
           "value": 4.116373,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2026-01-01",
-          "value": 4.0798679,
-          "source": "AU_ECON.xlsx"
+          "value": 4.07986795,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2026-02-01",
-          "value": 4.3016255,
-          "source": "AU_ECON.xlsx"
+          "value": 4.30162554,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2026-03-01",
-          "value": 4.2783386,
-          "source": "AU_ECON.xlsx"
+          "value": 4.27833862,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2026-04-01",
-          "value": 4.4904846,
-          "source": "AU_ECON.xlsx"
+          "value": 4.49048465,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 4.37134808,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 4.42834371,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         }
       ]
     },
@@ -1588,27 +1674,43 @@
         {
           "date": "2025-02-01",
           "value": 325.0,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,JV/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs jv 1 0 m1 job vacancies 7 private and public tot all industries 20 seasonally adjusted aus australia q quarterly num number"
         },
         {
           "date": "2025-05-01",
           "value": 336.7,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,JV/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs jv 1 0 m1 job vacancies 7 private and public tot all industries 20 seasonally adjusted aus australia q quarterly num number"
         },
         {
           "date": "2025-08-01",
           "value": 327.9,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,JV/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs jv 1 0 m1 job vacancies 7 private and public tot all industries 20 seasonally adjusted aus australia q quarterly num number"
         },
         {
           "date": "2025-11-01",
           "value": 328.7,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,JV/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs jv 1 0 m1 job vacancies 7 private and public tot all industries 20 seasonally adjusted aus australia q quarterly num number"
         },
         {
           "date": "2026-02-01",
           "value": 336.6,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,JV/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs jv 1 0 m1 job vacancies 7 private and public tot all industries 20 seasonally adjusted aus australia q quarterly num number"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 329.5,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,JV/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs jv 1 0 m1 job vacancies 7 private and public tot all industries 20 seasonally adjusted aus australia q quarterly num number"
         }
       ]
     },
@@ -1621,682 +1723,966 @@
         {
           "date": "2015-01-01",
           "value": 89.13921344570751,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-02-01",
           "value": 88.99619258257518,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-03-01",
           "value": 88.75770313775834,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-04-01",
           "value": 89.34512755843522,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-05-01",
           "value": 90.83080960418228,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-06-01",
           "value": 93.03901032286724,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-07-01",
           "value": 91.87258183615238,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-08-01",
           "value": 92.65028838441043,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-09-01",
           "value": 95.80988985621863,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-10-01",
           "value": 95.46476108399918,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-11-01",
           "value": 95.66512870660091,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-12-01",
           "value": 95.12630693710561,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-01-01",
           "value": 95.28948107421063,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-02-01",
           "value": 96.9535616362434,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-03-01",
           "value": 96.76432440173845,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-04-01",
           "value": 96.38945686437059,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-05-01",
           "value": 99.95077461535506,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-06-01",
           "value": 99.35626463807725,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-07-01",
           "value": 99.56130974550706,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-08-01",
           "value": 100.29149406360145,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-09-01",
           "value": 99.30303603367709,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-10-01",
           "value": 100.59389250104797,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-11-01",
           "value": 101.55043861024866,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-12-01",
           "value": 97.78500735681705,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-01-01",
           "value": 101.61155979998043,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-02-01",
           "value": 105.93333140808832,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-03-01",
           "value": 107.70433902579582,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-04-01",
           "value": 110.13409303427702,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-05-01",
           "value": 109.1148346165477,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-06-01",
           "value": 110.89034162395883,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-07-01",
           "value": 111.90952234962059,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-08-01",
           "value": 114.02490844025586,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-09-01",
           "value": 113.28661235228546,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-10-01",
           "value": 113.11174462543885,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-11-01",
           "value": 113.49753370196913,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-12-01",
           "value": 109.55541362871404,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-01-01",
           "value": 110.17905666208168,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-02-01",
           "value": 107.7765647452473,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-03-01",
           "value": 106.32100141452956,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-04-01",
           "value": 105.32495274509373,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-05-01",
           "value": 106.63570891079057,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-06-01",
           "value": 101.34830745287118,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-07-01",
           "value": 103.50822517068093,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-08-01",
           "value": 103.80470610396115,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-09-01",
           "value": 104.26967470497881,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-10-01",
           "value": 102.88608164091642,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-11-01",
           "value": 99.99124374590176,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-12-01",
           "value": 97.88583549451934,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-01-01",
           "value": 104.01142023218955,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-02-01",
           "value": 101.92080072217652,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-03-01",
           "value": 102.588813596096,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-04-01",
           "value": 103.93731083944118,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-05-01",
           "value": 99.58822444153571,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-06-01",
           "value": 102.58584537348354,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-07-01",
           "value": 100.30148683752775,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-08-01",
           "value": 98.31866340927775,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-09-01",
           "value": 98.9851730686657,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-10-01",
           "value": 97.31215644393306,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-11-01",
           "value": 94.86375885445948,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-12-01",
           "value": 95.58634618121376,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-01-01",
           "value": 94.62861970682292,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-02-01",
           "value": 96.71586304978986,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-03-01",
           "value": 87.74955562738198,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-04-01",
           "value": 49.91850323447344,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-05-01",
           "value": 46.15640577418181,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-06-01",
           "value": 55.88405153760541,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-07-01",
           "value": 64.67129708309623,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-08-01",
           "value": 67.93851296976298,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-09-01",
           "value": 71.19120162568042,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-10-01",
           "value": 79.58413473274291,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-11-01",
           "value": 86.70617767055111,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-12-01",
           "value": 92.54698668415378,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-01-01",
           "value": 94.98569744573456,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-02-01",
           "value": 104.24482460908835,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-03-01",
           "value": 112.90421463953821,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-04-01",
           "value": 117.88647240732546,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-05-01",
           "value": 128.11660662284157,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-06-01",
           "value": 125.67780490591942,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-07-01",
           "value": 126.10270304070363,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-08-01",
           "value": 119.77648405550545,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-09-01",
           "value": 118.73861850939731,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-10-01",
           "value": 129.01865817325157,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-11-01",
           "value": 140.02675644923417,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-12-01",
           "value": 136.7766786867366,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-01-01",
           "value": 135.10266251874086,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-02-01",
           "value": 153.5651060139914,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-03-01",
           "value": 155.55923672051654,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-04-01",
           "value": 155.97216350469304,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-05-01",
           "value": 155.89918881995925,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-06-01",
           "value": 158.6140574950648,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-07-01",
           "value": 157.0622576362883,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-08-01",
           "value": 156.9054007385125,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-09-01",
           "value": 156.53358022946577,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-10-01",
           "value": 156.7173168141388,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-11-01",
           "value": 159.84290603979852,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-12-01",
           "value": 154.6093834483256,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-01-01",
           "value": 153.49278581607265,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-02-01",
           "value": 152.06256163923894,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-03-01",
           "value": 147.37614401456443,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-04-01",
           "value": 146.48963807708378,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-05-01",
           "value": 146.6960240659149,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-06-01",
           "value": 142.41779093236312,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-07-01",
           "value": 143.44446374851952,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-08-01",
           "value": 144.16346089534792,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-09-01",
           "value": 142.97259641162276,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-10-01",
           "value": 138.70638138806487,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-11-01",
           "value": 132.41977569595193,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-12-01",
           "value": 131.98061963705428,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-01-01",
           "value": 134.8954459896893,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-02-01",
           "value": 126.42697605737223,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-03-01",
           "value": 125.24635083930306,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-04-01",
           "value": 122.67434220727975,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-05-01",
           "value": 120.15267379387542,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-06-01",
           "value": 116.25899171700425,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-07-01",
           "value": 114.24760643569125,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-08-01",
           "value": 111.43479864572352,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-09-01",
           "value": 116.24143952469721,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-10-01",
           "value": 117.9501843620212,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-11-01",
           "value": 117.15160641445463,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-12-01",
           "value": 116.20920142954694,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-01-01",
           "value": 116.19278959259682,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-02-01",
           "value": 114.82876657981423,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-03-01",
           "value": 115.25982002177184,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-04-01",
           "value": 115.42038314320975,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-05-01",
           "value": 113.57070385204055,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-06-01",
           "value": 115.31669287982665,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-07-01",
           "value": 114.75867710328853,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-08-01",
           "value": 113.90511460289395,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-09-01",
           "value": 111.3975074954002,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-10-01",
           "value": 109.72539369794121,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-11-01",
           "value": 109.4124272012047,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-12-01",
           "value": 107.94231051412082,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2026-01-01",
           "value": 114.66839143648167,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2026-02-01",
           "value": 118.34293478548454,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2026-03-01",
           "value": 114.62640686686296,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2026-04-01",
           "value": 113.79384313637556,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 116.01651959168709,
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 115.83784728443354,
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         }
       ]
     },
@@ -2308,223 +2694,317 @@
       "data": [
         {
           "date": "2015-03-01",
-          "value": 2.5,
-          "source": "AU_ECON.xlsx"
+          "value": 2.4659863945578175,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2015-06-01",
-          "value": 2.6,
-          "source": "AU_ECON.xlsx"
+          "value": 2.6248941574936513,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2015-09-01",
-          "value": 2.3,
-          "source": "AU_ECON.xlsx"
+          "value": 2.34113712374584,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2015-12-01",
-          "value": 2.2,
-          "source": "AU_ECON.xlsx"
+          "value": 2.244389027431426,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2016-03-01",
-          "value": 2.5,
-          "source": "AU_ECON.xlsx"
+          "value": 2.4896265560165887,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2016-06-01",
-          "value": 2.0,
-          "source": "AU_ECON.xlsx"
+          "value": 1.980198019801982,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2016-09-01",
-          "value": 1.7,
-          "source": "AU_ECON.xlsx"
+          "value": 1.7156862745097978,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2016-12-01",
-          "value": 1.9,
-          "source": "AU_ECON.xlsx"
+          "value": 1.8699186991869787,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2017-03-01",
-          "value": 1.5,
-          "source": "AU_ECON.xlsx"
+          "value": 1.538461538461533,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2017-06-01",
-          "value": 2.2,
-          "source": "AU_ECON.xlsx"
+          "value": 2.184466019417486,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2017-09-01",
-          "value": 2.2,
-          "source": "AU_ECON.xlsx"
+          "value": 2.168674698795181,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2017-12-01",
-          "value": 2.1,
-          "source": "AU_ECON.xlsx"
+          "value": 2.0750199521149204,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2018-03-01",
-          "value": 2.6,
-          "source": "AU_ECON.xlsx"
+          "value": 2.631578947368407,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2018-06-01",
-          "value": 2.5,
-          "source": "AU_ECON.xlsx"
+          "value": 2.454473475851149,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2018-09-01",
-          "value": 2.7,
-          "source": "AU_ECON.xlsx"
+          "value": 2.672955974842761,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2018-12-01",
-          "value": 2.8,
-          "source": "AU_ECON.xlsx"
+          "value": 2.81469898358091,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2019-03-01",
-          "value": 2.6,
-          "source": "AU_ECON.xlsx"
+          "value": 2.6418026418026486,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2019-06-01",
-          "value": 2.5,
-          "source": "AU_ECON.xlsx"
+          "value": 2.472952086553315,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2019-09-01",
-          "value": 2.8,
-          "source": "AU_ECON.xlsx"
+          "value": 2.833078101071984,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2019-12-01",
-          "value": 2.2,
-          "source": "AU_ECON.xlsx"
+          "value": 2.205323193916353,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2020-03-01",
-          "value": 2.0,
-          "source": "AU_ECON.xlsx"
+          "value": 2.0439061317184093,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2020-06-01",
-          "value": 1.7,
-          "source": "AU_ECON.xlsx"
+          "value": 1.6591251885369696,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2020-09-01",
-          "value": 1.0,
-          "source": "AU_ECON.xlsx"
+          "value": 0.9679821295606628,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2020-12-01",
-          "value": 1.3,
-          "source": "AU_ECON.xlsx"
+          "value": 1.2648809523809534,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2021-03-01",
-          "value": 1.8,
-          "source": "AU_ECON.xlsx"
+          "value": 1.780415430267035,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2021-06-01",
-          "value": 1.9,
-          "source": "AU_ECON.xlsx"
+          "value": 1.85459940652819,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2021-09-01",
-          "value": 2.1,
-          "source": "AU_ECON.xlsx"
+          "value": 2.06489675516226,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2021-12-01",
-          "value": 2.8,
-          "source": "AU_ECON.xlsx"
+          "value": 2.792064658339455,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2022-03-01",
-          "value": 2.4,
-          "source": "AU_ECON.xlsx"
+          "value": 2.4052478134110933,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2022-06-01",
-          "value": 3.1,
-          "source": "AU_ECON.xlsx"
+          "value": 3.1318281136198056,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2022-09-01",
-          "value": 3.8,
-          "source": "AU_ECON.xlsx"
+          "value": 3.7572254335260125,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2022-12-01",
-          "value": 3.5,
-          "source": "AU_ECON.xlsx"
+          "value": 3.5025017869907193,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2023-03-01",
-          "value": 3.9,
-          "source": "AU_ECON.xlsx"
+          "value": 3.9145907473309594,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2023-06-01",
-          "value": 3.7,
-          "source": "AU_ECON.xlsx"
+          "value": 3.742937853107353,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2023-09-01",
-          "value": 4.1,
-          "source": "AU_ECON.xlsx"
+          "value": 4.108635097493041,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2023-12-01",
-          "value": 4.1,
-          "source": "AU_ECON.xlsx"
+          "value": 4.143646408839774,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2024-03-01",
-          "value": 4.2,
-          "source": "AU_ECON.xlsx"
+          "value": 4.178082191780819,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2024-06-01",
-          "value": 3.9,
-          "source": "AU_ECON.xlsx"
+          "value": 3.8801906058543167,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2024-09-01",
-          "value": 3.6,
-          "source": "AU_ECON.xlsx"
+          "value": 3.6120401337792707,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2024-12-01",
-          "value": 3.4,
-          "source": "AU_ECON.xlsx"
+          "value": 3.44827586206895,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2025-03-01",
-          "value": 3.6,
-          "source": "AU_ECON.xlsx"
+          "value": 3.5502958579881616,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2025-06-01",
-          "value": 3.7,
-          "source": "AU_ECON.xlsx"
+          "value": 3.669724770642202,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2025-09-01",
-          "value": 3.7,
-          "source": "AU_ECON.xlsx"
+          "value": 3.7443511943189067,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2025-12-01",
-          "value": 3.5,
-          "source": "AU_ECON.xlsx"
+          "value": 3.4615384615384714,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 2.984126984126978,
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         }
       ]
     },
@@ -2537,222 +3017,316 @@
         {
           "date": "2015-03-01",
           "value": 1184.4356156,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2015-06-01",
           "value": 1143.0243076,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2015-09-01",
           "value": 1108.3753587,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2015-12-01",
           "value": 1151.9215235,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2016-03-01",
           "value": 1141.4251534,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2016-06-01",
           "value": 1122.0868393,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2016-09-01",
           "value": 1110.7494849,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2016-12-01",
           "value": 1125.2139393,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2017-03-01",
           "value": 1142.6299991,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2017-06-01",
           "value": 1116.6195903,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2017-09-01",
           "value": 1127.8267343,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2017-12-01",
           "value": 1182.1372107,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2018-03-01",
           "value": 1189.9836305,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2018-06-01",
           "value": 1163.0611111,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2018-09-01",
           "value": 1155.8883237,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2018-12-01",
           "value": 1207.4536677,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2019-03-01",
           "value": 1171.0040431,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2019-06-01",
           "value": 1147.0559949,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2019-09-01",
           "value": 1181.7668685,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2019-12-01",
           "value": 1192.8109602,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2020-03-01",
           "value": 1207.8010369,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2020-06-01",
           "value": 979.0420443,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2020-09-01",
           "value": 1097.7251883,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2020-12-01",
           "value": 1202.7951445,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2021-03-01",
           "value": 1241.1923146,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2021-06-01",
           "value": 1207.5166075,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2021-09-01",
           "value": 1235.100218,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2021-12-01",
           "value": 1305.884784,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2022-03-01",
           "value": 1367.9084993,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2022-06-01",
           "value": 1285.0173422,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2022-09-01",
           "value": 1338.7967628,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2022-12-01",
           "value": 1357.5691716,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2023-03-01",
           "value": 1327.4880095,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2023-06-01",
           "value": 1281.5904229,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2023-09-01",
           "value": 1313.3509915,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2023-12-01",
           "value": 1382.8387691,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2024-03-01",
           "value": 1368.5298637,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2024-06-01",
           "value": 1352.0501762,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2024-09-01",
           "value": 1352.295418,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2024-12-01",
           "value": 1318.8729598,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2025-03-01",
           "value": 1323.588736,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2025-06-01",
           "value": 1322.4015594,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2025-09-01",
           "value": 1376.8336786,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         },
         {
           "date": "2025-12-01",
           "value": 1381.8757991,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 1310.8837533,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
+          "note": "sheet=Data1; series=A85060262X"
         }
       ]
     },
@@ -3446,6 +4020,11 @@
           "date": "2026-05-01",
           "value": 140.019870279,
           "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 129.9,
+          "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/07/er20260714BullConsumerSentiment.pdf"
         }
       ]
     },
@@ -3457,68 +4036,106 @@
       "data": [
         {
           "date": "2025-04-01",
-          "value": 2.4,
-          "source": "AU_ECON.xlsx"
+          "value": 2.3,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-05-01",
-          "value": 2.1,
-          "source": "AU_ECON.xlsx"
+          "value": 2.0,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-06-01",
-          "value": 1.9,
-          "source": "AU_ECON.xlsx"
+          "value": 1.8,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-07-01",
-          "value": 3.0,
-          "source": "AU_ECON.xlsx"
+          "value": 2.9,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-08-01",
           "value": 3.2,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-09-01",
           "value": 3.6,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-10-01",
-          "value": 3.8,
-          "source": "AU_ECON.xlsx"
+          "value": 3.9,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-11-01",
-          "value": 3.4,
-          "source": "AU_ECON.xlsx"
+          "value": 3.5,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-12-01",
           "value": 3.8,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-01-01",
-          "value": 3.8,
-          "source": "AU_ECON.xlsx"
+          "value": 3.9,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-02-01",
-          "value": 3.7,
-          "source": "AU_ECON.xlsx"
+          "value": 3.8,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-03-01",
-          "value": 4.6,
-          "source": "AU_ECON.xlsx"
+          "value": 4.7,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-04-01",
           "value": 4.2,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 4.0,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 3.8,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         }
       ]
     },
@@ -3531,67 +4148,105 @@
         {
           "date": "2025-04-01",
           "value": 3.2,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-05-01",
           "value": 3.0,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-06-01",
           "value": 2.8,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-07-01",
           "value": 3.0,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-08-01",
           "value": 3.1,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-09-01",
           "value": 3.2,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-10-01",
           "value": 3.3,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-11-01",
           "value": 3.2,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-12-01",
           "value": 3.3,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-01-01",
           "value": 3.3,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-02-01",
           "value": 3.3,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-03-01",
           "value": 3.3,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-04-01",
           "value": 3.4,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 3.6,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 3.6,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         }
       ]
     },
@@ -4204,77 +4859,119 @@
         {
           "date": "2025-01-01",
           "value": 0.6,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-02-01",
           "value": 0.2,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-03-01",
           "value": 0.1,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-04-01",
           "value": 0.2,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-05-01",
           "value": 0.9,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-06-01",
           "value": 0.4,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-07-01",
           "value": 0.4,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-08-01",
           "value": -0.1,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-09-01",
           "value": 0.3,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-10-01",
           "value": 1.4,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-11-01",
           "value": 0.9,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-12-01",
           "value": -0.5,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2026-01-01",
           "value": 0.2,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2026-02-01",
           "value": 0.3,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2026-03-01",
           "value": 1.7,
-          "source": "AU_ECON.xlsx"
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2026-04-01",
+          "value": -1.1,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 1.3,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
         }
       ]
     },
@@ -4961,8 +5658,19 @@
         },
         {
           "date": "2026-04-01",
-          "value": 1.7962226981322,
-          "source": "AU_ECON.xlsx"
+          "value": 1.8,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://news.nab.com.au/content/dam/nab-news/documents/economics/202604%20NAB%20Monthly%20Business%20Survey%20April.pdf"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 0.9,
+          "source_url": "https://news.nab.com.au/content/dam/nab-news/documents/economics/nab-monthly-business-survey-may-26.pdf"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 0.6,
+          "source_url": "https://www.nab.com.au/content/dam/nab/documents/news/2026m06-nab-monthly-business-survey-mnb.pdf"
         }
       ]
     },
@@ -5656,6 +6364,16 @@
           "date": "2026-05-01",
           "value": 82.978906,
           "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 80.6,
+          "source_url": "https://www.westpac.com.au/news/making-news/2026/06/consumer-sentiment-slips-again-as-cost-of-living-pressures-weigh-on-households/"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 83.9,
+          "source_url": "https://www.westpac.com.au/news/making-news/2026/07/feeling-better-but-not-better-off-consumer-sentiment-and-the-cost-of-living-crunch/"
         }
       ]
     },
@@ -5834,6 +6552,20 @@
           "date": "2026-05-01",
           "value": 50.7,
           "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 51.5,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df",
+          "release_type": "final",
+          "note": "Previous value in July Flash release"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 51.7,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df",
+          "release_type": "flash",
+          "note": "July 2026 Flash"
         }
       ]
     },
@@ -6012,6 +6744,20 @@
           "date": "2026-05-01",
           "value": 48.7,
           "source": "AU_ECON.xlsx"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 50.5,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df",
+          "release_type": "final",
+          "note": "Previous value in July Flash release"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 53.0,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df",
+          "release_type": "flash",
+          "note": "July 2026 Flash"
         }
       ]
     },
@@ -6223,23 +6969,37 @@
         },
         {
           "date": "2025-03-01",
-          "value": 1.26076,
-          "source": "AU_ECON.xlsx"
+          "value": 1.2607624241484094,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,ANA_AGG/all?startPeriod=2024-Q1&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs ana agg 1 0 0 m1 chain volume measures gpm gross domestic product 20 seasonally adjusted aus australia q quarterly aud australian dollars"
         },
         {
           "date": "2025-06-01",
-          "value": 1.98489,
-          "source": "AU_ECON.xlsx"
+          "value": 1.9848945654955763,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,ANA_AGG/all?startPeriod=2024-Q1&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs ana agg 1 0 0 m1 chain volume measures gpm gross domestic product 20 seasonally adjusted aus australia q quarterly aud australian dollars"
         },
         {
           "date": "2025-09-01",
-          "value": 2.06251,
-          "source": "AU_ECON.xlsx"
+          "value": 2.0625101983297034,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,ANA_AGG/all?startPeriod=2024-Q1&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs ana agg 1 0 0 m1 chain volume measures gpm gross domestic product 20 seasonally adjusted aus australia q quarterly aud australian dollars"
         },
         {
           "date": "2025-12-01",
-          "value": 2.50548,
-          "source": "AU_ECON.xlsx"
+          "value": 2.5054757435269526,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,ANA_AGG/all?startPeriod=2024-Q1&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs ana agg 1 0 0 m1 chain volume measures gpm gross domestic product 20 seasonally adjusted aus australia q quarterly aud australian dollars"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 2.5197395557126967,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,ANA_AGG/all?startPeriod=2024-Q1&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs ana agg 1 0 0 m1 chain volume measures gpm gross domestic product 20 seasonally adjusted aus australia q quarterly aud australian dollars"
         }
       ]
     },
@@ -6251,223 +7011,317 @@
       "data": [
         {
           "date": "2015-03-01",
-          "value": 2.38785,
-          "source": "AU_ECON.xlsx"
+          "value": 2.3878540371118806,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2015-06-01",
-          "value": 2.56961,
-          "source": "AU_ECON.xlsx"
+          "value": 2.5696068465983712,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2015-09-01",
-          "value": 2.56547,
-          "source": "AU_ECON.xlsx"
+          "value": 2.5654750794998016,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2015-12-01",
-          "value": 2.43868,
-          "source": "AU_ECON.xlsx"
+          "value": 2.4386829432187174,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2016-03-01",
-          "value": 2.90466,
-          "source": "AU_ECON.xlsx"
+          "value": 2.9046597981277067,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2016-06-01",
-          "value": 2.7658,
-          "source": "AU_ECON.xlsx"
+          "value": 2.765804099848923,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2016-09-01",
-          "value": 2.46148,
-          "source": "AU_ECON.xlsx"
+          "value": 2.4614761303081822,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2016-12-01",
-          "value": 2.66112,
-          "source": "AU_ECON.xlsx"
+          "value": 2.6611228031814482,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2017-03-01",
-          "value": 2.34189,
-          "source": "AU_ECON.xlsx"
+          "value": 2.3418918094773478,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2017-06-01",
-          "value": 2.42634,
-          "source": "AU_ECON.xlsx"
+          "value": 2.4263431542461023,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2017-09-01",
-          "value": 2.50522,
-          "source": "AU_ECON.xlsx"
+          "value": 2.5052192066805867,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2017-12-01",
-          "value": 2.79049,
-          "source": "AU_ECON.xlsx"
+          "value": 2.790488709918959,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2018-03-01",
-          "value": 2.94083,
-          "source": "AU_ECON.xlsx"
+          "value": 2.9408259340921283,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2018-06-01",
-          "value": 3.04437,
-          "source": "AU_ECON.xlsx"
+          "value": 3.044368510800788,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2018-09-01",
-          "value": 2.49237,
-          "source": "AU_ECON.xlsx"
+          "value": 2.4923747846469224,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2018-12-01",
-          "value": 1.76871,
-          "source": "AU_ECON.xlsx"
+          "value": 1.7687052805387404,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2019-03-01",
-          "value": 1.44979,
-          "source": "AU_ECON.xlsx"
+          "value": 1.4497927259512267,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2019-06-01",
-          "value": 1.08331,
-          "source": "AU_ECON.xlsx"
+          "value": 1.0833104382439673,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2019-09-01",
-          "value": 0.7671,
-          "source": "AU_ECON.xlsx"
+          "value": 0.7671035382451397,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2019-12-01",
-          "value": 0.82938,
-          "source": "AU_ECON.xlsx"
+          "value": 0.8293752167287449,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2020-03-01",
-          "value": -0.86226,
-          "source": "AU_ECON.xlsx"
+          "value": -0.8622629965541195,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2020-06-01",
-          "value": -13.75923,
-          "source": "AU_ECON.xlsx"
+          "value": -13.759232395634823,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2020-09-01",
-          "value": -7.06029,
-          "source": "AU_ECON.xlsx"
+          "value": -7.060287032875201,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2020-12-01",
-          "value": -3.07692,
-          "source": "AU_ECON.xlsx"
+          "value": -3.076923076923077,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2021-03-01",
-          "value": -0.35494,
-          "source": "AU_ECON.xlsx"
+          "value": -0.3549399000412512,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2021-06-01",
-          "value": 15.37139,
-          "source": "AU_ECON.xlsx"
+          "value": 15.37139443778699,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2021-09-01",
-          "value": 2.17596,
-          "source": "AU_ECON.xlsx"
+          "value": 2.1759639257944885,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2021-12-01",
-          "value": 3.96435,
-          "source": "AU_ECON.xlsx"
+          "value": 3.964347565660109,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2022-03-01",
-          "value": 4.99135,
-          "source": "AU_ECON.xlsx"
+          "value": 4.991351618482831,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2022-06-01",
-          "value": 5.92779,
-          "source": "AU_ECON.xlsx"
+          "value": 5.927794118581287,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2022-09-01",
-          "value": 12.34942,
-          "source": "AU_ECON.xlsx"
+          "value": 12.3494196782731,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2022-12-01",
-          "value": 6.5511,
-          "source": "AU_ECON.xlsx"
+          "value": 6.551104375544048,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2023-03-01",
-          "value": 4.75498,
-          "source": "AU_ECON.xlsx"
+          "value": 4.754976724851989,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2023-06-01",
-          "value": 3.21305,
-          "source": "AU_ECON.xlsx"
+          "value": 3.2130477024384874,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2023-09-01",
-          "value": 1.99463,
-          "source": "AU_ECON.xlsx"
+          "value": 1.9946299565352765,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2023-12-01",
-          "value": 1.06733,
-          "source": "AU_ECON.xlsx"
+          "value": 1.0673312018055325,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2024-03-01",
-          "value": 0.92288,
-          "source": "AU_ECON.xlsx"
+          "value": 0.9228839027806135,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2024-06-01",
-          "value": 0.18187,
-          "source": "AU_ECON.xlsx"
+          "value": 0.18187153361863828,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2024-09-01",
-          "value": 0.40928,
-          "source": "AU_ECON.xlsx"
+          "value": 0.4092757535386182,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2024-12-01",
-          "value": 1.00023,
-          "source": "AU_ECON.xlsx"
+          "value": 1.0002326122354077,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2025-03-01",
-          "value": 0.94422,
-          "source": "AU_ECON.xlsx"
+          "value": 0.9442226353236327,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2025-06-01",
-          "value": 2.29624,
-          "source": "AU_ECON.xlsx"
+          "value": 2.2962372217791627,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2025-09-01",
-          "value": 2.70551,
-          "source": "AU_ECON.xlsx"
+          "value": 2.7055057432970653,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         },
         {
           "date": "2025-12-01",
-          "value": 2.48158,
-          "source": "AU_ECON.xlsx"
+          "value": 2.481575310916617,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 2.4727989254179406,
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
+          "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         }
       ]
     },
@@ -6479,225 +7333,320 @@
       "data": [
         {
           "date": "2015-03-01",
-          "value": -3.81454,
-          "source": "AU_ECON.xlsx"
+          "value": -3.81453651442224,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2015-06-01",
-          "value": -3.88332,
-          "source": "AU_ECON.xlsx"
+          "value": -3.8833183956979656,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2015-09-01",
-          "value": -3.97406,
-          "source": "AU_ECON.xlsx"
+          "value": -3.9740608801382304,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2015-12-01",
-          "value": -3.93136,
-          "source": "AU_ECON.xlsx"
+          "value": -3.9313570308191492,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2016-03-01",
-          "value": -3.07732,
-          "source": "AU_ECON.xlsx"
+          "value": -3.077321851577186,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2016-06-01",
-          "value": -3.08516,
-          "source": "AU_ECON.xlsx"
+          "value": -3.0851606323304415,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2016-09-01",
-          "value": -3.324,
-          "source": "AU_ECON.xlsx"
+          "value": -3.3240033173390193,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2016-12-01",
-          "value": 0.48907,
-          "source": "AU_ECON.xlsx"
+          "value": 0.48907046789730124,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2017-03-01",
-          "value": 0.55938,
-          "source": "AU_ECON.xlsx"
+          "value": 0.5593813376122636,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2017-06-01",
-          "value": 2.44597,
-          "source": "AU_ECON.xlsx"
+          "value": 2.4459728642838297,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2017-09-01",
-          "value": 7.43036,
-          "source": "AU_ECON.xlsx"
+          "value": 7.430357156534595,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2017-12-01",
-          "value": 3.98255,
-          "source": "AU_ECON.xlsx"
+          "value": 3.9825503754043368,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2018-03-01",
-          "value": 4.97983,
-          "source": "AU_ECON.xlsx"
+          "value": 4.979832454235189,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2018-06-01",
-          "value": 3.50065,
-          "source": "AU_ECON.xlsx"
+          "value": 3.500649355413854,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2018-09-01",
-          "value": 1.27905,
-          "source": "AU_ECON.xlsx"
+          "value": 1.2790531869385502,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2018-12-01",
-          "value": -0.32392,
-          "source": "AU_ECON.xlsx"
+          "value": -0.32392476954250515,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2019-03-01",
-          "value": -2.13431,
-          "source": "AU_ECON.xlsx"
+          "value": -2.134307247355871,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2019-06-01",
-          "value": -3.40139,
-          "source": "AU_ECON.xlsx"
+          "value": -3.401389479654049,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2019-09-01",
-          "value": -2.41106,
-          "source": "AU_ECON.xlsx"
+          "value": -2.411054950934155,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2019-12-01",
-          "value": -0.99569,
-          "source": "AU_ECON.xlsx"
+          "value": -0.9956908276187892,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2020-03-01",
-          "value": -0.93404,
-          "source": "AU_ECON.xlsx"
+          "value": -0.9340351179947359,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2020-06-01",
-          "value": -4.48034,
-          "source": "AU_ECON.xlsx"
+          "value": -4.480339346259409,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2020-09-01",
-          "value": -4.36633,
-          "source": "AU_ECON.xlsx"
+          "value": -4.366330277214725,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2020-12-01",
-          "value": 0.4432,
-          "source": "AU_ECON.xlsx"
+          "value": 0.44320408355082996,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2021-03-01",
-          "value": 5.96552,
-          "source": "AU_ECON.xlsx"
+          "value": 5.9655234984576255,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2021-06-01",
-          "value": 14.70609,
-          "source": "AU_ECON.xlsx"
+          "value": 14.706085727237106,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2021-09-01",
-          "value": 13.42475,
-          "source": "AU_ECON.xlsx"
+          "value": 13.42475259473812,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2021-12-01",
-          "value": 8.64717,
-          "source": "AU_ECON.xlsx"
+          "value": 8.647173994414214,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2022-03-01",
-          "value": 4.28922,
-          "source": "AU_ECON.xlsx"
+          "value": 4.289217365097198,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2022-06-01",
-          "value": 2.21369,
-          "source": "AU_ECON.xlsx"
+          "value": 2.213693418532059,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2022-09-01",
-          "value": 1.62528,
-          "source": "AU_ECON.xlsx"
+          "value": 1.625280966124465,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2022-12-01",
-          "value": 0.94742,
-          "source": "AU_ECON.xlsx"
+          "value": 0.9474151467168346,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2023-03-01",
-          "value": 2.24359,
-          "source": "AU_ECON.xlsx"
+          "value": 2.2435897435897356,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2023-06-01",
-          "value": 5.11392,
-          "source": "AU_ECON.xlsx"
+          "value": 5.1139230552479376,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2023-09-01",
-          "value": 5.8056,
-          "source": "AU_ECON.xlsx"
+          "value": 5.805598816893287,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2023-12-01",
-          "value": 5.96914,
-          "source": "AU_ECON.xlsx"
+          "value": 5.969140299408671,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2024-03-01",
-          "value": 3.15664,
-          "source": "AU_ECON.xlsx"
+          "value": 3.1566370317076986,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2024-06-01",
-          "value": 0.95133,
-          "source": "AU_ECON.xlsx"
+          "value": 0.9513300541746927,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2024-09-01",
-          "value": 1.42371,
-          "source": "AU_ECON.xlsx"
+          "value": 1.4237120415610205,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2024-12-01",
-          "value": 1.8221,
-          "source": "AU_ECON.xlsx"
+          "value": 1.8221005561680048,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2025-03-01",
-          "value": 2.48278,
-          "source": "AU_ECON.xlsx"
+          "value": 2.4827818116149647,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2025-06-01",
-          "value": 1.13504,
-          "source": "AU_ECON.xlsx"
+          "value": 1.135037330253863,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2025-09-01",
-          "value": 2.94709,
-          "source": "AU_ECON.xlsx"
+          "value": 2.947094980242948,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         },
         {
           "date": "2025-12-01",
-          "value": 3.46889,
-          "source": "AU_ECON.xlsx"
+          "value": 3.468893700883191,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 6.474938173333422,
+          "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
+          "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         }
       ]
     }
-  ]
+  ],
+  "script_version": "2026-07-31-update-au-macro-v1"
 }
