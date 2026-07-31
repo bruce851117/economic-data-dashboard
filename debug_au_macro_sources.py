@@ -30,7 +30,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-31-au-source-validation-v13-expected-leave-table17"
+VERSION = "2026-07-31-au-source-validation-v14-exact-uk-pmi-flow"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -708,6 +708,34 @@ def sp_preceding_context(anchor: Any) -> str:
     return " ".join(reversed(parts[-24:]))
 
 
+def parse_sp_release_date(value: str) -> datetime | None:
+    text = clean(value)
+    if not text:
+        return None
+    for format_value in ("%B %d %Y", "%b %d %Y"):
+        try:
+            return datetime.strptime(text, format_value).replace(tzinfo=timezone.utc)
+        except ValueError:
+            continue
+    return None
+
+
+def extract_sp_reference_month(text: str) -> str | None:
+    head = clean(text[:5000])
+    matches = list(re.finditer(
+        r"\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})\b",
+        head,
+        re.I,
+    ))
+    if not matches:
+        return None
+    month_map = {name.lower(): index for index, name in enumerate(
+        "January February March April May June July August September October November December".split(), 1
+    )}
+    match = matches[0]
+    return f"{int(match.group(2)):04d}-{month_map[match.group(1).lower()]:02d}"
+
+
 def discover_australia_pmi_releases() -> list[dict[str, str]]:
     response = get(SP_RELEASES_URL)
     (OUT / "sp_global_release_calendar.html").write_bytes(response.content)
@@ -726,27 +754,53 @@ def discover_australia_pmi_releases() -> list[dict[str, str]]:
             anchor.parent.get_text(" ", strip=True) if anchor.parent else "",
             sp_preceding_context(anchor),
         ) if part))
-        if not re.search(r"\bAustralia\b", context, re.I) or not re.search(r"\bPMI\b", context, re.I):
+        title_match = re.search(
+            r"(S&P Global\s+(?:Flash\s+)?Australia(?:\s+(?:Manufacturing|Services))?\s+PMI(?:[^|]{0,80})?)",
+            context,
+            re.I,
+        )
+        if not title_match:
+            title_match = re.search(
+                r"((?:Flash\s+)?Australia(?:\s+(?:Manufacturing|Services))?\s+PMI(?:[^|]{0,80})?)",
+                context,
+                re.I,
+            )
+        if not title_match:
             continue
+        title = clean(title_match.group(1))
         release_date_match = re.search(
             r"([A-Za-z]+\s+\d{1,2},?\s+20\d{2})\s+\d{2}:\d{2}\s+UTC",
             context,
             re.I,
         )
         candidates.append({
-            "title": context[:300],
+            "title": title,
+            "index_context": context,
             "url": url,
             "release_date": release_date_match.group(1).replace(",", "") if release_date_match else "",
         })
         seen.add(url)
-    # Same behavior as the successful UK pipeline: bounded newest candidates,
-    # not a hard-coded release ID.
-    candidates = candidates[:30]
-    (OUT / "sp_global_australia_release_candidates.json").write_text(
-        json.dumps(candidates, ensure_ascii=False, indent=2), encoding="utf-8"
+    cutoff = datetime.now(timezone.utc) - timedelta(days=150)
+    recent_candidates: list[dict[str, str]] = []
+    for candidate in candidates:
+        release_date = parse_sp_release_date(candidate.get("release_date", ""))
+        if release_date is not None and release_date >= cutoff:
+            recent_candidates.append(candidate)
+    if not recent_candidates:
+        recent_candidates = candidates[:30]
+    recent_candidates.sort(
+        key=lambda item: parse_sp_release_date(item.get("release_date", ""))
+        or datetime.min.replace(tzinfo=timezone.utc),
+        reverse=True,
     )
-    log(f"[S&P PMI] Australia releases discovered={len(candidates)}")
-    return candidates
+    (OUT / "sp_global_australia_release_candidates.json").write_text(
+        json.dumps(recent_candidates, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    log(
+        f"[S&P PMI] Australia discovered={len(candidates)} "
+        f"recent_to_process={len(recent_candidates)}"
+    )
+    return recent_candidates
 
 
 def extract_australia_pmi_value(text: str, sector: str) -> float | None:
@@ -806,6 +860,7 @@ def sp_australia_pmi(label: str) -> tuple[list[Point], dict[str, Any]]:
             text = sp_response_to_text(response)
             safe_id = candidate["url"].rstrip("/").split("/")[-1]
             (OUT / f"sp_global_australia_{safe_id}.txt").write_text(text, encoding="utf-8")
+            reference_month = extract_sp_reference_month(text)
             current = extract_australia_pmi_value(text, sector)
             previous = extract_previous_june_value(text, sector)
             attempt = {
@@ -817,12 +872,13 @@ def sp_australia_pmi(label: str) -> tuple[list[Point], dict[str, Any]]:
                 "contains_australia": "Australia" in text,
                 "contains_manufacturing": "Manufacturing PMI" in text,
                 "contains_services": "Services PMI" in text,
+                "reference_month": reference_month,
                 "current": current,
                 "previous": previous,
                 "text_preview": clean(text[:800]),
             }
             attempts.append(attempt)
-            if current is None:
+            if reference_month != "2026-07" or current is None:
                 continue
             points = [Point("2026-07", current, response.url, status="flash", note="July 2026 Flash")]
             if previous is not None:
