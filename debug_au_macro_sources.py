@@ -20,6 +20,7 @@ import sys
 import traceback
 from dataclasses import asdict, dataclass
 from datetime import date, datetime
+from datetime import timedelta as dt_timedelta
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -30,7 +31,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-31-au-source-validation-v14-exact-uk-pmi-flow"
+VERSION = "2026-07-31-au-source-validation-v15-exact-series-flexible-xls"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -336,8 +337,50 @@ def fetch_abs_target(flow: str, start: str, include: list[str], exclude: list[st
 
 
 def workbook_rows(content: bytes) -> list[dict[str, Any]]:
-    workbook = load_workbook(io.BytesIO(content), read_only=True, data_only=True)
-    return [{"sheet": sheet.title, "rows": [list(row) for row in sheet.iter_rows(values_only=True)]} for sheet in workbook.worksheets]
+    if content.startswith(b"PK"):
+        workbook = load_workbook(io.BytesIO(content), read_only=True, data_only=True)
+        return [{"sheet": sheet.title, "rows": [list(row) for row in sheet.iter_rows(values_only=True)]} for sheet in workbook.worksheets]
+    if content.startswith(bytes.fromhex("D0CF11E0")):
+        import xlrd
+        workbook = xlrd.open_workbook(file_contents=content)
+        return [{"sheet": sheet.name, "rows": [sheet.row_values(row) for row in range(sheet.nrows)]} for sheet in workbook.sheets()]
+    raise RuntimeError("Downloaded file is neither XLSX nor XLS")
+
+
+def excel_period(value: Any, frequency: str = "Q") -> str | None:
+    if isinstance(value, (int, float)) and 20000 <= float(value) <= 80000:
+        converted = datetime(1899, 12, 30) + dt_timedelta(days=float(value))
+        if frequency == "Q":
+            return f"{converted.year:04d}-Q{(converted.month - 1) // 3 + 1}"
+        return f"{converted.year:04d}-{converted.month:02d}"
+    period = period_key(value)
+    if period and frequency == "Q" and re.fullmatch(r"20\d{2}-\d{2}", period):
+        year, month = map(int, period.split("-"))
+        return f"{year:04d}-Q{(month - 1) // 3 + 1}"
+    return period
+
+
+def exact_series_from_workbook(content: bytes, series_id: str, source_url: str, frequency: str = "Q") -> tuple[list[Point], dict[str, Any]]:
+    for book in workbook_rows(content):
+        rows = book["rows"]
+        for id_row, row in enumerate(rows):
+            for value_col, cell in enumerate(row):
+                if clean(cell).upper() != series_id.upper():
+                    continue
+                values: dict[str, float] = {}
+                for data_row in rows[id_row + 1:]:
+                    if not data_row:
+                        continue
+                    period = excel_period(data_row[0], frequency)
+                    if period and value_col < len(data_row):
+                        value = number(data_row[value_col])
+                        if value is not None:
+                            values[period] = value
+                if not values:
+                    raise RuntimeError(f"Series {series_id} found at {book['sheet']} row {id_row + 1}, but no dated values followed")
+                points = [Point(period, value, source_url, note=f"sheet={book['sheet']}; series={series_id}") for period, value in sorted(values.items())]
+                return points, {"sheet": book["sheet"], "series_id": series_id, "series_id_row": id_row + 1, "value_col": value_col + 1, "observation_count": len(values)}
+    raise RuntimeError(f"Series ID {series_id} not found in downloaded workbook")
 
 
 def fetch_anz_job_ads(expected: dict[str, float]) -> tuple[list[Point], dict[str, Any]]:
@@ -460,203 +503,76 @@ def fetch_abs_workbook_candidate(
     raise RuntimeError("ABS national accounts workbook attempts failed: " + " | ".join(errors))
 
 
-def fetch_expected_to_leave_total() -> tuple[list[Point], dict[str, Any]]:
-    latest_pages = [
-        "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/latest-release",
-        "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/latest-release",
-    ]
-    fallback_url = "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx"
+def discover_abs_workbook(landing_urls: list[str], filename_stem: str, title_token: str, fallback_urls: list[str]) -> tuple[requests.Response, dict[str, Any]]:
     candidates: list[str] = []
     discovery: list[dict[str, Any]] = []
-    for page_url in latest_pages:
+    for landing_url in landing_urls:
         try:
-            page = get(page_url)
+            page = get(landing_url)
             soup = BeautifulSoup(page.text, "html.parser")
-            found = []
-            for anchor_tag in soup.find_all("a", href=True):
-                href = anchor_tag.get("href", "")
-                context = clean(" ".join([
-                    anchor_tag.get_text(" ", strip=True),
-                    anchor_tag.parent.get_text(" ", strip=True) if anchor_tag.parent else "",
-                ]))
-                if (
-                    href.lower().endswith(("6291017.xlsx", "6291017.xls"))
-                    or ("Table 17" in context and href.lower().endswith((".xlsx", ".xls")))
-                ):
+            found: list[str] = []
+            for anchor in soup.find_all("a", href=True):
+                href = anchor.get("href", "")
+                context = clean(" ".join([anchor.get_text(" ", strip=True), anchor.parent.get_text(" ", strip=True) if anchor.parent else ""]))
+                filename_match = filename_stem.lower() in href.lower()
+                title_match = title_token.lower() in context.lower()
+                if (filename_match or title_match) and re.search(r"\.xlsx?$", href, re.I):
                     url = urljoin(page.url, href)
                     if url not in candidates:
-                        candidates.append(url)
-                        found.append(url)
-            discovery.append({"page": page.url, "found": found})
+                        candidates.append(url); found.append(url)
+            discovery.append({"landing_url": page.url, "found": found})
         except Exception as error:
-            discovery.append({"page": page_url, "error": f"{type(error).__name__}: {error}"})
-    if fallback_url not in candidates:
-        candidates.append(fallback_url)
-
-    errors: list[str] = []
-    for workbook_url in candidates:
+            discovery.append({"landing_url": landing_url, "error": f"{type(error).__name__}: {error}"})
+    for url in fallback_urls:
+        if url not in candidates:
+            candidates.append(url)
+    errors=[]
+    for url in candidates:
         try:
-            response = get(workbook_url)
-            (OUT / "abs_6291017_table17_raw.xlsx").write_bytes(response.content)
-            books = workbook_rows(response.content)
-            ranked: list[dict[str, Any]] = []
-            for book in books:
-                rows = book["rows"]
-                # ABS Data1 layout: dates generally run down the first column,
-                # while each statistical series occupies one value column.
-                max_cols = max((len(row) for row in rows), default=0)
-                for value_col in range(1, max_cols):
-                    header_cells = []
-                    for row in rows[:25]:
-                        if value_col < len(row) and row[value_col] is not None:
-                            header_cells.append(clean(row[value_col]))
-                    header = clean(" ".join(header_cells))
-                    header_norm = norm(header)
-                    if "expect" not in header_norm or "leave" not in header_norm:
-                        continue
-                    total_score = 2 if re.search(r"\btotal\b", header_norm) else 0
-                    person_score = 1 if any(term in header_norm for term in ("employed persons", "persons", "workers")) else 0
-                    values: dict[str, float] = {}
-                    for row in rows:
-                        period = None
-                        for cell in row[: min(6, len(row))]:
-                            period = period_key(cell)
-                            if period:
-                                break
-                        if period and value_col < len(row):
-                            value = number(row[value_col])
-                            if value is not None:
-                                values[period] = value
-                    if values:
-                        ranked.append({
-                            "sheet": book["sheet"], "value_col": value_col + 1,
-                            "header": header, "score": total_score + person_score,
-                            "values": values,
-                        })
-                # Also support row-oriented tables by finding descriptive rows.
-                for row_index, row in enumerate(rows):
-                    row_label = norm(" ".join(clean(cell) for cell in row[:20] if cell is not None))
-                    if "expect" not in row_label or "leave" not in row_label:
-                        continue
-                    values: dict[str, float] = {}
-                    for col_index, cell in enumerate(row):
-                        value = number(cell)
-                        if value is None:
-                            continue
-                        # Search nearby header rows for the period corresponding to this column.
-                        period = None
-                        for header_index in range(max(0, row_index - 12), row_index):
-                            if col_index < len(rows[header_index]):
-                                period = period_key(rows[header_index][col_index])
-                                if period:
-                                    break
-                        if period:
-                            values[period] = value
-                    if values:
-                        ranked.append({
-                            "sheet": book["sheet"], "row": row_index + 1,
-                            "header": clean(" ".join(clean(cell) for cell in row[:20] if cell is not None)),
-                            "score": 2 if "total" in row_label else 0,
-                            "values": values,
-                        })
-            ranked.sort(key=lambda item: (-item["score"], -len(item["values"])))
-            if not ranked:
-                raise RuntimeError("Table 17 downloaded, but no Expects to leave series with dated values was found")
-            best = ranked[0]
-            points = [
-                Point(period, value, response.url, note=f"Table 17; Expects to leave; Total; {best.get('sheet')}")
-                for period, value in sorted(best["values"].items())
-            ]
-            return points, {
-                "request_url": response.url,
-                "discovery": discovery,
-                "selected": {key: value for key, value in best.items() if key != "values"},
-                "candidate_count": len(ranked),
-                "candidates": [{key: value for key, value in item.items() if key != "values"} for item in ranked[:30]],
-                "note": "ABS Table 17, Employed persons by expectations of future employment and current job duration; selected Expects to leave x Total",
-            }
+            response=get(url)
+            if response.content.startswith((b"PK", bytes.fromhex("D0CF11E0"))):
+                return response, {"discovery": discovery, "candidates": candidates}
+            errors.append(f"{url}: invalid workbook signature")
         except Exception as error:
-            errors.append(f"{workbook_url}: {type(error).__name__}: {error}")
-    raise RuntimeError("ABS Table 17 attempts failed: " + " | ".join(errors))
+            errors.append(f"{url}: {type(error).__name__}: {error}")
+    raise RuntimeError("Official workbook discovery/download failed: " + " | ".join(errors))
+
+
+def fetch_expected_to_leave_total() -> tuple[list[Point], dict[str, Any]]:
+    response, discovery = discover_abs_workbook(
+        [
+            "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/latest-release",
+            "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/latest-release",
+        ],
+        "6291017", "Table 17",
+        ["https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx"],
+    )
+    (OUT / "abs_6291017_table17_raw.xlsx").write_bytes(response.content)
+    points, selected = exact_series_from_workbook(response.content, "A85060262X", response.url, "Q")
+    selected.update(discovery)
+    selected["note"] = "ABS Table 17 Data1; Does not expect to be with current employer/business in 12 months; Employed total; Persons"
+    return points, selected
 
 
 def fetch_wpi_including_bonuses_yoy(series_id: str = "A2615579C") -> tuple[list[Point], dict[str, Any]]:
-    landing_url = "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/latest-release#data-downloads"
-    page = get(landing_url)
-    (OUT / "abs_wpi_latest_release.html").write_bytes(page.content)
-    soup = BeautifulSoup(page.text, "html.parser")
-    workbook_url = ""
-    for anchor in soup.find_all("a", href=True):
-        context = clean(" ".join([
-            anchor.get_text(" ", strip=True),
-            anchor.parent.get_text(" ", strip=True) if anchor.parent else "",
-        ]))
-        href = anchor.get("href", "")
-        if "Table 7b" in context and href.lower().endswith(".xlsx"):
-            workbook_url = urljoin(page.url, href)
-            break
-    if not workbook_url:
-        # ABS table filenames are stable within each release, but discovery is
-        # primary so the reference-period folder can change automatically.
-        release_match = re.search(r'href="([^"]+/wage-price-index-australia/[^/]+/634507b\.xlsx)"', page.text, re.I)
-        if release_match:
-            workbook_url = urljoin(page.url, html.unescape(release_match.group(1)))
-    if not workbook_url:
-        raise RuntimeError("ABS WPI Table 7b download link not found on official release page")
-
-    response = get(workbook_url)
-    (OUT / "abs_wpi_table_7b_raw.xlsx").write_bytes(response.content)
-    books = workbook_rows(response.content)
-    selected: dict[str, Any] | None = None
-    for book in books:
-        rows = book["rows"]
-        for row_index, row in enumerate(rows):
-            for col_index, cell in enumerate(row):
-                if clean(cell).upper() == series_id.upper():
-                    selected = {"sheet": book["sheet"], "rows": rows, "id_row": row_index + 1, "value_col": col_index}
-                    break
-            if selected:
-                break
-        if selected:
-            break
-    if not selected:
-        raise RuntimeError(f"ABS WPI series ID {series_id} not found in Table 7b Data1 workbook")
-
-    levels: dict[str, float] = {}
-    rows = selected["rows"]
-    value_col = selected["value_col"]
-    for row in rows:
-        period = None
-        for cell in row[: min(6, len(row))]:
-            period = period_key(cell)
-            if period:
-                break
-        if period and value_col < len(row):
-            value = number(row[value_col])
-            if value is not None:
-                levels[period] = value
-    ordered = sorted(levels)
-    yoy = {
-        ordered[index]: (levels[ordered[index]] / levels[ordered[index - 4]] - 1.0) * 100.0
-        for index in range(4, len(ordered))
-        if levels[ordered[index - 4]] != 0
-    }
+    response, discovery = discover_abs_workbook(
+        ["https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/latest-release#data-downloads"],
+        "634507b", "Table 7b",
+        [],
+    )
+    suffix = ".xlsx" if response.content.startswith(b"PK") else ".xls"
+    (OUT / f"abs_wpi_table_7b_raw{suffix}").write_bytes(response.content)
+    levels, selected = exact_series_from_workbook(response.content, series_id, response.url, "Q")
+    level_map = {point.period: point.value for point in levels}
+    ordered = sorted(level_map)
+    yoy = {ordered[index]: (level_map[ordered[index]] / level_map[ordered[index - 4]] - 1.0) * 100.0 for index in range(4, len(ordered)) if level_map[ordered[index - 4]] != 0}
     if not yoy:
-        raise RuntimeError(f"ABS WPI series {series_id} found but quarterly levels could not be converted to YoY")
-    points = [
-        Point(period, value, response.url, note=f"Table 7b Data1; series={series_id}; index level YoY")
-        for period, value in sorted(yoy.items())
-    ]
-    return points, {
-        "request_url": response.url,
-        "landing_url": landing_url,
-        "sheet": selected["sheet"],
-        "series_id": series_id,
-        "series_id_row": selected["id_row"],
-        "value_col": value_col + 1,
-        "latest_index_levels": [{"period": key, "value": levels[key]} for key in ordered[-12:]],
-        "note": "Official ABS Table 7b hourly rates of pay including bonuses, original; YoY calculated from A2615579C quarterly index levels",
-    }
+        raise RuntimeError(f"ABS WPI series {series_id} found but YoY could not be calculated")
+    points = [Point(period, value, response.url, note=f"Table 7b Data1; series={series_id}; calculated from quarterly index") for period, value in sorted(yoy.items())]
+    selected.update(discovery)
+    selected["latest_index_levels"] = [{"period": key, "value": level_map[key]} for key in ordered[-12:]]
+    selected["note"] = "Official ABS Table 7b; A2615579C Total hourly rates including bonuses, Private and Public, original; YoY from index levels"
+    return points, selected
 
 
 def fetch_westpac_unemployment_expectations() -> tuple[list[Point], dict[str, Any]]:
