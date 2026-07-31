@@ -20,17 +20,17 @@ import sys
 import traceback
 from dataclasses import asdict, dataclass
 from datetime import date, datetime
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from urllib.parse import urljoin
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-31-au-source-validation-v10-workbook-dates-pmi-fallback"
+VERSION = "2026-07-31-au-source-validation-v11-uk-pmi-flow"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -468,56 +468,162 @@ def official_html_value(url: str, patterns: list[str], period: str, raw_name: st
 
 
 
-def sp_australia_pmi(label: str) -> tuple[list[Point], dict[str, Any]]:
-    urls = [
-        "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df",
-        "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df?language=en",
-    ]
-    errors: list[str] = []
-    names = (
-        ["Flash Australia Manufacturing PMI", "Australia Manufacturing PMI"]
-        if label == "製造業PMI"
-        else ["Flash Australia Services PMI Business Activity Index", "Australia Services PMI Business Activity Index"]
+SP_RELEASES_URL = "https://www.pmi.spglobal.com/Public/Release/PressReleases"
+
+
+def sp_response_to_text(response: requests.Response) -> str:
+    content_type = (response.headers.get("content-type") or "").lower()
+    if response.content.startswith(b"%PDF") or "application/pdf" in content_type:
+        reader = PdfReader(io.BytesIO(response.content))
+        return "\n".join(page.extract_text() or "" for page in reader.pages)
+    return BeautifulSoup(response.text, "html.parser").get_text("\n", strip=True)
+
+
+def sp_preceding_context(anchor: Any) -> str:
+    parts: list[str] = []
+    for element in anchor.previous_elements:
+        if isinstance(element, NavigableString):
+            text = clean(str(element))
+            if text:
+                parts.append(text)
+        if len(" ".join(parts)) >= 320:
+            break
+    return " ".join(reversed(parts[-24:]))
+
+
+def discover_australia_pmi_releases() -> list[dict[str, str]]:
+    response = get(SP_RELEASES_URL)
+    (OUT / "sp_global_release_calendar.html").write_bytes(response.content)
+    soup = BeautifulSoup(response.text, "html.parser")
+    candidates: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for anchor in soup.find_all("a", href=True):
+        href = anchor.get("href", "")
+        if "/Public/Home/PressRelease/" not in href:
+            continue
+        url = urljoin(SP_RELEASES_URL, href)
+        if url in seen:
+            continue
+        context = clean(" ".join(part for part in (
+            anchor.get_text(" ", strip=True),
+            anchor.parent.get_text(" ", strip=True) if anchor.parent else "",
+            sp_preceding_context(anchor),
+        ) if part))
+        if not re.search(r"\bAustralia\b", context, re.I) or not re.search(r"\bPMI\b", context, re.I):
+            continue
+        release_date_match = re.search(
+            r"([A-Za-z]+\s+\d{1,2},?\s+20\d{2})\s+\d{2}:\d{2}\s+UTC",
+            context,
+            re.I,
+        )
+        candidates.append({
+            "title": context[:300],
+            "url": url,
+            "release_date": release_date_match.group(1).replace(",", "") if release_date_match else "",
+        })
+        seen.add(url)
+    # Same behavior as the successful UK pipeline: bounded newest candidates,
+    # not a hard-coded release ID.
+    candidates = candidates[:30]
+    (OUT / "sp_global_australia_release_candidates.json").write_text(
+        json.dumps(candidates, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    verified = (51.7, 51.5) if label == "製造業PMI" else (53.0, 50.5)
-    for url in urls:
+    log(f"[S&P PMI] Australia releases discovered={len(candidates)}")
+    return candidates
+
+
+def extract_australia_pmi_value(text: str, sector: str) -> float | None:
+    compact = clean(text).replace("™", "").replace("®", "")
+    number_pattern = r"([0-9]{1,2}(?:\.[0-9]+)?)"
+    if sector == "manufacturing":
+        patterns = [
+            rf"\bFlash Australia Manufacturing PMI\s*:\s*{number_pattern}\b",
+            rf"\bAustralia Manufacturing PMI\s*:\s*{number_pattern}\b",
+            r"\bseasonally adjusted S&P Global Australia Manufacturing PMI\s+"
+            rf"(?:posted|registered|stood at|rose to|fell to)\s+{number_pattern}\b",
+        ]
+    else:
+        patterns = [
+            rf"\bFlash Australia Services PMI Business Activity Index\s*:\s*{number_pattern}\b",
+            rf"\bAustralia Services PMI Business Activity Index\s*:\s*{number_pattern}\b",
+            r"\bS&P Global Australia Services PMI Business Activity Index\s+"
+            rf"(?:posted|registered|stood at|rose to|fell to)\s+{number_pattern}\b",
+        ]
+    for priority, pattern in enumerate(patterns, 1):
+        for match in re.finditer(pattern, compact, re.I):
+            value = float(match.group(1))
+            context = compact[max(0, match.start() - 120):match.end() + 150]
+            if 20.0 <= value <= 80.0 and not (
+                value == 50.0 and re.search(r">\s*50|50\s*=", context)
+            ):
+                log(f"[S&P PMI PARSER] sector={sector} value={value} priority={priority}")
+                return value
+    return None
+
+
+def extract_previous_june_value(text: str, sector: str) -> float | None:
+    compact = clean(text).replace("™", "").replace("®", "")
+    label = (
+        r"Flash Australia Manufacturing PMI"
+        if sector == "manufacturing"
+        else r"Flash Australia Services PMI Business Activity Index"
+    )
+    match = re.search(
+        label + r"\s*:\s*[0-9]{1,2}(?:\.[0-9]+)?\s*\(\s*Jun\s*:\s*([0-9]{1,2}(?:\.[0-9]+)?)\s*\)",
+        compact,
+        re.I,
+    )
+    return float(match.group(1)) if match else None
+
+
+def sp_australia_pmi(label: str) -> tuple[list[Point], dict[str, Any]]:
+    sector = "manufacturing" if label == "製造業PMI" else "services"
+    candidates = discover_australia_pmi_releases()
+    attempts: list[dict[str, Any]] = []
+    for candidate in candidates:
+        title = candidate.get("title", "").lower()
+        if "australia" not in title or "pmi" not in title:
+            continue
         try:
-            response = get(url)
-            (OUT / "sp_global_australia_pmi_july.html").write_bytes(response.content)
-            soup = BeautifulSoup(response.text, "html.parser")
-            sources = [
-                soup.get_text(" ", strip=True),
-                response.text,
-                " ".join(tag.get("content", "") for tag in soup.find_all("meta")),
-                " ".join(script.get_text(" ", strip=True) for script in soup.find_all("script")),
-            ]
-            for source in sources:
-                haystack = html.unescape(source).replace("−", "-").replace("®", "")
-                haystack = re.sub(r"<[^>]+>", " ", haystack)
-                haystack = re.sub(r"\s+", " ", haystack)
-                for name in names:
-                    pattern = (
-                        re.escape(name)
-                        + r"[^0-9]{0,160}([0-9]+(?:\.[0-9]+)?)"
-                        + r"[^0-9]{0,120}Jun[^0-9]{0,30}([0-9]+(?:\.[0-9]+)?)"
-                    )
-                    match = re.search(pattern, haystack, re.I | re.S)
-                    if match:
-                        return [
-                            Point("2026-06", float(match.group(2)), response.url, status="final", note="Previous value in July Flash release"),
-                            Point("2026-07", float(match.group(1)), response.url, status="flash", note="July 2026 Flash"),
-                        ], {"note": "Official S&P Global individual release; parsed from page content"}
-            # Fail-safe only when the official release identity and all four
-            # published numbers are present in the downloaded official page.
-            flattened = html.unescape(response.text)
-            if "Flash Australia PMI" in flattened and all(str(value) in flattened for value in (51.7, 51.5, 53.0, 50.5)):
-                return [
-                    Point("2026-06", verified[1], response.url, status="final", note="Verified in official July Flash release"),
-                    Point("2026-07", verified[0], response.url, status="flash", note="Verified in official July Flash release"),
-                ], {"note": "Official S&P release verified; layout-safe fallback"}
+            response = get(candidate["url"])
+            text = sp_response_to_text(response)
+            safe_id = candidate["url"].rstrip("/").split("/")[-1]
+            (OUT / f"sp_global_australia_{safe_id}.txt").write_text(text, encoding="utf-8")
+            current = extract_australia_pmi_value(text, sector)
+            previous = extract_previous_june_value(text, sector)
+            attempt = {
+                "url": response.url,
+                "title": candidate.get("title", ""),
+                "content_type": response.headers.get("content-type", ""),
+                "content_length": len(response.content),
+                "text_length": len(text),
+                "contains_australia": "Australia" in text,
+                "contains_manufacturing": "Manufacturing PMI" in text,
+                "contains_services": "Services PMI" in text,
+                "current": current,
+                "previous": previous,
+                "text_preview": clean(text[:800]),
+            }
+            attempts.append(attempt)
+            if current is None:
+                continue
+            points = [Point("2026-07", current, response.url, status="flash", note="July 2026 Flash")]
+            if previous is not None:
+                points.insert(0, Point("2026-06", previous, response.url, status="final", note="Previous value in July Flash release"))
+            (OUT / "sp_global_australia_release_parsed.json").write_text(
+                json.dumps(attempts, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+            return points, {
+                "note": "Same calendar discovery and labelled-value parser used by successful UK PMI pipeline",
+                "selected_release": attempt,
+                "release_candidates": candidates,
+            }
         except Exception as error:
-            errors.append(f"{url}: {type(error).__name__}: {error}")
-    raise RuntimeError("Official Australia PMI current/previous values not parsed: " + " | ".join(errors))
+            attempts.append({"url": candidate.get("url", ""), "error": f"{type(error).__name__}: {error}"})
+    (OUT / "sp_global_australia_release_parsed.json").write_text(
+        json.dumps(attempts, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    raise RuntimeError("No Australia PMI value parsed from discovered official S&P releases")
 
 def pdf_value(url: str, patterns: list[str], period: str, raw_name: str) -> list[Point]:
     response = get(url)
