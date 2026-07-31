@@ -4022,6 +4022,11 @@
           "source": "AU_ECON.xlsx"
         },
         {
+          "date": "2026-06-01",
+          "value": 139.8,
+          "source": "AU_ECON.xlsx"
+        },
+        {
           "date": "2026-07-01",
           "value": 129.9,
           "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/07/er20260714BullConsumerSentiment.pdf"
