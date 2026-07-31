@@ -1029,20 +1029,187 @@ def merge_points(database: dict[str, Any], series_id: str, points: list[Point], 
     return added,revised
 
 def write_markdown(database: dict[str, Any], logs: list[dict[str, Any]]) -> None:
-    lines=["# 澳洲總體資料 Debug 表", "", f"更新時間：{database.get('generated_at','')}", "",
-           "## 更新摘要", "", "| 指標 | Series ID | 狀態 | 新增 | 修訂 | 官方最新期 | 官方最新值 | 錯誤 |",
-           "|---|---|---:|---:|---:|---|---:|---|"]
+    """Write a compact Excel-style heatmap matrix for quick data validation.
+
+    GitHub Markdown supports embedded HTML tables.  The MD therefore uses an
+    HTML table so categories can use rowspans and cells can display background
+    colours similar to the reference spreadsheet.
+    """
+    import calendar
+    from html import escape
+
+    monthly_groups = [
+        ("就業", [
+            "auempchg", "auunemp", "auvacancy", "auanzjobads",
+            "auwageyoy", "auexitleave", "auunempexp",
+        ]),
+        ("通膨", ["aucpi", "autrimmed", "auretail"]),
+        ("調查", ["aunabprices", "auconsconf", "aumanpmi", "auservpmi"]),
+    ]
+    quarterly_groups = [
+        ("GDP", ["augdpyoy", "auconsumptionyoy", "auinvestmentyoy"]),
+    ]
+
+    display_names = {
+        "auempchg": "就業新增",
+        "auunemp": "失業率",
+        "auvacancy": "職缺",
+        "auanzjobads": "ANZ職缺廣告數",
+        "auwageyoy": "時薪YoY",
+        "auexitleave": "預計離職",
+        "auunempexp": "失業預期",
+        "aucpi": "CPI",
+        "autrimmed": "Trim mean",
+        "auretail": "零售",
+        "aunabprices": "NAB企業調查 售價",
+        "auconsconf": "消費信心",
+        "aumanpmi": "PMI製造業",
+        "auservpmi": "PMI服務業",
+        "augdpyoy": "GDP",
+        "auconsumptionyoy": "GDP 私人消費",
+        "auinvestmentyoy": "GDP投資",
+    }
+
+    # False means a higher value is rendered red, matching the reference heat
+    # map.  Consumer confidence is the exception: a higher value is green.
+    high_is_green = {"auconsconf"}
+
+    decimals = {
+        "auempchg": 0,
+        "auunemp": 2,
+        "auvacancy": 0,
+        "auanzjobads": 0,
+        "auwageyoy": 2,
+        "auexitleave": 0,
+        "auunempexp": 1,
+        "aucpi": 2,
+        "autrimmed": 2,
+        "auretail": 2,
+        "aunabprices": 2,
+        "auconsconf": 2,
+        "aumanpmi": 1,
+        "auservpmi": 1,
+        "augdpyoy": 2,
+        "auconsumptionyoy": 2,
+        "auinvestmentyoy": 2,
+    }
+
+    series_map = {item.get("id"): item for item in database.get("series", [])}
+
+    def month_key(date_text: str) -> str:
+        return str(date_text)[:7]
+
+    def series_values(series_id: str) -> dict[str, float]:
+        result = {}
+        series = series_map.get(series_id, {})
+        for point in series.get("data", []):
+            try:
+                result[month_key(point.get("date", ""))] = float(point.get("value"))
+            except (TypeError, ValueError):
+                continue
+        return result
+
+    def latest_periods(series_ids: list[str], count: int) -> list[str]:
+        periods = set()
+        for series_id in series_ids:
+            periods.update(series_values(series_id))
+        return sorted(periods, reverse=True)[:count]
+
+    def period_label(period: str) -> str:
+        year, month = map(int, period.split("-"))
+        last_day = calendar.monthrange(year, month)[1]
+        return f"{year}/{month}/{last_day}"
+
+    def format_value(series_id: str, value: float) -> str:
+        places = decimals.get(series_id, 2)
+        if places == 0:
+            return f"{value:.0f}"
+        return f"{value:.{places}f}"
+
+    def blend(a: tuple[int, int, int], b: tuple[int, int, int], t: float) -> tuple[int, int, int]:
+        t = min(1.0, max(0.0, t))
+        return tuple(round(x + (y - x) * t) for x, y in zip(a, b))
+
+    def heat_color(series_id: str, value: float, visible_values: list[float]) -> str:
+        if len(visible_values) < 2 or max(visible_values) == min(visible_values):
+            return "#ffffff"
+        low = min(visible_values)
+        high = max(visible_values)
+        position = (value - low) / (high - low)
+        if series_id in high_is_green:
+            position = 1.0 - position
+        green = (99, 190, 123)
+        white = (255, 255, 255)
+        red = (248, 105, 113)
+        if position <= 0.5:
+            rgb = blend(green, white, position / 0.5)
+        else:
+            rgb = blend(white, red, (position - 0.5) / 0.5)
+        return "#%02x%02x%02x" % rgb
+
+    def render_table(groups: list[tuple[str, list[str]]], periods: list[str]) -> list[str]:
+        lines = [
+            '<table>',
+            '  <thead>',
+            '    <tr>',
+            '      <th style="min-width:60px"></th>',
+            '      <th style="min-width:180px"></th>',
+        ]
+        for period in periods:
+            lines.append(f'      <th align="center" style="min-width:90px">{escape(period_label(period))}</th>')
+        lines += ['    </tr>', '  </thead>', '  <tbody>']
+
+        for group_name, series_ids in groups:
+            for row_index, series_id in enumerate(series_ids):
+                values = series_values(series_id)
+                visible = [values[p] for p in periods if p in values]
+                lines.append('    <tr>')
+                if row_index == 0:
+                    lines.append(
+                        f'      <th rowspan="{len(series_ids)}" align="center" '
+                        f'valign="middle">{escape(group_name)}</th>'
+                    )
+                lines.append(f'      <td>{escape(display_names.get(series_id, series_id))}</td>')
+                for period in periods:
+                    if period not in values:
+                        lines.append('      <td align="right"></td>')
+                        continue
+                    value = values[period]
+                    color = heat_color(series_id, value, visible)
+                    lines.append(
+                        f'      <td align="right" bgcolor="{color}">'
+                        f'{escape(format_value(series_id, value))}</td>'
+                    )
+                lines.append('    </tr>')
+        lines += ['  </tbody>', '</table>']
+        return lines
+
+    monthly_ids = [sid for _, ids in monthly_groups for sid in ids]
+    quarterly_ids = [sid for _, ids in quarterly_groups for sid in ids]
+    monthly_periods = latest_periods(monthly_ids, 4)
+    quarterly_periods = latest_periods(quarterly_ids, 4)
+
+    lines = [
+        "# 澳洲總體資料 Debug 表",
+        "",
+        f"更新時間：{database.get('generated_at', '')}",
+        "",
+        "> 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。",
+        "",
+    ]
+    lines.extend(render_table(monthly_groups, monthly_periods))
+    lines += ["", "<br>", ""]
+    lines.extend(render_table(quarterly_groups, quarterly_periods))
+    lines += ["", "## 更新狀態", "", "| 指標 | 狀態 | 新增 | 修訂 | 官方最新期 | 官方最新值 | 錯誤 |", "|---|---|---:|---:|---|---:|---|"]
     for row in logs:
-        lines.append("| " + " | ".join(str(row.get(k,"" )).replace("|","\\|") for k in
-            ("label","series_id","status","added","revised","latest_period","latest_value","error")) + " |")
-    for series in database.get("series",[]):
-        lines += ["", f"## {series.get('name')} (`{series.get('id')}`)", "",
-                  f"頻率：{series.get('frequency','')}　單位：{series.get('unit','')}", "",
-                  "| 日期 | 數值 | Release | Source |", "|---|---:|---|---|"]
-        for point in sorted(series.get("data",[]),key=lambda x:x.get("date",""),reverse=True):
-            source=point.get("source_url",point.get("source",""))
-            lines.append(f"| {point.get('date','')} | {point.get('value','')} | {point.get('release_type','')} | {source} |")
-    MD_FILE.write_text("\n".join(lines)+"\n",encoding="utf-8")
+        cells = [
+            row.get("label", ""), row.get("status", ""), row.get("added", ""),
+            row.get("revised", ""), row.get("latest_period", ""),
+            row.get("latest_value", ""), row.get("error", ""),
+        ]
+        lines.append("| " + " | ".join(str(v).replace("|", "\\|") for v in cells) + " |")
+
+    MD_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 def main() -> int:
     OUT.mkdir(parents=True,exist_ok=True)
