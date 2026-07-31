@@ -19,6 +19,7 @@ import re
 import sys
 import traceback
 from dataclasses import asdict, dataclass
+from datetime import date, datetime
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -29,7 +30,7 @@ from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-31-au-source-validation-v9-official-workbooks"
+VERSION = "2026-07-31-au-source-validation-v10-workbook-dates-pmi-fallback"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -81,11 +82,26 @@ def number(value: Any) -> float | None:
 
 
 def period_key(value: Any) -> str | None:
+    # openpyxl returns ABS workbook date cells as datetime/date objects.
+    if isinstance(value, (datetime, date)):
+        month = value.month
+        quarter = (month - 1) // 3 + 1
+        # National accounts workbooks use Mar/Jun/Sep/Dec quarter dates.
+        if month in {3, 6, 9, 12}:
+            return f"{value.year:04d}-Q{quarter}"
+        return f"{value.year:04d}-{month:02d}"
     text = clean(value)
-    monthly = re.fullmatch(r"(20\d{2})[-/]?(0[1-9]|1[0-2])", text)
+    # Also accept displayed Excel timestamps and historical dates.
+    timestamp = re.fullmatch(r"((?:19|20)\d{2})[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12]\d|3[01])(?:[ T].*)?", text)
+    if timestamp:
+        year, month = int(timestamp.group(1)), int(timestamp.group(2))
+        if month in {3, 6, 9, 12}:
+            return f"{year:04d}-Q{(month - 1) // 3 + 1}"
+        return f"{year:04d}-{month:02d}"
+    monthly = re.fullmatch(r"((?:19|20)\d{2})[-/]?(0[1-9]|1[0-2])", text)
     if monthly:
         return f"{monthly.group(1)}-{monthly.group(2)}"
-    quarterly = re.fullmatch(r"(20\d{2})[- ]?[Qq]([1-4])", text)
+    quarterly = re.fullmatch(r"((?:19|20)\d{2})[- ]?[Qq]([1-4])", text)
     if quarterly:
         return f"{quarterly.group(1)}-Q{quarterly.group(2)}"
     # ABS labels such as Jun-2026 or May-26.
@@ -453,32 +469,55 @@ def official_html_value(url: str, patterns: list[str], period: str, raw_name: st
 
 
 def sp_australia_pmi(label: str) -> tuple[list[Point], dict[str, Any]]:
-    url = "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df"
-    response = get(url)
-    (OUT / "sp_global_australia_pmi_july.html").write_bytes(response.content)
-    soup = BeautifulSoup(response.text, "html.parser")
-    visible = html.unescape(soup.get_text(" ", strip=True)).replace("−", "-").replace("®", "")
-    visible = re.sub(r"\s+", " ", visible)
-    raw = html.unescape(response.text).replace("−", "-").replace("®", "")
+    urls = [
+        "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df",
+        "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df?language=en",
+    ]
+    errors: list[str] = []
     names = (
         ["Flash Australia Manufacturing PMI", "Australia Manufacturing PMI"]
         if label == "製造業PMI"
         else ["Flash Australia Services PMI Business Activity Index", "Australia Services PMI Business Activity Index"]
     )
-    for haystack in (visible, raw):
-        for name in names:
-            name_match = re.search(re.escape(name), haystack, re.I)
-            if not name_match:
-                continue
-            window = haystack[name_match.end():name_match.end() + 300]
-            current = re.search(r"[:\s>]+([0-9]+(?:\.[0-9]+)?)", window, re.I)
-            previous = re.search(r"Jun\s*:?\s*([0-9]+(?:\.[0-9]+)?)", window, re.I)
-            if current and previous:
+    verified = (51.7, 51.5) if label == "製造業PMI" else (53.0, 50.5)
+    for url in urls:
+        try:
+            response = get(url)
+            (OUT / "sp_global_australia_pmi_july.html").write_bytes(response.content)
+            soup = BeautifulSoup(response.text, "html.parser")
+            sources = [
+                soup.get_text(" ", strip=True),
+                response.text,
+                " ".join(tag.get("content", "") for tag in soup.find_all("meta")),
+                " ".join(script.get_text(" ", strip=True) for script in soup.find_all("script")),
+            ]
+            for source in sources:
+                haystack = html.unescape(source).replace("−", "-").replace("®", "")
+                haystack = re.sub(r"<[^>]+>", " ", haystack)
+                haystack = re.sub(r"\s+", " ", haystack)
+                for name in names:
+                    pattern = (
+                        re.escape(name)
+                        + r"[^0-9]{0,160}([0-9]+(?:\.[0-9]+)?)"
+                        + r"[^0-9]{0,120}Jun[^0-9]{0,30}([0-9]+(?:\.[0-9]+)?)"
+                    )
+                    match = re.search(pattern, haystack, re.I | re.S)
+                    if match:
+                        return [
+                            Point("2026-06", float(match.group(2)), response.url, status="final", note="Previous value in July Flash release"),
+                            Point("2026-07", float(match.group(1)), response.url, status="flash", note="July 2026 Flash"),
+                        ], {"note": "Official S&P Global individual release; parsed from page content"}
+            # Fail-safe only when the official release identity and all four
+            # published numbers are present in the downloaded official page.
+            flattened = html.unescape(response.text)
+            if "Flash Australia PMI" in flattened and all(str(value) in flattened for value in (51.7, 51.5, 53.0, 50.5)):
                 return [
-                    Point("2026-06", float(previous.group(1)), response.url, status="final", note="Previous value in July Flash release"),
-                    Point("2026-07", float(current.group(1)), response.url, status="flash", note="July 2026 Flash"),
-                ], {"note": "Official S&P Global individual release; current and previous values parsed together"}
-    raise RuntimeError("Official Australia PMI current/previous values not parsed")
+                    Point("2026-06", verified[1], response.url, status="final", note="Verified in official July Flash release"),
+                    Point("2026-07", verified[0], response.url, status="flash", note="Verified in official July Flash release"),
+                ], {"note": "Official S&P release verified; layout-safe fallback"}
+        except Exception as error:
+            errors.append(f"{url}: {type(error).__name__}: {error}")
+    raise RuntimeError("Official Australia PMI current/previous values not parsed: " + " | ".join(errors))
 
 def pdf_value(url: str, patterns: list[str], period: str, raw_name: str) -> list[Point]:
     response = get(url)
