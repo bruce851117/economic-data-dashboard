@@ -29,7 +29,7 @@ from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-31-au-source-validation-v6"
+VERSION = "2026-07-31-au-source-validation-v7"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -182,13 +182,27 @@ def abs_csv(flow: str, start_period: str, *, last_n: int | None = None) -> tuple
         errors.append(f"{candidate}: successful response contained no CSV rows")
     raise RuntimeError("ABS dataflow attempts failed: " + " | ".join(errors))
 
+def component_id(key: str) -> str:
+    return re.sub(r"[^A-Z0-9_]", "", key.split(":", 1)[0].strip().upper())
+
+
 def row_text(row: dict[str, Any]) -> str:
-    return norm(" ".join(str(value) for key, value in row.items() if key not in {"OBS_VALUE", "TIME_PERIOD"}))
+    ignored = {"TIME_PERIOD", "OBS_VALUE", "OBS_STATUS", "OBS_COMMENT", "UNIT_MULT", "DECIMALS"}
+    return norm(" ".join(
+        str(value) for key, value in row.items()
+        if component_id(str(key)) not in ignored
+    ))
 
 
 def series_identity(row: dict[str, Any]) -> str:
+    # labels=both retains labelled source columns. TIME_PERIOD must be excluded
+    # by SDMX component ID, otherwise each observation becomes its own series.
     ignored = {"TIME_PERIOD", "OBS_VALUE", "OBS_STATUS", "OBS_COMMENT", "UNIT_MULT", "DECIMALS"}
-    return "|".join(f"{key}={row.get(key, '')}" for key in sorted(row) if key not in ignored)
+    return "|".join(
+        f"{key}={row.get(key, '')}"
+        for key in sorted(row)
+        if component_id(str(key)) not in ignored
+    )
 
 
 def rank_abs_series(
@@ -227,11 +241,19 @@ def rank_abs_series(
             continue
 
         values = levels
-        if transform == "mom_diff":
+        if transform in {"mom_diff", "mom_diff_thousands"}:
+            ordered = sorted(levels)
+            divisor = 1000.0 if transform == "mom_diff_thousands" else 1.0
+            values = {
+                current: (levels[current] - levels[previous]) / divisor
+                for previous, current in zip(ordered, ordered[1:])
+            }
+        elif transform == "yoy_pct_q":
             ordered = sorted(levels)
             values = {
-                current: levels[current] - levels[previous]
-                for previous, current in zip(ordered, ordered[1:])
+                ordered[index]: (levels[ordered[index]] / levels[ordered[index - 4]] - 1.0) * 100.0
+                for index in range(4, len(ordered))
+                if levels[ordered[index - 4]] != 0
             }
 
         common = sorted(set(expected) & set(values))
@@ -278,6 +300,12 @@ def rank_abs_series(
 def fetch_abs_target(flow: str, start: str, include: list[str], exclude: list[str], expected: dict[str, float], transform: str = "level") -> tuple[list[Point], dict[str, Any]]:
     rows, url = abs_csv(flow, start)
     points, candidates = rank_abs_series(rows, include, exclude, expected, transform=transform)
+    if flow == "JV":
+        quarter_month = {"Q1": "02", "Q2": "05", "Q3": "08", "Q4": "11"}
+        for point in points:
+            match = re.fullmatch(r"(\d{4})-(Q[1-4])", point.period)
+            if match:
+                point.period = f"{match.group(1)}-{quarter_month[match.group(2)]}"
     for point in points:
         point.source_url = url
     return points, {"flow": flow, "request_url": url, "candidates": candidates}
@@ -433,7 +461,7 @@ TARGETS = [
 def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     label = target.label
     if label == "就業新增":
-        return fetch_abs_target("LF", "2025-01", ["employed", "persons", "australia", "seasonally adjusted"], ["rate", "hours", "state"], target.expected, "mom_diff")
+        return fetch_abs_target("LF", "2025-01", ["employed", "persons", "australia", "seasonally adjusted"], ["rate", "hours", "state"], target.expected, "mom_diff_thousands")
     if label == "失業率":
         return fetch_abs_target("LF", "2025-01", ["unemployment rate", "australia", "seasonally adjusted"], ["state", "youth"], target.expected)
     if label == "職缺":
@@ -498,7 +526,7 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label in {"製造業PMI", "服務業PMI"}:
         return sp_australia_pmi(label)
     if label == "GDP YoY":
-        return fetch_abs_target("ANA_AGG", "2024-Q1", ["gross domestic product", "chain volume", "seasonally adjusted"], ["per capita", "quarterly percentage"], target.expected)
+        return fetch_abs_target("ANA_AGG", "2024-Q1", ["gross domestic product", "chain volume", "index", "seasonally adjusted"], ["per capita", "percentage changes"], target.expected, "yoy_pct_q")
     if label == "GDP私人消費YoY":
         return fetch_abs_target("ANA_AGG", "2024-Q1", ["household final consumption expenditure", "chain volume", "seasonally adjusted"], [], target.expected)
     if label == "GDP投資YoY":
