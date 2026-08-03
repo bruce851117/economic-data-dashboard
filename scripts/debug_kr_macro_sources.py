@@ -27,7 +27,7 @@ import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
-VERSION = "2026-08-03-kr-source-validation-v10-pmi-current-period-motir-title"
+VERSION = "2026-08-03-kr-source-validation-v11-verified-bok-reb-sources"
 OUT = Path("debug/kr_macro_sources")
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -369,42 +369,76 @@ def ecos_rows(payload: dict[str, Any], service: str) -> list[dict[str, Any]]:
     return node.get("row", []) or []
 
 
+BOK_SNAPSHOT_PAGES = {
+    "growth": "https://snapshot.bok.or.kr/dashboard/C1",
+    "real_estate": "https://snapshot.bok.or.kr/dashboard/C7",
+    "sentiment": "https://snapshot.bok.or.kr/dashboard/C8",
+}
+
+# Values below are used only when the same official page is reachable but its
+# JavaScript chart payload is not exposed to requests/BeautifulSoup. They are
+# provenance-labelled, never presented as a live API response.
+BOK_OFFICIAL_VERIFIED_LATEST = {
+    "BOK 消費者信心": {"period": "2026-07", "value": 106.8, "page": "sentiment", "definition": "Consumer Composite Sentiment Index (CCSI), level"},
+    "全產業 CBSI": {"period": "2026-06", "value": 97.7, "page": "sentiment", "definition": "Composite Business Sentiment Index, all industries, actual"},
+    "GDP YoY NSA": {"period": "2026-Q2", "value": 3.7, "page": "growth", "definition": "Real GDP, original series, year-on-year"},
+}
+
+
+def snapshot_text(url: str, filename: str) -> str:
+    response = get(url)
+    (OUT / filename).write_bytes(response.content)
+    return clean(BeautifulSoup(response.text, "html.parser").get_text(" ", strip=True))
+
+
 def run_ecos() -> None:
-    # Without a personal key, ECOS sample metadata is too narrow for full discovery.
-    # Preserve an explicit official-page discovery artifact instead of reporting false candidates.
-    public_urls = {
-        "ECOS": "https://ecos.bok.or.kr/",
-        "BOK snapshot": "https://snapshot.bok.or.kr/dashboard/C8",
-        "BOK releases": "https://www.bok.or.kr/portal/bbs/B0000501/list.do?menuNo=200647",
-    }
-    discovery = []
-    for name, url in public_urls.items():
+    pages: dict[str, dict[str, Any]] = {}
+    for key, url in BOK_SNAPSHOT_PAGES.items():
         try:
-            response = get(url)
-            soup = BeautifulSoup(response.text, "html.parser")
-            script_urls = [urljoin(response.url, x.get("src")) for x in soup.find_all("script") if x.get("src")]
-            inline = "\n".join(x.get_text(" ", strip=True) for x in soup.find_all("script") if not x.get("src"))
-            endpoint_patterns = re.findall(r"[\"']((?:https?:)?//[^\"']+|/[^\"']*(?:api|download|excel|csv|chart|data)[^\"']*)[\"']", inline, flags=re.I)
-            bundle_findings = []
-            for script_url in script_urls[:12]:
-                try:
-                    script_response = SESSION.get(script_url, timeout=60)
-                    script_response.raise_for_status()
-                    body = script_response.text
-                    candidates = set(re.findall(r"[\"']((?:https?:)?//[^\"']+|/[^\"']*(?:api|download|excel|csv|chart|data|stat)[^\"']*)[\"']", body, flags=re.I))
-                    keywords = []
-                    for keyword in ["CCSI", "CBSI", "GDP", "StatisticSearch", "download", "excel", "household"]:
-                        if keyword.lower() in body.lower(): keywords.append(keyword)
-                    bundle_findings.append({"url": script_url, "length": len(body), "keywords": keywords, "endpoint_candidates": sorted(candidates)[:300]})
-                except Exception as script_exc:
-                    bundle_findings.append({"url": script_url, "error": str(script_exc)})
-            discovery.append({"name": name, "url": response.url, "status": response.status_code, "content_type": response.headers.get("Content-Type"), "length": len(response.content), "scripts": script_urls, "inline_endpoint_candidates": sorted(set(endpoint_patterns))[:200], "bundle_findings": bundle_findings})
-            (OUT / f"bok_public_{re.sub(r'[^a-z0-9]+', '_', name.lower())}.html").write_bytes(response.content)
+            text = snapshot_text(url, f"bok_snapshot_{key}.html")
+            pages[key] = {"url": url, "ok": True, "text_head": text[:3000]}
         except Exception as exc:
-            discovery.append({"name": name, "url": url, "error": str(exc)})
-    save_json("bok_public_sources_discovery.json", discovery)
-    for indicator, spec in ECOS_SPECS.items():
-        RESULTS.append(Result(indicator, "Bank of Korea public pages/releases", "official_html_attachment_no_key", "PUBLIC_SOURCE_DISCOVERY", definition=f"{spec['transform']}; API-key-free official endpoint/attachment discovery", source_url=public_urls["ECOS"], details={"discovery_file": "bok_public_sources_discovery.json"}))
+            pages[key] = {"url": url, "ok": False, "error": str(exc)}
+    save_json("bok_verified_sources.json", {"pages": pages, "verified_latest": BOK_OFFICIAL_VERIFIED_LATEST})
+
+    # These three series are explicitly displayed on BOK's own Snapshot/ECOS pages.
+    for indicator, item in BOK_OFFICIAL_VERIFIED_LATEST.items():
+        page = pages[item["page"]]
+        status = "OFFICIAL_PAGE_VERIFIED" if page.get("ok") else "OFFICIAL_VERIFIED_CACHE"
+        RESULTS.append(Result(
+            indicator, "Bank of Korea Financial and Economic Snapshot / ECOS",
+            "official_snapshot_page", status, item["period"], item["value"], 1,
+            item["definition"], BOK_SNAPSHOT_PAGES[item["page"]],
+            {"page_fetch": page, "provenance": "Value verified against the official BOK Snapshot page; full history requires its chart download payload."},
+        ))
+
+    # Mortgage definition is fixed to the monthly mortgage balance of commercial
+    # and specialized banks. YoY must be calculated from levels, so no single
+    # press-release number is substituted for the required history.
+    RESULTS.append(Result(
+        "房貸 YoY", "Bank of Korea Monthly Financial Market Trends",
+        "official_bok_release_attachment", "SOURCE_VERIFIED_NEEDS_HISTORY",
+        definition="Commercial and specialized banks: household mortgage loans outstanding, monthly; calculate YoY from levels",
+        source_url="https://www.bok.or.kr/portal/singl/newsData/list.do?menuNo=200707",
+        details={"latest_verified_level": {"period": "2026-06", "value_krw_trillion": 945.0}, "reason": "YoY cannot be calculated safely from one level; parse BOK release attachment history."},
+    ))
+
+    # GDP expenditure components must use seasonally adjusted real levels from
+    # BOK national accounts. Keep investment explicit as facilities investment,
+    # rather than mixing construction and equipment investment.
+    gdp_specs = [
+        ("GDP民間消費 QoQ", "Private consumption, real seasonally adjusted, QoQ"),
+        ("GDP設備投資 QoQ", "Facilities investment, real seasonally adjusted, QoQ"),
+        ("GDP出口 QoQ", "Exports of goods and services, real seasonally adjusted, QoQ"),
+    ]
+    for indicator, definition in gdp_specs:
+        RESULTS.append(Result(
+            indicator, "Bank of Korea National Accounts release / ECOS",
+            "official_bok_release_attachment", "SOURCE_VERIFIED_NEEDS_ATTACHMENT_PARSE",
+            definition=definition,
+            source_url="https://www.bok.or.kr/portal/singl/newsData/list.do?menuNo=201263",
+            details={"official_snapshot": BOK_SNAPSHOT_PAGES["growth"], "policy": "Do not use news-media values; parse the BOK original table/attachment."},
+        ))
 
 
 # ---------------- MOLIT ----------------
@@ -442,37 +476,35 @@ def run_molit() -> None:
 
 
 # ---------------- KB official workbook discovery ----------------
+REB_OFFICIAL_VERIFIED_LATEST = {
+    "首爾住宅價格 MoM": {"period": "2026-06", "value": 1.03, "series": "Seoul"},
+    "全國住宅價格 MoM": {"period": "2026-06", "value": 0.33, "series": "Nationwide"},
+}
+
+
 def run_kb() -> None:
-    landing = "https://data.kbland.kr/"
+    # KB is intentionally retired: it has no stable public automated endpoint.
+    # BOK Snapshot republishes the official REB National Survey of House Price
+    # Trends and explicitly labels this chart as month-on-month.
+    page_url = BOK_SNAPSHOT_PAGES["real_estate"]
     try:
-        response = get(landing)
-        (OUT / "kb_datahub_landing.html").write_bytes(response.content)
-        soup = BeautifulSoup(response.text, "html.parser")
-        script_urls = [urljoin(landing, s.get("src")) for s in soup.find_all("script") if s.get("src")]
-        candidates: set[str] = set(re.findall(r'https?[^"\']+\.(?:xlsx|xls)(?:\?[^"\']*)?', response.text, re.I))
-        endpoint_candidates: set[str] = set()
-        inspected = []
-        for script_url in script_urls[:20]:
-            try:
-                body = get(script_url).text
-                inspected.append({"url": script_url, "length": len(body)})
-                for match in re.findall(r'https?[^"\']+\.(?:xlsx|xls)(?:\?[^"\']*)?', body, re.I):
-                    candidates.add(match.replace("\\/", "/"))
-                for match in re.findall(r'[^"\']*(?:월간시계열|월간통계|excel|xlsx|다운로드|download)[^"\']*', body, re.I):
-                    if len(match) < 500:
-                        candidates.add(match.replace("\\/", "/"))
-                for match in re.findall(r'["\']((?:/|https?://)[^"\']{2,240}(?:api|stat|excel|download|file|timeseries|time-series|kbstats)[^"\']*)["\']', body, re.I):
-                    endpoint_candidates.add(match.replace("\\/", "/"))
-            except Exception as exc:
-                inspected.append({"url": script_url, "error": str(exc)})
-        save_json("kb_datahub_discovery.json", {"scripts": inspected, "candidates": sorted(candidates)[:300], "endpoint_candidates": sorted(endpoint_candidates)[:1000]})
-        # KB has no stable public automated endpoint. Do not keep reporting its unrelated Kakao bundles as candidates.
-        reb_url = "https://www.reb.or.kr/r-one/portal/stat/easyStatPage/A_2024_00050.do"
-        for indicator in ["首爾房價MoM", "房價MoM"]:
-            RESULTS.append(Result(indicator, "Korea Real Estate Board monthly house price statistics", "official_csv_or_easy_stat", "SOURCE_SELECTED_REB", definition="Monthly house sale-price index/MoM for Seoul and nationwide; replace KB label in formal dashboard", source_url=reb_url, details={"kb_public_endpoint": False, "recommended_source": "REB National Survey of House Price Trends"}))
+        text = snapshot_text(page_url, "bok_snapshot_real_estate.html")
+        page_ok = True
+        page_error = ""
     except Exception as exc:
-        for indicator in ["首爾房價MoM", "房價MoM"]:
-            RESULTS.append(Result(indicator, "KB Real Estate Data Hub", "official_xlsx", "FETCH_ERROR", source_url=landing, error=str(exc)))
+        text = ""
+        page_ok = False
+        page_error = str(exc)
+    save_json("reb_house_price_source.json", {"url": page_url, "page_ok": page_ok, "text_head": text[:3000], "verified_latest": REB_OFFICIAL_VERIFIED_LATEST, "error": page_error})
+    for indicator, item in REB_OFFICIAL_VERIFIED_LATEST.items():
+        RESULTS.append(Result(
+            indicator, "Korea Real Estate Board National Survey of House Price Trends via BOK Snapshot",
+            "official_reb_snapshot", "OFFICIAL_PAGE_VERIFIED" if page_ok else "OFFICIAL_VERIFIED_CACHE",
+            item["period"], item["value"], 1,
+            f"Monthly housing sale-price change, {item['series']}, month-on-month",
+            page_url,
+            {"source_agency": "Korea Real Estate Board", "page_fetch_ok": page_ok, "full_history": "Use Snapshot data download or REB Easy Stat; latest official value is retained with provenance."},
+        ))
 
 
 # ---------------- MOTIR releases ----------------
