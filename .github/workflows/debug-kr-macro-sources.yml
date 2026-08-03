@@ -1,0 +1,50 @@
+name: Debug KR Macro Sources
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  debug-korea-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install requests beautifulsoup4 pandas openpyxl xlrd pypdf lxml
+
+      - name: Run Korea source validation
+        env:
+          KOSIS_API_KEY: ${{ secrets.KOSIS_API_KEY }}
+          ECOS_API_KEY: ${{ secrets.ECOS_API_KEY }}
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        run: python -u scripts/debug_kr_macro_sources.py
+
+      - name: Show Markdown summary
+        if: always()
+        run: |
+          if [ -f debug/kr_macro_sources/korea_debug.md ]; then
+            cat debug/kr_macro_sources/korea_debug.md
+          fi
+
+      - name: Upload Korea source debug artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kr-macro-source-debug-${{ github.run_number }}
+          path: debug/kr_macro_sources/
+          if-no-files-found: warn
+          retention-days: 7
