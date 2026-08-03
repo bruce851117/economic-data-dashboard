@@ -27,7 +27,7 @@ import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
-VERSION = "2026-08-03-kr-source-validation-v12-structured-no-monthly-html"
+VERSION = "2026-08-03-kr-source-validation-v13-fred-static-fallback"
 OUT = Path("debug/kr_macro_sources")
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -229,6 +229,7 @@ def run_oecd_labour_fallback() -> None:
 
 
 FRED_CSV_BASE = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
+FRED_STATIC_BASE = "https://fred.stlouisfed.org/data/{series_id}.txt"
 FRED_RETAIL_SERIES = "KORSLRTTO01GYSAM"
 STAT_KOREA_RETAIL_VERIFIED = {"2025-12": 1.2, "2026-05": 1.7, "2026-06": 4.2}
 FRED_QNA_SERIES = {
@@ -239,12 +240,41 @@ FRED_QNA_SERIES = {
 
 
 def fred_series(series_id: str, quarterly: bool = False) -> dict[str, float]:
-    response = get(FRED_CSV_BASE.format(series_id=series_id))
-    frame = pd.read_csv(io.BytesIO(response.content), dtype=str)
-    if len(frame.columns) < 2:
-        raise RuntimeError(f"FRED CSV has unexpected columns: {list(frame.columns)}")
-    values = {}
-    for raw_date, raw_value in zip(frame.iloc[:, 0], frame.iloc[:, 1]):
+    """Download one small structured FRED series without scraping release HTML.
+
+    The static text endpoint is attempted first because GitHub-hosted runners can
+    time out on the chart CSV endpoint. The CSV endpoint remains a secondary
+    fallback. Both responses contain the same published time series.
+    """
+    attempts = []
+    raw_rows: list[tuple[str, Any]] = []
+    static_url = FRED_STATIC_BASE.format(series_id=series_id)
+    try:
+        response = SESSION.get(static_url, timeout=(20, 120), headers={**HEADERS, "Accept": "text/plain,*/*;q=0.5"})
+        response.raise_for_status()
+        for line in response.text.splitlines():
+            match = re.match(r"^\s*(\d{4}-\d{2}-\d{2})\s+([^\s]+)\s*$", line)
+            if match:
+                raw_rows.append((match.group(1), match.group(2)))
+        if not raw_rows:
+            attempts.append({"url": static_url, "error": "No date/value rows in static text response"})
+    except Exception as exc:
+        attempts.append({"url": static_url, "error": str(exc)})
+
+    csv_url = FRED_CSV_BASE.format(series_id=series_id)
+    if not raw_rows:
+        try:
+            response = SESSION.get(csv_url, timeout=(20, 120), headers={**HEADERS, "Accept": "text/csv,*/*;q=0.5"})
+            response.raise_for_status()
+            frame = pd.read_csv(io.BytesIO(response.content), dtype=str)
+            if len(frame.columns) < 2:
+                raise RuntimeError(f"FRED CSV has unexpected columns: {list(frame.columns)}")
+            raw_rows = list(zip(frame.iloc[:, 0], frame.iloc[:, 1]))
+        except Exception as exc:
+            attempts.append({"url": csv_url, "error": str(exc)})
+
+    values: dict[str, float] = {}
+    for raw_date, raw_value in raw_rows:
         value = number(raw_value)
         date_text = str(raw_date)
         if value is None or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date_text):
@@ -253,7 +283,7 @@ def fred_series(series_id: str, quarterly: bool = False) -> dict[str, float]:
         period = f"{date_text[:4]}-Q{(month - 1) // 3 + 1}" if quarterly else date_text[:7]
         values[period] = value
     if not values:
-        raise RuntimeError(f"FRED series {series_id} returned no numeric observations")
+        raise RuntimeError(json.dumps({"series_id": series_id, "attempts": attempts}, ensure_ascii=False))
     return values
 
 
