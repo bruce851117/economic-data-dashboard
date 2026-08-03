@@ -27,7 +27,7 @@ import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
-VERSION = "2026-08-03-kr-source-validation-v1"
+VERSION = "2026-08-03-kr-source-validation-v2-official-review"
 OUT = Path("debug/kr_macro_sources")
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -204,78 +204,74 @@ def run_kosis() -> None:
 
 
 # ---------------- OECD SDMX ----------------
-OECD_FLOW = "OECD.SDD.TPS,DSD_PRICES@DF_PRICES_ALL"
-OECD_STRUCTURE = "https://sdmx.oecd.org/public/rest/dataflow/OECD.SDD.TPS/DSD_PRICES@DF_PRICES_ALL/?references=all"
-OECD_DATA = "https://sdmx.oecd.org/public/rest/data/OECD.SDD.TPS,DSD_PRICES@DF_PRICES_ALL"
-
-
-def oecd_structure() -> tuple[list[str], dict[str, dict[str, str]]]:
-    response = get(OECD_STRUCTURE, headers={"Accept": "application/vnd.sdmx.structure+xml;version=3.0"})
-    (OUT / "oecd_prices_structure.xml").write_bytes(response.content)
-    root = ET.fromstring(response.content)
-    dims: list[str] = []
-    codelists: dict[str, dict[str, str]] = {}
-    for elem in root.iter():
-        tag = elem.tag.split("}")[-1]
-        if tag == "Dimension" and elem.attrib.get("id") and elem.attrib.get("id") not in dims:
-            dims.append(elem.attrib["id"])
-        if tag == "Codelist":
-            cid = elem.attrib.get("id", "")
-            codes: dict[str, str] = {}
-            for code in elem:
-                if code.tag.split("}")[-1] != "Code":
-                    continue
-                code_id = code.attrib.get("id", "")
-                labels = [child.text or "" for child in code.iter() if child.tag.split("}")[-1] == "Name"]
-                codes[code_id] = " | ".join(labels)
-            if cid:
-                codelists[cid] = codes
-    # The dataflow structure order is also returned in CSV header if structural XML differs.
-    return dims, codelists
+# OECD publishes a dedicated official dataflow for national core CPI YoY.
+OECD_CORE_FLOW = "DSD_PRICES@DF_PRICES_N_TXCP01_NRG"
+OECD_CORE_URLS = [
+    "https://sdmx.oecd.org/public/rest/v2/data/dataflow/OECD.SDD.TPS/DSD_PRICES@DF_PRICES_N_TXCP01_NRG/1.0/all",
+    "https://sdmx.oecd.org/public/rest/data/OECD.SDD.TPS,DSD_PRICES@DF_PRICES_N_TXCP01_NRG,1.0/all",
+]
 
 
 def run_oecd_core() -> None:
-    try:
-        dims, codelists = oecd_structure()
-        # First request all Korean observations; the server accepts wildcard dimensions.
-        # Build a key only when REF_AREA is present in the discovered order.
-        data_dims = [d for d in dims if d not in {"TIME_PERIOD", "OBS_VALUE"}]
-        if "REF_AREA" not in data_dims:
-            raise RuntimeError(f"REF_AREA not found in OECD dimensions: {data_dims}")
-        key = [""] * len(data_dims)
-        key[data_dims.index("REF_AREA")] = "KOR"
-        url = f"{OECD_DATA}/" + ".".join(key)
-        response = get(url, params={"startPeriod": "2015-01", "dimensionAtObservation": "AllDimensions"}, headers={"Accept": "application/vnd.sdmx.data+csv;version=2.0;labels=both"})
-        (OUT / "oecd_core_cpi_kor_raw.csv").write_bytes(response.content)
-        frame = pd.read_csv(io.BytesIO(response.content), dtype=str)
-        save_json("oecd_core_cpi_columns.json", list(frame.columns))
-        period_col = next((c for c in frame if c.split(":", 1)[0] == "TIME_PERIOD"), None)
-        value_col = next((c for c in frame if c.split(":", 1)[0] == "OBS_VALUE"), None)
-        if not period_col or not value_col:
-            raise RuntimeError("OECD CSV missing TIME_PERIOD/OBS_VALUE")
-        candidates = []
-        identity_cols = [c for c in frame.columns if c not in {period_col, value_col} and not c.startswith("OBS_")]
-        for identity, group in frame.groupby(identity_cols, dropna=False):
-            if not isinstance(identity, tuple): identity = (identity,)
-            meta = dict(zip(identity_cols, identity))
-            text = norm(" | ".join(f"{k}={v}" for k, v in meta.items()))
-            score = 0
-            for token in ["kor", "monthly", "consumer price", "all items non-food non-energy", "growth rate over one year", "national"]:
-                if token in text: score += 10
-            if "quarter" in text: score -= 20
-            values = {period_month(p): number(v) for p, v in zip(group[period_col], group[value_col])}
-            values = {k: v for k, v in values.items() if k and v is not None}
-            if values:
-                candidates.append({"score": score, "metadata": meta, "values": values})
-        candidates.sort(key=lambda x: (-x["score"], -len(x["values"])))
-        save_json("oecd_core_cpi_candidates.json", [{"score": c["score"], "metadata": c["metadata"], "latest": list(sorted(c["values"].items()))[-6:]} for c in candidates[:30]])
-        if not candidates:
-            raise RuntimeError("No OECD Korean CPI candidates")
-        selected = candidates[0]
-        period = max(selected["values"])
-        RESULTS.append(Result("Core CPI YoY", "OECD SDMX DSD_PRICES@DF_PRICES_ALL", "official_sdmx_csv", "OFFICIAL_ONLY", period, selected["values"][period], len(selected["values"]), "OECD CPI excluding food and energy, national methodology, YoY", url, {"metadata": selected["metadata"], "latest": list(sorted(selected["values"].items()))[-6:]}))
-    except Exception as exc:
-        RESULTS.append(Result("Core CPI YoY", "OECD SDMX DSD_PRICES@DF_PRICES_ALL", "official_sdmx_csv", "FETCH_ERROR", definition="OECD CPI excluding food and energy, YoY", source_url=OECD_STRUCTURE, error=str(exc)))
+    errors = []
+    for base_url in OECD_CORE_URLS:
+        try:
+            response = get(
+                base_url,
+                params={
+                    "startPeriod": "2015-01",
+                    "dimensionAtObservation": "AllDimensions",
+                    "format": "csvfilewithlabels",
+                },
+                headers={"Accept": "text/csv,application/vnd.sdmx.data+csv;version=2.0;q=0.9,*/*;q=0.1"},
+            )
+            (OUT / "oecd_core_cpi_raw.csv").write_bytes(response.content)
+            frame = pd.read_csv(io.BytesIO(response.content), dtype=str)
+            save_json("oecd_core_cpi_columns.json", list(frame.columns))
+            period_col = next((c for c in frame if c.split(":", 1)[0].strip() == "TIME_PERIOD"), None)
+            value_col = next((c for c in frame if c.split(":", 1)[0].strip() == "OBS_VALUE"), None)
+            area_col = next((c for c in frame if c.split(":", 1)[0].strip() == "REF_AREA"), None)
+            if not period_col or not value_col or not area_col:
+                raise RuntimeError(f"OECD CSV missing required columns: {list(frame.columns)}")
+            korea = frame[frame[area_col].astype(str).str.contains(r"(^|:)KOR($|:)|Korea", case=False, regex=True, na=False)].copy()
+            if korea.empty:
+                raise RuntimeError("OECD dedicated core-CPI flow returned no KOR observations")
+            values = {}
+            for period_raw, value_raw in zip(korea[period_col], korea[value_col]):
+                period = period_month(period_raw)
+                value = number(value_raw)
+                if period and value is not None:
+                    values[period] = value
+            if not values:
+                raise RuntimeError("OECD Korean core-CPI observations contained no numeric monthly values")
+            latest = max(values)
+            metadata_cols = [c for c in frame.columns if c not in {period_col, value_col} and not c.startswith("OBS_")]
+            metadata = {c: clean(korea.iloc[-1][c]) for c in metadata_cols if clean(korea.iloc[-1][c])}
+            RESULTS.append(Result(
+                "Core CPI YoY",
+                "OECD dedicated national core CPI dataflow",
+                "official_sdmx_csv",
+                "OFFICIAL_ONLY",
+                latest,
+                values[latest],
+                len(values),
+                "National CPI, all items less food and energy, growth rate over one year",
+                response.url,
+                {"flow": OECD_CORE_FLOW, "metadata": metadata, "latest": list(sorted(values.items()))[-12:]},
+            ))
+            return
+        except Exception as exc:
+            errors.append({"url": base_url, "error": str(exc)})
+    save_json("oecd_core_cpi_errors.json", errors)
+    RESULTS.append(Result(
+        "Core CPI YoY",
+        "OECD dedicated national core CPI dataflow",
+        "official_sdmx_csv",
+        "FETCH_ERROR",
+        definition="National CPI, all items less food and energy, YoY",
+        source_url=OECD_CORE_URLS[0],
+        error="; ".join(x["error"] for x in errors),
+    ))
 
 
 # ---------------- ECOS metadata-first ----------------
@@ -410,31 +406,45 @@ def run_motir() -> None:
             response = get(url)
             text = clean(BeautifulSoup(response.text, "html.parser").get_text(" ", strip=True))
             (OUT / f"motir_retail_{period}.html").write_bytes(response.content)
-            patterns = [
-                rf"{period[-2:]}월[^.]*?전체 매출(?:은|이)?[^.]*?(?:전년[^.]*?)?([0-9]+(?:\.[0-9]+)?)% 증가",
-                r"전체 매출\s*([0-9]+(?:\.[0-9]+)?)% 증가",
-                r"전체 매출은 전년보다\s*([0-9]+(?:\.[0-9]+)?)% 증가",
+            month_ko = str(int(period[-2:])) + "월"
+            anchors = [
+                rf"{re.escape(month_ko)} 주요 유통업체.*?전체 매출(?:은|이)?[^.%]{{0,120}}?([0-9]+(?:\.[0-9]+)?)% 증가",
+                rf"{re.escape(month_ko)}.*?전체 매출(?:은|이)?[^.%]{{0,160}}?([0-9]+(?:\.[0-9]+)?)% 증가",
+                r"전체 매출(?:은|이)?[^.%]{0,160}?([0-9]+(?:\.[0-9]+)?)% 증가",
             ]
             value = None
-            for pattern in patterns:
+            for pattern in anchors:
                 match = re.search(pattern, text)
                 if match:
-                    value = float(match.group(1)); break
+                    value = float(match.group(1))
+                    break
             if value is not None:
                 values[period] = value
-            details.append({"period": period, "url": url, "value": value, "text_head": text[:700]})
+            details.append({"period": period, "url": url, "value": value, "text_head": text[:1200]})
         except Exception as exc:
             details.append({"period": period, "url": url, "error": str(exc)})
     save_json("motir_major_retailer_details.json", details)
     if values:
         period = max(values)
-        RESULTS.append(Result("零售YoY", "MOTIR Sales Trends for Major Retailers", "official_html_pdf", "OFFICIAL_ONLY", period, values[period], len(values), "全體主要零售商銷售YoY；保存offline/online供除錯", dict(MOTIR_RELEASES)[period], {"latest": list(sorted(values.items()))[-6:]}))
+        RESULTS.append(Result(
+            "零售YoY", "MOTIR Sales Trends for Major Retailers", "official_html_pdf", "OFFICIAL_ONLY",
+            period, values[period], len(values),
+            "全體主要零售商銷售YoY；保存offline/online供除錯",
+            dict(MOTIR_RELEASES)[period], {"latest": list(sorted(values.items()))[-12:]},
+        ))
     else:
         RESULTS.append(Result("零售YoY", "MOTIR Sales Trends for Major Retailers", "official_html_pdf", "FETCH_ERROR", source_url=MOTIR_RELEASES[0][1], error="No total major-retailer YoY parsed"))
 
 
 # ---------------- S&P Global South Korea PMI ----------------
-SP_RELEASES = "https://www.pmi.spglobal.com/Public/Release/PressReleases"
+SP_RELEASE_CALENDARS = [
+    "https://www.pmi.spglobal.com/Public/Release/PressReleases",
+    "https://www.pmi.spglobal.com/Public/Home/PressRelease",
+]
+SP_KOREA_SEEDS = [
+    "https://www.pmi.spglobal.com/Public/Home/PressRelease/02be97f3996640a1b389c15884701137",
+    "https://www.pmi.spglobal.com/Public/Home/PressRelease/d24db6b6b62745c1970931ac3b4323c5",
+]
 
 def sp_text(response: requests.Response) -> str:
     ctype = response.headers.get("Content-Type", "").lower()
@@ -444,55 +454,95 @@ def sp_text(response: requests.Response) -> str:
     return BeautifulSoup(response.text, "html.parser").get_text("\n", strip=True)
 
 
+def sp_release_period(text: str) -> str | None:
+    patterns = [
+        r"Data were collected\s+\d{1,2}-\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})",
+        r"(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})",
+    ]
+    first = re.search(patterns[0], text, re.I)
+    if first:
+        month = datetime.strptime(first.group(1).title(), "%B").month
+        return f"{first.group(2)}-{month:02d}"
+    # The release subtitle normally prints reference month followed by year.
+    second = re.search(r"\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})\b", text[:3500], re.I)
+    if second:
+        month = datetime.strptime(second.group(1).title(), "%B").month
+        return f"{second.group(2)}-{month:02d}"
+    return None
+
+
+def sp_headline_pmi(text: str) -> float | None:
+    patterns = [
+        r"headline S&P Global South Korea Manufacturing PMI[^.]{0,280}?\b(?:rose|fell|increased|decreased|was|posted|registered)\b[^0-9]{0,100}?([0-9]{2}(?:\.[0-9])?)",
+        r"seasonally adjusted S&P Global South Korea Manufacturing Purchasing Managers(?:'|’)? Index[^.]{0,280}?\b(?:rose|fell|increased|decreased|was|posted|registered|at)\b[^0-9]{0,100}?([0-9]{2}(?:\.[0-9])?)",
+        r"South Korea Manufacturing PMI Index, sa[^0-9]{0,80}([0-9]{2}(?:\.[0-9])?)",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text, re.I)
+        if match:
+            value = float(match.group(1))
+            if 30 <= value <= 70:
+                return value
+    return None
+
+
 def run_sp_pmi() -> None:
-    try:
-        calendar = get(SP_RELEASES)
-        (OUT / "sp_global_release_calendar.html").write_bytes(calendar.content)
-        soup = BeautifulSoup(calendar.text, "html.parser")
-        candidates = []
-        for a in soup.find_all("a", href=True):
-            href = a["href"]
-            if "PressRelease" not in href:
+    candidates: dict[str, dict[str, str]] = {url: {"title": "official seed", "url": url} for url in SP_KOREA_SEEDS}
+    calendar_errors = []
+    for calendar_url in SP_RELEASE_CALENDARS:
+        try:
+            calendar = get(calendar_url)
+            safe_name = re.sub(r"[^a-zA-Z0-9]+", "_", calendar_url)[-50:]
+            (OUT / f"sp_global_calendar_{safe_name}.html").write_bytes(calendar.content)
+            soup = BeautifulSoup(calendar.text, "html.parser")
+            for a in soup.find_all("a", href=True):
+                href = a["href"]
+                if "PressRelease" not in href:
+                    continue
+                context = clean(" ".join([
+                    a.get_text(" ", strip=True),
+                    a.parent.get_text(" ", strip=True) if a.parent else "",
+                    a.find_previous(string=True) or "",
+                ]))
+                if ("south korea" in norm(context) or "korea manufacturing" in norm(context)) and "pmi" in norm(context):
+                    url = urljoin(calendar_url, href)
+                    candidates[url] = {"title": context[:500], "url": url}
+        except Exception as exc:
+            calendar_errors.append({"url": calendar_url, "error": str(exc)})
+    save_json("sp_global_korea_candidates.json", {"candidates": list(candidates.values()), "calendar_errors": calendar_errors})
+
+    parsed = []
+    for candidate in list(candidates.values())[:60]:
+        try:
+            response = get(candidate["url"])
+            text = clean(sp_text(response))
+            if "south korea" not in norm(text) or "manufacturing pmi" not in norm(text):
                 continue
-            context = clean(a.get_text(" ", strip=True) + " " + (a.parent.get_text(" ", strip=True) if a.parent else ""))
-            if "south korea" in norm(context) and "pmi" in norm(context):
-                candidates.append({"title": context[:400], "url": urljoin(SP_RELEASES, href)})
-        # Also search raw page for release URLs near South Korea labels.
-        save_json("sp_global_korea_candidates.json", candidates)
-        parsed = []
-        for candidate in candidates[:30]:
-            try:
-                response = get(candidate["url"])
-                text = clean(sp_text(response))
-                safe = re.sub(r"[^a-zA-Z0-9]+", "_", candidate["url"])[-80:]
-                (OUT / f"sp_global_korea_{safe}.txt").write_text(text, encoding="utf-8")
-                month_match = re.search(r"(?:data were collected|survey data collected|reporting on)\D{0,80}(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})", text, re.I)
-                period = ""
-                if month_match:
-                    month = datetime.strptime(month_match.group(1), "%B").month
-                    period = f"{month_match.group(2)}-{month:02d}"
-                value = None
-                patterns = [
-                    r"South Korea Manufacturing PMI[^0-9]{0,120}([0-9]{2}(?:\.[0-9])?)",
-                    r"seasonally adjusted[^.]{0,150}?PMI[^0-9]{0,80}([0-9]{2}(?:\.[0-9])?)",
-                    r"PMI (?:rose|fell|increased|decreased)[^.]{0,80}?to\s+([0-9]{2}(?:\.[0-9])?)",
-                ]
-                for pattern in patterns:
-                    match = re.search(pattern, text, re.I)
-                    if match:
-                        value = float(match.group(1)); break
-                parsed.append({**candidate, "period": period, "value": value, "text_head": text[:900]})
-            except Exception as exc:
-                parsed.append({**candidate, "error": str(exc)})
-        save_json("sp_global_korea_parsed.json", parsed)
-        valid = [x for x in parsed if x.get("period") and x.get("value")]
-        if not valid:
-            raise RuntimeError("No South Korea Manufacturing PMI official release parsed")
+            safe = re.sub(r"[^a-zA-Z0-9]+", "_", candidate["url"])[-80:]
+            (OUT / f"sp_global_korea_{safe}.txt").write_text(text, encoding="utf-8")
+            period = sp_release_period(text)
+            value = sp_headline_pmi(text)
+            parsed.append({**candidate, "final_url": response.url, "period": period, "value": value, "text_head": text[:1400]})
+        except Exception as exc:
+            parsed.append({**candidate, "error": str(exc)})
+    save_json("sp_global_korea_parsed.json", parsed)
+    valid = [x for x in parsed if x.get("period") and x.get("value") is not None]
+    if valid:
         valid.sort(key=lambda x: x["period"])
         latest = valid[-1]
-        RESULTS.append(Result("製造業PMI", "S&P Global South Korea Manufacturing PMI", "official_html_pdf", "OFFICIAL_ONLY", latest["period"], latest["value"], len(valid), "Headline seasonally adjusted Manufacturing PMI; exclude Output/New Orders", latest["url"], {"latest_releases": valid[-6:]}))
-    except Exception as exc:
-        RESULTS.append(Result("製造業PMI", "S&P Global", "official_html_pdf", "FETCH_ERROR", definition="Headline Manufacturing PMI", source_url=SP_RELEASES, error=str(exc)))
+        RESULTS.append(Result(
+            "製造業PMI", "S&P Global South Korea Manufacturing PMI", "official_html_pdf", "OFFICIAL_ONLY",
+            latest["period"], latest["value"], len(valid),
+            "Headline seasonally adjusted Manufacturing PMI; exclude Output/New Orders",
+            latest.get("final_url") or latest["url"], {"latest_releases": valid[-12:]},
+        ))
+    else:
+        RESULTS.append(Result(
+            "製造業PMI", "S&P Global", "official_html_pdf", "FETCH_ERROR",
+            definition="Headline Manufacturing PMI", source_url=SP_RELEASE_CALENDARS[0],
+            details={"candidate_count": len(candidates), "parsed_count": len(parsed)},
+            error="No South Korea Manufacturing PMI official release parsed",
+        ))
 
 
 # ---------------- outputs ----------------
