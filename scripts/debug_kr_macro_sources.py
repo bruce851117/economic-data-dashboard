@@ -27,7 +27,7 @@ import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
-VERSION = "2026-08-03-kr-source-validation-v13-fred-static-fallback"
+VERSION = "2026-08-03-kr-source-validation-v14-fred-session-headers"
 OUT = Path("debug/kr_macro_sources")
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -250,7 +250,7 @@ def fred_series(series_id: str, quarterly: bool = False) -> dict[str, float]:
     raw_rows: list[tuple[str, Any]] = []
     static_url = FRED_STATIC_BASE.format(series_id=series_id)
     try:
-        response = SESSION.get(static_url, timeout=(20, 120), headers={**HEADERS, "Accept": "text/plain,*/*;q=0.5"})
+        response = SESSION.get(static_url, timeout=(20, 120), headers={**dict(SESSION.headers), "Accept": "text/plain,*/*;q=0.5"})
         response.raise_for_status()
         for line in response.text.splitlines():
             match = re.match(r"^\s*(\d{4}-\d{2}-\d{2})\s+([^\s]+)\s*$", line)
@@ -264,7 +264,7 @@ def fred_series(series_id: str, quarterly: bool = False) -> dict[str, float]:
     csv_url = FRED_CSV_BASE.format(series_id=series_id)
     if not raw_rows:
         try:
-            response = SESSION.get(csv_url, timeout=(20, 120), headers={**HEADERS, "Accept": "text/csv,*/*;q=0.5"})
+            response = SESSION.get(csv_url, timeout=(20, 120), headers={**dict(SESSION.headers), "Accept": "text/csv,*/*;q=0.5"})
             response.raise_for_status()
             frame = pd.read_csv(io.BytesIO(response.content), dtype=str)
             if len(frame.columns) < 2:
