@@ -613,7 +613,7 @@ def write_outputs() -> None:
 
 def main() -> int:
     print(f"[KR DEBUG] {VERSION}")
-    tasks = [run_kosis, run_oecd_core, run_ecos, run_molit, run_kb, run_motir, run_sp_pmi]
+    tasks = [run_oecd_labour_fallback, run_retail_fallback, run_oecd_core, run_ecos, run_molit, run_kb, run_motir, run_sp_pmi]
     for task in tasks:
         print(f"[RUN] {task.__name__}")
         try:
