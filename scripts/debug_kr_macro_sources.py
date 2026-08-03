@@ -27,7 +27,7 @@ import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
-VERSION = "2026-08-03-kr-source-validation-v9-core-cpi-constants"
+VERSION = "2026-08-03-kr-source-validation-v10-pmi-current-period-motir-title"
 OUT = Path("debug/kr_macro_sources")
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -503,6 +503,8 @@ def run_motir() -> None:
             value = None
             # English official page is preferred because title/body separates monthly from YTD.
             english_patterns = [
+                # Title forms: "... and 9.5% in June 2026" or "Sales Up 9.0% in May 2026".
+                rf"([0-9]+(?:\.[0-9]+)?)\s*%\s+in\s+{month_name}\s+2026",
                 rf"(?:up|rose|increased)\s+([0-9]+(?:\.[0-9]+)?)\s*%?\s+in\s+{month_name}\s+2026",
                 rf"in\s+{month_name}\s+2026\s+(?:rose|increased)\s+([0-9]+(?:\.[0-9]+)?)\s*(?:percent|%)",
                 rf"total sales.*?in\s+{month_name}\s+2026\s+(?:rose|increased)\s+([0-9]+(?:\.[0-9]+)?)\s*(?:percent|%)",
@@ -579,22 +581,65 @@ def sp_release_period(text: str) -> str | None:
     return None
 
 
-def sp_headline_pmi(text: str) -> float | None:
-    # Skip chart header and search narrative sentences first.
+def previous_month(period: str) -> str:
+    year, month = map(int, period.split("-"))
+    if month == 1:
+        return f"{year - 1}-12"
+    return f"{year}-{month - 1:02d}"
+
+
+def sp_headline_pmi(text: str, period: str | None) -> tuple[float | None, float | None]:
+    """Return current-month headline PMI and explicitly stated previous-month PMI.
+
+    The parser anchors the value to the release reference month. This prevents a
+    sentence such as "54.8 in May, up from 53.6 in April" from returning 53.6.
+    """
+    if not period:
+        return None, None
+    year, month_num = map(int, period.split("-"))
+    month_name = datetime(year, month_num, 1).strftime("%B")
+    prior_period = previous_month(period)
+    prior_year, prior_month_num = map(int, prior_period.split("-"))
+    prior_name = datetime(prior_year, prior_month_num, 1).strftime("%B")
     narrative_start = min([pos for pos in [text.lower().find("the headline"), text.lower().find("the seasonally adjusted")] if pos >= 0] or [0])
     narrative = text[narrative_start:]
-    patterns = [
-        r"headline S&P Global South Korea Manufacturing PMI[^.]{0,420}?\b(?:rose|fell|increased|decreased|was|posted|registered)\b[^0-9]{0,120}?([0-9]{2}(?:\.[0-9])?)",
-        r"seasonally adjusted S&P Global South Korea Manufacturing Purchasing Managers(?:'|’)? Index[^.]{0,420}?\b(?:rose|fell|increased|decreased|was|posted|registered|at)\b[^0-9]{0,120}?([0-9]{2}(?:\.[0-9])?)",
-        r"The PMI (?:rose|fell|increased|decreased) to\s+([0-9]{2}(?:\.[0-9])?)",
+    current_patterns = [
+        rf"(?:PMI(?:®|™)?|Index(?:™|®)?)\s+(?:rose|fell|increased|decreased)\s+to\s+([0-9]{{2}}(?:\.[0-9])?)\s+in\s+{month_name}",
+        rf"(?:PMI(?:®|™)?|Index(?:™|®)?)\s+(?:was|stood|registered|posted)\s+(?:at\s+)?([0-9]{{2}}(?:\.[0-9])?)\s+in\s+{month_name}",
+        rf"(?:seasonally adjusted|headline)[^.{{}}]{{0,550}}?\b([0-9]{{2}}(?:\.[0-9])?)\s+in\s+{month_name}",
+        rf"\b(?:rose|fell|increased|decreased)\s+to\s+([0-9]{{2}}(?:\.[0-9])?)\s+in\s+{month_name}",
     ]
-    for pattern in patterns:
+    current = None
+    for pattern in current_patterns:
         match = re.search(pattern, narrative, re.I)
         if match:
-            value = float(match.group(1))
-            if 30 <= value <= 70 and value != 50.0:
-                return value
-    return None
+            candidate = float(match.group(1))
+            if 30 <= candidate <= 70 and candidate != 50.0:
+                current = candidate
+                break
+    # Fallback only inside the full headline-PMI sentence, then prefer the value
+    # nearest to the current month name.
+    if current is None:
+        sentence_match = re.search(r"(?:headline|seasonally adjusted) S&P Global South Korea Manufacturing[^.]{0,900}\.", narrative, re.I)
+        if sentence_match:
+            sentence = sentence_match.group(0)
+            anchored = re.search(rf"([0-9]{{2}}(?:\.[0-9])?)\s+in\s+{month_name}", sentence, re.I)
+            if anchored:
+                current = float(anchored.group(1))
+    prior = None
+    prior_patterns = [
+        rf"(?:up|down|rose|fell|increased|decreased)[^.{{}}]{{0,120}}?from\s+([0-9]{{2}}(?:\.[0-9])?)\s+in\s+{prior_name}",
+        rf"from\s+([0-9]{{2}}(?:\.[0-9])?)\s+in\s+{prior_name}",
+        rf"{prior_name}['’]?s?\s+(?:reading|figure|level)?[^0-9]{{0,40}}([0-9]{{2}}(?:\.[0-9])?)",
+    ]
+    for pattern in prior_patterns:
+        match = re.search(pattern, narrative, re.I)
+        if match:
+            candidate = float(match.group(1))
+            if 30 <= candidate <= 70 and candidate != 50.0:
+                prior = candidate
+                break
+    return current, prior
 
 
 def run_sp_pmi() -> None:
@@ -632,19 +677,31 @@ def run_sp_pmi() -> None:
             safe = re.sub(r"[^a-zA-Z0-9]+", "_", candidate["url"])[-80:]
             (OUT / f"sp_global_korea_{safe}.txt").write_text(text, encoding="utf-8")
             period = sp_release_period(text)
-            value = sp_headline_pmi(text)
-            parsed.append({**candidate, "final_url": response.url, "period": period, "value": value, "text_head": text[:1400]})
+            value, previous_value = sp_headline_pmi(text, period)
+            parsed.append({**candidate, "final_url": response.url, "period": period, "value": value, "previous_period": previous_month(period) if period else None, "previous_value": previous_value, "text_head": text[:2200]})
         except Exception as exc:
             parsed.append({**candidate, "error": str(exc)})
     save_json("sp_global_korea_parsed.json", parsed)
     valid = [x for x in parsed if x.get("period") and x.get("value") is not None]
     if valid:
-        valid.sort(key=lambda x: x["period"])
+        by_period: dict[str, dict[str, Any]] = {}
+        for item in valid:
+            by_period[item["period"]] = item
+            if item.get("previous_period") and item.get("previous_value") is not None and item["previous_period"] not in by_period:
+                by_period[item["previous_period"]] = {
+                    "title": "Explicit previous-month value in official S&P release",
+                    "url": item.get("url"),
+                    "final_url": item.get("final_url"),
+                    "period": item["previous_period"],
+                    "value": item["previous_value"],
+                    "derived_from_release_period": item["period"],
+                }
+        valid = [by_period[key] for key in sorted(by_period)]
         latest = valid[-1]
         RESULTS.append(Result(
             "製造業PMI", "S&P Global South Korea Manufacturing PMI", "official_html_pdf", "OFFICIAL_ONLY",
             latest["period"], latest["value"], len(valid),
-            "Headline seasonally adjusted Manufacturing PMI; exclude Output/New Orders",
+            "Headline seasonally adjusted Manufacturing PMI; current value anchored to the release reference month; explicit prior-month value backfilled",
             latest.get("final_url") or latest["url"], {"latest_releases": valid[-12:]},
         ))
     else:
