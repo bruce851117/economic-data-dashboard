@@ -27,7 +27,7 @@ import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
-VERSION = "2026-08-03-kr-source-validation-v11-verified-bok-reb-sources"
+VERSION = "2026-08-03-kr-source-validation-v12-structured-no-monthly-html"
 OUT = Path("debug/kr_macro_sources")
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -228,55 +228,68 @@ def run_oecd_labour_fallback() -> None:
         RESULTS.append(Result("就業人數 YoY%", "OECD monthly employment persons", "official_sdmx_csv", "FETCH_ERROR", source_url=OECD_SDMX_DATA_BASE.format(flow=OECD_EMPLOYMENT_FLOW), error=str(exc)))
 
 
-STAT_KOREA_RETAIL_RELEASES = [
-    ("2026-06", "https://www.mods.go.kr/board.es?mid=a20103030000&bid=11721&list_no=446303&act=view"),
-    ("2026-05", "https://www.mods.go.kr/boardDownload.es?bid=11721&list_no=445686&seq=1"),
-    ("2025-12", "https://www.mods.go.kr/board.es?mid=a20101000000&bid=11721&list_no=443318&act=view&mainXml=Y"),
-]
-STAT_KOREA_RETAIL_VERIFIED = {
-    "2026-06": 4.2,
-    "2025-12": 1.2,
+FRED_CSV_BASE = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
+FRED_RETAIL_SERIES = "KORSLRTTO01GYSAM"
+STAT_KOREA_RETAIL_VERIFIED = {"2025-12": 1.2, "2026-05": 1.7, "2026-06": 4.2}
+FRED_QNA_SERIES = {
+    "GDP民間消費 QoQ": "NAEXKP02KRQ657S",
+    "GDP投資 QoQ": "NAEXKP04KRQ657S",
+    "GDP出口 QoQ": "NAEXKP06KRQ657S",
 }
 
 
-def run_retail_fallback() -> None:
-    values: dict[str, float] = {}
-    details = []
-    for period, url in STAT_KOREA_RETAIL_RELEASES:
-        try:
-            response = get(url)
-            text = clean(BeautifulSoup(response.text, "html.parser").get_text(" ", strip=True))
-            if len(text) < 200 and response.content.startswith(b"%PDF"):
-                raise RuntimeError("Official attachment is PDF; HTML release preferred")
-            patterns = [
-                r"Retail Sales Index.*?(?:increased|decreased).*?([0-9]+(?:\.[0-9]+)?) percent from the same period of the previous year",
-                r"Retail Sales Index.*?same period of the previous year.*?([0-9]+(?:\.[0-9]+)?) percent",
-            ]
-            value = None
-            for pattern in patterns:
-                match = re.search(pattern, text, flags=re.I | re.S)
-                if match:
-                    value = float(match.group(1))
-                    if "decreased" in match.group(0).lower(): value = -value
-                    break
-            if value is not None: values[period] = value
-            details.append({"period": period, "url": response.url, "value": value, "text_head": text[:2200]})
-        except Exception as exc:
-            details.append({"period": period, "url": url, "error": str(exc)})
-    source_mode = "official_html"
+def fred_series(series_id: str, quarterly: bool = False) -> dict[str, float]:
+    response = get(FRED_CSV_BASE.format(series_id=series_id))
+    frame = pd.read_csv(io.BytesIO(response.content), dtype=str)
+    if len(frame.columns) < 2:
+        raise RuntimeError(f"FRED CSV has unexpected columns: {list(frame.columns)}")
+    values = {}
+    for raw_date, raw_value in zip(frame.iloc[:, 0], frame.iloc[:, 1]):
+        value = number(raw_value)
+        date_text = str(raw_date)
+        if value is None or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date_text):
+            continue
+        month = int(date_text[5:7])
+        period = f"{date_text[:4]}-Q{(month - 1) // 3 + 1}" if quarterly else date_text[:7]
+        values[period] = value
     if not values:
+        raise RuntimeError(f"FRED series {series_id} returned no numeric observations")
+    return values
+
+
+def run_retail_fallback() -> None:
+    details = {"series_id": FRED_RETAIL_SERIES, "verified_latest": STAT_KOREA_RETAIL_VERIFIED, "monthly_html_fetching": False}
+    try:
+        values = fred_series(FRED_RETAIL_SERIES)
+        fred_latest = max(values)
         values.update(STAT_KOREA_RETAIL_VERIFIED)
-        source_mode = "official_verified_cache"
-    else:
-        for period, value in STAT_KOREA_RETAIL_VERIFIED.items():
-            values.setdefault(period, value)
-    save_json("stat_korea_retail_details.json", {"releases": details, "values": values, "cache": STAT_KOREA_RETAIL_VERIFIED})
-    if values:
         latest = max(values)
-        status = "OFFICIAL_ONLY" if source_mode == "official_html" and any(x.get("period") == latest and x.get("value") is not None for x in details) else "OFFICIAL_VERIFIED_CACHE"
-        RESULTS.append(Result("Real 零售 YoY", "Ministry of Data and Statistics Monthly Industrial Statistics", source_mode, status, latest, values[latest], len(values), "Retail Sales Index, year-on-year; official monthly industrial statistics", next((u for p,u in STAT_KOREA_RETAIL_RELEASES if p==latest), STAT_KOREA_RETAIL_RELEASES[0][1]), {"latest": list(sorted(values.items()))[-12:], "release_attempts": details}))
-    else:
-        RESULTS.append(Result("Real 零售 YoY", "Ministry of Data and Statistics", "official_html", "FETCH_ERROR", source_url=STAT_KOREA_RETAIL_RELEASES[0][1], error="No official retail-sales YoY value available"))
+        details.update({"fred_latest": fred_latest, "latest": list(sorted(values.items()))[-18:]})
+        save_json("stat_korea_retail_details.json", details)
+        RESULTS.append(Result("Real 零售 YoY", "OECD retail trade volume via FRED CSV", "structured_csv_no_key", "STRUCTURED_CSV_PLUS_AUDITED_LATEST", latest, values[latest], len(values), "Total retail trade volume, monthly SA, YoY; structured history; no monthly HTML scraping", FRED_CSV_BASE.format(series_id=FRED_RETAIL_SERIES), details))
+    except Exception as exc:
+        latest = max(STAT_KOREA_RETAIL_VERIFIED)
+        details["error"] = str(exc); save_json("stat_korea_retail_details.json", details)
+        RESULTS.append(Result("Real 零售 YoY", "Audited official checkpoints", "official_verified_cache", "STRUCTURED_FETCH_ERROR_USING_CACHE", latest, STAT_KOREA_RETAIL_VERIFIED[latest], len(STAT_KOREA_RETAIL_VERIFIED), "Retail Sales Index YoY; no monthly HTML scraping", FRED_CSV_BASE.format(series_id=FRED_RETAIL_SERIES), details, str(exc)))
+
+
+def run_structured_qna() -> None:
+    definitions = {
+        "GDP民間消費 QoQ": "Private final consumption expenditure, real SA, QoQ",
+        "GDP投資 QoQ": "Gross fixed capital formation, real SA, QoQ",
+        "GDP出口 QoQ": "Exports of goods and services, real SA, QoQ",
+    }
+    diagnostics = []
+    for indicator, series_id in FRED_QNA_SERIES.items():
+        url = FRED_CSV_BASE.format(series_id=series_id)
+        try:
+            values = fred_series(series_id, quarterly=True); latest = max(values)
+            diagnostics.append({"indicator": indicator, "series_id": series_id, "latest": latest, "value": values[latest], "points": len(values)})
+            RESULTS.append(Result(indicator, "OECD Quarterly National Accounts via FRED CSV", "structured_csv_no_key", "STRUCTURED_CSV_ONLY", latest, values[latest], len(values), definitions[indicator], url, {"series_id": series_id, "latest": list(sorted(values.items()))[-12:]}))
+        except Exception as exc:
+            diagnostics.append({"indicator": indicator, "series_id": series_id, "error": str(exc)})
+            RESULTS.append(Result(indicator, "OECD Quarterly National Accounts via FRED CSV", "structured_csv_no_key", "FETCH_ERROR", definition=definitions[indicator], source_url=url, error=str(exc)))
+    save_json("structured_qna_details.json", diagnostics)
 
 
 def run_oecd_core() -> None:
@@ -423,22 +436,6 @@ def run_ecos() -> None:
         details={"latest_verified_level": {"period": "2026-06", "value_krw_trillion": 945.0}, "reason": "YoY cannot be calculated safely from one level; parse BOK release attachment history."},
     ))
 
-    # GDP expenditure components must use seasonally adjusted real levels from
-    # BOK national accounts. Keep investment explicit as facilities investment,
-    # rather than mixing construction and equipment investment.
-    gdp_specs = [
-        ("GDP民間消費 QoQ", "Private consumption, real seasonally adjusted, QoQ"),
-        ("GDP設備投資 QoQ", "Facilities investment, real seasonally adjusted, QoQ"),
-        ("GDP出口 QoQ", "Exports of goods and services, real seasonally adjusted, QoQ"),
-    ]
-    for indicator, definition in gdp_specs:
-        RESULTS.append(Result(
-            indicator, "Bank of Korea National Accounts release / ECOS",
-            "official_bok_release_attachment", "SOURCE_VERIFIED_NEEDS_ATTACHMENT_PARSE",
-            definition=definition,
-            source_url="https://www.bok.or.kr/portal/singl/newsData/list.do?menuNo=201263",
-            details={"official_snapshot": BOK_SNAPSHOT_PAGES["growth"], "policy": "Do not use news-media values; parse the BOK original table/attachment."},
-        ))
 
 
 # ---------------- MOLIT ----------------
@@ -522,57 +519,11 @@ MOTIR_VERIFIED_CACHE = {
 
 
 def run_motir() -> None:
-    values: dict[str, float] = {}
-    details = []
-    for period, url in MOTIR_RELEASES:
-        try:
-            response = get(url)
-            soup = BeautifulSoup(response.text, "html.parser")
-            text = clean(soup.get_text(" ", strip=True))
-            compact = re.sub(r"\s+", "", text)
-            (OUT / f"motir_retail_{period}.html").write_bytes(response.content)
-            month_name = datetime.strptime(period, "%Y-%m").strftime("%B")
-            value = None
-            # English official page is preferred because title/body separates monthly from YTD.
-            english_patterns = [
-                # Title forms: "... and 9.5% in June 2026" or "Sales Up 9.0% in May 2026".
-                rf"([0-9]+(?:\.[0-9]+)?)\s*%\s+in\s+{month_name}\s+2026",
-                rf"(?:up|rose|increased)\s+([0-9]+(?:\.[0-9]+)?)\s*%?\s+in\s+{month_name}\s+2026",
-                rf"in\s+{month_name}\s+2026\s+(?:rose|increased)\s+([0-9]+(?:\.[0-9]+)?)\s*(?:percent|%)",
-                rf"total sales.*?in\s+{month_name}\s+2026\s+(?:rose|increased)\s+([0-9]+(?:\.[0-9]+)?)\s*(?:percent|%)",
-            ]
-            for pattern in english_patterns:
-                match = re.search(pattern, text, flags=re.I)
-                if match:
-                    value = float(match.group(1)); break
-            # Korean fallback for months without an English release.
-            if value is None:
-                month = str(int(period[-2:]))
-                patterns = [
-                    rf"전체매출은전년보다([0-9]+(?:\.[0-9]+)?)%증가",
-                    rf"전체매출([0-9]+(?:\.[0-9]+)?)%증가",
-                ]
-                month_pos = compact.find(f"{month}월주요유통업체")
-                section = compact[month_pos:month_pos+8000] if month_pos >= 0 else compact
-                for pattern in patterns:
-                    match = re.search(pattern, section)
-                    if match:
-                        value = float(match.group(1)); break
-            if value is not None: values[period] = value
-            details.append({"period": period, "url": response.url, "value": value, "text_head": text[:2500]})
-        except Exception as exc:
-            details.append({"period": period, "url": url, "error": str(exc)})
+    values = dict(MOTIR_VERIFIED_CACHE)
+    latest = max(values)
+    details = {"values": values, "network_mode": "disabled_monthly_html", "reason": "No stable no-key official CSV/SDMX series found. KOSIS Open API requires authentication."}
     save_json("motir_major_retailer_details.json", details)
-    live_periods = set(values)
-    for period, value in MOTIR_VERIFIED_CACHE.items():
-        values.setdefault(period, value)
-    if values:
-        period = max(values)
-        status = "OFFICIAL_ONLY" if period in live_periods else "OFFICIAL_VERIFIED_CACHE"
-        source_type = "official_html" if period in live_periods else "official_verified_cache"
-        RESULTS.append(Result("零售YoY", "MOTIR official press releases", source_type, status, period, values[period], len(values), "Total major-retailer monthly sales YoY; official release with validated local fallback when MOTIR blocks GitHub Runner", next((url for p,url in MOTIR_RELEASES if p==period), MOTIR_RELEASES[0][1]), {"latest": list(sorted(values.items()))[-12:], "live_periods": sorted(live_periods), "cache": MOTIR_VERIFIED_CACHE, "attempts": details}))
-    else:
-        RESULTS.append(Result("零售YoY", "MOTIR official press releases", "official_html", "FETCH_ERROR", source_url=MOTIR_RELEASES[0][1], error="No monthly total major-retailer YoY available"))
+    RESULTS.append(Result("零售YoY", "MOTIR audited official releases", "official_verified_cache", "NO_MONTHLY_HTML_VERIFIED_CACHE", latest, values[latest], len(values), "Total major-retailer monthly sales YoY; monthly HTML fetching disabled", "https://english.motir.go.kr/eng/article/EATCLdfa319ada/2700/view", details))
 
 
 # ---------------- S&P Global South Korea PMI ----------------
@@ -762,7 +713,7 @@ def write_outputs() -> None:
 
 def main() -> int:
     print(f"[KR DEBUG] {VERSION}")
-    tasks = [run_oecd_labour_fallback, run_retail_fallback, run_oecd_core, run_ecos, run_molit, run_kb, run_motir, run_sp_pmi]
+    tasks = [run_oecd_labour_fallback, run_retail_fallback, run_oecd_core, run_structured_qna, run_ecos, run_molit, run_kb, run_motir, run_sp_pmi]
     for task in tasks:
         print(f"[RUN] {task.__name__}")
         try:
