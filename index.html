@@ -43,7 +43,7 @@
 
     .uk-toolbar,.eu-toolbar{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin-bottom:18px;padding:15px 16px;border:1px solid var(--border);border-radius:var(--radius);background:#fff;box-shadow:var(--shadow)}
     .uk-field,.eu-field{display:flex;flex-direction:column;gap:5px;color:var(--muted);font-size:12px;font-weight:700}.uk-field input,.eu-field input{padding:9px 11px;border:1px solid #bdcce0;border-radius:8px;background:#fff;color:var(--text)}
-    .uk-apply,.eu-apply{padding:10px 16px;border:0;border-radius:9px;color:#fff;background:#2563eb;cursor:pointer;font-weight:800}.uk-summary,.eu-summary{margin-left:auto;color:var(--muted);font-size:12px}
+    .uk-apply,.eu-apply{padding:10px 16px;border:0;border-radius:9px;color:#fff;background:#2563eb;cursor:pointer;font-weight:800}.macro-range-button{padding:9px 12px;border:1px solid #bdcce0;border-radius:8px;color:#334155;background:#fff;cursor:pointer;font-weight:800}.macro-range-button:hover{color:#1d4ed8;border-color:#93c5fd;background:#eff6ff}.macro-range-button.active{color:#fff;border-color:#2563eb;background:#2563eb}.uk-summary,.eu-summary{margin-left:auto;color:var(--muted);font-size:12px}
     .uk-block,.eu-block{margin-top:22px}.uk-block:first-child,.eu-block:first-child{margin-top:0}.uk-block-head,.eu-block-head{padding:16px 18px;color:#fff;border-radius:14px 14px 0 0}.uk-block-head h2,.eu-block-head h2{margin:0;font-size:19px}.uk-block-head p,.eu-block-head p{margin:4px 0 0;color:rgba(255,255,255,.82);font-size:12px}
     .uk-chart-grid,.eu-chart-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:10px;border:1px solid var(--border);border-top:0;border-radius:0 0 14px 14px;background:#f8fafc}
     .uk-chart-card,.eu-chart-card{min-width:0;padding:10px;border:1px solid var(--border);border-radius:11px;background:#fff;box-shadow:0 3px 10px rgba(15,23,42,.05)}.uk-chart-title,.eu-chart-title{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;margin-bottom:5px}.uk-chart-title h3,.eu-chart-title h3{margin:0;font-size:13px;line-height:1.3}.uk-chart-title span,.eu-chart-title span{color:var(--muted);font-size:9px;text-align:right}.uk-chart-actions,.eu-chart-actions{display:flex;justify-content:flex-end;gap:4px;margin-bottom:4px}.uk-chart-control,.eu-chart-control{padding:3px 7px;border:1px solid #cbd5e1;border-radius:6px;color:#475569;background:#fff;cursor:pointer;font-size:9px;font-weight:700}.uk-chart-control:hover,.eu-chart-control:hover{color:#1d4ed8;border-color:#93c5fd;background:#eff6ff}.uk-chart-wrap,.eu-chart-wrap{position:relative;height:190px;touch-action:none;user-select:none}.uk-chart-wrap svg,.eu-chart-wrap svg{display:block;width:100%;height:100%;overflow:visible}.uk-axis-hit-y,.eu-axis-hit-y{cursor:ns-resize}.uk-track-hit,.eu-track-hit{cursor:ns-resize}.uk-chart-wrap.is-panning,.eu-chart-wrap.is-panning{cursor:grabbing}.uk-crosshair,.eu-crosshair{pointer-events:none;display:none}.uk-chart-wrap.crosshair-active .uk-crosshair,.eu-crosshair{display:block}.uk-tooltip,.eu-tooltip{position:fixed;z-index:50;display:none;pointer-events:none;padding:8px 10px;border-radius:8px;color:#fff;background:rgba(15,23,42,.94);box-shadow:0 5px 18px rgba(15,23,42,.3);font-size:12px;white-space:nowrap}.uk-empty,.eu-empty{padding:40px;text-align:center;color:var(--muted)}
@@ -122,7 +122,10 @@
         <label class="uk-field">開始日期<input id="uk-start" type="date"></label>
         <label class="uk-field">結束日期<input id="uk-end" type="date"></label>
         <button id="uk-apply" class="uk-apply" type="button">套用日期</button>
-        <button id="uk-all" class="filter" type="button">全部期間</button><button id="uk-update-button" class="update-button" type="button">更新英國資料</button><span id="uk-update-status" class="update-status"></span>
+        <button class="macro-range-button" type="button" data-macro-region="uk" data-range-months="3">近3M</button>
+        <button class="macro-range-button" type="button" data-macro-region="uk" data-range-months="6">近6M</button>
+        <button class="macro-range-button" type="button" data-macro-region="uk" data-range-months="12">近1Y</button>
+        <button id="uk-all" class="macro-range-button" type="button">全部期間</button><button id="uk-update-button" class="update-button" type="button">更新英國資料</button><span id="uk-update-status" class="update-status"></span>
         <div id="uk-summary" class="uk-summary">正在載入英國經濟數據</div>
       </div>
       <div id="uk-content" class="loading">正在讀取 data/uk_macro.json</div>
@@ -133,7 +136,10 @@
         <label class="eu-field">開始日期<input id="eu-start" type="date"></label>
         <label class="eu-field">結束日期<input id="eu-end" type="date"></label>
         <button id="eu-apply" class="eu-apply" type="button">套用日期</button>
-        <button id="eu-all" class="filter" type="button">全部期間</button>
+        <button class="macro-range-button" type="button" data-macro-region="eu" data-range-months="3">近3M</button>
+        <button class="macro-range-button" type="button" data-macro-region="eu" data-range-months="6">近6M</button>
+        <button class="macro-range-button" type="button" data-macro-region="eu" data-range-months="12">近1Y</button>
+        <button id="eu-all" class="macro-range-button" type="button">全部期間</button>
         <button id="eu-update-button" class="update-button" type="button">更新歐洲資料</button>
         <span id="eu-update-status" class="update-status"></span>
         <div id="eu-summary" class="eu-summary">正在載入歐洲經濟數據</div>
@@ -146,7 +152,10 @@
         <label class="au-field">開始日期<input id="au-start" type="date"></label>
         <label class="au-field">結束日期<input id="au-end" type="date"></label>
         <button id="au-apply" class="au-apply" type="button">套用日期</button>
-        <button id="au-all" class="filter" type="button">全部期間</button>
+        <button class="macro-range-button" type="button" data-macro-region="au" data-range-months="3">近3M</button>
+        <button class="macro-range-button" type="button" data-macro-region="au" data-range-months="6">近6M</button>
+        <button class="macro-range-button" type="button" data-macro-region="au" data-range-months="12">近1Y</button>
+        <button id="au-all" class="macro-range-button" type="button">全部期間</button>
         <button id="au-update-button" class="update-button" type="button">更新澳洲資料</button>
         <span id="au-update-status" class="update-status"></span>
         <div id="au-summary" class="au-summary">正在載入澳洲經濟數據</div>
@@ -265,18 +274,40 @@
     function setTriggerButtons(running){document.querySelectorAll('.trigger-update-button').forEach(button=>{button.disabled=running;button.classList.toggle('running',running);button.textContent=running?'正在觸發更新…':'更新全部資料'})}
     async function triggerUpdate(){setTriggerButtons(true);setTriggerState('正在送出 GitHub Actions 更新要求','');try{const response=await fetch(TRIGGER_WORKER_URL+'/trigger-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:'main'})});const result=await response.json().catch(()=>({}));if(!response.ok||!result.success)throw new Error(result.error||`HTTP ${response.status}`);setTriggerState('已成功觸發更新，約1至3分鐘後重新整理頁面','ok')}catch(error){setTriggerState('觸發失敗：'+(error.message||String(error)),'error')}finally{setTriggerButtons(false)}}
     document.querySelectorAll('.trigger-update-button').forEach(button=>button.addEventListener('click',triggerUpdate));
+    function macroRegionConfig(region){
+      if(region==='uk')return{range:ukRange,render:renderUk,yView:ukYView};
+      if(region==='eu')return{range:euRange,render:renderEu,yView:euYView};
+      if(region==='au')return{range:auRange,render:renderAu,yView:auYView};
+      return null;
+    }
+    function clearMacroRangeActive(region){
+      document.querySelectorAll(`.macro-range-button[data-macro-region="${region}"]`).forEach(button=>button.classList.remove('active'));
+    }
+    function setMacroQuickRange(region,months,clickedButton){
+      const config=macroRegionConfig(region);if(!config)return;
+      const range=config.range();if(!range.max)return;
+      const latest=new Date(`${range.max}T00:00:00Z`);
+      const start=new Date(Date.UTC(latest.getUTCFullYear(),latest.getUTCMonth()-(months-1),1));
+      $(`${region}-start`).value=start.toISOString().slice(0,10);
+      $(`${region}-end`).value=range.max;
+      config.yView.clear();
+      clearMacroRangeActive(region);
+      clickedButton?.classList.add('active');
+      config.render();
+    }
+    document.querySelectorAll('.macro-range-button[data-macro-region][data-range-months]').forEach(button=>button.addEventListener('click',()=>setMacroQuickRange(button.dataset.macroRegion,Number(button.dataset.rangeMonths),button)));
     async function triggerUkUpdate(){const b=$('uk-update-button'),s=$('uk-update-status');b.disabled=true;b.classList.add('running');b.textContent='正在觸發更新…';s.className='update-status';s.textContent='連線至更新服務';try{const response=await fetch(TRIGGER_WORKER_URL+'/trigger-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:'main',workflow:'update-uk-macro.yml'})});const result=await response.json().catch(()=>({}));if(!response.ok||!result.success)throw new Error(result.error||`HTTP ${response.status}`);s.className='update-status ok';s.textContent='已觸發 Update UK Macro Data，約1至3分鐘後重新整理'}catch(error){s.className='update-status error';s.textContent='觸發失敗：'+(error.message||String(error))}finally{b.disabled=false;b.classList.remove('running');b.textContent='更新英國資料'}}
     $('uk-update-button').addEventListener('click',triggerUkUpdate);
-    $('uk-apply').addEventListener('click',()=>{ukYView.clear();renderUk()});
-    $('uk-all').addEventListener('click',()=>{const r=ukRange();$('uk-start').value=r.min;$('uk-end').value=r.max;ukYView.clear();renderUk()});
+    $('uk-apply').addEventListener('click',()=>{clearMacroRangeActive('uk');ukYView.clear();renderUk()});
+    $('uk-all').addEventListener('click',()=>{const r=ukRange();$('uk-start').value=r.min;$('uk-end').value=r.max;clearMacroRangeActive('uk');ukYView.clear();renderUk()});
     async function triggerEuUpdate(){const b=$('eu-update-button'),status=$('eu-update-status');b.disabled=true;b.classList.add('running');b.textContent='正在觸發更新…';status.className='update-status';status.textContent='連線至更新服務';try{const response=await fetch(TRIGGER_WORKER_URL+'/trigger-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:'main',workflow:'update-eu-macro.yml'})});const result=await response.json().catch(()=>({}));if(!response.ok||!result.success)throw new Error(result.error||`HTTP ${response.status}`);status.className='update-status ok';status.textContent='已觸發 Update EU Macro Data，約1至3分鐘後重新整理'}catch(error){status.className='update-status error';status.textContent='觸發失敗：'+(error.message||String(error))}finally{b.disabled=false;b.classList.remove('running');b.textContent='更新歐洲資料'}}
     $('eu-update-button').addEventListener('click',triggerEuUpdate);
-    $('eu-apply').addEventListener('click',()=>{euYView.clear();renderEu()});
-    $('eu-all').addEventListener('click',()=>{const r=euRange();$('eu-start').value=r.min;$('eu-end').value=r.max;euYView.clear();renderEu()});
+    $('eu-apply').addEventListener('click',()=>{clearMacroRangeActive('eu');euYView.clear();renderEu()});
+    $('eu-all').addEventListener('click',()=>{const r=euRange();$('eu-start').value=r.min;$('eu-end').value=r.max;clearMacroRangeActive('eu');euYView.clear();renderEu()});
     async function triggerAuUpdate(){const b=$('au-update-button'),status=$('au-update-status');b.disabled=true;b.classList.add('running');b.textContent='正在觸發更新…';status.className='update-status';status.textContent='連線至更新服務';try{const response=await fetch(TRIGGER_WORKER_URL+'/trigger-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:'main',workflow:'update-au-macro.yml'})});const result=await response.json().catch(()=>({}));if(!response.ok||!result.success)throw new Error(result.error||`HTTP ${response.status}`);status.className='update-status ok';status.textContent='已觸發 Update AU Macro Data，約1至3分鐘後重新整理'}catch(error){status.className='update-status error';status.textContent='觸發失敗：'+(error.message||String(error))}finally{b.disabled=false;b.classList.remove('running');b.textContent='更新澳洲資料'}}
     $('au-update-button').addEventListener('click',triggerAuUpdate);
-    $('au-apply').addEventListener('click',()=>{auYView.clear();renderAu()});
-    $('au-all').addEventListener('click',()=>{const r=auRange();$('au-start').value=r.min;$('au-end').value=r.max;auYView.clear();renderAu()});
+    $('au-apply').addEventListener('click',()=>{clearMacroRangeActive('au');auYView.clear();renderAu()});
+    $('au-all').addEventListener('click',()=>{const r=auRange();$('au-start').value=r.min;$('au-end').value=r.max;clearMacroRangeActive('au');auYView.clear();renderAu()});
     function activateTab(name){['inflation','employment','uk','eu','au'].forEach(id=>{const tab=$('tab-'+id),panel=$(id+'-panel');tab?.classList.toggle('active',id===name);panel?.classList.toggle('active',id===name)});if(name==='uk')renderUk();if(name==='eu')renderEu();if(name==='au')renderAu()}
     $('tab-inflation').addEventListener('click',()=>activateTab('inflation'));
     $('tab-employment').addEventListener('click',()=>activateTab('employment'));
