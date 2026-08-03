@@ -27,7 +27,7 @@ import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
-VERSION = "2026-08-03-kr-source-validation-v2-official-review"
+VERSION = "2026-08-03-kr-source-validation-v3-no-korean-id"
 OUT = Path("debug/kr_macro_sources")
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -125,6 +125,122 @@ def qoq(levels: dict[str, float]) -> dict[str, float]:
     return {keys[i]: (levels[keys[i]] / levels[keys[i-1]] - 1.0) * 100.0 for i in range(1, len(keys)) if levels[keys[i-1]]}
 
 
+# ---------------- no-key official alternatives ----------------
+OECD_UNEMPLOYMENT_FLOW = "DSD_LFS@DF_IALFS_UNE_M"
+OECD_EMPLOYMENT_FLOW = "DSD_LFS@DF_IALFS_EMP_M"
+OECD_SDMX_DATA_BASE = "https://sdmx.oecd.org/public/rest/data/OECD.SDD.TPS,{flow},1.0/all"
+FRED_RETAIL_CSV = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=KORSLRTTO01GYSAM"
+SEOUL_HOUSING_URL = "https://land.seoul.go.kr:444/land/krragsttst/hsmgTrstt.do"
+
+
+def read_sdmx_csv(response: requests.Response) -> pd.DataFrame:
+    frame = pd.read_csv(io.BytesIO(response.content), dtype=str)
+    if frame.empty:
+        raise RuntimeError("SDMX CSV is empty")
+    return frame
+
+
+def find_column(frame: pd.DataFrame, code: str) -> str | None:
+    return next((column for column in frame.columns if column.split(":", 1)[0].strip() == code), None)
+
+
+def fetch_oecd_korea_flow(flow: str, filename: str, start_period: str = "2015-01") -> pd.DataFrame:
+    url = OECD_SDMX_DATA_BASE.format(flow=flow)
+    response = get(
+        url,
+        params={"startPeriod": start_period, "dimensionAtObservation": "AllDimensions", "format": "csvfilewithlabels"},
+        headers={"Accept": "text/csv,application/vnd.sdmx.data+csv;version=2.0;q=0.9,*/*;q=0.1"},
+    )
+    (OUT / filename).write_bytes(response.content)
+    frame = read_sdmx_csv(response)
+    area_col = find_column(frame, "REF_AREA")
+    if not area_col:
+        raise RuntimeError(f"REF_AREA is missing from OECD CSV: {list(frame.columns)}")
+    korea = frame[frame[area_col].astype(str).str.contains(r"(^|:)KOR($|:)|Korea", case=False, regex=True, na=False)].copy()
+    if korea.empty:
+        raise RuntimeError(f"No Korean rows in OECD flow {flow}")
+    return korea
+
+
+def sdmx_series_candidates(frame: pd.DataFrame) -> list[dict[str, Any]]:
+    period_col = find_column(frame, "TIME_PERIOD")
+    value_col = find_column(frame, "OBS_VALUE")
+    if not period_col or not value_col:
+        raise RuntimeError("TIME_PERIOD or OBS_VALUE is missing")
+    identity_cols = [c for c in frame.columns if c not in {period_col, value_col} and not c.startswith("OBS_") and not c.startswith("TIME_PERIOD")]
+    candidates = []
+    for identity, group in frame.groupby(identity_cols, dropna=False):
+        if not isinstance(identity, tuple):
+            identity = (identity,)
+        metadata = dict(zip(identity_cols, identity))
+        values = {}
+        for raw_period, raw_value in zip(group[period_col], group[value_col]):
+            period = period_month(raw_period)
+            value = number(raw_value)
+            if period and value is not None:
+                values[period] = value
+        if values:
+            candidates.append({"metadata": metadata, "values": values})
+    return candidates
+
+
+def candidate_score(candidate: dict[str, Any], include: Iterable[str], exclude: Iterable[str] = ()) -> float:
+    text = norm(" | ".join(f"{key}={value}" for key, value in candidate["metadata"].items()))
+    return sum(10 for token in include if norm(token) in text) - sum(25 for token in exclude if norm(token) in text) + min(len(candidate["values"]), 120) / 120
+
+
+def run_oecd_labour_fallback() -> None:
+    # Unemployment rate, monthly, total sex, age 15+, seasonally adjusted.
+    try:
+        frame = fetch_oecd_korea_flow(OECD_UNEMPLOYMENT_FLOW, "oecd_korea_unemployment_raw.csv")
+        candidates = sdmx_series_candidates(frame)
+        for candidate in candidates:
+            candidate["score"] = candidate_score(candidate, ["monthly", "unemployment rate", "total", "15 years or over", "seasonally"], ["male", "female", "youth"])
+        candidates.sort(key=lambda item: (-item["score"], -len(item["values"])))
+        save_json("oecd_korea_unemployment_candidates.json", [{"score": x["score"], "metadata": x["metadata"], "latest": list(sorted(x["values"].items()))[-12:]} for x in candidates[:30]])
+        best = candidates[0]
+        latest = max(best["values"])
+        RESULTS.append(Result("失業率", "OECD monthly unemployment rate", "official_sdmx_csv", "OFFICIAL_FALLBACK", latest, best["values"][latest], len(best["values"]), "Korea, total, age 15+, monthly, seasonally adjusted", OECD_SDMX_DATA_BASE.format(flow=OECD_UNEMPLOYMENT_FLOW), {"metadata": best["metadata"], "latest": list(sorted(best["values"].items()))[-12:]}))
+    except Exception as exc:
+        RESULTS.append(Result("失業率", "OECD monthly unemployment rate", "official_sdmx_csv", "FETCH_ERROR", source_url=OECD_SDMX_DATA_BASE.format(flow=OECD_UNEMPLOYMENT_FLOW), error=str(exc)))
+
+    # Employment persons, monthly, total, age 15+, not seasonally adjusted; calculate YoY.
+    try:
+        frame = fetch_oecd_korea_flow(OECD_EMPLOYMENT_FLOW, "oecd_korea_employment_raw.csv")
+        candidates = sdmx_series_candidates(frame)
+        for candidate in candidates:
+            candidate["score"] = candidate_score(candidate, ["monthly", "employment", "persons", "total", "15 years or over", "not seasonally"], ["rate", "male", "female", "manufacturing"])
+        candidates.sort(key=lambda item: (-item["score"], -len(item["values"])))
+        save_json("oecd_korea_employment_candidates.json", [{"score": x["score"], "metadata": x["metadata"], "latest": list(sorted(x["values"].items()))[-12:]} for x in candidates[:30]])
+        best = candidates[0]
+        output = yoy(best["values"])
+        latest = max(output)
+        RESULTS.append(Result("就業人數 YoY%", "OECD monthly employment persons", "official_sdmx_csv", "OFFICIAL_FALLBACK", latest, output[latest], len(output), "Korea, total employment age 15+, monthly NSA; calculated YoY", OECD_SDMX_DATA_BASE.format(flow=OECD_EMPLOYMENT_FLOW), {"metadata": best["metadata"], "latest_level": list(sorted(best["values"].items()))[-12:], "latest_yoy": list(sorted(output.items()))[-12:]}))
+    except Exception as exc:
+        RESULTS.append(Result("就業人數 YoY%", "OECD monthly employment persons", "official_sdmx_csv", "FETCH_ERROR", source_url=OECD_SDMX_DATA_BASE.format(flow=OECD_EMPLOYMENT_FLOW), error=str(exc)))
+
+
+def run_retail_fallback() -> None:
+    # Federal Reserve Bank of St. Louis distributes this OECD series without an API key.
+    try:
+        response = get(FRED_RETAIL_CSV)
+        (OUT / "fred_oecd_korea_real_retail_yoy.csv").write_bytes(response.content)
+        frame = pd.read_csv(io.BytesIO(response.content), dtype=str)
+        date_col, value_col = frame.columns[:2]
+        values = {}
+        for raw_date, raw_value in zip(frame[date_col], frame[value_col]):
+            period = period_month(str(raw_date)[:7])
+            value = number(raw_value)
+            if period and value is not None:
+                values[period] = value
+        if not values:
+            raise RuntimeError("FRED/OECD retail CSV has no numeric observations")
+        latest = max(values)
+        RESULTS.append(Result("Real 零售 YoY", "OECD via Federal Reserve Bank of St. Louis", "official_csv_no_key", "OFFICIAL_FALLBACK", latest, values[latest], len(values), "Korea total retail trade volume, monthly, same-period YoY, seasonally adjusted", FRED_RETAIL_CSV, {"series_id": "KORSLRTTO01GYSAM", "latest": list(sorted(values.items()))[-12:]}))
+    except Exception as exc:
+        RESULTS.append(Result("Real 零售 YoY", "OECD via Federal Reserve Bank of St. Louis", "official_csv_no_key", "FETCH_ERROR", source_url=FRED_RETAIL_CSV, error=str(exc)))
+
+
 # ---------------- KOSIS ----------------
 KOSIS_ENDPOINT = "https://kosis.kr/openapi/Param/statisticsParameterData.do"
 
@@ -184,6 +300,10 @@ def choose_candidate(candidates: list[dict[str, Any]], include: Iterable[str], e
 
 
 def run_kosis() -> None:
+    if not KOSIS_KEY or KOSIS_KEY in {"2", "sample", "test", "none", "null"}:
+        run_oecd_labour_fallback()
+        run_retail_fallback()
+        return
     specs = [
         ("失業率", "DT_1DA7102S", ["계절조정", "실업률", "계"], ["남자", "여자"], "LEVEL", "全國、總計、季節調整失業率"),
         ("就業人數 YoY%", "DT_1DA7002S", ["취업자", "계"], ["계절조정", "남자", "여자"], "YOY", "全國未季調就業者人數，Level計算YoY"),
@@ -303,10 +423,11 @@ def ecos_rows(payload: dict[str, Any], service: str) -> list[dict[str, Any]]:
 
 
 def run_ecos() -> None:
-    if not ECOS_KEY:
-        for indicator, spec in ECOS_SPECS.items():
-            RESULTS.append(Result(indicator, "BOK ECOS", "official_json_api", "MISSING_SECRET", definition="metadata-first discovery required", source_url=ECOS_BASE, error="Add repository secret ECOS_API_KEY"))
-        return
+    global ECOS_KEY
+    using_sample = False
+    if not ECOS_KEY or ECOS_KEY in {"2", "sample", "test", "none", "null"}:
+        ECOS_KEY = "sample"
+        using_sample = True
     try:
         payload = ecos_call("StatisticTableList", "1", "10000", "")
         tables = ecos_rows(payload, "StatisticTableList")
@@ -346,17 +467,43 @@ def run_ecos() -> None:
             if not table_details:
                 raise RuntimeError("No ECOS table/item candidate matched metadata keywords")
             best = table_details[0]
-            RESULTS.append(Result(indicator, "BOK ECOS metadata discovery", "official_json_api", "CANDIDATE_FOUND", definition=f"{spec['transform']}; exact series requires candidate validation", source_url=ECOS_BASE, details={"selected_candidate": best, "candidate_count": len(table_details)}))
+            RESULTS.append(Result(indicator, "BOK ECOS metadata discovery", "official_json_api", "CANDIDATE_FOUND_SAMPLE" if using_sample else "CANDIDATE_FOUND", definition=f"{spec['transform']}; exact series requires candidate validation", source_url=ECOS_BASE, details={"using_official_sample_key": using_sample, "selected_candidate": best, "candidate_count": len(table_details)}))
         except Exception as exc:
             RESULTS.append(Result(indicator, "BOK ECOS metadata discovery", "official_json_api", "FETCH_ERROR", source_url=ECOS_BASE, error=str(exc)))
 
 
 # ---------------- MOLIT ----------------
 def run_molit() -> None:
-    if not MOLIT_KEY:
-        RESULTS.append(Result("首爾房市交易量", "MOLIT Statistics OpenAPI", "official_json_api", "MISSING_SECRET_OR_CODES", definition="주택매매거래량, 서울, monthly, 건", source_url="https://stat.molit.go.kr/portal/openapi/main.do", error="Add MOLIT_API_KEY and approve the target table; table/form codes are assigned in the portal and must not be guessed"))
-        return
-    RESULTS.append(Result("首爾房市交易量", "MOLIT Statistics OpenAPI", "official_json_api", "NEEDS_PORTAL_CODES", definition="주택매매거래량, 서울, monthly, 건", source_url="https://stat.molit.go.kr/portal/openapi/main.do", details={"key_configured": True, "note": "OpenAPI requires approved table/form/series codes. Save codes as repository variables after portal approval; each request window <= 5 years."}))
+    try:
+        response = get(SEOUL_HOUSING_URL)
+        (OUT / "seoul_housing_transactions_page.html").write_bytes(response.content)
+        soup = BeautifulSoup(response.text, "html.parser")
+        forms = []
+        for form in soup.find_all("form"):
+            forms.append({
+                "action": urljoin(response.url, form.get("action") or ""),
+                "method": (form.get("method") or "GET").upper(),
+                "inputs": [{"name": tag.get("name"), "value": tag.get("value"), "type": tag.get("type")} for tag in form.find_all(["input", "select", "button"]) if tag.get("name")],
+            })
+        scripts = [urljoin(response.url, tag.get("src")) for tag in soup.find_all("script") if tag.get("src")]
+        links = []
+        for tag in soup.find_all(["a", "button"], href=True):
+            text = clean(tag.get_text(" ", strip=True))
+            href = urljoin(response.url, tag.get("href"))
+            if any(token in norm(text + " " + href) for token in ["excel", "xls", "다운로드", "download"]):
+                links.append({"text": text, "url": href})
+        tables = []
+        try:
+            for idx, frame in enumerate(pd.read_html(io.StringIO(response.text))):
+                path = OUT / f"seoul_housing_table_{idx}.csv"
+                frame.to_csv(path, index=False, encoding="utf-8-sig")
+                tables.append({"index": idx, "rows": len(frame), "columns": [str(c) for c in frame.columns], "preview": frame.head(5).fillna("").astype(str).to_dict("records")})
+        except Exception as exc:
+            tables.append({"parse_error": str(exc)})
+        save_json("seoul_housing_transactions_discovery.json", {"url": response.url, "forms": forms, "scripts": scripts, "download_links": links, "tables": tables})
+        RESULTS.append(Result("首爾房市交易量", "Seoul Real Estate Information Plaza / Korea Real Estate Board", "official_html_excel_no_key", "DISCOVERY_AVAILABLE", definition="Monthly housing transactions by Seoul administrative district, reported-date basis", source_url=response.url, details={"forms": len(forms), "scripts": len(scripts), "download_links": len(links), "tables": len(tables)}))
+    except Exception as exc:
+        RESULTS.append(Result("首爾房市交易量", "Seoul Real Estate Information Plaza", "official_html_excel_no_key", "FETCH_ERROR", definition="Monthly Seoul housing transactions", source_url=SEOUL_HOUSING_URL, error=str(exc)))
 
 
 # ---------------- KB official workbook discovery ----------------
@@ -368,6 +515,7 @@ def run_kb() -> None:
         soup = BeautifulSoup(response.text, "html.parser")
         script_urls = [urljoin(landing, s.get("src")) for s in soup.find_all("script") if s.get("src")]
         candidates: set[str] = set(re.findall(r'https?[^"\']+\.(?:xlsx|xls)(?:\?[^"\']*)?', response.text, re.I))
+        endpoint_candidates: set[str] = set()
         inspected = []
         for script_url in script_urls[:20]:
             try:
@@ -375,15 +523,17 @@ def run_kb() -> None:
                 inspected.append({"url": script_url, "length": len(body)})
                 for match in re.findall(r'https?[^"\']+\.(?:xlsx|xls)(?:\?[^"\']*)?', body, re.I):
                     candidates.add(match.replace("\\/", "/"))
-                for match in re.findall(r'[^"\']*(?:월간시계열|월간통계|excel|xlsx)[^"\']*', body, re.I):
+                for match in re.findall(r'[^"\']*(?:월간시계열|월간통계|excel|xlsx|다운로드|download)[^"\']*', body, re.I):
                     if len(match) < 500:
                         candidates.add(match.replace("\\/", "/"))
+                for match in re.findall(r'["\']((?:/|https?://)[^"\']{2,240}(?:api|stat|excel|download|file|timeseries|time-series|kbstats)[^"\']*)["\']', body, re.I):
+                    endpoint_candidates.add(match.replace("\\/", "/"))
             except Exception as exc:
                 inspected.append({"url": script_url, "error": str(exc)})
-        save_json("kb_datahub_discovery.json", {"scripts": inspected, "candidates": sorted(candidates)[:200]})
+        save_json("kb_datahub_discovery.json", {"scripts": inspected, "candidates": sorted(candidates)[:300], "endpoint_candidates": sorted(endpoint_candidates)[:1000]})
         status = "CANDIDATES_FOUND" if candidates else "DOWNLOAD_URL_NOT_FOUND"
         for indicator in ["首爾房價MoM", "房價MoM"]:
-            RESULTS.append(Result(indicator, "KB Real Estate Data Hub monthly time-series workbook", "official_xlsx", status, definition="월간 주택매매가격; 서울/전국; index level or MoM", source_url=landing, details={"candidate_count": len(candidates), "candidates": sorted(candidates)[:30]}))
+            RESULTS.append(Result(indicator, "KB Real Estate Data Hub monthly time-series workbook", "official_xlsx", status, definition="월간 주택매매가격; 서울/전국; index level or MoM", source_url=landing, details={"candidate_count": len(candidates), "endpoint_candidate_count": len(endpoint_candidates), "candidates": sorted(candidates)[:30], "endpoint_candidates": sorted(endpoint_candidates)[:50]}))
     except Exception as exc:
         for indicator in ["首爾房價MoM", "房價MoM"]:
             RESULTS.append(Result(indicator, "KB Real Estate Data Hub", "official_xlsx", "FETCH_ERROR", source_url=landing, error=str(exc)))
@@ -407,14 +557,18 @@ def run_motir() -> None:
             text = clean(BeautifulSoup(response.text, "html.parser").get_text(" ", strip=True))
             (OUT / f"motir_retail_{period}.html").write_bytes(response.content)
             month_ko = str(int(period[-2:])) + "월"
+            monthly_section = text
+            section_match = re.search(rf"\[?\s*[’']?26년\s*{re.escape(month_ko)}\s*매출동향\s*\]?(.{{0,6000}})", text)
+            if section_match:
+                monthly_section = section_match.group(1)
             anchors = [
-                rf"{re.escape(month_ko)} 주요 유통업체.*?전체 매출(?:은|이)?[^.%]{{0,120}}?([0-9]+(?:\.[0-9]+)?)% 증가",
+                rf"{re.escape(month_ko)} 주요 유통업체.*?전체 매출(?:은|이)?[^.%]{{0,240}}?([0-9]+(?:\.[0-9]+)?)% 증가",
                 rf"{re.escape(month_ko)}.*?전체 매출(?:은|이)?[^.%]{{0,160}}?([0-9]+(?:\.[0-9]+)?)% 증가",
                 r"전체 매출(?:은|이)?[^.%]{0,160}?([0-9]+(?:\.[0-9]+)?)% 증가",
             ]
             value = None
             for pattern in anchors:
-                match = re.search(pattern, text)
+                match = re.search(pattern, monthly_section)
                 if match:
                     value = float(match.group(1))
                     break
@@ -442,6 +596,7 @@ SP_RELEASE_CALENDARS = [
     "https://www.pmi.spglobal.com/Public/Home/PressRelease",
 ]
 SP_KOREA_SEEDS = [
+    "https://www.pmi.spglobal.com/Public/Home/PressRelease/e3969ebb292742239ce5f41df762674a",
     "https://www.pmi.spglobal.com/Public/Home/PressRelease/02be97f3996640a1b389c15884701137",
     "https://www.pmi.spglobal.com/Public/Home/PressRelease/d24db6b6b62745c1970931ac3b4323c5",
 ]
@@ -472,16 +627,19 @@ def sp_release_period(text: str) -> str | None:
 
 
 def sp_headline_pmi(text: str) -> float | None:
+    # Skip chart header and search narrative sentences first.
+    narrative_start = min([pos for pos in [text.lower().find("the headline"), text.lower().find("the seasonally adjusted")] if pos >= 0] or [0])
+    narrative = text[narrative_start:]
     patterns = [
-        r"headline S&P Global South Korea Manufacturing PMI[^.]{0,280}?\b(?:rose|fell|increased|decreased|was|posted|registered)\b[^0-9]{0,100}?([0-9]{2}(?:\.[0-9])?)",
-        r"seasonally adjusted S&P Global South Korea Manufacturing Purchasing Managers(?:'|’)? Index[^.]{0,280}?\b(?:rose|fell|increased|decreased|was|posted|registered|at)\b[^0-9]{0,100}?([0-9]{2}(?:\.[0-9])?)",
-        r"South Korea Manufacturing PMI Index, sa[^0-9]{0,80}([0-9]{2}(?:\.[0-9])?)",
+        r"headline S&P Global South Korea Manufacturing PMI[^.]{0,420}?\b(?:rose|fell|increased|decreased|was|posted|registered)\b[^0-9]{0,120}?([0-9]{2}(?:\.[0-9])?)",
+        r"seasonally adjusted S&P Global South Korea Manufacturing Purchasing Managers(?:'|’)? Index[^.]{0,420}?\b(?:rose|fell|increased|decreased|was|posted|registered|at)\b[^0-9]{0,120}?([0-9]{2}(?:\.[0-9])?)",
+        r"The PMI (?:rose|fell|increased|decreased) to\s+([0-9]{2}(?:\.[0-9])?)",
     ]
     for pattern in patterns:
-        match = re.search(pattern, text, re.I)
+        match = re.search(pattern, narrative, re.I)
         if match:
             value = float(match.group(1))
-            if 30 <= value <= 70:
+            if 30 <= value <= 70 and value != 50.0:
                 return value
     return None
 
