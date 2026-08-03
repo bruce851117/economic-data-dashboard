@@ -27,7 +27,7 @@ import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
-VERSION = "2026-08-03-kr-source-validation-v6-retail-v2-seoul-period"
+VERSION = "2026-08-03-kr-source-validation-v7-verified-sources"
 OUT = Path("debug/kr_macro_sources")
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -246,7 +246,7 @@ def run_retail_fallback() -> None:
             for _, row in frame.iterrows():
                 raw = str(row.get(time_col) or "").strip()
                 period = raw[:7] if re.fullmatch(r"\d{4}-\d{2}(?:-\d{2})?", raw) else None
-                value = to_float(row.get(value_col))
+                value = number(row.get(value_col))
                 if period and value is not None:
                     values[period] = value
             if not values:
@@ -265,7 +265,7 @@ def run_retail_fallback() -> None:
         for _, row in frame.iterrows():
             raw = str(row.iloc[0] or "").strip()
             period = raw[:7] if re.fullmatch(r"\d{4}-\d{2}(?:-\d{2})?", raw) else None
-            value = to_float(row.iloc[1])
+            value = number(row.iloc[1])
             if period and value is not None: values[period] = value
         if not values: raise RuntimeError("FRED retail response had no monthly values")
         (OUT / "fred_korea_retail_raw.csv").write_bytes(response.content)
@@ -426,7 +426,7 @@ def run_molit() -> None:
             for row in rows:
                 raw_period = str(row.get("baseMm") or "").strip()
                 period = f"{raw_period[:4]}-{raw_period[4:6]}" if re.fullmatch(r"\d{6}", raw_period) else None
-                value = to_float(row.get("gubun10"))
+                value = number(row.get("gubun10"))
                 if period and value is not None: values[period] = value
         save_json("seoul_housing_transactions_api.json", {"endpoint": chart_url, "attempts": attempts, "latest": list(sorted(values.items()))[-24:]})
         if not values: raise RuntimeError("Official Seoul chart endpoint returned no Seoul-total values")
@@ -462,9 +462,10 @@ def run_kb() -> None:
             except Exception as exc:
                 inspected.append({"url": script_url, "error": str(exc)})
         save_json("kb_datahub_discovery.json", {"scripts": inspected, "candidates": sorted(candidates)[:300], "endpoint_candidates": sorted(endpoint_candidates)[:1000]})
-        status = "DISCOVERY_NO_STAT_ENDPOINT"
+        # KB has no stable public automated endpoint. Do not keep reporting its unrelated Kakao bundles as candidates.
+        reb_url = "https://www.reb.or.kr/r-one/portal/stat/easyStatPage/A_2024_00050.do"
         for indicator in ["首爾房價MoM", "房價MoM"]:
-            RESULTS.append(Result(indicator, "KB Real Estate Data Hub monthly time-series workbook", "official_xlsx", status, definition="월간 주택매매가격; 서울/전국; index level or MoM", source_url=landing, details={"candidate_count": len(candidates), "endpoint_candidate_count": len(endpoint_candidates), "candidates": sorted(candidates)[:30], "endpoint_candidates": sorted(endpoint_candidates)[:50]}))
+            RESULTS.append(Result(indicator, "Korea Real Estate Board monthly house price statistics", "official_csv_or_easy_stat", "SOURCE_SELECTED_REB", definition="Monthly house sale-price index/MoM for Seoul and nationwide; replace KB label in formal dashboard", source_url=reb_url, details={"kb_public_endpoint": False, "recommended_source": "REB National Survey of House Price Trends"}))
     except Exception as exc:
         for indicator in ["首爾房價MoM", "房價MoM"]:
             RESULTS.append(Result(indicator, "KB Real Estate Data Hub", "official_xlsx", "FETCH_ERROR", source_url=landing, error=str(exc)))
@@ -472,9 +473,8 @@ def run_kb() -> None:
 
 # ---------------- MOTIR releases ----------------
 MOTIR_RELEASES = [
-    ("2026-06", "https://www.motir.go.kr/kor/article/ATCL3f49a5a8c/172066/view"),
-    ("2026-05", "https://www.motir.go.kr/kor/article/ATCL3f49a5a8c/171960/view"),
-    ("2026-04", "https://www.motir.go.kr/kor/article/ATCL3f49a5a8c/171869/view"),
+    ("2026-06", "https://english.motir.go.kr/eng/article/EATCLdfa319ada/2700/view"),
+    ("2026-05", "https://english.motir.go.kr/eng/article/EATCLdfa319ada/2670/view"),
     ("2026-02", "https://www.motir.go.kr/kor/article/ATCL3f49a5a8c/171632/view"),
 ]
 
@@ -489,33 +489,41 @@ def run_motir() -> None:
             text = clean(soup.get_text(" ", strip=True))
             compact = re.sub(r"\s+", "", text)
             (OUT / f"motir_retail_{period}.html").write_bytes(response.content)
-            month = str(int(period[-2:]))
-            # Locate the explicit monthly section, not half-year/YTD summary.
-            section_markers = [f"’26년{month}월매출동향", f"'26년{month}월매출동향", f"26년{month}월매출동향"]
-            positions = [compact.find(marker) for marker in section_markers if compact.find(marker) >= 0]
-            monthly = compact[min(positions):min(positions)+7000] if positions else compact
-            patterns = [
-                rf"{month}월주요유통업체.*?전체매출은전년(?:동기)?보다([0-9]+(?:\.[0-9]+)?)%증가",
-                rf"{month}월주요유통업체.*?전체매출[^0-9]{{0,60}}([0-9]+(?:\.[0-9]+)?)%증가",
-                rf"전체매출은전년(?:동기)?보다([0-9]+(?:\.[0-9]+)?)%증가",
-            ]
+            month_name = datetime.strptime(period, "%Y-%m").strftime("%B")
             value = None
-            for pattern in patterns:
-                match = re.search(pattern, monthly)
+            # English official page is preferred because title/body separates monthly from YTD.
+            english_patterns = [
+                rf"(?:up|rose|increased)\s+([0-9]+(?:\.[0-9]+)?)\s*%?\s+in\s+{month_name}\s+2026",
+                rf"in\s+{month_name}\s+2026\s+(?:rose|increased)\s+([0-9]+(?:\.[0-9]+)?)\s*(?:percent|%)",
+                rf"total sales.*?in\s+{month_name}\s+2026\s+(?:rose|increased)\s+([0-9]+(?:\.[0-9]+)?)\s*(?:percent|%)",
+            ]
+            for pattern in english_patterns:
+                match = re.search(pattern, text, flags=re.I)
                 if match:
-                    value = float(match.group(1))
-                    break
-            if value is not None:
-                values[period] = value
-            details.append({"period": period, "url": url, "value": value, "monthly_section_found": bool(positions), "monthly_compact_head": monthly[:1800]})
+                    value = float(match.group(1)); break
+            # Korean fallback for months without an English release.
+            if value is None:
+                month = str(int(period[-2:]))
+                patterns = [
+                    rf"전체매출은전년보다([0-9]+(?:\.[0-9]+)?)%증가",
+                    rf"전체매출([0-9]+(?:\.[0-9]+)?)%증가",
+                ]
+                month_pos = compact.find(f"{month}월주요유통업체")
+                section = compact[month_pos:month_pos+8000] if month_pos >= 0 else compact
+                for pattern in patterns:
+                    match = re.search(pattern, section)
+                    if match:
+                        value = float(match.group(1)); break
+            if value is not None: values[period] = value
+            details.append({"period": period, "url": response.url, "value": value, "text_head": text[:2500]})
         except Exception as exc:
             details.append({"period": period, "url": url, "error": str(exc)})
     save_json("motir_major_retailer_details.json", details)
     if values:
         period = max(values)
-        RESULTS.append(Result("零售YoY", "MOTIR Sales Trends for Major Retailers", "official_html_pdf", "OFFICIAL_ONLY", period, values[period], len(values), "全體主要零售商單月銷售YoY，排除半年/YTD摘要", dict(MOTIR_RELEASES)[period], {"latest": list(sorted(values.items()))[-12:]}))
+        RESULTS.append(Result("零售YoY", "MOTIR official press releases", "official_html", "OFFICIAL_ONLY", period, values[period], len(values), "Total major-retailer monthly sales YoY; English official release preferred", next(url for p,url in MOTIR_RELEASES if p==period), {"latest": list(sorted(values.items()))[-12:]}))
     else:
-        RESULTS.append(Result("零售YoY", "MOTIR Sales Trends for Major Retailers", "official_html_pdf", "FETCH_ERROR", source_url=MOTIR_RELEASES[0][1], error="No monthly total major-retailer YoY parsed"))
+        RESULTS.append(Result("零售YoY", "MOTIR official press releases", "official_html", "FETCH_ERROR", source_url=MOTIR_RELEASES[0][1], error="No monthly total major-retailer YoY parsed"))
 
 
 # ---------------- S&P Global South Korea PMI ----------------
@@ -524,6 +532,8 @@ SP_RELEASE_CALENDARS = [
     "https://www.pmi.spglobal.com/Public/Home/PressRelease",
 ]
 SP_KOREA_SEEDS = [
+    "https://www.pmi.spglobal.com/Public/Home/PressRelease/c599f8cf537c431bbf5e3a6116222881",
+    "https://www.pmi.spglobal.com/Public/Home/PressRelease/70bb58bb8f804354841961b33505c3f5",
     "https://www.pmi.spglobal.com/Public/Home/PressRelease/e3969ebb292742239ce5f41df762674a",
     "https://www.pmi.spglobal.com/Public/Home/PressRelease/02be97f3996640a1b389c15884701137",
     "https://www.pmi.spglobal.com/Public/Home/PressRelease/d24db6b6b62745c1970931ac3b4323c5",
@@ -642,7 +652,7 @@ def write_outputs() -> None:
     lines = ["# 韓國經濟數據來源診斷", "", f"- 版本：`{VERSION}`", f"- 產生時間：`{now_iso()}`", "", "| 指標 | 來源 | 格式 | 狀態 | 最新期 | 最新值 | 筆數 | 錯誤／待辦 |", "|---|---|---|---|---:|---:|---:|---|"]
     for r in RESULTS:
         lines.append(f"| {r.indicator} | {r.source} | {r.source_type} | {r.status} | {r.latest_period or ''} | {'' if r.latest_value is None else r.latest_value} | {r.points} | {(r.error or '').replace('|', '/')} |")
-    lines += ["", "## Secret／代碼狀態", "", f"- `KOSIS_API_KEY`: {'已設定' if KOSIS_KEY else '未設定'}", f"- `ECOS_API_KEY`: {'已設定' if ECOS_KEY else '未設定'}", f"- `MOLIT_API_KEY`: {'已設定' if MOLIT_KEY else '未設定'}", "", "> CANDIDATE_FOUND 只表示 metadata 已定位候選，仍須以既有參考值核對後才能進正式 updater。"]
+    lines += ["", "## Secret／代碼狀態", "", f"- `KOSIS_API_KEY`: {'已設定' if KOSIS_KEY else '未設定'}", f"- `ECOS_API_KEY`: {'已設定' if ECOS_KEY else '未設定'}", f"- `MOLIT_API_KEY`: {'已設定' if MOLIT_KEY else '未設定'}", "", "> 本版只保留已核對的正式來源；SOURCE_SELECTED_REB 表示已決定改用 REB，但尚未完成時序下載。"]
     (OUT / "korea_debug.md").write_text("\n".join(lines), encoding="utf-8")
 
 
