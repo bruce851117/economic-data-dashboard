@@ -17,7 +17,7 @@ import traceback
 import unicodedata
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, asdict
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import urljoin
@@ -27,7 +27,7 @@ import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
-VERSION = "2026-08-03-kr-source-validation-v4-source-fixes"
+VERSION = "2026-08-03-kr-source-validation-v5-oecd-retail-seoul-json"
 OUT = Path("debug/kr_macro_sources")
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -131,6 +131,8 @@ OECD_EMPLOYMENT_FLOW = "DSD_LFS@DF_IALFS_INDIC"
 OECD_SDMX_DATA_BASE = "https://sdmx.oecd.org/public/rest/data/OECD.SDD.TPS,{flow},1.0/all"
 FRED_RETAIL_CSV = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=KORSLRTTO01GYSAM"
 FRED_EMPLOYMENT_CSV = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=LFEMTTTTKRM647N"
+OECD_RETAIL_FLOW = "DSD_STES@DF_INDSERV"
+OECD_RETAIL_AGENCY = "OECD.SDD.STES"
 SEOUL_HOUSING_URL = "https://land.seoul.go.kr:444/land/krragsttst/hsmgTrstt.do"
 
 
@@ -222,116 +224,35 @@ def run_oecd_labour_fallback() -> None:
 
 
 def run_retail_fallback() -> None:
-    # Federal Reserve Bank of St. Louis distributes this OECD series without an API key.
     try:
-        response = SESSION.get(FRED_RETAIL_CSV, timeout=120)
+        url = f"https://sdmx.oecd.org/public/rest/data/{OECD_RETAIL_AGENCY},{OECD_RETAIL_FLOW},/KOR.M.TOVM..G47.Y.GY...?startPeriod=2015-01&dimensionAtObservation=AllDimensions&format=csvfilewithlabels"
+        response = SESSION.get(url, timeout=120, headers={"Accept": "text/csv"})
         response.raise_for_status()
-        (OUT / "fred_oecd_korea_real_retail_yoy.csv").write_bytes(response.content)
-        frame = pd.read_csv(io.BytesIO(response.content), dtype=str)
-        date_col, value_col = frame.columns[:2]
+        (OUT / "oecd_korea_retail_raw.csv").write_bytes(response.content)
+        frame = pd.read_csv(io.BytesIO(response.content), low_memory=False)
+        time_col, value_col = find_time_value_columns(frame)
         values = {}
-        for raw_date, raw_value in zip(frame[date_col], frame[value_col]):
-            period = period_month(str(raw_date)[:7])
-            value = number(raw_value)
-            if period and value is not None:
-                values[period] = value
-        if not values:
-            raise RuntimeError("FRED/OECD retail CSV has no numeric observations")
+        for _, row in frame.iterrows():
+            period = normalize_month(row.get(time_col)); value = to_float(row.get(value_col))
+            if period and value is not None: values[period] = value
+        if not values: raise RuntimeError("OECD retail response had no monthly values")
         latest = max(values)
-        RESULTS.append(Result("Real 零售 YoY", "OECD via Federal Reserve Bank of St. Louis", "official_csv_no_key", "OFFICIAL_FALLBACK", latest, values[latest], len(values), "Korea total retail trade volume, monthly, same-period YoY, seasonally adjusted", FRED_RETAIL_CSV, {"series_id": "KORSLRTTO01GYSAM", "latest": list(sorted(values.items()))[-12:]}))
-    except Exception as exc:
-        RESULTS.append(Result("Real 零售 YoY", "OECD via Federal Reserve Bank of St. Louis", "official_csv_no_key", "FETCH_ERROR", source_url=FRED_RETAIL_CSV, error=str(exc)))
-
-
-# ---------------- KOSIS ----------------
-KOSIS_ENDPOINT = "https://kosis.kr/openapi/Param/statisticsParameterData.do"
-
-
-def kosis_table(tbl_id: str, start: str, end: str) -> list[dict[str, Any]]:
-    if not KOSIS_KEY:
-        raise RuntimeError("Repository secret KOSIS_API_KEY is not configured")
-    params = {
-        "method": "getList", "apiKey": KOSIS_KEY, "itmId": "ALL",
-        "objL1": "ALL", "objL2": "ALL", "objL3": "ALL", "objL4": "ALL",
-        "format": "json", "jsonVD": "Y", "prdSe": "M",
-        "startPrdDe": start, "endPrdDe": end, "orgId": "101", "tblId": tbl_id,
-    }
-    response = get(KOSIS_ENDPOINT, params=params)
-    payload = response.json()
-    save_json(f"kosis_{tbl_id}_raw.json", payload)
-    if isinstance(payload, dict) and payload.get("err"):
-        raise RuntimeError(str(payload))
-    if not isinstance(payload, list):
-        raise RuntimeError(f"Unexpected KOSIS response: {type(payload).__name__}")
-    return payload
-
-
-def kosis_candidates(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    grouped: dict[str, dict[str, Any]] = {}
-    for row in rows:
-        period = period_month(row.get("PRD_DE"))
-        value = number(row.get("DT"))
-        if not period or value is None:
-            continue
-        identity_parts = []
-        for key in sorted(row):
-            if key in {"DT", "PRD_DE", "PRD_SE", "UNIT_NM", "UNIT_NM_ENG", "TBL_ID", "TBL_NM", "TBL_NM_ENG"}:
-                continue
-            if key.endswith("_NM") or key in {"ITM_ID", "ITM_NM", "C1", "C1_NM", "C2", "C2_NM", "C3", "C3_NM"}:
-                if row.get(key) not in (None, ""):
-                    identity_parts.append(f"{key}={clean(row[key])}")
-        identity = " | ".join(identity_parts)
-        item = grouped.setdefault(identity, {"identity": identity, "metadata": row, "values": {}})
-        item["values"][period] = value
-    return sorted(grouped.values(), key=lambda x: (-len(x["values"]), x["identity"]))
-
-
-def choose_candidate(candidates: list[dict[str, Any]], include: Iterable[str], exclude: Iterable[str] = ()) -> dict[str, Any]:
-    include_n = [norm(x) for x in include]
-    exclude_n = [norm(x) for x in exclude]
-    scored = []
-    for candidate in candidates:
-        text = norm(candidate["identity"])
-        score = sum(10 for token in include_n if token in text) - sum(20 for token in exclude_n if token in text)
-        score += min(len(candidate["values"]), 120) / 120
-        scored.append((score, candidate))
-    scored.sort(key=lambda x: (-x[0], -len(x[1]["values"])))
-    if not scored:
-        raise RuntimeError("No KOSIS numeric series found")
-    return scored[0][1]
-
-
-def run_kosis() -> None:
-    if not KOSIS_KEY or KOSIS_KEY in {"2", "sample", "test", "none", "null"}:
-        run_oecd_labour_fallback()
-        run_retail_fallback()
+        RESULTS.append(Result("Real 零售 YoY", "OECD Production and Sales SDMX", "official_sdmx_csv", "OFFICIAL_FALLBACK", latest, values[latest], len(values), "Korea retail trade volume, G47, monthly, seasonally adjusted, same-period YoY", url, {"flow": OECD_RETAIL_FLOW, "latest": list(sorted(values.items()))[-12:]}))
         return
-    specs = [
-        ("失業率", "DT_1DA7102S", ["계절조정", "실업률", "계"], ["남자", "여자"], "LEVEL", "全國、總計、季節調整失業率"),
-        ("就業人數 YoY%", "DT_1DA7002S", ["취업자", "계"], ["계절조정", "남자", "여자"], "YOY", "全國未季調就業者人數，Level計算YoY"),
-        ("Real 零售 YoY", "DT_1K41012", ["불변", "총지수"], ["경상", "계절조정"], "YOY", "總零售不變價原始指數，Level計算YoY"),
-    ]
-    for indicator, tbl, include, exclude, transform, definition in specs:
-        try:
-            rows = kosis_table(tbl, "201501", "202612")
-            candidates = kosis_candidates(rows)
-            save_json(f"kosis_{tbl}_candidates.json", [{"identity": c["identity"], "latest": list(sorted(c["values"].items()))[-6:], "points": len(c["values"])} for c in candidates[:50]])
-            selected = choose_candidate(candidates, include, exclude)
-            values = selected["values"]
-            output = yoy(values) if transform == "YOY" else values
-            latest_period = max(output)
-            RESULTS.append(Result(indicator, f"KOSIS {tbl}", "official_json_api", "OFFICIAL_ONLY", latest_period, output[latest_period], len(output), definition, KOSIS_ENDPOINT, {"selected_identity": selected["identity"], "latest_level": list(sorted(values.items()))[-6:], "latest_output": list(sorted(output.items()))[-6:]}))
-        except Exception as exc:
-            RESULTS.append(Result(indicator, f"KOSIS {tbl}", "official_json_api", "FETCH_ERROR", definition=definition, source_url=KOSIS_ENDPOINT, error=str(exc)))
-
-
-# ---------------- OECD SDMX ----------------
-# OECD publishes a dedicated official dataflow for national core CPI YoY.
-OECD_CORE_FLOW = "DSD_PRICES@DF_PRICES_N_TXCP01_NRG"
-OECD_CORE_URLS = [
-    "https://sdmx.oecd.org/public/rest/v2/data/dataflow/OECD.SDD.TPS/DSD_PRICES@DF_PRICES_N_TXCP01_NRG/1.0/all",
-    "https://sdmx.oecd.org/public/rest/data/OECD.SDD.TPS,DSD_PRICES@DF_PRICES_N_TXCP01_NRG,1.0/all",
-]
+    except Exception as primary_exc:
+        primary_error = str(primary_exc)
+    try:
+        response = SESSION.get(FRED_RETAIL_CSV, timeout=120); response.raise_for_status()
+        (OUT / "fred_korea_retail_raw.csv").write_bytes(response.content)
+        frame = pd.read_csv(io.BytesIO(response.content)); values = {}
+        for _, row in frame.iterrows():
+            period = normalize_month(row.iloc[0]); value = to_float(row.iloc[1])
+            if period and value is not None: values[period] = value
+        if not values: raise RuntimeError("FRED retail response had no monthly values")
+        latest = max(values)
+        RESULTS.append(Result("Real 零售 YoY", "OECD via FRED backup", "official_csv_no_key", "OFFICIAL_FALLBACK", latest, values[latest], len(values), "Korea total retail trade volume, monthly, same-period YoY, seasonally adjusted", FRED_RETAIL_CSV, {"primary_oecd_error": primary_error, "latest": list(sorted(values.items()))[-12:]}))
+    except Exception as secondary_exc:
+        RESULTS.append(Result("Real 零售 YoY", "OECD Production and Sales SDMX", "official_sdmx_csv", "FETCH_ERROR", source_url=f"{OECD_RETAIL_AGENCY},{OECD_RETAIL_FLOW}", error=f"OECD: {primary_error}; FRED: {secondary_exc}"))
 
 
 def run_oecd_core() -> None:
@@ -436,7 +357,11 @@ def run_ecos() -> None:
     for name, url in public_urls.items():
         try:
             response = get(url)
-            discovery.append({"name": name, "url": response.url, "status": response.status_code, "content_type": response.headers.get("Content-Type"), "length": len(response.content)})
+            soup = BeautifulSoup(response.text, "html.parser")
+            script_urls = [urljoin(response.url, x.get("src")) for x in soup.find_all("script") if x.get("src")]
+            inline = "\n".join(x.get_text(" ", strip=True) for x in soup.find_all("script") if not x.get("src"))
+            endpoint_patterns = re.findall(r"[\"']((?:https?:)?//[^\"']+|/[^\"']*(?:api|download|excel|csv|chart|data)[^\"']*)[\"']", inline, flags=re.I)
+            discovery.append({"name": name, "url": response.url, "status": response.status_code, "content_type": response.headers.get("Content-Type"), "length": len(response.content), "scripts": script_urls, "inline_endpoint_candidates": sorted(set(endpoint_patterns))[:200]})
             (OUT / f"bok_public_{re.sub(r'[^a-z0-9]+', '_', name.lower())}.html").write_bytes(response.content)
         except Exception as exc:
             discovery.append({"name": name, "url": url, "error": str(exc)})
@@ -446,39 +371,35 @@ def run_ecos() -> None:
 
 
 # ---------------- MOLIT ----------------
+def month_chunks(start_year: int = 2015):
+    end = date(datetime.now(timezone.utc).year, datetime.now(timezone.utc).month, 1)
+    cur = date(start_year, 1, 1)
+    while cur <= end:
+        chunk_end = date(cur.year + 1, 1, 1)
+        if chunk_end > end: chunk_end = end
+        yield cur.strftime("%Y%m"), chunk_end.strftime("%Y%m")
+        cur = date(chunk_end.year + (1 if chunk_end.month == 12 else 0), 1 if chunk_end.month == 12 else chunk_end.month + 1, 1)
+
+
 def run_molit() -> None:
+    chart_url = "https://land.seoul.go.kr:444/land/krragsttst/getHsmgChartList.do"
+    values = {}; attempts = []
     try:
-        response = get(SEOUL_HOUSING_URL)
-        (OUT / "seoul_housing_transactions_page.html").write_bytes(response.content)
-        soup = BeautifulSoup(response.text, "html.parser")
-        forms = []
-        for form in soup.find_all("form"):
-            forms.append({
-                "action": urljoin(response.url, form.get("action") or ""),
-                "method": (form.get("method") or "GET").upper(),
-                "inputs": [{"name": tag.get("name"), "value": tag.get("value"), "type": tag.get("type")} for tag in form.find_all(["input", "select", "button"]) if tag.get("name")],
-            })
-        scripts = [urljoin(response.url, tag.get("src")) for tag in soup.find_all("script") if tag.get("src")]
-        inline_scripts = [clean(tag.get_text(" ", strip=True)) for tag in soup.find_all("script") if not tag.get("src") and clean(tag.get_text(" ", strip=True))]
-        selects = {tag.get("name") or tag.get("id") or f"select_{idx}": [{"value": option.get("value"), "text": clean(option.get_text(" ", strip=True))} for option in tag.find_all("option")] for idx, tag in enumerate(soup.find_all("select"))}
-        links = []
-        for tag in soup.find_all(["a", "button"], href=True):
-            text = clean(tag.get_text(" ", strip=True))
-            href = urljoin(response.url, tag.get("href"))
-            if any(token in norm(text + " " + href) for token in ["excel", "xls", "다운로드", "download"]):
-                links.append({"text": text, "url": href})
-        tables = []
-        try:
-            for idx, frame in enumerate(pd.read_html(io.StringIO(response.text))):
-                path = OUT / f"seoul_housing_table_{idx}.csv"
-                frame.to_csv(path, index=False, encoding="utf-8-sig")
-                tables.append({"index": idx, "rows": len(frame), "columns": [str(c) for c in frame.columns], "preview": frame.head(5).fillna("").astype(str).to_dict("records")})
-        except Exception as exc:
-            tables.append({"parse_error": str(exc)})
-        save_json("seoul_housing_transactions_discovery.json", {"url": response.url, "forms": forms, "select_options": selects, "inline_scripts": inline_scripts, "scripts": scripts, "download_links": links, "tables": tables})
-        RESULTS.append(Result("首爾房市交易量", "Seoul Real Estate Information Plaza / Korea Real Estate Board", "official_html_excel_no_key", "DISCOVERY_AVAILABLE", definition="Monthly housing transactions by Seoul administrative district, reported-date basis", source_url=response.url, details={"forms": len(forms), "scripts": len(scripts), "download_links": len(links), "tables": len(tables)}))
+        for from_ym, to_ym in month_chunks(2015):
+            payload = {"bldgGbn": "AD", "sggCd": "11000", "fromYm": from_ym, "toYm": to_ym}
+            response = SESSION.post(chart_url, data=payload, timeout=60, headers={"Referer": SEOUL_HOUSING_URL, "X-Requested-With": "XMLHttpRequest"})
+            response.raise_for_status(); data = response.json(); rows = data.get("result") or []
+            attempts.append({"payload": payload, "row_count": len(rows), "sample": rows[:2]})
+            for row in rows:
+                period = normalize_month(row.get("baseMm")); value = to_float(row.get("gubun10"))
+                if period and value is not None: values[period] = value
+        save_json("seoul_housing_transactions_api.json", {"endpoint": chart_url, "attempts": attempts, "latest": list(sorted(values.items()))[-24:]})
+        if not values: raise RuntimeError("Official Seoul chart endpoint returned no Seoul-total values")
+        latest = max(values)
+        RESULTS.append(Result("首爾房市交易量", "Seoul Real Estate Information Plaza", "official_json_no_key", "OFFICIAL_ONLY", latest, values[latest], len(values), "Monthly Seoul housing transaction count; Seoul total field gubun10", chart_url, {"latest": list(sorted(values.items()))[-12:]}))
     except Exception as exc:
-        RESULTS.append(Result("首爾房市交易量", "Seoul Real Estate Information Plaza", "official_html_excel_no_key", "FETCH_ERROR", definition="Monthly Seoul housing transactions", source_url=SEOUL_HOUSING_URL, error=str(exc)))
+        save_json("seoul_housing_transactions_api.json", {"endpoint": chart_url, "attempts": attempts, "error": str(exc)})
+        RESULTS.append(Result("首爾房市交易量", "Seoul Real Estate Information Plaza", "official_json_no_key", "FETCH_ERROR", definition="bldgGbn=AD, sggCd=11000, value=gubun10", source_url=chart_url, error=str(exc)))
 
 
 # ---------------- KB official workbook discovery ----------------
