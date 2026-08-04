@@ -27,7 +27,7 @@ import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
-VERSION = "2026-08-04-kr-source-validation-v15-direct-oecd-sdmx"
+VERSION = "2026-08-04-kr-source-validation-v16-oecd-correct-flow-version"
 OUT = Path("debug/kr_macro_sources")
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -228,8 +228,8 @@ def run_oecd_labour_fallback() -> None:
         RESULTS.append(Result("就業人數 YoY%", "OECD monthly employment persons", "official_sdmx_csv", "FETCH_ERROR", source_url=OECD_SDMX_DATA_BASE.format(flow=OECD_EMPLOYMENT_FLOW), error=str(exc)))
 
 
-OECD_RETAIL_URL = "https://sdmx.oecd.org/public/rest/data/OECD.SDD.STES,DSD_STES@DF_INDSERV,4.3/KOR.M.TOVM.GR.G47.Y.GY._Z.N"
-OECD_KEI_BASE = "https://sdmx.oecd.org/public/rest/data/OECD.SDD.STES,DSD_KEI@DF_KEI,1.0/{key}"
+OECD_RETAIL_URL = "https://sdmx.oecd.org/public/rest/data/OECD.SDD.STES,DSD_STES@DF_INDSERV,4.3/KOR.M.TOVM.GR.G47.Y.GY..N"
+OECD_KEI_BASE = "https://sdmx.oecd.org/public/rest/data/OECD.SDD.STES,DSD_KEI@DF_KEI,/{key}"
 STAT_KOREA_RETAIL_VERIFIED = {"2025-12": 1.2, "2026-05": 1.7, "2026-06": 4.2}
 OECD_QNA_SERIES = {
     "GDP民間消費 QoQ": {"measure": "P3_S1M_Q", "key": "KOR.Q.P3_S1M_Q.GR._T.Y.G1", "definition": "Private final consumption expenditure, real SA, QoQ"},
