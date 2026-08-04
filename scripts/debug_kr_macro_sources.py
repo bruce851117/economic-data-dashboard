@@ -27,7 +27,7 @@ import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
-VERSION = "2026-08-03-kr-source-validation-v14-fred-session-headers"
+VERSION = "2026-08-04-kr-source-validation-v15-direct-oecd-sdmx"
 OUT = Path("debug/kr_macro_sources")
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -228,97 +228,70 @@ def run_oecd_labour_fallback() -> None:
         RESULTS.append(Result("就業人數 YoY%", "OECD monthly employment persons", "official_sdmx_csv", "FETCH_ERROR", source_url=OECD_SDMX_DATA_BASE.format(flow=OECD_EMPLOYMENT_FLOW), error=str(exc)))
 
 
-FRED_CSV_BASE = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
-FRED_STATIC_BASE = "https://fred.stlouisfed.org/data/{series_id}.txt"
-FRED_RETAIL_SERIES = "KORSLRTTO01GYSAM"
+OECD_RETAIL_URL = "https://sdmx.oecd.org/public/rest/data/OECD.SDD.STES,DSD_STES@DF_INDSERV,4.3/KOR.M.TOVM.GR.G47.Y.GY._Z.N"
+OECD_KEI_BASE = "https://sdmx.oecd.org/public/rest/data/OECD.SDD.STES,DSD_KEI@DF_KEI,1.0/{key}"
 STAT_KOREA_RETAIL_VERIFIED = {"2025-12": 1.2, "2026-05": 1.7, "2026-06": 4.2}
-FRED_QNA_SERIES = {
-    "GDP民間消費 QoQ": "NAEXKP02KRQ657S",
-    "GDP投資 QoQ": "NAEXKP04KRQ657S",
-    "GDP出口 QoQ": "NAEXKP06KRQ657S",
+OECD_QNA_SERIES = {
+    "GDP民間消費 QoQ": {"measure": "P3_S1M_Q", "key": "KOR.Q.P3_S1M_Q.GR._T.Y.G1", "definition": "Private final consumption expenditure, real SA, QoQ"},
+    "GDP投資 QoQ": {"measure": "P51G_Q", "key": "KOR.Q.P51G_Q.GR._T.Y.G1", "definition": "Gross fixed capital formation, real SA, QoQ"},
+    "GDP出口 QoQ": {"measure": "P6_Q", "key": "KOR.Q.P6_Q.GR._T.Y.G1", "definition": "Exports of goods and services, real SA, QoQ"},
 }
 
 
-def fred_series(series_id: str, quarterly: bool = False) -> dict[str, float]:
-    """Download one small structured FRED series without scraping release HTML.
-
-    The static text endpoint is attempted first because GitHub-hosted runners can
-    time out on the chart CSV endpoint. The CSV endpoint remains a secondary
-    fallback. Both responses contain the same published time series.
-    """
-    attempts = []
-    raw_rows: list[tuple[str, Any]] = []
-    static_url = FRED_STATIC_BASE.format(series_id=series_id)
-    try:
-        response = SESSION.get(static_url, timeout=(20, 120), headers={**dict(SESSION.headers), "Accept": "text/plain,*/*;q=0.5"})
-        response.raise_for_status()
-        for line in response.text.splitlines():
-            match = re.match(r"^\s*(\d{4}-\d{2}-\d{2})\s+([^\s]+)\s*$", line)
-            if match:
-                raw_rows.append((match.group(1), match.group(2)))
-        if not raw_rows:
-            attempts.append({"url": static_url, "error": "No date/value rows in static text response"})
-    except Exception as exc:
-        attempts.append({"url": static_url, "error": str(exc)})
-
-    csv_url = FRED_CSV_BASE.format(series_id=series_id)
-    if not raw_rows:
-        try:
-            response = SESSION.get(csv_url, timeout=(20, 120), headers={**dict(SESSION.headers), "Accept": "text/csv,*/*;q=0.5"})
-            response.raise_for_status()
-            frame = pd.read_csv(io.BytesIO(response.content), dtype=str)
-            if len(frame.columns) < 2:
-                raise RuntimeError(f"FRED CSV has unexpected columns: {list(frame.columns)}")
-            raw_rows = list(zip(frame.iloc[:, 0], frame.iloc[:, 1]))
-        except Exception as exc:
-            attempts.append({"url": csv_url, "error": str(exc)})
-
+def oecd_csv_values(url: str, start_period: str, quarterly: bool = False) -> tuple[dict[str, float], str, dict[str, Any]]:
+    response = get(url, params={"startPeriod": start_period, "dimensionAtObservation": "AllDimensions", "format": "csvfilewithlabels"}, headers={"Accept": "text/csv,application/vnd.sdmx.data+csv;version=2.0;q=0.9,*/*;q=0.1"})
+    frame = pd.read_csv(io.BytesIO(response.content), dtype=str)
+    period_col = next((c for c in frame if c.split(":", 1)[0].strip() == "TIME_PERIOD"), None)
+    value_col = next((c for c in frame if c.split(":", 1)[0].strip() == "OBS_VALUE"), None)
+    if not period_col or not value_col:
+        raise RuntimeError(f"OECD CSV missing TIME_PERIOD/OBS_VALUE: {list(frame.columns)}")
     values: dict[str, float] = {}
-    for raw_date, raw_value in raw_rows:
+    for raw_period, raw_value in zip(frame[period_col], frame[value_col]):
+        period = period_quarter(raw_period) if quarterly else period_month(raw_period)
         value = number(raw_value)
-        date_text = str(raw_date)
-        if value is None or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date_text):
-            continue
-        month = int(date_text[5:7])
-        period = f"{date_text[:4]}-Q{(month - 1) // 3 + 1}" if quarterly else date_text[:7]
-        values[period] = value
+        if period and value is not None:
+            values[period] = value
     if not values:
-        raise RuntimeError(json.dumps({"series_id": series_id, "attempts": attempts}, ensure_ascii=False))
-    return values
+        raise RuntimeError("OECD SDMX response contained no numeric observations")
+    metadata = {}
+    if not frame.empty:
+        for col in frame.columns:
+            if col not in {period_col, value_col} and not col.startswith("OBS_"):
+                value = clean(frame.iloc[-1][col])
+                if value:
+                    metadata[col] = value
+    return values, response.url, metadata
 
 
 def run_retail_fallback() -> None:
-    details = {"series_id": FRED_RETAIL_SERIES, "verified_latest": STAT_KOREA_RETAIL_VERIFIED, "monthly_html_fetching": False}
+    details: dict[str, Any] = {"monthly_html_fetching": False, "structured_source": "OECD SDMX", "verified_latest": STAT_KOREA_RETAIL_VERIFIED}
     try:
-        values = fred_series(FRED_RETAIL_SERIES)
-        fred_latest = max(values)
+        values, final_url, metadata = oecd_csv_values(OECD_RETAIL_URL, "2015-01")
+        oecd_latest = max(values)
         values.update(STAT_KOREA_RETAIL_VERIFIED)
         latest = max(values)
-        details.update({"fred_latest": fred_latest, "latest": list(sorted(values.items()))[-18:]})
+        details.update({"oecd_latest": oecd_latest, "metadata": metadata, "latest": list(sorted(values.items()))[-18:]})
         save_json("stat_korea_retail_details.json", details)
-        RESULTS.append(Result("Real 零售 YoY", "OECD retail trade volume via FRED CSV", "structured_csv_no_key", "STRUCTURED_CSV_PLUS_AUDITED_LATEST", latest, values[latest], len(values), "Total retail trade volume, monthly SA, YoY; structured history; no monthly HTML scraping", FRED_CSV_BASE.format(series_id=FRED_RETAIL_SERIES), details))
+        RESULTS.append(Result("Real 零售 YoY", "OECD Production and Sales SDMX plus audited Korean latest values", "official_sdmx_csv", "OFFICIAL_SDMX_PLUS_AUDITED_LATEST", latest, values[latest], len(values), "Retail trade volume, monthly SA, YoY; direct OECD SDMX; no monthly HTML scraping", final_url, details))
     except Exception as exc:
         latest = max(STAT_KOREA_RETAIL_VERIFIED)
-        details["error"] = str(exc); save_json("stat_korea_retail_details.json", details)
-        RESULTS.append(Result("Real 零售 YoY", "Audited official checkpoints", "official_verified_cache", "STRUCTURED_FETCH_ERROR_USING_CACHE", latest, STAT_KOREA_RETAIL_VERIFIED[latest], len(STAT_KOREA_RETAIL_VERIFIED), "Retail Sales Index YoY; no monthly HTML scraping", FRED_CSV_BASE.format(series_id=FRED_RETAIL_SERIES), details, str(exc)))
+        details["error"] = str(exc)
+        save_json("stat_korea_retail_details.json", details)
+        RESULTS.append(Result("Real 零售 YoY", "Audited official checkpoints", "official_verified_cache", "OECD_SDMX_ERROR_USING_CACHE", latest, STAT_KOREA_RETAIL_VERIFIED[latest], len(STAT_KOREA_RETAIL_VERIFIED), "Retail Sales Index YoY; no monthly HTML scraping", OECD_RETAIL_URL, details, str(exc)))
 
 
 def run_structured_qna() -> None:
-    definitions = {
-        "GDP民間消費 QoQ": "Private final consumption expenditure, real SA, QoQ",
-        "GDP投資 QoQ": "Gross fixed capital formation, real SA, QoQ",
-        "GDP出口 QoQ": "Exports of goods and services, real SA, QoQ",
-    }
     diagnostics = []
-    for indicator, series_id in FRED_QNA_SERIES.items():
-        url = FRED_CSV_BASE.format(series_id=series_id)
+    for indicator, spec in OECD_QNA_SERIES.items():
+        url = OECD_KEI_BASE.format(key=spec["key"])
         try:
-            values = fred_series(series_id, quarterly=True); latest = max(values)
-            diagnostics.append({"indicator": indicator, "series_id": series_id, "latest": latest, "value": values[latest], "points": len(values)})
-            RESULTS.append(Result(indicator, "OECD Quarterly National Accounts via FRED CSV", "structured_csv_no_key", "STRUCTURED_CSV_ONLY", latest, values[latest], len(values), definitions[indicator], url, {"series_id": series_id, "latest": list(sorted(values.items()))[-12:]}))
+            values, final_url, metadata = oecd_csv_values(url, "2015-Q1", quarterly=True)
+            latest = max(values)
+            diagnostics.append({"indicator": indicator, "measure": spec["measure"], "url": final_url, "latest": latest, "value": values[latest], "points": len(values), "metadata": metadata})
+            RESULTS.append(Result(indicator, "OECD Key Economic Indicators SDMX", "official_sdmx_csv", "OFFICIAL_SDMX_ONLY", latest, values[latest], len(values), spec["definition"], final_url, {"measure": spec["measure"], "metadata": metadata, "latest": list(sorted(values.items()))[-12:]}))
         except Exception as exc:
-            diagnostics.append({"indicator": indicator, "series_id": series_id, "error": str(exc)})
-            RESULTS.append(Result(indicator, "OECD Quarterly National Accounts via FRED CSV", "structured_csv_no_key", "FETCH_ERROR", definition=definitions[indicator], source_url=url, error=str(exc)))
+            diagnostics.append({"indicator": indicator, "measure": spec["measure"], "url": url, "error": str(exc)})
+            RESULTS.append(Result(indicator, "OECD Key Economic Indicators SDMX", "official_sdmx_csv", "FETCH_ERROR", definition=spec["definition"], source_url=url, error=str(exc)))
     save_json("structured_qna_details.json", diagnostics)
 
 
