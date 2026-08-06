@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-08-06T08:37:08.618487+00:00",
+  "updated_at_utc": "2026-08-06T08:56:00.330441+00:00",
   "series": {
     "就業-就業（人數，千人）|非農": {
       "2023-01": 154776.0,
@@ -3545,6 +3545,7 @@
     "消費|零售控制 MoM%": {}
   },
   "errors": [
+    "BLS: ['Your request has failed. Please check your input parameters, and try your request again.']",
     "ADP: ADP history link not found",
     "密大1y通膨預期: Missing FRED_API_KEY",
     "密大5~10y通膨預期: Missing FRED_API_KEY",
