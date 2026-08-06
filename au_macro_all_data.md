@@ -1,0 +1,182 @@
+# 澳洲總體資料 Debug 表
+
+更新時間：2026-08-06T05:24:53.248735+00:00
+
+> 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
+
+<table>
+  <thead>
+    <tr>
+      <th style="min-width:60px"></th>
+      <th style="min-width:180px"></th>
+      <th align="center" style="min-width:90px">2026/7/31</th>
+      <th align="center" style="min-width:90px">2026/6/30</th>
+      <th align="center" style="min-width:90px">2026/5/31</th>
+      <th align="center" style="min-width:90px">2026/4/30</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="7" align="center" valign="middle">就業</th>
+      <td>就業新增</td>
+      <td align="right"></td>
+      <td align="right" bgcolor="#f86971">76</td>
+      <td align="right" bgcolor="#fcbdc1">44</td>
+      <td align="right" bgcolor="#63be7b">-39</td>
+    </tr>
+    <tr>
+      <td>失業率</td>
+      <td align="right"></td>
+      <td align="right" bgcolor="#f8fcf9">4.43</td>
+      <td align="right" bgcolor="#63be7b">4.37</td>
+      <td align="right" bgcolor="#f86971">4.49</td>
+    </tr>
+    <tr>
+      <td>職缺</td>
+      <td align="right"></td>
+      <td align="right"></td>
+      <td align="right" bgcolor="#ffffff">330</td>
+      <td align="right"></td>
+    </tr>
+    <tr>
+      <td>ANZ職缺廣告數</td>
+      <td align="right"></td>
+      <td align="right" bgcolor="#f98188">116</td>
+      <td align="right" bgcolor="#f86971">116</td>
+      <td align="right" bgcolor="#63be7b">114</td>
+    </tr>
+    <tr>
+      <td>時薪YoY</td>
+      <td align="right"></td>
+      <td align="right"></td>
+      <td align="right"></td>
+      <td align="right"></td>
+    </tr>
+    <tr>
+      <td>預計離職</td>
+      <td align="right"></td>
+      <td align="right"></td>
+      <td align="right"></td>
+      <td align="right"></td>
+    </tr>
+    <tr>
+      <td>失業預期</td>
+      <td align="right" bgcolor="#63be7b">129.9</td>
+      <td align="right" bgcolor="#feeff0">139.8</td>
+      <td align="right" bgcolor="#feebec">140.0</td>
+      <td align="right" bgcolor="#f86971">147.8</td>
+    </tr>
+    <tr>
+      <th rowspan="3" align="center" valign="middle">通膨</th>
+      <td>CPI</td>
+      <td align="right"></td>
+      <td align="right" bgcolor="#63be7b">3.80</td>
+      <td align="right" bgcolor="#ffffff">4.00</td>
+      <td align="right" bgcolor="#f86971">4.20</td>
+    </tr>
+    <tr>
+      <td>Trim mean</td>
+      <td align="right"></td>
+      <td align="right" bgcolor="#f86971">3.60</td>
+      <td align="right" bgcolor="#f86971">3.60</td>
+      <td align="right" bgcolor="#63be7b">3.40</td>
+    </tr>
+    <tr>
+      <td>零售</td>
+      <td align="right"></td>
+      <td align="right" bgcolor="#fdcdd0">0.40</td>
+      <td align="right" bgcolor="#f86971">1.20</td>
+      <td align="right" bgcolor="#63be7b">-1.20</td>
+    </tr>
+    <tr>
+      <th rowspan="4" align="center" valign="middle">調查</th>
+      <td>NAB企業調查 售價</td>
+      <td align="right"></td>
+      <td align="right" bgcolor="#63be7b">0.60</td>
+      <td align="right" bgcolor="#b1debd">0.90</td>
+      <td align="right" bgcolor="#f86971">1.80</td>
+    </tr>
+    <tr>
+      <td>消費信心</td>
+      <td align="right" bgcolor="#63be7b">83.90</td>
+      <td align="right" bgcolor="#fa8d93">80.60</td>
+      <td align="right" bgcolor="#b0debc">82.98</td>
+      <td align="right" bgcolor="#f86971">80.15</td>
+    </tr>
+    <tr>
+      <td>PMI製造業</td>
+      <td align="right" bgcolor="#f86971">51.7</td>
+      <td align="right" bgcolor="#fba5aa">51.5</td>
+      <td align="right" bgcolor="#63be7b">50.7</td>
+      <td align="right" bgcolor="#fee1e3">51.3</td>
+    </tr>
+    <tr>
+      <td>PMI服務業</td>
+      <td align="right" bgcolor="#f86971">53.0</td>
+      <td align="right" bgcolor="#e6f4ea">50.5</td>
+      <td align="right" bgcolor="#63be7b">48.7</td>
+      <td align="right" bgcolor="#f4faf6">50.7</td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<table>
+  <thead>
+    <tr>
+      <th style="min-width:60px"></th>
+      <th style="min-width:180px"></th>
+      <th align="center" style="min-width:90px">2026/3/31</th>
+      <th align="center" style="min-width:90px">2025/12/31</th>
+      <th align="center" style="min-width:90px">2025/9/30</th>
+      <th align="center" style="min-width:90px">2025/6/30</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="3" align="center" valign="middle">GDP</th>
+      <td>GDP</td>
+      <td align="right" bgcolor="#f86971">2.52</td>
+      <td align="right" bgcolor="#f87179">2.51</td>
+      <td align="right" bgcolor="#90d1a1">2.06</td>
+      <td align="right" bgcolor="#63be7b">1.98</td>
+    </tr>
+    <tr>
+      <td>GDP 私人消費</td>
+      <td align="right" bgcolor="#eaf6ed">2.47</td>
+      <td align="right" bgcolor="#f0f9f3">2.48</td>
+      <td align="right" bgcolor="#f86971">2.71</td>
+      <td align="right" bgcolor="#63be7b">2.30</td>
+    </tr>
+    <tr>
+      <td>GDP投資</td>
+      <td align="right" bgcolor="#f86971">6.47</td>
+      <td align="right" bgcolor="#ebf7ee">3.47</td>
+      <td align="right" bgcolor="#cdead5">2.95</td>
+      <td align="right" bgcolor="#63be7b">1.14</td>
+    </tr>
+  </tbody>
+</table>
+
+## 更新狀態
+
+| 指標 | 狀態 | 新增 | 修訂 | 官方最新期 | 官方最新值 | 錯誤 |
+|---|---|---:|---:|---|---:|---|
+| 就業新增 | OK | 0 | 0 | 2026-06 | 76.3425194399988 |  |
+| 失業率 | OK | 0 | 0 | 2026-06 | 4.42834371 |  |
+| 職缺 | OK | 0 | 0 | 2026-05 | 329.5 |  |
+| ANZ職缺廣告 | OK | 0 | 0 | 2026-06 | 115.83784728443354 |  |
+| 時薪YoY | OK | 0 | 0 | 2026-Q1 | 2.984126984126978 |  |
+| 預計離職 | OK | 0 | 0 | 2026-Q1 | 1310.8837533 |  |
+| 失業預期 | OK | 0 | 0 | 2026-07 | 129.9 |  |
+| CPI YoY | OK | 0 | 0 | 2026-06 | 3.8 |  |
+| Trimmed Mean YoY | OK | 0 | 0 | 2026-06 | 3.6 |  |
+| 零售 | OK | 1 | 16 | 2026-06 | 0.4 |  |
+| NAB企業售價 | OK | 0 | 0 | 2026-06 | 0.6 |  |
+| 消費信心 | OK | 0 | 0 | 2026-07 | 83.9 |  |
+| 製造業PMI | ERROR | 0 | 0 |  |  | RuntimeError: No Australia PMI value parsed from discovered official S&P releases |
+| 服務業PMI | ERROR | 0 | 0 |  |  | RuntimeError: No Australia PMI value parsed from discovered official S&P releases |
+| GDP YoY | OK | 0 | 0 | 2026-Q1 | 2.5197395557126967 |  |
+| GDP私人消費YoY | OK | 0 | 0 | 2026-Q1 | 2.4727989254179406 |  |
+| GDP投資YoY | OK | 0 | 0 | 2026-Q1 | 6.474938173333422 |  |

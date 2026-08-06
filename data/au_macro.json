@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-01T05:34:46.219853+00:00",
+  "generated_at": "2026-08-06T05:24:53.248735+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -4863,120 +4863,126 @@
         },
         {
           "date": "2025-01-01",
-          "value": 0.6,
-          "source": "AU_ECON.xlsx",
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
-        },
-        {
-          "date": "2025-02-01",
-          "value": 0.2,
-          "source": "AU_ECON.xlsx",
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
-        },
-        {
-          "date": "2025-03-01",
-          "value": 0.1,
-          "source": "AU_ECON.xlsx",
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
-        },
-        {
-          "date": "2025-04-01",
-          "value": 0.2,
-          "source": "AU_ECON.xlsx",
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
-        },
-        {
-          "date": "2025-05-01",
           "value": 0.9,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
         },
         {
-          "date": "2025-06-01",
-          "value": 0.4,
+          "date": "2025-02-01",
+          "value": 0.1,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
         },
         {
-          "date": "2025-07-01",
-          "value": 0.4,
+          "date": "2025-03-01",
+          "value": -1.3,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
         },
         {
-          "date": "2025-08-01",
-          "value": -0.1,
+          "date": "2025-04-01",
+          "value": 2.3,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
         },
         {
-          "date": "2025-09-01",
-          "value": 0.3,
-          "source": "AU_ECON.xlsx",
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
-        },
-        {
-          "date": "2025-10-01",
+          "date": "2025-05-01",
           "value": 1.4,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 0.0,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 0.7,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
+        },
+        {
+          "date": "2025-08-01",
+          "value": -0.3,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 0.0,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 1.6,
+          "source": "AU_ECON.xlsx",
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
         },
         {
           "date": "2025-11-01",
           "value": 0.9,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
         },
         {
           "date": "2025-12-01",
-          "value": -0.5,
+          "value": 0.1,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
         },
         {
           "date": "2026-01-01",
-          "value": 0.2,
+          "value": 0.0,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
         },
         {
           "date": "2026-02-01",
-          "value": 0.3,
+          "value": 0.5,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
         },
         {
           "date": "2026-03-01",
-          "value": 1.7,
+          "value": 2.0,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
         },
         {
           "date": "2026-04-01",
-          "value": -1.1,
+          "value": -1.2,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
         },
         {
           "date": "2026-05-01",
-          "value": 1.3,
+          "value": 1.2,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted aus australia m monthly pct percent"
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 0.4,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
         }
       ]
     },
