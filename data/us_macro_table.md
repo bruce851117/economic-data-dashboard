@@ -1,6 +1,6 @@
 # 美國總體經濟數據
 
-> 更新時間：2026-08-06 08:00 UTC  
+> 更新時間：2026-08-06 08:37 UTC  
 > 日期為資料所屬月份月底。N/A 代表該月份尚未發布，或官方來源未提供可穩定自動下載的歷史值。
 
 ## 就業-就業（人數，千人）
@@ -117,8 +117,8 @@
 | Core CPI | CPI XYOY Index | 2026/06/30 | Bureau of Labor Statistics | CUUR0000SA0L1E | N/A | 2.594 | 2.851 | 2.75 | 2.595 |
 | Core Goods | CPRPCXYY Index | 2026/06/30 | Bureau of Labor Statistics | CUUR0000SACL1E | N/A | 0.818 | 1.063 | 1.129 | 1.182 |
 | Core Services | CPRPSXYY Index | 2026/06/30 | Bureau of Labor Statistics | CUUR0000SASLE | N/A | 3.161 | 3.421 | 3.268 | 3.047 |
-| SuperCore | CPUPNFEY Index | 2026/06/30 | Bureau of Labor Statistics | CUUR0000SASL2RS | N/A | 3.146 | 3.743 | 3.518 | 3.358 |
-| Core PPI | FDIUSGYO Index | 2026/06/30 | Bureau of Labor Statistics | WPSFD49116 | N/A | 5.057 | 5.073 | 4.407 | 3.651 |
+| Core Services less Shelter | CPUPNFEY Index | 2026/06/30 | Bureau of Labor Statistics | CUUR0000SASL2RS | N/A | 3.146 | 3.743 | 3.518 | 3.358 |
+| Core PPI | FDIUSGYO Index | 2026/06/30 | Bureau of Labor Statistics | WPUFD49104 | N/A | 4.673 | 4.579 | 4.889 | 3.949 |
 | US Zillow Rent Index All Homes MoM Smoothed SA | ZRIOAMOM Index | 2026/06/30 | Zillow Research | National ZORI SA MoM | N/A | 0.266 | 0.243 | 0.209 | 0.128 |
 | 密大1y通膨預期 | CONSPXMD Index | N/A | University of Michigan | MICH | N/A | N/A | N/A | N/A | N/A |
 | 密大5~10y通膨預期 | CONSP5MD Index | N/A | University of Michigan | MICH5E | N/A | N/A | N/A | N/A | N/A |
