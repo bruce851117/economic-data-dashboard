@@ -282,19 +282,82 @@ def main():
     current["就業-職缺|職缺/失業人口"]=merge(old.get("就業-職缺|職缺/失業人口",{}),{k:round(jolts[k]/unemployed[k],7) for k in jolts.keys()&unemployed.keys() if unemployed[k]})
     cache={"updated_at_utc":datetime.now(timezone.utc).isoformat(),"series":current,"errors":errors}
     CACHE.write_text(json.dumps(cache,ensure_ascii=False,indent=2),encoding="utf-8")
-    all_periods=sorted({p for values in current.values() for p in values})[-MONTHS:]
-    lines=["# 美國總體經濟數據", "", f"> 更新時間：{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}  ", "> 日期為資料所屬月份月底。N/A 代表該月份尚未發布，或官方來源未提供可穩定自動下載的歷史值。", ""]
-    for section in dict.fromkeys(s.section for s in SPECS):
-        rows=[s for s in SPECS if s.section==section]
-        lines += [f"## {section}","", "| 指標 | Bloomberg | 最新資料月份 | 來源 | 官方序列 / 定義 | " + " | ".join(month_end(p) for p in reversed(all_periods)) + " |", "|---|---|---:|---|---|"+"---:|"*len(all_periods)]
-        for s in rows:
-            vals=current.get(f"{s.section}|{s.name}",{}); latest=max(vals) if vals else None
-            display="&nbsp;"*(s.level*4)+s.name
-            lines.append("| " + " | ".join([display,s.ticker,month_end(latest) if latest else "N/A",s.source,s.series]+[fmt(vals.get(p)) for p in reversed(all_periods)]) + " |")
-        lines.append("")
+    # Markdown 僅輸出下列 32 項；順序及顯示名稱均固定，不受 SPECS 順序影響。
+    # tuple: (Markdown 顯示名稱, cache section, cache 指標名稱)
+    md_rows = [
+        ("Atlanta Fed Job Switcher薪資", "就業-薪水", "Atlanta Fed Job Switcher薪資"),
+        ("Atlanta Fed Job Stayer薪資", "就業-薪水", "Atlanta Fed Job Stayer薪資"),
+        ("ADP Pay Job Changers薪資", "就業-薪水", "ADP Pay Job Changers薪資"),
+        ("ADP Pay Job Stayers薪資", "就業-薪水", "ADP Pay Job Stayers薪資"),
+        ("Atlanta Fed最低25%薪資", "就業-薪水", "Atlanta Fed最低25%薪資"),
+        ("Atlanta Fed 50%薪資", "就業-薪水", "Atlanta Fed 50%薪資"),
+        ("Atlanta Fed 75%薪資", "就業-薪水", "Atlanta Fed 75%薪資"),
+        ("Atlanta Fed最高25%薪資", "就業-薪水", "Atlanta Fed最高25%薪資"),
+        ("ISM服務就業", "就業-調查", "ISM服務就業"),
+        ("ISM製造就業", "就業-調查", "ISM製造就業"),
+        ("中小企hiring plan", "就業-調查", "中小企hiring plan"),
+        ("自願離職調查", "就業-調查", "自願離職調查"),
+        ("Job Plentiful", "就業-調查", "Job Plentiful"),
+        ("Job Hard to get", "就業-調查", "Job Hard to get"),
+        ("SuperCore", "物價", "Core Services less Shelter"),
+        ("Core PPI", "物價", "Core PPI"),
+        ("NY FED 1y通膨預期", "物價", "NY FED 1y通膨預期"),
+        ("NY FED 5y通膨預期", "物價", "NY FED 5y通膨預期"),
+        ("密大1y通膨預期", "物價", "密大1y通膨預期"),
+        ("密大5~10y通膨預期", "物價", "密大5~10y通膨預期"),
+        ("零售控制", "消費", "零售控制 MoM%"),
+        ("Real Personal Spending", "消費", "Real Personal Spending"),
+        ("disposable personal income", "消費", "disposable personal income"),
+        ("Personal Outlays", "消費", "Personal Outlays"),
+        ("Personal Saving", "消費", "Personal Saving"),
+        ("Interest Paid", "消費", "Interest Paid"),
+        ("家戶金融狀況vs一年前", "消費", "家戶金融狀況vs一年前"),
+        ("預計未來一年金融狀況", "消費", "預計未來一年金融狀況"),
+        ("密大", "消費", "密大"),
+        ("CB", "消費", "CB"),
+        ("ISM製造", "企業調查", "ISM製造"),
+        ("ISM服務", "企業調查", "ISM服務"),
+    ]
+    spec_by_key = {f"{s.section}|{s.name}": s for s in SPECS}
+    selected_keys = [f"{section}|{cache_name}" for _, section, cache_name in md_rows]
+    all_periods = sorted({
+        period
+        for key in selected_keys
+        for period in current.get(key, {})
+    })[-MONTHS:]
+
+    lines = [
+        "# 美國總體經濟數據",
+        "",
+        f"> 更新時間：{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}  ",
+        "> 日期為資料所屬月份月底。N/A 代表該月份尚未發布，或官方來源未提供可穩定自動下載的歷史值。",
+        "",
+        "| 指標 | Bloomberg | 最新資料月份 | 來源 | 官方序列 / 定義 | "
+        + " | ".join(month_end(p) for p in reversed(all_periods)) + " |",
+        "|---|---|---:|---|---|" + "---:|" * len(all_periods),
+    ]
+    for display_name, section, cache_name in md_rows:
+        key = f"{section}|{cache_name}"
+        s = spec_by_key[key]
+        vals = current.get(key, {})
+        latest = max(vals) if vals else None
+        lines.append("| " + " | ".join(
+            [display_name, s.ticker, month_end(latest) if latest else "N/A", s.source, s.series]
+            + [fmt(vals.get(p)) for p in reversed(all_periods)]
+        ) + " |")
+
+    lines.append("")
     if errors:
-        lines += ["## 更新警告","", *[f"- {e}" for e in errors],""]
-    lines += ["## 來源策略","", "- BLS：Public Data API v2，涵蓋 CES、CPS、JOLTS、CPI、PPI。", "- Atlanta Fed、ADP、Zillow：優先使用官方 XLSX、ZIP/CSV。", "- BEA 與密大公開序列：使用 FRED API，需設定 `FRED_API_KEY`。", "- ISM、NFIB、紐約聯準銀行與 Conference Board：只補官方頁面可穩定辨識的最新值；未提供開放歷史 API 的月份不臆造，並保留先前成功資料。", ""]
+        lines += ["## 更新警告", "", *[f"- {e}" for e in errors], ""]
+    lines += [
+        "## 來源策略",
+        "",
+        "- BLS：Public Data API v2，涵蓋 CPI、PPI 等官方資料。",
+        "- Atlanta Fed、ADP：優先使用官方 XLSX、ZIP/CSV。",
+        "- BEA 與密大公開序列：目前使用 FRED API。",
+        "- ISM、NFIB、紐約聯準銀行與 Conference Board：只補官方頁面可穩定辨識的最新值；未提供開放歷史 API 的月份不臆造，並保留先前成功資料。",
+        "",
+    ]
     OUT.write_text("\n".join(lines),encoding="utf-8")
     print(f"Wrote {OUT} with {len(SPECS)} rows; warnings={len(errors)}")
 
