@@ -1,18 +1,18 @@
 # 美國總體經濟數據
 
-> 更新時間：2026-08-06 09:01 UTC  
+> 更新時間：2026-08-06 09:28 UTC  
 > 日期為資料所屬月份月底。N/A 代表該月份尚未發布，或官方來源未提供可穩定自動下載的歷史值。
 
 | 指標 | Bloomberg | 最新資料月份 | 來源 | 官方序列 / 定義 | 2026/08/31 | 2026/06/30 | 2026/05/31 | 2026/04/30 | 2026/03/31 |
 |---|---|---:|---|---|---:|---:|---:|---:|---:|
-| Atlanta Fed Job Switcher薪資 | WGTRJBSW Index | N/A | Federal Reserve Bank of Atlanta | Job switcher | N/A | N/A | N/A | N/A | N/A |
-| Atlanta Fed Job Stayer薪資 | WGTRJBSY Index | N/A | Federal Reserve Bank of Atlanta | Job stayer | N/A | N/A | N/A | N/A | N/A |
+| Atlanta Fed Job Switcher薪資 | WGTRJBSW Index | 2026/06/30 | Federal Reserve Bank of Atlanta | Job switcher | N/A | 4.1 | 3.7 | 3.8 | 5 |
+| Atlanta Fed Job Stayer薪資 | WGTRJBSY Index | 2026/06/30 | Federal Reserve Bank of Atlanta | Job stayer | N/A | 3.4 | 3.3 | 3.6 | 3.8 |
 | ADP Pay Job Changers薪資 | ADPUJCPG Index | N/A | ADP Research | Median YoY job changers | N/A | N/A | N/A | N/A | N/A |
 | ADP Pay Job Stayers薪資 | ADPUJSPG Index | N/A | ADP Research | Median YoY job stayers | N/A | N/A | N/A | N/A | N/A |
-| Atlanta Fed最低25%薪資 | WGTRQUA1 Index | N/A | Federal Reserve Bank of Atlanta | 1st wage quartile | N/A | N/A | N/A | N/A | N/A |
-| Atlanta Fed 50%薪資 | WGTRQUA2 Index | N/A | Federal Reserve Bank of Atlanta | 2nd wage quartile | N/A | N/A | N/A | N/A | N/A |
-| Atlanta Fed 75%薪資 | WGTRQUA3 Index | N/A | Federal Reserve Bank of Atlanta | 3rd wage quartile | N/A | N/A | N/A | N/A | N/A |
-| Atlanta Fed最高25%薪資 | WGTRQUA4 Index | N/A | Federal Reserve Bank of Atlanta | 4th wage quartile | N/A | N/A | N/A | N/A | N/A |
+| Atlanta Fed最低25%薪資 | WGTRQUA1 Index | 2026/06/30 | Federal Reserve Bank of Atlanta | 1st wage quartile | N/A | 3.6 | 3.5 | 3.6 | 3.5 |
+| Atlanta Fed 50%薪資 | WGTRQUA2 Index | 2026/06/30 | Federal Reserve Bank of Atlanta | 2nd wage quartile | N/A | 4 | 4 | 4.1 | 4.2 |
+| Atlanta Fed 75%薪資 | WGTRQUA3 Index | 2026/06/30 | Federal Reserve Bank of Atlanta | 3rd wage quartile | N/A | 3.9 | 4 | 4.1 | 4.4 |
+| Atlanta Fed最高25%薪資 | WGTRQUA4 Index | 2026/06/30 | Federal Reserve Bank of Atlanta | 4th wage quartile | N/A | 3.9 | 3.8 | 3.7 | 3.8 |
 | ISM服務就業 | NAPMNEMP Index | N/A | Institute for Supply Management | Official monthly report | N/A | N/A | N/A | N/A | N/A |
 | ISM製造就業 | NAPMEMPL Index | N/A | Institute for Supply Management | Official monthly report | N/A | N/A | N/A | N/A | N/A |
 | 中小企hiring plan | SBOIHIRE Index | 2026/08/31 | NFIB | Plans to Increase Employment | 12 | N/A | N/A | N/A | N/A |
@@ -40,7 +40,8 @@
 
 ## 更新警告
 
-- ADP: ADP history link not found
+- BLS: ['Your request has failed. Please check your input parameters, and try your request again.']
+- ADP: ADP Pay Insights historical ZIP link not found
 - 密大5~10y通膨預期: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=MICH5E&api_key=8a03085705655538369511e239a57d04&file_type=json&observation_start=2023-01-01
 - Personal Outlays: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=A068RC1M027SBEA&api_key=8a03085705655538369511e239a57d04&file_type=json&observation_start=2023-01-01
 - Interest Paid: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=B069RC1M027SBEA&api_key=8a03085705655538369511e239a57d04&file_type=json&observation_start=2023-01-01
