@@ -88,14 +88,17 @@ SPECS.append(Spec("物價","US Zillow Rent Index All Homes MoM Smoothed SA","ZRI
 # FRED is used only where the primary publisher has no stable open API used here.
 for section,name,ticker,source,fred_id,transform in [
 ("物價","密大1y通膨預期","CONSPXMD Index","University of Michigan","MICH","level"),
-("物價","密大5~10y通膨預期","CONSP5MD Index","University of Michigan","MICH5E","level"),
+("物價","密大5~10y通膨預期","CONSP5MD Index","University of Michigan","Long-run inflation expectations","umich_latest"),
 ("消費","Real Personal Spending","PCE CHY% Index","Bureau of Economic Analysis","PCEC96","yoy_pct"),
 ("消費","disposable personal income","PIDSDI Index","Bureau of Economic Analysis","DSPI","level"),
-("消費","Personal Outlays","PIDSSO Index","Bureau of Economic Analysis","A068RC1M027SBEA","level"),
+("消費","Personal Outlays","PIDSSO Index","Bureau of Economic Analysis","A068RC1","level"),
 ("消費","Personal Saving","PIDSS Index","Bureau of Economic Analysis","PSAVE","level"),
-("消費","Interest Paid","PIDSINT Index","Bureau of Economic Analysis","B069RC1M027SBEA","level"),
+("消費","Interest Paid","PIDSINT Index","Bureau of Economic Analysis","B069RC1","level"),
 ("消費","密大","CONSSENT Index","University of Michigan","UMCSENT","level")]:
-    SPECS.append(Spec(section,name,ticker,source,fred_id,"fred",fred_id,transform))
+    if transform == "umich_latest":
+        SPECS.append(Spec(section,name,ticker,source,fred_id,"umich_latest","long_run","level"))
+    else:
+        SPECS.append(Spec(section,name,ticker,source,fred_id,"fred",fred_id,transform))
 
 # Official downloadable/page sources. These parsers report unavailable rather than silently substituting a different concept.
 for name,ticker,key in [("NY FED 1y通膨預期","NYCNM1IR Index","one_year"),("NY FED 5y通膨預期","NYCN5IMD Index","five_year")]:
@@ -327,6 +330,34 @@ def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
         if m: out[(provider,key)]={period:float(m.group(1))}
     return out
 
+def fetch_michigan_long_run_latest():
+    """Fetch the latest official University of Michigan long-run inflation expectation."""
+    url = "https://www.sca.isr.umich.edu/"
+    response = SESSION.get(url, timeout=60)
+    response.raise_for_status()
+    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", response.text))
+
+    period_match = re.search(
+        r"(?:Final|Preliminary) Results for ([A-Za-z]+) (20\d{2})",
+        text,
+        flags=re.IGNORECASE,
+    )
+    if not period_match:
+        raise RuntimeError("University of Michigan reference month not found")
+    month_number = list(calendar.month_name).index(period_match.group(1).title())
+    period = month_key(int(period_match.group(2)), month_number)
+
+    patterns = [
+        r"Long-run inflation expectations[^.]{0,180}?(\d+(?:\.\d+)?)%",
+        r"long-run[^.]{0,120}?at\s+(\d+(?:\.\d+)?)%",
+        r"five[- ]year inflation expectations[^.]{0,120}?(\d+(?:\.\d+)?)%",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text, flags=re.IGNORECASE)
+        if match:
+            return {period: float(match.group(1))}
+    raise RuntimeError("University of Michigan long-run inflation value not found")
+
 def merge(old,new):
     x=dict(old or {}); x.update(new or {}); return dict(sorted(x.items()))
 def fmt(v):
@@ -356,6 +387,7 @@ def main():
             elif s.provider=="fred": vals=transform(fetch_fred(s.source_id),s.transform)
             elif s.provider=="atlanta": vals=atl.get(s.source_id,{})
             elif s.provider=="adp": vals=adp.get(s.source_id,{})
+            elif s.provider=="umich_latest": vals=fetch_michigan_long_run_latest()
             elif s.provider=="zillow": vals=zori
             elif s.provider in {"ism","nfib","conference","nyfed"}: vals=pages.get((s.provider,s.source_id),{})
             else: vals={}
@@ -368,17 +400,11 @@ def main():
     current["就業-職缺|職缺/失業人口"]=merge(old.get("就業-職缺|職缺/失業人口",{}),{k:round(jolts[k]/unemployed[k],7) for k in jolts.keys()&unemployed.keys() if unemployed[k]})
     cache={"updated_at_utc":datetime.now(timezone.utc).isoformat(),"series":current,"errors":errors}
     CACHE.write_text(json.dumps(cache,ensure_ascii=False,indent=2),encoding="utf-8")
-    # Markdown 僅輸出下列 32 項；順序及顯示名稱均固定，不受 SPECS 順序影響。
+    # Markdown 僅輸出尚待追蹤的 26 項；已確認成功的 6 項 Atlanta Fed 指標不再顯示。
     # tuple: (Markdown 顯示名稱, cache section, cache 指標名稱)
     md_rows = [
-        ("Atlanta Fed Job Switcher薪資", "就業-薪水", "Atlanta Fed Job Switcher薪資"),
-        ("Atlanta Fed Job Stayer薪資", "就業-薪水", "Atlanta Fed Job Stayer薪資"),
         ("ADP Pay Job Changers薪資", "就業-薪水", "ADP Pay Job Changers薪資"),
         ("ADP Pay Job Stayers薪資", "就業-薪水", "ADP Pay Job Stayers薪資"),
-        ("Atlanta Fed最低25%薪資", "就業-薪水", "Atlanta Fed最低25%薪資"),
-        ("Atlanta Fed 50%薪資", "就業-薪水", "Atlanta Fed 50%薪資"),
-        ("Atlanta Fed 75%薪資", "就業-薪水", "Atlanta Fed 75%薪資"),
-        ("Atlanta Fed最高25%薪資", "就業-薪水", "Atlanta Fed最高25%薪資"),
         ("ISM服務就業", "就業-調查", "ISM服務就業"),
         ("ISM製造就業", "就業-調查", "ISM製造就業"),
         ("中小企hiring plan", "就業-調查", "中小企hiring plan"),
