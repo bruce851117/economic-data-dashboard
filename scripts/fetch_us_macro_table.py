@@ -8,6 +8,7 @@ Prior successful observations are retained in data/us_macro_cache.json when a so
 from __future__ import annotations
 
 import calendar, io, json, os, re, time, zipfile
+from urllib.parse import urljoin
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -169,26 +170,62 @@ def fetch_fred(series_id:str)->dict[str,float]:
         if v is not None: out[d["date"][:7]]=v
     return out
 
-def fetch_atlanta()->dict[str,dict[str,float]]:
-    url="https://www.atlantafed.org/-/media/Project/Atlanta/FRBA/Documents/datafiles/chcs/wage-growth-tracker/wage-growth-data.xlsx"
-    r=SESSION.get(url,timeout=90); r.raise_for_status(); book=pd.ExcelFile(io.BytesIO(r.content))
-    aliases={"switcher":["job switcher"],"stayer":["job stayer"],"q1":["1st quartile","first quartile"],"q2":["2nd quartile","second quartile"],"q3":["3rd quartile","third quartile"],"q4":["4th quartile","fourth quartile"]}
-    result={k:{} for k in aliases}
-    for sheet in book.sheet_names:
-        raw=pd.read_excel(book,sheet_name=sheet,header=None)
-        for header in range(min(12,len(raw))):
-            df=pd.read_excel(book,sheet_name=sheet,header=header)
-            date_col=next((c for c in df.columns if "date" in str(c).lower()),None)
-            if date_col is None: continue
-            dates=pd.to_datetime(df[date_col],errors="coerce")
-            if dates.notna().sum()<3: continue
-            for key,words in aliases.items():
-                col=next((c for c in df.columns if any(w in str(c).lower() for w in words)),None)
-                if col is not None:
-                    for d,v in zip(dates,df[col]):
-                        n=num(v)
-                        if pd.notna(d) and n is not None: result[key][d.strftime("%Y-%m")]=n
+def _period_value_map(frame, date_column, value_column):
+    result = {}
+    dates = pd.to_datetime(frame[date_column], errors="coerce")
+    values = pd.to_numeric(frame[value_column], errors="coerce")
+    for date, value in zip(dates, values):
+        if pd.notna(date) and pd.notna(value):
+            result[date.strftime("%Y-%m")] = float(value)
     return result
+
+
+def _parse_atlanta_workbook(content):
+    """Parse the current Atlanta Fed Wage Growth Tracker workbook."""
+    workbook = pd.ExcelFile(io.BytesIO(content))
+    required_sheets = {"data_overall", "Average Wage Quartile"}
+    missing = required_sheets.difference(workbook.sheet_names)
+    if missing:
+        raise RuntimeError("Atlanta Fed workbook missing sheets: " + ", ".join(sorted(missing)))
+
+    overall = pd.read_excel(workbook, sheet_name="data_overall", header=1)
+    overall_date = overall.columns[0]
+    for column in ("Job Stayer", "Job Switcher"):
+        if column not in overall.columns:
+            raise RuntimeError(f"Atlanta Fed data_overall missing column: {column}")
+
+    quartiles = pd.read_excel(workbook, sheet_name="Average Wage Quartile", header=2)
+    quartile_date = quartiles.columns[0]
+    quartile_columns = {
+        "q1": "Lowest quartile of wage distribution",
+        "q2": "2nd quartile of wage distribution",
+        "q3": "3rd quartile of wage distribution",
+        "q4": "Highest quartile of wage distribution",
+    }
+    for column in quartile_columns.values():
+        if column not in quartiles.columns:
+            raise RuntimeError(f"Atlanta Fed quartile sheet missing column: {column}")
+
+    result = {
+        "switcher": _period_value_map(overall, overall_date, "Job Switcher"),
+        "stayer": _period_value_map(overall, overall_date, "Job Stayer"),
+    }
+    for key, column in quartile_columns.items():
+        result[key] = _period_value_map(quartiles, quartile_date, column)
+    empty = [key for key, values in result.items() if not values]
+    if empty:
+        raise RuntimeError("Atlanta Fed returned no usable data for: " + ", ".join(empty))
+    return result
+
+
+def fetch_atlanta():
+    url = (
+        "https://www.atlantafed.org/-/media/Project/Atlanta/FRBA/Documents/"
+        "datafiles/chcs/wage-growth-tracker/wage-growth-data.xlsx"
+    )
+    response = SESSION.get(url, timeout=90)
+    response.raise_for_status()
+    return _parse_atlanta_workbook(response.content)
 
 def fetch_zillow()->dict[str,float]:
     url="https://files.zillowstatic.com/research/public_csvs/zori/Metro_zori_uc_sfrcondomfr_sm_sa_month.csv"
@@ -201,24 +238,73 @@ def fetch_zillow()->dict[str,float]:
             if v is not None: vals[c[:7]]=v
     return transform(vals,"mom_pct")
 
-def fetch_adp()->dict[str,dict[str,float]]:
-    html=SESSION.get("https://adpemploymentreport.com/",timeout=60).text
-    m=re.search(r'https://adpemploymentreport\.com/artifacts/us_ner/\d+/ADP_NER_history\.zip',html)
-    if not m: raise RuntimeError("ADP history link not found")
-    r=SESSION.get(m.group(0),timeout=90); r.raise_for_status(); z=zipfile.ZipFile(io.BytesIO(r.content))
-    result={"changer":{},"stayer":{}}
-    for name in z.namelist():
-        if not name.lower().endswith(".csv"): continue
-        df=pd.read_csv(z.open(name))
-        cols={str(c).lower():c for c in df.columns}; date=next((c for c in df.columns if "date" in str(c).lower()),None)
-        if date is None: continue
-        for key,needles in {"changer":["changer","job changer"],"stayer":["stayer","job stayer"]}.items():
-            col=next((c for c in df.columns if any(n in str(c).lower() for n in needles) and "pay" in str(c).lower()),None)
-            if col is None: continue
-            for d,v in zip(pd.to_datetime(df[date],errors="coerce"),df[col]):
-                n=num(v)
-                if pd.notna(d) and n is not None: result[key][d.strftime("%Y-%m")]=n
+def _parse_adp_pay_history(content):
+    frame = pd.read_csv(io.BytesIO(content))
+    required = {"timestep", "agg", "category", "date", "median pay change"}
+    missing = required.difference(frame.columns)
+    if missing:
+        raise RuntimeError("ADP history missing columns: " + ", ".join(sorted(missing)))
+
+    selected = frame[
+        frame["timestep"].astype(str).str.upper().eq("M")
+        & frame["agg"].astype(str).str.strip().str.casefold().eq("worker type")
+    ].copy()
+    selected["date"] = pd.to_datetime(selected["date"], errors="coerce")
+    selected["median pay change"] = pd.to_numeric(selected["median pay change"], errors="coerce")
+    result = {"changer": {}, "stayer": {}}
+    for category, key in (("job changer", "changer"), ("job stayer", "stayer")):
+        rows = selected[selected["category"].astype(str).str.strip().str.casefold().eq(category)]
+        for date, value in zip(rows["date"], rows["median pay change"]):
+            if pd.notna(date) and pd.notna(value):
+                result[key][date.strftime("%Y-%m")] = float(value)
+    empty = [key for key, values in result.items() if not values]
+    if empty:
+        raise RuntimeError("ADP Pay Insights returned no usable data for: " + ", ".join(empty))
     return result
+
+
+def _adp_history_links(html, page_url):
+    pattern = r"href\s*=\s*[\"']([^\"']*ADP_PAY_history\.zip(?:\?[^\"']*)?)[\"']"
+    hrefs = re.findall(pattern, html, flags=re.IGNORECASE)
+    links = []
+    for href in hrefs:
+        absolute = urljoin(page_url, href.replace("&amp;", "&"))
+        if absolute not in links:
+            links.append(absolute)
+    return links
+
+
+def fetch_adp():
+    page_url = "https://payinsights.adp.com/"
+    page = SESSION.get(page_url, timeout=60)
+    page.raise_for_status()
+    links = _adp_history_links(page.text, page_url)
+    if not links:
+        raise RuntimeError("ADP Pay Insights historical ZIP link not found")
+
+    failures = []
+    for link in links:
+        try:
+            response = SESSION.get(link, timeout=90)
+            response.raise_for_status()
+            with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
+                candidates = [
+                    name for name in archive.namelist()
+                    if Path(name).name.casefold() == "adp_pay_history.csv"
+                ]
+                if not candidates:
+                    candidates = [
+                        name for name in archive.namelist()
+                        if name.lower().endswith(".csv")
+                        and "pay" in Path(name).name.lower()
+                        and "history" in Path(name).name.lower()
+                    ]
+                if not candidates:
+                    raise RuntimeError("ADP_PAY_history.csv not found inside ZIP")
+                return _parse_adp_pay_history(archive.read(candidates[0]))
+        except Exception as error:
+            failures.append(f"{link}: {error}")
+    raise RuntimeError("ADP Pay Insights ZIP could not be parsed; " + " | ".join(failures))
 
 def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
     """Official-page latest values. Full history remains in cache when publisher offers no open history API."""
