@@ -76,11 +76,11 @@ Spec("就業-薪水","Atlanta Fed最高25%薪資","WGTRQUA4 Index","Federal Rese
 Spec("就業-薪水","ADP Pay Job Changers薪資","ADPUJCPG Index","ADP Research","Median YoY job changers","adp","changer"),
 Spec("就業-薪水","ADP Pay Job Stayers薪資","ADPUJSPG Index","ADP Research","Median YoY job stayers","adp","stayer"),]
 
-# BLS price series. YoY uses official unadjusted indexes; PPI uses SA index and YoY.
+# BLS price series. YoY uses official unadjusted indexes. Core PPI is final demand less foods and energy.
 for name,ticker,sid,transform in [
 ("Core CPI","CPI XYOY Index","CUUR0000SA0L1E","yoy_pct"),("Core Goods","CPRPCXYY Index","CUUR0000SACL1E","yoy_pct"),
-("Core Services","CPRPSXYY Index","CUUR0000SASLE","yoy_pct"),("SuperCore","CPUPNFEY Index","CUUR0000SASL2RS","yoy_pct"),
-("Core PPI","FDIUSGYO Index","WPSFD49116","yoy_pct")]:
+("Core Services","CPRPSXYY Index","CUUR0000SASLE","yoy_pct"),("Core Services less Shelter","CPUPNFEY Index","CUUR0000SASL2RS","yoy_pct"),
+("Core PPI","FDIUSGYO Index","WPUFD49104","yoy_pct")]:
     SPECS.append(Spec("物價",name,ticker,"Bureau of Labor Statistics",sid,"bls",sid,transform))
 SPECS.append(Spec("物價","US Zillow Rent Index All Homes MoM Smoothed SA","ZRIOAMOM Index","Zillow Research","National ZORI SA MoM","zillow","zori_mom"))
 
