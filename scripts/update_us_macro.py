@@ -101,11 +101,10 @@ def fetch_current() -> tuple[dict[str, dict[str, float]], list[str]]:
             continue
         try:
             if s.provider == "bls":
-                # The two employment blocks share the same Bloomberg level ticker;
-                # the reference stores levels in both and the dashboard derives the
-                # month change at render time, so never apply the "change" transform.
-                tr = "level" if "月增減" in s.section else s.transform
-                vals = fus.transform(bls.get(s.source_id, {}), tr)
+                # The 月增減 block uses the same level ticker as the 人數 block but
+                # must store the real month-over-month change (level[t]-level[t-1]),
+                # which is exactly what the spec's "change" transform computes.
+                vals = fus.transform(bls.get(s.source_id, {}), s.transform)
             elif s.provider == "fred":
                 vals = fus.transform(fus.fetch_fred(s.source_id), s.transform)
             elif s.provider == "atlanta":
