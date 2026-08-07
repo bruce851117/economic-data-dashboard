@@ -23,6 +23,7 @@ CACHE = ROOT / "data" / "us_macro_cache.json"
 MONTHS = 5
 BLS_URL = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
 FRED_URL = "https://api.stlouisfed.org/fred/series/observations"
+CENSUS_MARTS_URL = "https://api.census.gov/data/timeseries/eits/marts"
 UA = "USMacroDashboard/1.0 GitHub-Actions"
 SESSION = requests.Session(); SESSION.headers.update({"User-Agent": UA})
 
@@ -404,76 +405,162 @@ def fetch_umichigan_csv():
     return result
 
 
-INVESTING_ISM_URLS = {
-    "services_employment": "https://www.investing.com/economic-calendar/ism-non-manufacturing-employment-1048",
-    "manufacturing_employment": "https://www.investing.com/economic-calendar/ism-manufacturing-employment-1046",
-    "manufacturing_pmi": "https://www.investing.com/economic-calendar/ism-manufacturing-pmi-173",
-    "services_pmi": "https://www.investing.com/economic-calendar/ism-non-manufacturing-pmi-176",
+ISM_REPORT_BASE = "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports"
+
+
+def _month_candidates(count=8):
+    today = datetime.now(timezone.utc).date().replace(day=1)
+    candidates = []
+    year, month = today.year, today.month
+    for _ in range(count):
+        candidates.append((year, month, calendar.month_name[month].lower()))
+        month -= 1
+        if month == 0:
+            year -= 1
+            month = 12
+    return candidates
+
+
+def _plain_html(html):
+    text = re.sub(r"<script[^>]*>.*?</script>", " ", html, flags=re.I | re.S)
+    text = re.sub(r"<style[^>]*>.*?</style>", " ", text, flags=re.I | re.S)
+    text = re.sub(r"<[^>]+>", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _ism_number(text, patterns, label):
+    for pattern in patterns:
+        match = re.search(pattern, text, flags=re.I | re.S)
+        if match:
+            return float(match.group(1))
+    raise RuntimeError(f"ISM {label} value not found")
+
+
+def _parse_ism_report(html, sector, expected_year, expected_month):
+    text = _plain_html(html)
+    month_name = calendar.month_name[expected_month]
+    if not re.search(rf"\b{month_name}\s+{expected_year}\b|\b{month_name}\b", text, flags=re.I):
+        raise RuntimeError(f"ISM report does not identify {month_name} {expected_year}")
+
+    if sector == "manufacturing":
+        pmi = _ism_number(text, [
+            r"Manufacturing PMI(?:®)?\s+(?:registered|at)\s+(\d+(?:\.\d+)?)\s*percent",
+            r"Manufacturing PMI(?:®)?\s+at\s+(\d+(?:\.\d+)?)%",
+        ], "Manufacturing PMI")
+        employment = _ism_number(text, [
+            r"Employment Index(?: reading)?(?: of)?\s+(\d+(?:\.\d+)?)\s*percent",
+            r"Employment Index\s+(?:registered|at)\s+(\d+(?:\.\d+)?)\s*percent",
+        ], "Manufacturing Employment")
+        return {"manufacturing_pmi": pmi, "manufacturing_employment": employment}
+
+    pmi = _ism_number(text, [
+        r"Services PMI(?:®)?\s+(?:registered|at)\s+(\d+(?:\.\d+)?)\s*percent",
+        r"Services PMI(?:®)?\s+at\s+(\d+(?:\.\d+)?)%",
+    ], "Services PMI")
+    employment = _ism_number(text, [
+        r"Employment Index(?: returned[^.]{0,120}?with a reading of| registered| at)\s+(\d+(?:\.\d+)?)\s*percent",
+        r"Employment Index[^.]{0,160}?reading of\s+(\d+(?:\.\d+)?)\s*percent",
+    ], "Services Employment")
+    return {"services_pmi": pmi, "services_employment": employment}
+
+
+def fetch_ism_official():
+    """Fetch recent Manufacturing and Services PMI/Employment values from ISM official monthly reports."""
+    result = {
+        "manufacturing_pmi": {},
+        "manufacturing_employment": {},
+        "services_pmi": {},
+        "services_employment": {},
+    }
+    failures = []
+    headers = {"User-Agent": "Mozilla/5.0", "Accept": "text/html,application/xhtml+xml"}
+    for year, month, slug in _month_candidates(8):
+        period = month_key(year, month)
+        for sector, path in (("manufacturing", "pmi"), ("services", "services")):
+            url = f"{ISM_REPORT_BASE}/{path}/{slug}/"
+            try:
+                response = SESSION.get(url, headers=headers, timeout=60)
+                response.raise_for_status()
+                parsed = _parse_ism_report(response.text, sector, year, month)
+                for key, value in parsed.items():
+                    result[key][period] = value
+            except Exception as error:
+                failures.append(f"{sector} {period}: {error}")
+
+    if not any(result.values()):
+        raise RuntimeError("All ISM official monthly reports failed; " + " | ".join(failures))
+    return result
+
+
+CENSUS_CONTROL_CATEGORIES = {
+    "total": "44X72",
+    "motor_vehicles": "441",
+    "gasoline": "447",
+    "building_materials": "444",
+    "food_services": "722",
 }
 
 
-def _parse_investing_actual_table(html):
-    """Parse Release date and Actual columns and map '(Jul)' to the July reference period."""
-    tables = pd.read_html(io.StringIO(html))
-    for table in tables:
-        normalized = {str(column).strip().casefold(): column for column in table.columns}
-        release_col = normalized.get("release date")
-        actual_col = normalized.get("actual")
-        if release_col is None or actual_col is None:
+def _parse_census_marts_rows(payload):
+    if not isinstance(payload, list) or len(payload) < 2:
+        raise RuntimeError("Census MARTS returned no data rows")
+    headers = payload[0]
+    required = {"cell_value", "category_code", "data_type_code", "seasonally_adj", "time"}
+    missing = required.difference(headers)
+    if missing:
+        raise RuntimeError("Census MARTS missing fields: " + ", ".join(sorted(missing)))
+    indexes = {name: headers.index(name) for name in required}
+    values = {name: {} for name in CENSUS_CONTROL_CATEGORIES}
+    reverse_codes = {code: name for name, code in CENSUS_CONTROL_CATEGORIES.items()}
+
+    for row in payload[1:]:
+        category = str(row[indexes["category_code"]]).strip()
+        key = reverse_codes.get(category)
+        if not key:
             continue
-        values = {}
-        for release_value, actual_value in zip(table[release_col], table[actual_col]):
-            release_text = str(release_value)
-            match = re.search(r"([A-Za-z]{3})\)?\s*$", release_text)
-            year_match = re.search(r"\b(20\d{2})\b", release_text)
-            value = num(actual_value)
-            if not match or not year_match or value is None:
-                continue
-            month_abbr = match.group(1).title()
-            try:
-                month_number = list(calendar.month_abbr).index(month_abbr)
-            except ValueError:
-                continue
-            values[month_key(int(year_match.group(1)), month_number)] = value
-        if values:
-            return values
-
-    # Fallback for HTML where the history table was serialized as plain text.
-    values = {}
-    row_pattern = re.compile(
-        r"[A-Z][a-z]{2}\s+\d{1,2},\s+(20\d{2})\s*\(([A-Z][a-z]{2})\)"
-        r".{0,250}?([+-]?\d+(?:\.\d+)?)",
-        flags=re.S,
-    )
-    for year_text, month_abbr, value_text in row_pattern.findall(html):
-        try:
-            month_number = list(calendar.month_abbr).index(month_abbr.title())
-        except ValueError:
+        if str(row[indexes["data_type_code"]]).strip().upper() != "SM":
             continue
-        values[month_key(int(year_text), month_number)] = float(value_text)
-    if values:
-        return values
-    raise RuntimeError("Investing.com Actual history table not found")
+        if str(row[indexes["seasonally_adj"]]).strip().lower() not in {"yes", "true", "1"}:
+            continue
+        period_match = re.search(r"(20\d{2})-(0[1-9]|1[0-2])", str(row[indexes["time"]]))
+        value = num(row[indexes["cell_value"]])
+        if period_match and value is not None:
+            values[key][f"{period_match.group(1)}-{period_match.group(2)}"] = value
+    return values
 
 
-def fetch_investing_ism():
-    result = {}
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9",
+def fetch_census_retail_control():
+    """Retail control group level and MoM%, calculated from Census MARTS seasonally adjusted monthly sales."""
+    api_key = os.getenv("CENSUS_API_KEY", "").strip()
+    if not api_key:
+        raise RuntimeError("Missing CENSUS_API_KEY")
+    start_year = datetime.now(timezone.utc).year - 3
+    params = {
+        "get": "cell_value,data_type_code,category_code,seasonally_adj,time",
+        "time": f"from {start_year}-01",
+        "data_type_code": "SM",
+        "key": api_key,
     }
-    failures = []
-    for key, url in INVESTING_ISM_URLS.items():
-        try:
-            response = SESSION.get(url, headers=headers, timeout=90)
-            response.raise_for_status()
-            result[key] = _parse_investing_actual_table(response.text)
-        except Exception as error:
-            failures.append(f"{key}: {error}")
-    if not result:
-        raise RuntimeError("All Investing.com ISM tables failed; " + " | ".join(failures))
-    return result
+    payload = request_json(CENSUS_MARTS_URL, params=params)
+    components = _parse_census_marts_rows(payload)
+    missing = [name for name, values in components.items() if not values]
+    if missing:
+        raise RuntimeError("Census MARTS missing control-group components: " + ", ".join(missing))
+
+    common_periods = set.intersection(*(set(values) for values in components.values()))
+    levels = {}
+    for period in common_periods:
+        levels[period] = round(
+            components["total"][period]
+            - components["motor_vehicles"][period]
+            - components["gasoline"][period]
+            - components["building_materials"][period]
+            - components["food_services"][period],
+            3,
+        )
+    if not levels:
+        raise RuntimeError("Census MARTS has no common months for control-group calculation")
+    return transform(dict(sorted(levels.items())), "mom_pct")
 
 
 NYFED_SCE_XLSX_URL = "https://www.newyorkfed.org/medialibrary/interactives/sce/sce/downloads/data/frbny-sce-data.xlsx"
@@ -560,26 +647,23 @@ def fetch_nyfed_sce():
 
 
 def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
-    """Fetch latest official-page values plus Investing.com ISM Actual history tables."""
+    """Fetch the remaining publisher pages and official ISM monthly reports."""
     out={}; now=datetime.now(); period=f"{now.year:04d}-{now.month:02d}"
     pages={
       "nfib":SESSION.get("https://nfib-sbet.org/MainPage.html",timeout=60).text,
       "conference":SESSION.get("https://www.conference-board.org/topics/consumer-confidence/index.cfm",timeout=60).text,
-      "nyfed":SESSION.get("https://www.newyorkfed.org/microeconomics/sce",timeout=60).text,
     }
     patterns=[
       (("nfib","hiring_plan"),r"Plans to Increase Employment\D{0,80}(-?\d+(?:\.\d+)?)"),
       (("conference","confidence"),r"Consumer Confidence Index[^\d]{0,100}(?:decreased|increased).*?to\s+(\d+(?:\.\d+)?)"),
       (("conference","hard"),r"jobs[^\n]{0,40}hard to get[^\d]{0,80}(\d+(?:\.\d+)?)"),
-      (("nyfed","one_year"),r"one-year ahead[^\d]{0,100}(\d+(?:\.\d+)?)\s*percent"),
-      (("nyfed","five_year"),r"five-year-ahead[^\d]{0,100}(\d+(?:\.\d+)?)\s*percent"),
     ]
     for (provider,key),pat in patterns:
         match=re.search(pat,pages[provider],re.I|re.S)
         if match:
             out[(provider,key)]={period:float(match.group(1))}
 
-    for key, values in fetch_investing_ism().items():
+    for key, values in fetch_ism_official().items():
         out[("ism", key)] = values
     return out
 
@@ -637,6 +721,8 @@ def main():
     except Exception as e: nyfed_sce={}; errors.append(f"NY Fed SCE: {e}")
     try: umich=fetch_umichigan_csv()
     except Exception as e: umich={}; errors.append(f"University of Michigan CSV: {e}")
+    try: retail_control=fetch_census_retail_control()
+    except Exception as e: retail_control={}; errors.append(f"Census retail control: {e}")
     for s in SPECS:
         key=f"{s.section}|{s.name}"
         try:
@@ -647,6 +733,7 @@ def main():
             elif s.provider=="umich_csv": vals=umich.get(s.source_id,{})
             elif s.provider=="zillow": vals=zori
             elif s.provider=="nyfed_xlsx": vals=nyfed_sce.get(s.source_id,{})
+            elif s.provider=="census" and s.source_id=="retail_control": vals=retail_control
             elif s.provider in {"ism","nfib","conference","nyfed"}: vals=pages.get((s.provider,s.source_id),{})
             else: vals={}
             current[key]=merge(old.get(key,{}),vals)
@@ -658,28 +745,9 @@ def main():
     current["就業-職缺|職缺/失業人口"]=merge(old.get("就業-職缺|職缺/失業人口",{}),{k:round(jolts[k]/unemployed[k],7) for k in jolts.keys()&unemployed.keys() if unemployed[k]})
     cache={"updated_at_utc":datetime.now(timezone.utc).isoformat(),"series":current,"errors":errors}
     CACHE.write_text(json.dumps(cache,ensure_ascii=False,indent=2),encoding="utf-8")
-    # Markdown 僅輸出尚待追蹤的 21 項；已確認成功的 Atlanta Fed、SuperCore、Core PPI、Real Personal Spending、Personal Outlays、Interest Paid 不再顯示。
+    # Markdown僅輸出尚待確認的CB、ISM製造與ISM服務；所有已成功項目仍照常抓取並更新Cache。
     # tuple: (Markdown 顯示名稱, cache section, cache 指標名稱)
     md_rows = [
-        ("ADP Pay Job Changers薪資", "就業-薪水", "ADP Pay Job Changers薪資"),
-        ("ADP Pay Job Stayers薪資", "就業-薪水", "ADP Pay Job Stayers薪資"),
-        ("ISM服務就業", "就業-調查", "ISM服務就業"),
-        ("ISM製造就業", "就業-調查", "ISM製造就業"),
-        ("中小企hiring plan", "就業-調查", "中小企hiring plan"),
-        ("失去工作機率調查", "就業-調查", "失去工作機率調查"),
-        ("自願離職調查", "就業-調查", "自願離職調查"),
-        ("Job Plentiful", "就業-調查", "Job Plentiful"),
-        ("Job Hard to get", "就業-調查", "Job Hard to get"),
-        ("NY FED 1y通膨預期", "物價", "NY FED 1y通膨預期"),
-        ("NY FED 5y通膨預期", "物價", "NY FED 5y通膨預期"),
-        ("密大1y通膨預期", "物價", "密大1y通膨預期"),
-        ("密大5~10y通膨預期", "物價", "密大5~10y通膨預期"),
-        ("零售控制", "消費", "零售控制 MoM%"),
-        ("disposable personal income", "消費", "disposable personal income"),
-        ("Personal Saving", "消費", "Personal Saving"),
-        ("家戶金融狀況vs一年前", "消費", "家戶金融狀況vs一年前"),
-        ("預計未來一年金融狀況", "消費", "預計未來一年金融狀況"),
-        ("密大", "消費", "密大"),
         ("CB", "消費", "CB"),
         ("ISM製造", "企業調查", "ISM製造"),
         ("ISM服務", "企業調查", "ISM服務"),
@@ -721,7 +789,7 @@ def main():
         "- BLS：Public Data API v2，涵蓋 CPI、PPI 等官方資料。",
         "- Atlanta Fed、ADP：優先使用官方 XLSX、ZIP/CSV。",
         "- University of Michigan：使用官方 tbmics.csv 與 tbmpx1px5.csv；BEA其餘序列沿用FRED API。",
-        "- NY Fed SCE：使用官方FRBNY-SCE-Data.xlsx，讀取1年／5年通膨預期、失去工作機率與自願離職機率；ISM四項使用Investing.com經濟日曆歷史表的Actual欄。",
+        "- NY Fed SCE使用官方FRBNY-SCE-Data.xlsx；ISM四項改用ISM官方月報；零售控制組使用Census MARTS API的季調月銷售額自行計算。",
         "",
     ]
     OUT.write_text("\n".join(lines),encoding="utf-8")
