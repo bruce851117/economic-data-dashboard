@@ -20,6 +20,9 @@ import requests
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "us_macro_table.md"
 CACHE = ROOT / "data" / "us_macro_cache.json"
+CB_DEBUG_DIR = ROOT / "data" / "us_macro_debug"
+CB_RAW_HTML = CB_DEBUG_DIR / "cb_consumer_confidence_raw.html"
+CB_HTTP_JSON = CB_DEBUG_DIR / "cb_consumer_confidence_http.json"
 MONTHS = 5
 BLS_URL = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
 FRED_URL = "https://api.stlouisfed.org/fred/series/observations"
@@ -822,10 +825,35 @@ def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
     except Exception:
         pass
 
+    cb_url = "https://www.conference-board.org/topics/consumer-confidence/index.cfm"
+    CB_DEBUG_DIR.mkdir(parents=True, exist_ok=True)
     try:
-        response = SESSION.get("https://www.conference-board.org/topics/consumer-confidence/index.cfm", headers=headers, timeout=60)
+        response = SESSION.get(cb_url, headers=headers, timeout=60, allow_redirects=True)
+        raw = response.content
+        CB_RAW_HTML.write_bytes(raw)
+        encoding = response.encoding or response.apparent_encoding or "utf-8"
+        decoded = raw.decode(encoding, errors="replace")
+        plain_text = _plain_html(decoded)
+        title_match = re.search(r"<title[^>]*>(.*?)</title>", decoded, flags=re.I | re.S)
+        diagnostic = {
+            "requested_url": cb_url,
+            "final_url": response.url,
+            "status_code": response.status_code,
+            "content_type": response.headers.get("Content-Type", ""),
+            "response_bytes": len(raw),
+            "encoding": encoding,
+            "title": re.sub(r"\s+", " ", title_match.group(1)).strip() if title_match else "",
+            "contains_consumer_confidence": "consumer confidence" in plain_text.lower(),
+            "contains_jobs_plentiful": "jobs plentiful" in plain_text.lower(),
+            "contains_jobs_hard_to_get": "jobs hard to get" in plain_text.lower(),
+            "contains_next_data": "__NEXT_DATA__" in decoded,
+            "contains_initial_state": "__INITIAL_STATE__" in decoded,
+            "response_preview": plain_text[:4000],
+            "saved_raw_html": str(CB_RAW_HTML.relative_to(ROOT)),
+        }
+        CB_HTTP_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
         response.raise_for_status()
-        text = _plain_html(response.text)
+        text = plain_text
         period_match = re.search(r"(?:in|for)\s+([A-Za-z]+)\s+(20\d{2})", text, flags=re.I)
         report_period = None
         if period_match and period_match.group(1).title() in calendar.month_name:
@@ -839,8 +867,27 @@ def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
             out[("conference", "plentiful")] = {report_period: float(plentiful.group(1))}
         if report_period and hard:
             out[("conference", "hard")] = {report_period: float(hard.group(1))}
-    except Exception:
-        pass
+        diagnostic.update({
+            "parsed_reference_period": report_period,
+            "parsed_consumer_confidence": float(confidence.group(1)) if confidence else None,
+            "parsed_jobs_plentiful": float(plentiful.group(1)) if plentiful else None,
+            "parsed_jobs_hard_to_get": float(hard.group(1)) if hard else None,
+        })
+        CB_HTTP_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception as error:
+        existing = {}
+        if CB_HTTP_JSON.exists():
+            try:
+                existing = json.loads(CB_HTTP_JSON.read_text(encoding="utf-8"))
+            except Exception:
+                existing = {}
+        existing.update({
+            "requested_url": cb_url,
+            "error_type": type(error).__name__,
+            "error": str(error),
+            "saved_raw_html": str(CB_RAW_HTML.relative_to(ROOT)) if CB_RAW_HTML.exists() else None,
+        })
+        CB_HTTP_JSON.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
 
     for key, values in fetch_ism_official().items():
         out[("ism", key)] = values
@@ -933,8 +980,6 @@ def main():
         ("中小企hiring plan", "就業-調查", "中小企hiring plan"),
         ("Job Plentiful", "就業-調查", "Job Plentiful"),
         ("Job Hard to get", "就業-調查", "Job Hard to get"),
-        ("零售控制", "消費", "零售控制 MoM%"),
-        ("預計未來一年金融狀況", "消費", "預計未來一年金融狀況"),
         ("CB", "消費", "CB"),
     ]
     spec_by_key = {f"{spec.section}|{spec.name}": spec for spec in SPECS}
@@ -949,6 +994,7 @@ def main():
         "",
         f"> 更新時間：{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}  ",
         "> 其他已成功指標仍會在背景抓取、接受來源修訂並更新Cache，只是不顯示於本表。",
+        "> Conference Board原始回應會保存至 `data/us_macro_debug/`，供後續判斷GitHub Actions實際收到的HTML。",
         "",
         "| 指標 | 最新資料月份 | 來源 | 抓取方式 | 官方序列／定義 | "
         + " | ".join(month_end(period) for period in reversed(all_periods)) + " |",
