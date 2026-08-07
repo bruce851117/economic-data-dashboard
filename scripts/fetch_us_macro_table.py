@@ -123,7 +123,7 @@ Spec("就業-調查","Job Hard to get","CONCJOBH Index","The Conference Board","
 Spec("消費","家戶金融狀況vs一年前","CONSPAGI Index","University of Michigan","PAGO_R_M (monthly data)","umich","pago"),
 Spec("消費","預計未來一年金融狀況","CONSEXFI Index","University of Michigan","PEXP_R_M (monthly data)","umich","pexp"),
 Spec("消費","CB","CONCCONF Index","The Conference Board","Consumer Confidence Index","conference","confidence"),
-Spec("消費","零售控制 MoM%","RSTAXAGM Index","U.S. Census Bureau","44X72 - (4411,4412) - 447 - 444 - 722; seasonally adjusted monthly sales MoM%","census","retail_control"),]
+Spec("消費","零售控制 MoM%","RSTAXAGM Index","U.S. Census Bureau","44X72 - 441X - 447 - 444 - 722; seasonally adjusted monthly sales MoM%","census","retail_control"),]
 
 def month_key(year:int, month:int)->str: return f"{year:04d}-{month:02d}"
 def month_end(period:str)->str:
@@ -602,8 +602,8 @@ def fetch_umich_financial():
 
 CENSUS_CONTROL_CATEGORIES = {
     "total": "44X72",
-    # Temporary candidate pending user review of raw Census rows in Markdown.
-    "auto_other_motor_vehicles": "4411,4412",
+    # Census MARTS official aggregate: Auto and Other Motor Vehicle Dealers.
+    "auto_other_motor_vehicles": "441X",
     "gasoline": "447",
     "building_materials": "444",
     "food_services": "722",
@@ -618,8 +618,8 @@ CENSUS_CATEGORY_LABELS = {
     "441": "Motor Vehicle and Parts Dealers",
     "4411": "Automobile Dealers",
     "4412": "Other Motor Vehicle Dealers",
-    "4411,4412": "Auto and Other Motor Vehicle Dealers",
-    "441X": "Motor Vehicle and Parts Dealers (alternate aggregate)",
+    "4411,4412": "Automobile Dealers plus Other Motor Vehicle Dealers (component sum)",
+    "441X": "Auto and Other Motor Vehicle Dealers",
     "442": "Furniture and Home Furnishings Stores",
     "443": "Electronics and Appliance Stores",
     "444": "Building Material and Garden Equipment and Supplies Dealers",
@@ -984,7 +984,7 @@ def main():
             "## Census MARTS 零售銷售原始資料",
             "",
             "> 以下為API回傳的全部季調月銷售額（data_type_code=SM、seasonally_adj=yes）。",
-            "> 目前暫定控制組扣除代碼為 `4411,4412`，請依下表確認實際應使用哪個category_code。",
+            "> 控制組採用Census MARTS官方彙總代碼 `441X`（Auto and Other Motor Vehicle Dealers）。",
             "",
             "| category_code | Census分類名稱 | "
             + " | ".join(month_end(period) for period in reversed(raw_periods)) + " |",
