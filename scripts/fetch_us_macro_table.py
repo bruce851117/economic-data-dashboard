@@ -103,8 +103,11 @@ for section,name,ticker,source,fred_id,transform in [
     SPECS.append(Spec(section,name,ticker,source,fred_id,"fred",fred_id,transform))
 
 # Official downloadable/page sources. These parsers report unavailable rather than silently substituting a different concept.
-for name,ticker,key in [("NY FED 1y通膨預期","NYCNM1IR Index","one_year"),("NY FED 5y通膨預期","NYCN5IMD Index","five_year")]:
-    SPECS.append(Spec("物價",name,ticker,"Federal Reserve Bank of New York","Survey of Consumer Expectations","nyfed",key))
+for name,ticker,key,series_name in [
+    ("NY FED 1y通膨預期","NYCNM1IR Index","one_year","Median one-year ahead expected inflation rate"),
+    ("NY FED 5y通膨預期","NYCN5IMD Index","five_year","Median five-year ahead expected inflation rate"),
+]:
+    SPECS.append(Spec("物價",name,ticker,"Federal Reserve Bank of New York",series_name,"nyfed_xlsx",key))
 for section,name,ticker,key in [
 ("就業-調查","ISM服務就業","NAPMNEMP Index","services_employment"),("就業-調查","ISM製造就業","NAPMEMPL Index","manufacturing_employment"),
 ("物價","ISM製造價格","NAPMPRIC Index","manufacturing_prices"),("物價","ISM服務價格","NAPMNPRC Index","services_prices"),
@@ -112,7 +115,8 @@ for section,name,ticker,key in [
     SPECS.append(Spec(section,name,ticker,"Institute for Supply Management","Official monthly report","ism",key))
 SPECS += [
 Spec("就業-調查","中小企hiring plan","SBOIHIRE Index","NFIB","Plans to Increase Employment","nfib","hiring_plan"),
-Spec("就業-調查","自願離職調查","NYCNJSJV Index","Federal Reserve Bank of New York","Job Separation Leaving a Job","nyfed","job_separation"),
+Spec("就業-調查","失去工作機率調查","NYCNJSLJ Index","Federal Reserve Bank of New York","Mean probability of losing a job","nyfed_xlsx","job_loss"),
+Spec("就業-調查","自願離職調查","NYCNJSJV Index","Federal Reserve Bank of New York","Mean probability of leaving a job voluntarily","nyfed_xlsx","job_separation"),
 Spec("就業-調查","Job Plentiful","CONCJOBP Index","The Conference Board","Jobs plentiful","conference","plentiful"),
 Spec("就業-調查","Job Hard to get","CONCJOBH Index","The Conference Board","Jobs hard to get","conference","hard"),
 Spec("消費","家戶金融狀況vs一年前","CONSPAGI Index","University of Michigan","PAGO_R_ALL","umich","pago"),
@@ -472,6 +476,89 @@ def fetch_investing_ism():
     return result
 
 
+NYFED_SCE_XLSX_URL = "https://www.newyorkfed.org/medialibrary/interactives/sce/sce/downloads/data/frbny-sce-data.xlsx"
+
+
+def _nyfed_period(value):
+    """Convert NY Fed YYYYMM values, including Excel numeric cells, to YYYY-MM."""
+    if value is None or pd.isna(value):
+        return None
+    if isinstance(value, (datetime, pd.Timestamp)):
+        return pd.Timestamp(value).strftime("%Y-%m")
+    text = str(value).strip()
+    if text.endswith(".0"):
+        text = text[:-2]
+    if re.fullmatch(r"20\d{4}", text):
+        year, month = int(text[:4]), int(text[4:])
+        if 1 <= month <= 12:
+            return month_key(year, month)
+    parsed = pd.to_datetime(value, errors="coerce")
+    return parsed.strftime("%Y-%m") if pd.notna(parsed) else None
+
+
+def _parse_nyfed_sheet(workbook, sheet_name, required_columns):
+    """Read NY Fed sheets whose field names are on Excel row 4 and dates in column A."""
+    frame = pd.read_excel(workbook, sheet_name=sheet_name, header=3)
+    date_column = frame.columns[0]
+    missing = [column for column in required_columns.values() if column not in frame.columns]
+    if missing:
+        raise RuntimeError(f"NY Fed sheet {sheet_name} missing columns: {', '.join(missing)}")
+    result = {key: {} for key in required_columns}
+    for _, row in frame.iterrows():
+        period = _nyfed_period(row[date_column])
+        if not period:
+            continue
+        for key, column in required_columns.items():
+            value = num(row[column])
+            if value is not None:
+                result[key][period] = value
+    return result
+
+
+def _parse_nyfed_sce_workbook(content):
+    workbook = pd.ExcelFile(io.BytesIO(content))
+    required_sheets = {
+        "Job separation expectation",
+        "Inflation expectations",
+        "Five-year ahead Infl Exp",
+    }
+    missing_sheets = required_sheets.difference(workbook.sheet_names)
+    if missing_sheets:
+        raise RuntimeError("NY Fed workbook missing sheets: " + ", ".join(sorted(missing_sheets)))
+
+    result = {}
+    result.update(_parse_nyfed_sheet(
+        workbook,
+        "Job separation expectation",
+        {
+            "job_loss": "Mean probability of losing a job",
+            "job_separation": "Mean probability of leaving a job voluntarily",
+        },
+    ))
+    result.update(_parse_nyfed_sheet(
+        workbook,
+        "Inflation expectations",
+        {"one_year": "Median one-year ahead expected inflation rate"},
+    ))
+    result.update(_parse_nyfed_sheet(
+        workbook,
+        "Five-year ahead Infl Exp",
+        {"five_year": "Median five-year ahead expected inflation rate"},
+    ))
+    empty = [key for key, values in result.items() if not values]
+    if empty:
+        raise RuntimeError("NY Fed workbook returned no usable data for: " + ", ".join(empty))
+    return result
+
+
+def fetch_nyfed_sce():
+    response = SESSION.get(NYFED_SCE_XLSX_URL, timeout=120)
+    response.raise_for_status()
+    if not response.content.startswith(b"PK"):
+        raise RuntimeError(f"NY Fed SCE response is not an XLSX file ({response.headers.get('content-type')})")
+    return _parse_nyfed_sce_workbook(response.content)
+
+
 def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
     """Fetch latest official-page values plus Investing.com ISM Actual history tables."""
     out={}; now=datetime.now(); period=f"{now.year:04d}-{now.month:02d}"
@@ -546,6 +633,8 @@ def main():
     except Exception as e: zori={}; errors.append(f"Zillow: {e}")
     try: pages=fetch_page_latest()
     except Exception as e: pages={}; errors.append(f"Official pages: {e}")
+    try: nyfed_sce=fetch_nyfed_sce()
+    except Exception as e: nyfed_sce={}; errors.append(f"NY Fed SCE: {e}")
     try: umich=fetch_umichigan_csv()
     except Exception as e: umich={}; errors.append(f"University of Michigan CSV: {e}")
     for s in SPECS:
@@ -557,6 +646,7 @@ def main():
             elif s.provider=="adp": vals=adp.get(s.source_id,{})
             elif s.provider=="umich_csv": vals=umich.get(s.source_id,{})
             elif s.provider=="zillow": vals=zori
+            elif s.provider=="nyfed_xlsx": vals=nyfed_sce.get(s.source_id,{})
             elif s.provider in {"ism","nfib","conference","nyfed"}: vals=pages.get((s.provider,s.source_id),{})
             else: vals={}
             current[key]=merge(old.get(key,{}),vals)
@@ -576,6 +666,7 @@ def main():
         ("ISM服務就業", "就業-調查", "ISM服務就業"),
         ("ISM製造就業", "就業-調查", "ISM製造就業"),
         ("中小企hiring plan", "就業-調查", "中小企hiring plan"),
+        ("失去工作機率調查", "就業-調查", "失去工作機率調查"),
         ("自願離職調查", "就業-調查", "自願離職調查"),
         ("Job Plentiful", "就業-調查", "Job Plentiful"),
         ("Job Hard to get", "就業-調查", "Job Hard to get"),
@@ -630,7 +721,7 @@ def main():
         "- BLS：Public Data API v2，涵蓋 CPI、PPI 等官方資料。",
         "- Atlanta Fed、ADP：優先使用官方 XLSX、ZIP/CSV。",
         "- University of Michigan：使用官方 tbmics.csv 與 tbmpx1px5.csv；BEA其餘序列沿用FRED API。",
-        "- ISM四項：使用Investing.com經濟日曆歷史表的Actual欄；NFIB、紐約聯準銀行與Conference Board沿用既有頁面解析並保留先前成功資料。",
+        "- NY Fed SCE：使用官方FRBNY-SCE-Data.xlsx，讀取1年／5年通膨預期、失去工作機率與自願離職機率；ISM四項使用Investing.com經濟日曆歷史表的Actual欄。",
         "",
     ]
     OUT.write_text("\n".join(lines),encoding="utf-8")
