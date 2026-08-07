@@ -28,7 +28,7 @@ MONTHS = 5
 BLS_URL = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
 FRED_URL = "https://api.stlouisfed.org/fred/series/observations"
 CENSUS_MARTS_URL = "https://api.census.gov/data/timeseries/eits/marts"
-NFIB_SBET_API_URL = "https://api.nfib-sbet.org:443/rest/sbetdb/_proc/getIndicators2"
+NFIB_SBET_API_URL = "https://api.nfib-sbet.org/rest/sbetdb/_proc/getTotals2"
 UA = "USMacroDashboard/1.0 GitHub-Actions"
 SESSION = requests.Session(); SESSION.headers.update({"User-Agent": UA})
 
@@ -968,35 +968,46 @@ def _nfib_api_records(payload):
 
 
 def fetch_nfib_sbet_api():
-    """Fetch Plans to Increase Employment from NFIB's official SBET REST API."""
+    """Fetch NFIB hiring plans from the official SBET getTotals2 REST procedure."""
     now = datetime.now(timezone.utc)
-    payload = {
-        "app_name": "sbet",
-        "params": [
-            {"name": "minYear", "param_type": "IN", "value": now.year - 3},
-            {"name": "minMonth", "param_type": "IN", "value": 1},
-            {"name": "maxYear", "param_type": "IN", "value": now.year},
-            {"name": "maxMonth", "param_type": "IN", "value": 12},
-            {
-                "name": "indicator",
-                "param_type": "IN",
-                "value": "Plans to Increase Employment",
-            },
-        ],
-    }
+    parameters = [
+        ("minYear", now.year - 3),
+        ("minMonth", 1),
+        ("maxYear", now.year),
+        ("maxMonth", 12),
+        ("questions", "emp_count_change_expect"),
+        ("industry", ""),
+        ("employee", ""),
+        ("statev", ""),
+    ]
+    form_data = [("app_name", "sbet")]
+    for index, (name, value) in enumerate(parameters):
+        form_data.extend([
+            (f"params[{index}][name]", name),
+            (f"params[{index}][param_type]", "IN"),
+            (f"params[{index}][value]", str(value)),
+        ])
+
     diagnostic = {
         "method": "NFIB SBET REST API",
         "endpoint": NFIB_SBET_API_URL,
-        "procedure": "getIndicators2",
-        "indicator": "Plans to Increase Employment",
-        "request_body": payload,
+        "procedure": "getTotals2",
+        "question": "emp_count_change_expect",
+        "request_parameters": {name: value for name, value in parameters},
+        "request_encoding": "application/x-www-form-urlencoded",
     }
     try:
         response = SESSION.post(
             NFIB_SBET_API_URL,
-            json=payload,
-            headers={"Accept": "application/json", "Content-Type": "application/json"},
-            timeout=90,
+            data=form_data,
+            headers={
+                "Accept": "application/json, text/javascript, */*; q=0.01",
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                "Origin": "https://www.nfib-sbet.org",
+                "Referer": "https://www.nfib-sbet.org/",
+                "X-Requested-With": "XMLHttpRequest",
+            },
+            timeout=120,
         )
         diagnostic.update({
             "status_code": response.status_code,
@@ -1009,6 +1020,7 @@ def fetch_nfib_sbet_api():
             data = response.json()
         except ValueError as error:
             raise RuntimeError("NFIB SBET API response is not valid JSON") from error
+
         diagnostic["response_json"] = data
         records = _nfib_api_records(data)
         values = {}
@@ -1018,19 +1030,26 @@ def fetch_nfib_sbet_api():
             value_fields[period] = field
         if not values:
             raise RuntimeError(
-                "NFIB SBET API returned JSON but no monthly Plans to Increase Employment observations were recognized"
+                "NFIB SBET API returned JSON but no monthly emp_count_change_expect observations were recognized"
             )
+
         diagnostic.update({
             "parsed_observations": dict(sorted(values.items())),
             "parsed_value_fields": dict(sorted(value_fields.items())),
             "latest_period": max(values),
             "latest_value": values[max(values)],
         })
-        NFIB_API_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
+        NFIB_API_JSON.write_text(
+            json.dumps(diagnostic, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
         return dict(sorted(values.items()))
     except Exception as error:
         diagnostic.update({"error_type": type(error).__name__, "error": str(error)})
-        NFIB_API_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
+        NFIB_API_JSON.write_text(
+            json.dumps(diagnostic, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
         raise
 
 
@@ -1240,7 +1259,7 @@ def main():
         "|---|---:|---|---|---|" + "---:|" * len(all_periods),
     ]
     method_labels = {
-        "nfib": "REST API（NFIB SBET getIndicators2）",
+        "nfib": "REST API（NFIB SBET getTotals2）",
         "conference": "HTML（Conference Board官方發布頁）",
         "census": "API＋計算（Census MARTS）",
         "fred": "API（FRED）",
