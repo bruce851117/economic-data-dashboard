@@ -66,7 +66,7 @@
   <header class="header"><div class="header-inner">
     <div class="eyebrow">BLS ECONOMIC DATA</div><h1 class="title">美英歐澳經濟數據 Dashboard</h1>
     <p class="desc">美國通膨與就業，以及英國、歐洲與澳洲主要總體經濟數據。</p>
-    <div class="tabs"><button id="tab-inflation" class="tab active">通膨數據</button><button id="tab-employment" class="tab">非農就業</button><button id="tab-uk" class="tab">英國經濟數據</button><button id="tab-eu" class="tab">歐洲經濟數據</button><button id="tab-au" class="tab">澳洲經濟數據</button></div>
+    <div class="tabs"><button id="tab-inflation" class="tab active">通膨數據</button><button id="tab-employment" class="tab">非農就業</button><button id="tab-uk" class="tab">英國經濟數據</button><button id="tab-eu" class="tab">歐洲經濟數據</button><button id="tab-au" class="tab">澳洲經濟數據</button><button id="tab-us" class="tab">美國經濟數據</button></div>
   </div></header>
   <main>
     <section id="inflation-panel" class="panel active">
@@ -162,6 +162,14 @@
       </div>
       <div id="au-content" class="loading">正在讀取 data/au_macro.json</div>
       <div id="au-tooltip" class="au-tooltip"></div>
+    </section>
+    <section id="us-panel" class="panel">
+      <div class="au-toolbar">
+        <button id="us-update-button" class="update-button" type="button">更新美國資料</button>
+        <span id="us-update-status" class="update-status"></span>
+        <div id="us-summary" class="au-summary">正在載入美國經濟數據</div>
+      </div>
+      <div id="us-content" class="loading">正在讀取 data/us_macro.json</div>
     </section>
   </main>
 
@@ -270,9 +278,38 @@
     async function load(){const results=await Promise.allSettled([getJson('./data/cpi.json'),getJson('./data/ppi.json'),getJson('./data/employment.json')]);if(results[0].status==='fulfilled'){cpiData=results[0].value;renderCpi();renderDerived()}else{setError('cpi-content',results[0].reason.message);setError('derived-content',results[0].reason.message)}if(results[1].status==='fulfilled'){ppiData=results[1].value;renderPpi()}else setError('ppi-content',results[1].reason.message);if(results[2].status==='fulfilled'){employmentData=results[2].value;renderEmployment()}else{setError('employment-payroll-content',results[2].reason.message);setError('employment-household-content',results[2].reason.message);setError('employment-flows-content',results[2].reason.message);setError('employment-reasons-content',results[2].reason.message);setError('employment-summary-content',results[2].reason.message)}const latestInflationUpdate=[cpiData?.updated_at_utc,ppiData?.updated_at_utc].filter(Boolean).map(v=>new Date(v)).sort((a,b)=>b-a)[0];$('update-text').textContent=latestInflationUpdate?'更新：'+new Intl.DateTimeFormat('zh-TW',{dateStyle:'short',timeStyle:'short',timeZone:'Asia/Taipei'}).format(latestInflationUpdate):''}
     document.querySelectorAll('.filter:not(.employment-filter)').forEach(b=>b.addEventListener('click',()=>{visibleMonths=Number(b.dataset.months);document.querySelectorAll('.filter:not(.employment-filter)').forEach(x=>x.classList.toggle('active',x===b));render()}));
     document.querySelectorAll('.employment-filter').forEach(b=>b.addEventListener('click',()=>{employmentMonths=Number(b.dataset.months);document.querySelectorAll('.employment-filter').forEach(x=>x.classList.toggle('active',x===b));renderEmployment()}));
+    async function pollWorkflowUntilDone(workflow,since,onState){
+      const deadline=Date.now()+15*60*1000;const labels={queued:'排隊中…',in_progress:'執行中…'};
+      while(Date.now()<deadline){
+        await new Promise(r=>setTimeout(r,5000));
+        let s;try{const r=await fetch(TRIGGER_WORKER_URL+'/workflow-status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({workflow,since})});s=await r.json().catch(()=>({}))}catch{continue}
+        if(!s||!s.ok)continue;
+        if(!s.found){onState('等待 GitHub 建立執行紀錄…','');continue}
+        if(s.status!=='completed'){onState(labels[s.status]||('狀態：'+s.status),'');continue}
+        if(s.conclusion==='success'){onState('執行成功 ✅ 即將重新整理','ok');return true}
+        onState('執行結束：'+(s.conclusion||'未知')+'，請至 GitHub Actions 查看','error');return false;
+      }
+      onState('等待逾時，請至 GitHub Actions 查看最終結果','error');return null;
+    }
+    async function runWorkflowUpdate({workflow,button,statusEl,idleLabel,reloadOnSuccess=true}){
+      const setBtn=running=>{if(button){button.disabled=running;button.classList.toggle('running',running);button.textContent=running?'正在觸發更新…':idleLabel}};
+      const onState=(msg,cls)=>{statusEl.className='update-status'+(cls?' '+cls:'');statusEl.textContent=msg};
+      setBtn(true);onState('正在送出更新要求…','');
+      let since,wf;
+      try{
+        const body={ref:'main'};if(workflow)body.workflow=workflow;
+        const r=await fetch(TRIGGER_WORKER_URL+'/trigger-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+        const res=await r.json().catch(()=>({}));
+        if(!r.ok||!res.success)throw new Error(res.error||('HTTP '+r.status));
+        since=res.timestamp;wf=res.workflow||workflow;
+      }catch(e){onState('觸發失敗：'+(e.message||String(e)),'error');setBtn(false);return}
+      const ok=await pollWorkflowUntilDone(wf,since,onState);
+      setBtn(false);
+      if(ok&&reloadOnSuccess)setTimeout(()=>location.reload(),2500);
+    }
     function setTriggerState(message,className){document.querySelectorAll('.trigger-status').forEach(element=>{element.textContent=message;element.className='update-status trigger-status'+(className?' '+className:'')})}
     function setTriggerButtons(running){document.querySelectorAll('.trigger-update-button').forEach(button=>{button.disabled=running;button.classList.toggle('running',running);button.textContent=running?'正在觸發更新…':'更新全部資料'})}
-    async function triggerUpdate(){setTriggerButtons(true);setTriggerState('正在送出 GitHub Actions 更新要求','');try{const response=await fetch(TRIGGER_WORKER_URL+'/trigger-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:'main'})});const result=await response.json().catch(()=>({}));if(!response.ok||!result.success)throw new Error(result.error||`HTTP ${response.status}`);setTriggerState('已成功觸發更新，約1至3分鐘後重新整理頁面','ok')}catch(error){setTriggerState('觸發失敗：'+(error.message||String(error)),'error')}finally{setTriggerButtons(false)}}
+    function triggerUpdate(ev){const btn=ev&&ev.currentTarget?ev.currentTarget:document.querySelector('.trigger-update-button');return runWorkflowUpdate({workflow:'',button:btn,statusEl:document.querySelector('.trigger-status'),idleLabel:'更新全部資料'})}
     document.querySelectorAll('.trigger-update-button').forEach(button=>button.addEventListener('click',triggerUpdate));
     function macroRegionConfig(region){
       if(region==='uk')return{range:ukRange,render:renderUk,yView:ukYView};
@@ -296,25 +333,43 @@
       config.render();
     }
     document.querySelectorAll('.macro-range-button[data-macro-region][data-range-months]').forEach(button=>button.addEventListener('click',()=>setMacroQuickRange(button.dataset.macroRegion,Number(button.dataset.rangeMonths),button)));
-    async function triggerUkUpdate(){const b=$('uk-update-button'),s=$('uk-update-status');b.disabled=true;b.classList.add('running');b.textContent='正在觸發更新…';s.className='update-status';s.textContent='連線至更新服務';try{const response=await fetch(TRIGGER_WORKER_URL+'/trigger-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:'main',workflow:'update-uk-macro.yml'})});const result=await response.json().catch(()=>({}));if(!response.ok||!result.success)throw new Error(result.error||`HTTP ${response.status}`);s.className='update-status ok';s.textContent='已觸發 Update UK Macro Data，約1至3分鐘後重新整理'}catch(error){s.className='update-status error';s.textContent='觸發失敗：'+(error.message||String(error))}finally{b.disabled=false;b.classList.remove('running');b.textContent='更新英國資料'}}
+    function triggerUkUpdate(){return runWorkflowUpdate({workflow:'update-uk-macro.yml',button:$('uk-update-button'),statusEl:$('uk-update-status'),idleLabel:'更新英國資料'})}
     $('uk-update-button').addEventListener('click',triggerUkUpdate);
     $('uk-apply').addEventListener('click',()=>{clearMacroRangeActive('uk');ukYView.clear();renderUk()});
     $('uk-all').addEventListener('click',()=>{const r=ukRange();$('uk-start').value=r.min;$('uk-end').value=r.max;clearMacroRangeActive('uk');ukYView.clear();renderUk()});
-    async function triggerEuUpdate(){const b=$('eu-update-button'),status=$('eu-update-status');b.disabled=true;b.classList.add('running');b.textContent='正在觸發更新…';status.className='update-status';status.textContent='連線至更新服務';try{const response=await fetch(TRIGGER_WORKER_URL+'/trigger-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:'main',workflow:'update-eu-macro.yml'})});const result=await response.json().catch(()=>({}));if(!response.ok||!result.success)throw new Error(result.error||`HTTP ${response.status}`);status.className='update-status ok';status.textContent='已觸發 Update EU Macro Data，約1至3分鐘後重新整理'}catch(error){status.className='update-status error';status.textContent='觸發失敗：'+(error.message||String(error))}finally{b.disabled=false;b.classList.remove('running');b.textContent='更新歐洲資料'}}
+    function triggerEuUpdate(){return runWorkflowUpdate({workflow:'update-eu-macro.yml',button:$('eu-update-button'),statusEl:$('eu-update-status'),idleLabel:'更新歐洲資料'})}
     $('eu-update-button').addEventListener('click',triggerEuUpdate);
     $('eu-apply').addEventListener('click',()=>{clearMacroRangeActive('eu');euYView.clear();renderEu()});
     $('eu-all').addEventListener('click',()=>{const r=euRange();$('eu-start').value=r.min;$('eu-end').value=r.max;clearMacroRangeActive('eu');euYView.clear();renderEu()});
-    async function triggerAuUpdate(){const b=$('au-update-button'),status=$('au-update-status');b.disabled=true;b.classList.add('running');b.textContent='正在觸發更新…';status.className='update-status';status.textContent='連線至更新服務';try{const response=await fetch(TRIGGER_WORKER_URL+'/trigger-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:'main',workflow:'update-au-macro.yml'})});const result=await response.json().catch(()=>({}));if(!response.ok||!result.success)throw new Error(result.error||`HTTP ${response.status}`);status.className='update-status ok';status.textContent='已觸發 Update AU Macro Data，約1至3分鐘後重新整理'}catch(error){status.className='update-status error';status.textContent='觸發失敗：'+(error.message||String(error))}finally{b.disabled=false;b.classList.remove('running');b.textContent='更新澳洲資料'}}
+    function triggerAuUpdate(){return runWorkflowUpdate({workflow:'update-au-macro.yml',button:$('au-update-button'),statusEl:$('au-update-status'),idleLabel:'更新澳洲資料'})}
     $('au-update-button').addEventListener('click',triggerAuUpdate);
+    function triggerUsUpdate(){return runWorkflowUpdate({workflow:'update-us-macro.yml',button:$('us-update-button'),statusEl:$('us-update-status'),idleLabel:'更新美國資料'})}
+    $('us-update-button').addEventListener('click',triggerUsUpdate);
     $('au-apply').addEventListener('click',()=>{clearMacroRangeActive('au');auYView.clear();renderAu()});
     $('au-all').addEventListener('click',()=>{const r=auRange();$('au-start').value=r.min;$('au-end').value=r.max;clearMacroRangeActive('au');auYView.clear();renderAu()});
-    function activateTab(name){['inflation','employment','uk','eu','au'].forEach(id=>{const tab=$('tab-'+id),panel=$(id+'-panel');tab?.classList.toggle('active',id===name);panel?.classList.toggle('active',id===name)});if(name==='uk')renderUk();if(name==='eu')renderEu();if(name==='au')renderAu()}
+    let usData=null;
+    function loadUs(){return getJson('./data/us_macro.json').then(d=>{usData=d;renderUs()}).catch(e=>setError('us-content',e.message))}
+    function renderUs(){
+      if(!usData)return;
+      const upd=usData.generated_at?new Intl.DateTimeFormat('zh-TW',{dateStyle:'short',timeStyle:'short',timeZone:'Asia/Taipei'}).format(new Date(usData.generated_at)):'';
+      $('us-summary').textContent='美國經濟數據'+(upd?'（更新：'+upd+'）':'');
+      const sById={};(usData.series||[]).forEach(s=>{sById[s.id]=s});
+      let html='';
+      (usData.blocks||[]).forEach(b=>{
+        html+='<h3 style="margin:18px 0 6px;font-size:15px">'+b.title+'</h3><div class="scroll"><table class="data-table"><thead><tr><th style="text-align:left">指標</th><th>Ticker</th><th>最新月份</th><th>數值</th></tr></thead><tbody>';
+        (b.series||[]).forEach(id=>{const s=sById[id];if(!s)return;const last=s.data&&s.data.length?s.data[s.data.length-1]:null;html+='<tr><td style="text-align:left">'+s.name+'</td><td>'+s.ticker+'</td><td>'+(last?last.date.slice(0,7):'—')+'</td><td>'+(last?last.value:'—')+'</td></tr>'});
+        html+='</tbody></table></div>';
+      });
+      const c=$('us-content');c.className='';c.innerHTML=html;
+    }
+    function activateTab(name){['inflation','employment','uk','eu','au','us'].forEach(id=>{const tab=$('tab-'+id),panel=$(id+'-panel');tab?.classList.toggle('active',id===name);panel?.classList.toggle('active',id===name)});if(name==='uk')renderUk();if(name==='eu')renderEu();if(name==='au')renderAu();if(name==='us')renderUs()}
     $('tab-inflation').addEventListener('click',()=>activateTab('inflation'));
     $('tab-employment').addEventListener('click',()=>activateTab('employment'));
     $('tab-uk').addEventListener('click',()=>activateTab('uk'));
     $('tab-eu').addEventListener('click',()=>activateTab('eu'));
     $('tab-au').addEventListener('click',()=>activateTab('au'));
-    load();loadUk();loadEu();loadAu();
+    $('tab-us').addEventListener('click',()=>activateTab('us'));
+    load();loadUk();loadEu();loadAu();loadUs();
   </script>
 </body>
 </html>
