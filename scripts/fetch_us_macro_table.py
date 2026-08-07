@@ -200,16 +200,20 @@ def _period_value_map(frame, date_column, value_column):
 def _parse_atlanta_workbook(content):
     """Parse the current Atlanta Fed Wage Growth Tracker workbook."""
     workbook = pd.ExcelFile(io.BytesIO(content))
-    required_sheets = {"data_overall", "Average Wage Quartile"}
+    required_sheets = {"Job Switcher", "Average Wage Quartile"}
     missing = required_sheets.difference(workbook.sheet_names)
     if missing:
         raise RuntimeError("Atlanta Fed workbook missing sheets: " + ", ".join(sorted(missing)))
 
-    overall = pd.read_excel(workbook, sheet_name="data_overall", header=1)
+    # The dedicated "Job Switcher" sheet holds the smoothed (moving-average)
+    # series that Bloomberg's WGTRJBSW/WGTRJBSY track. The "Job Stayer"/"Job
+    # Switcher" columns on data_overall are single-month medians and do not
+    # match the published headline, so they must not be used here.
+    overall = pd.read_excel(workbook, sheet_name="Job Switcher", header=2)
     overall_date = overall.columns[0]
     for column in ("Job Stayer", "Job Switcher"):
         if column not in overall.columns:
-            raise RuntimeError(f"Atlanta Fed data_overall missing column: {column}")
+            raise RuntimeError(f"Atlanta Fed 'Job Switcher' sheet missing column: {column}")
 
     quartiles = pd.read_excel(workbook, sheet_name="Average Wage Quartile", header=2)
     quartile_date = quartiles.columns[0]

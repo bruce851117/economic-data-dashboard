@@ -27,6 +27,11 @@ DATA_FILE = ROOT / "data" / "us_macro.json"
 # Provider that must not overwrite the reference value (see module docstring).
 SKIP_PROVIDERS = {"nfib"}
 
+# Individual series (section|name) to leave untouched. Core Services less
+# Shelter's BLS series (CUUR0000SASL2RS) does not match the reference concept,
+# so it is skipped until a correct series is chosen.
+SKIP_KEYS = {"物價|Core Services less Shelter"}
+
 
 def month_key(date: str) -> str | None:
     """Return 'YYYY-MM' from a 'YYYY-MM' or 'YYYY-MM-DD' string."""
@@ -92,7 +97,7 @@ def fetch_current() -> tuple[dict[str, dict[str, float]], list[str]]:
 
     for s in fus.SPECS:
         key = f"{s.section}|{s.name}"
-        if s.provider in SKIP_PROVIDERS:
+        if s.provider in SKIP_PROVIDERS or key in SKIP_KEYS:
             continue
         try:
             if s.provider == "bls":
