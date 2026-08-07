@@ -1,0 +1,6 @@
+{
+  "requested_url": "https://www.nfib.com/news/monthly_report/jobs-report/",
+  "error_type": "HTTPError",
+  "error": "403 Client Error: Forbidden for url: https://www.nfib.com/news/monthly_report/jobs-report/",
+  "saved_raw_html": "data/us_macro_debug/nfib_jobs_report_raw.html"
+}
