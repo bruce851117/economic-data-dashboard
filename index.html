@@ -68,8 +68,9 @@
     #us-table-view thead th.item-head{z-index:7;left:0}
     .us-section-cell{background:#0f2038!important;color:#fff!important;font-weight:800;letter-spacing:.5px}
     .us-section-fill{background:#0f2038}
-    .us-toggle{cursor:pointer;display:inline-block;width:15px;color:#0f2038;font-size:11px;user-select:none;text-align:center}
-    .us-toggle-sp{display:inline-block;width:15px}
+    .us-toggle{cursor:pointer;display:inline-block;width:20px;color:#2563eb;font-size:16px;font-weight:900;line-height:1;user-select:none;text-align:center}
+    .us-toggle:hover{color:#1d4ed8}
+    .us-toggle-sp{display:inline-block;width:20px}
     .us-mom{font-size:10px;font-weight:600;opacity:.72;margin-top:1px}
   </style>
 </head>
@@ -370,7 +371,7 @@
     $('us-sub-table').addEventListener('click',()=>{usSub='table';$('us-sub-table').classList.add('active');$('us-sub-chart').classList.remove('active');$('us-table-view').style.display='';$('us-chart-view').style.display='none';renderUs()});
     $('us-sub-chart').addEventListener('click',()=>{usSub='chart';$('us-sub-chart').classList.add('active');$('us-sub-table').classList.remove('active');$('us-table-view').style.display='none';$('us-chart-view').style.display=''});
     document.querySelectorAll('.us-range-button').forEach(b=>b.addEventListener('click',()=>{usMonths=Number(b.dataset.usMonths);document.querySelectorAll('.us-range-button').forEach(x=>x.classList.toggle('active',x===b));renderUs()}));
-    $('us-table-view').addEventListener('click',e=>{const t=e.target.closest('.us-toggle');if(!t)return;const k=t.dataset.usKey;usExpand[k]=!usExpand[k];renderUsTable()});
+    $('us-table-view').addEventListener('click',e=>{const t=e.target.closest('.us-toggle');if(!t)return;const k=t.dataset.usKey;const sc=$('us-content').querySelector('.scroll'),st=sc?sc.scrollTop:0,sl=sc?sc.scrollLeft:0;usExpand[k]=!usExpand[k];renderUsTable();const sc2=$('us-content').querySelector('.scroll');if(sc2){sc2.scrollTop=st;sc2.scrollLeft=sl}});
     $('au-apply').addEventListener('click',()=>{clearMacroRangeActive('au');auYView.clear();renderAu()});
     $('au-all').addEventListener('click',()=>{const r=auRange();$('au-start').value=r.min;$('au-end').value=r.max;clearMacroRangeActive('au');auYView.clear();renderAu()});
     let usData=null,usMonths=6,usSub='table';const usExpand={};
@@ -393,7 +394,7 @@
         S.push({title:'就業 - 就業（非農月增減，千人）',rows});}
       // 2) 就業-失業（指定項目加月增減括號）
       {const B='就業-失業',rows=[],mom=new Set(['Labor Force','Employed','Unemployed','Employed to Unemployed','Unemployed to Unemployed','Not in Labor Force to Unemployed','On temporary layoff','Permanent Job Losers','Completed Temp Job','Job leavers','Reentrants','New entrants']);
-        const pct=new Set(['失業率','Employed to Unemployed','Unemployed to Unemployed','Not in Labor Force to Unemployed']);
+        const pct=new Set(['失業率']);
         (usData.series||[]).filter(s=>s.block===B).forEach(s=>{const nm=s.name,vals=usMap(B,nm);let rule;if(nm==='失業率'||pct.has(nm))rule={digits:1,pct:true};else if(nm==='平均失業Duration')rule={digits:1};else rule={digits:0,grouping:true};const row={key:B+'|'+nm,name:nm,level:0,parent:null,vals,rule};if(mom.has(nm)){row.mom=true;row.momVals=usMomMap(vals)}rows.push(row)});
         S.push({title:'就業 - 失業',rows});}
       // 3) 就業-調查（新增 Plentiful - Hard to get，細項隱藏）
