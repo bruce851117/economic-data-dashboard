@@ -120,7 +120,7 @@ Spec("就業-調查","失去工作機率調查","NYCNJSLJ Index","Federal Reserv
 Spec("就業-調查","自願離職調查","NYCNJSJV Index","Federal Reserve Bank of New York","Mean probability of leaving a job voluntarily","nyfed_xlsx","job_separation"),
 Spec("就業-調查","Job Plentiful","CONCJOBP Index","The Conference Board","Jobs plentiful","conference","plentiful"),
 Spec("就業-調查","Job Hard to get","CONCJOBH Index","The Conference Board","Jobs hard to get","conference","hard"),
-Spec("消費","家戶金融狀況vs一年前","CONSPAGI Index","University of Michigan","PAGO_R_ALL","umich","pago"),
+Spec("消費","家戶金融狀況vs一年前","CONSPAGI Index","University of Michigan","PAGO_R_M (monthly data)","umich","pago"),
 Spec("消費","預計未來一年金融狀況","CONSEXFI Index","University of Michigan","PEXP_R_ALL","umich","pexp"),
 Spec("消費","CB","CONCCONF Index","The Conference Board","Consumer Confidence Index","conference","confidence"),
 Spec("消費","零售控制 MoM%","RSTAXAGM Index","U.S. Census Bureau","MRTS control group","census","retail_control"),]
@@ -524,17 +524,29 @@ def _find_umich_excel_link(html, chart_number):
     raise RuntimeError(f"Michigan chart {chart_number} Excel link not found")
 
 
+def _normalize_excel_header(value):
+    if value is None or pd.isna(value):
+        return ""
+    return re.sub(r"\s+", "", str(value)).upper()
+
+
 def _parse_umich_chart_excel(content, wanted_column):
+    """Parse one exact Michigan chart column, never substitute a moving average column."""
     workbook = pd.ExcelFile(io.BytesIO(content))
+    wanted = _normalize_excel_header(wanted_column)
     for sheet in workbook.sheet_names:
         raw = pd.read_excel(workbook, sheet_name=sheet, header=None)
-        for row_index in range(min(20, len(raw))):
-            labels = [str(value).strip() for value in raw.iloc[row_index].tolist()]
-            candidates = [i for i, label in enumerate(labels) if wanted_column.casefold() in label.casefold()]
-            if not candidates:
+        for row_index in range(min(25, len(raw))):
+            labels = [_normalize_excel_header(value) for value in raw.iloc[row_index].tolist()]
+            exact_candidates = [index for index, label in enumerate(labels) if label == wanted]
+            if not exact_candidates:
                 continue
-            date_col = 0
-            value_col = candidates[0]
+            value_col = exact_candidates[0]
+            date_candidates = [
+                index for index, label in enumerate(labels)
+                if label in {"DATEMY", "DATE", "MONTH", "MONTHDATE"}
+            ]
+            date_col = date_candidates[0] if date_candidates else 0
             result = {}
             for _, row in raw.iloc[row_index + 1:].iterrows():
                 date = pd.to_datetime(row.iloc[date_col], errors="coerce")
@@ -542,9 +554,8 @@ def _parse_umich_chart_excel(content, wanted_column):
                 if pd.notna(date) and value is not None:
                     result[date.strftime("%Y-%m")] = value
             if result:
-                return result
-    raise RuntimeError(f"Michigan Excel column not found: {wanted_column}")
-
+                return dict(sorted(result.items()))
+    raise RuntimeError(f"Michigan Excel exact column not found: {wanted_column}")
 
 def fetch_umich_financial():
     headers = {"User-Agent": "Mozilla/5.0", "Accept": "text/html,application/xhtml+xml"}
@@ -552,7 +563,7 @@ def fetch_umich_financial():
     page.raise_for_status()
     result = {}
     for key, chart_number, column in (
-        ("pago", 6, "PAGO_R"),
+        ("pago", 6, "PAGO_R_M"),
         ("pexp", 8, "PEXP_R"),
     ):
         link = _find_umich_excel_link(page.text, chart_number)
@@ -574,12 +585,20 @@ CENSUS_CONTROL_CATEGORIES = {
 def _parse_census_marts_rows(payload):
     if not isinstance(payload, list) or len(payload) < 2:
         raise RuntimeError("Census MARTS returned no data rows")
-    headers = payload[0]
-    required = {"cell_value", "category_code", "data_type_code", "seasonally_adj", "time"}
+    headers = [str(header).strip() for header in payload[0]]
+    required = {"cell_value", "category_code", "data_type_code", "seasonally_adj"}
     missing = required.difference(headers)
     if missing:
         raise RuntimeError("Census MARTS missing fields: " + ", ".join(sorted(missing)))
+
+    # 'time' is predicate-only in this API and must not be requested in get=.
+    # Census can return either time or time_slot_date depending on the query.
+    date_field = "time" if "time" in headers else "time_slot_date" if "time_slot_date" in headers else None
+    if not date_field:
+        raise RuntimeError("Census MARTS response has no time or time_slot_date field")
+
     indexes = {name: headers.index(name) for name in required}
+    date_index = headers.index(date_field)
     values = {name: {} for name in CENSUS_CONTROL_CATEGORIES}
     reverse_codes = {code: name for name, code in CENSUS_CONTROL_CATEGORIES.items()}
 
@@ -592,23 +611,25 @@ def _parse_census_marts_rows(payload):
             continue
         if str(row[indexes["seasonally_adj"]]).strip().lower() not in {"yes", "true", "1"}:
             continue
-        period_match = re.search(r"(20\d{2})-(0[1-9]|1[0-2])", str(row[indexes["time"]]))
+        period_match = re.search(r"(20\d{2})-(0[1-9]|1[0-2])", str(row[date_index]))
         value = num(row[indexes["cell_value"]])
         if period_match and value is not None:
-            values[key][f"{period_match.group(1)}-{period_match.group(2)}"] = value
+            period = f"{period_match.group(1)}-{period_match.group(2)}"
+            values[key][period] = value
     return values
 
-
 def fetch_census_retail_control():
-    """Retail control group level and MoM%, calculated from Census MARTS seasonally adjusted monthly sales."""
+    """Calculate retail control group MoM% from Census MARTS seasonally adjusted monthly sales."""
     api_key = os.getenv("CENSUS_API_KEY", "").strip()
     if not api_key:
         raise RuntimeError("Missing CENSUS_API_KEY")
+
     start_year = datetime.now(timezone.utc).year - 3
     params = {
-        "get": "cell_value,data_type_code,category_code,seasonally_adj,time",
-        "time": f"from {start_year}-01",
-        "data_type_code": "SM",
+        # time is predicate-only, so it is not included in get.
+        "get": "cell_value,data_type_code,category_code,seasonally_adj,time_slot_date",
+        # Census Economic Indicators examples use 'from YYYY', not 'from YYYY-MM'.
+        "time": f"from {start_year}",
         "key": api_key,
     }
     payload = request_json(CENSUS_MARTS_URL, params=params)
@@ -631,7 +652,6 @@ def fetch_census_retail_control():
     if not levels:
         raise RuntimeError("Census MARTS has no common months for control-group calculation")
     return transform(dict(sorted(levels.items())), "mom_pct")
-
 
 NYFED_SCE_XLSX_URL = "https://www.newyorkfed.org/medialibrary/interactives/sce/sce/downloads/data/frbny-sce-data.xlsx"
 
@@ -847,10 +867,8 @@ def main():
     current["就業-職缺|職缺/失業人口"]=merge(old.get("就業-職缺|職缺/失業人口",{}),{k:round(jolts[k]/unemployed[k],7) for k in jolts.keys()&unemployed.keys() if unemployed[k]})
     cache={"updated_at_utc":datetime.now(timezone.utc).isoformat(),"series":current,"errors":errors}
     CACHE.write_text(json.dumps(cache,ensure_ascii=False,indent=2),encoding="utf-8")
-    # Markdown僅顯示目前尚待確認的12項；其他指標仍照常抓取並更新Cache。
+    # Markdown僅顯示目前仍待確認的8項；其他指標仍照常抓取並更新Cache。
     md_rows = [
-        ("ISM服務就業", "就業-調查", "ISM服務就業"),
-        ("ISM製造就業", "就業-調查", "ISM製造就業"),
         ("中小企hiring plan", "就業-調查", "中小企hiring plan"),
         ("Job Plentiful", "就業-調查", "Job Plentiful"),
         ("Job Hard to get", "就業-調查", "Job Hard to get"),
@@ -859,24 +877,25 @@ def main():
         ("家戶金融狀況vs一年前", "消費", "家戶金融狀況vs一年前"),
         ("預計未來一年金融狀況", "消費", "預計未來一年金融狀況"),
         ("CB", "消費", "CB"),
-        ("ISM製造", "企業調查", "ISM製造"),
-        ("ISM服務", "企業調查", "ISM服務"),
     ]
     spec_by_key = {f"{spec.section}|{spec.name}": spec for spec in SPECS}
     selected_keys = [f"{section}|{cache_name}" for _, section, cache_name in md_rows]
-    all_periods = sorted({period for key in selected_keys for period in current.get(key, {})})[-MONTHS:]
+    all_periods = sorted({
+        period
+        for key in selected_keys
+        for period in current.get(key, {})
+    })[-MONTHS:]
     lines = [
         "# 美國總體經濟數據：待確認項目",
         "",
         f"> 更新時間：{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}  ",
-        "> 其他已成功指標仍會在背景抓取並更新Cache，只是不顯示於本表。",
+        "> 其他已成功指標仍會在背景抓取、接受來源修訂並更新Cache，只是不顯示於本表。",
         "",
         "| 指標 | 最新資料月份 | 來源 | 抓取方式 | 官方序列／定義 | "
         + " | ".join(month_end(period) for period in reversed(all_periods)) + " |",
         "|---|---:|---|---|---|" + "---:|" * len(all_periods),
     ]
     method_labels = {
-        "ism": "HTML（ISM官方月報；雲端阻擋時使用已驗證基準值）",
         "nfib": "HTML（NFIB官方Jobs Report）",
         "conference": "HTML（Conference Board官方發布頁）",
         "census": "API＋計算（Census MARTS）",
