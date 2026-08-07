@@ -408,7 +408,7 @@
       // 4) 就業-職缺
       {const B='就業-職缺',rows=[];(usData.series||[]).filter(s=>s.block===B).forEach(s=>{const nm=s.name;let rule=nm==='JOLTS'?{digits:0,grouping:true}:nm==='職缺/失業人口'?{digits:2}:{digits:1,pct:true};rows.push({key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule})});S.push({title:'就業 - 職缺',rows});}
       // 5) 就業-薪水（switcher/stayer 分組）
-      {const B='就業-薪水',order=['時薪 MoM%','Atlanta Fed Job Switcher薪資','ADP Pay Job Changers薪資','Atlanta Fed Job Stayer薪資','ADP Pay Job Stayers薪資','Atlanta Fed最低25%薪資','Atlanta Fed 50%薪資','Atlanta Fed 75%薪資','Atlanta Fed最高25%薪資'],rows=[];
+      {const B='就業-薪水',order=['時薪 MoM%','Atlanta Fed Job Switcher薪資','Atlanta Fed Job Stayer薪資','ADP Pay Job Changers薪資','ADP Pay Job Stayers薪資','Atlanta Fed最低25%薪資','Atlanta Fed 50%薪資','Atlanta Fed 75%薪資','Atlanta Fed最高25%薪資'],rows=[];
         order.forEach(nm=>{if(usFind(B,nm))rows.push({key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule:{digits:1,pct:true}})});
         S.push({title:'就業 - 薪水',rows});}
       // 6) 物價
