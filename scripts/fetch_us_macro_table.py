@@ -827,6 +827,74 @@ def _reported_period(text):
     return month_key(int(match.group(2)), list(calendar.month_name).index(month_name))
 
 
+def _month_name_period(year, month_name):
+    month_name = month_name.title()
+    if month_name not in calendar.month_name:
+        return None
+    return month_key(int(year), list(calendar.month_name).index(month_name))
+
+
+def _parse_conference_board_release(html):
+    """Parse current and revised-prior CCI plus current labor-market shares."""
+    text = _plain_html(html)
+
+    updated = re.search(
+        r"Updated:\s*(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s*"
+        r"([A-Za-z]+)\s+\d{1,2},\s+(20\d{2})",
+        text,
+        flags=re.I,
+    )
+    if not updated:
+        updated = re.search(r"Updated:\s*([A-Za-z]+)\s+\d{1,2},\s+(20\d{2})", text, flags=re.I)
+    if not updated:
+        raise RuntimeError("Conference Board Updated date not found")
+    current_period = _month_name_period(updated.group(2), updated.group(1))
+
+    cci = re.search(
+        r"Consumer Confidence Index\s*(?:®\s*)?"
+        r"(?:increased|decreased|rose|fell|edged up|edged down|inched up|inched down)"
+        r".*?\bto\s+(\d+(?:\.\d+)?)\s*\(1985\s*=\s*100\)\s+in\s+([A-Za-z]+)"
+        r".*?\bfrom\s+(?:an?\s+)?(?:upwardly\s+|downwardly\s+)?(?:revised\s+)?"
+        r"(\d+(?:\.\d+)?)\s+in\s+([A-Za-z]+)",
+        text,
+        flags=re.I | re.S,
+    )
+    if not cci:
+        raise RuntimeError("Conference Board current/prior Consumer Confidence values not found")
+
+    current_value = float(cci.group(1))
+    current_month = cci.group(2)
+    prior_value = float(cci.group(3))
+    prior_month = cci.group(4)
+    current_period_from_sentence = _month_name_period(updated.group(2), current_month)
+    if current_period_from_sentence != current_period:
+        raise RuntimeError(
+            f"Conference Board month mismatch: Updated={current_period}, sentence={current_period_from_sentence}"
+        )
+    current_year, current_month_number = map(int, current_period.split("-"))
+    prior_month_number = list(calendar.month_name).index(prior_month.title())
+    prior_year = current_year - 1 if prior_month_number > current_month_number else current_year
+    prior_period = month_key(prior_year, prior_month_number)
+
+    plentiful = re.search(
+        r"(\d+(?:\.\d+)?)%\s+of consumers said jobs were\s+[\"'“”‘’]?plentiful[\"'“”‘’]?",
+        text,
+        flags=re.I,
+    )
+    hard = re.search(
+        r"(\d+(?:\.\d+)?)%\s+of consumers said jobs were\s+[\"'“”‘’]?hard to get[\"'“”‘’]?",
+        text,
+        flags=re.I,
+    )
+
+    return {
+        "current_period": current_period,
+        "prior_period": prior_period,
+        "confidence": {current_period: current_value, prior_period: prior_value},
+        "plentiful": {current_period: float(plentiful.group(1))} if plentiful else {},
+        "hard": {current_period: float(hard.group(1))} if hard else {},
+    }
+
 def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
     """Fetch NFIB, Conference Board and ISM independently so one provider cannot erase another."""
     out = {}
@@ -871,25 +939,19 @@ def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
         }
         CB_HTTP_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
         response.raise_for_status()
-        text = plain_text
-        period_match = re.search(r"(?:in|for)\s+([A-Za-z]+)\s+(20\d{2})", text, flags=re.I)
-        report_period = None
-        if period_match and period_match.group(1).title() in calendar.month_name:
-            report_period = month_key(int(period_match.group(2)), list(calendar.month_name).index(period_match.group(1).title()))
-        confidence = re.search(r"Consumer Confidence Index[^.]{0,160}?(?:decreased|increased|edged down|inched up)[^.]{0,100}?to\s+(\d+(?:\.\d+)?)", text, flags=re.I)
-        plentiful = re.search(r"jobs (?:were|are|as) [‘\"']?plentiful[’\"']?[^\d]{0,80}(\d+(?:\.\d+)?)%", text, flags=re.I)
-        hard = re.search(r"jobs (?:were|are|as) [‘\"']?hard to get[’\"']?[^\d]{0,80}(\d+(?:\.\d+)?)%", text, flags=re.I)
-        if report_period and confidence:
-            out[("conference", "confidence")] = {report_period: float(confidence.group(1))}
-        if report_period and plentiful:
-            out[("conference", "plentiful")] = {report_period: float(plentiful.group(1))}
-        if report_period and hard:
-            out[("conference", "hard")] = {report_period: float(hard.group(1))}
+        parsed_cb = _parse_conference_board_release(decoded)
+        out[("conference", "confidence")] = parsed_cb["confidence"]
+        if parsed_cb["plentiful"]:
+            out[("conference", "plentiful")] = parsed_cb["plentiful"]
+        if parsed_cb["hard"]:
+            out[("conference", "hard")] = parsed_cb["hard"]
         diagnostic.update({
-            "parsed_reference_period": report_period,
-            "parsed_consumer_confidence": float(confidence.group(1)) if confidence else None,
-            "parsed_jobs_plentiful": float(plentiful.group(1)) if plentiful else None,
-            "parsed_jobs_hard_to_get": float(hard.group(1)) if hard else None,
+            "parsed_reference_period": parsed_cb["current_period"],
+            "parsed_prior_period": parsed_cb["prior_period"],
+            "parsed_consumer_confidence": parsed_cb["confidence"].get(parsed_cb["current_period"]),
+            "parsed_prior_consumer_confidence": parsed_cb["confidence"].get(parsed_cb["prior_period"]),
+            "parsed_jobs_plentiful": parsed_cb["plentiful"].get(parsed_cb["current_period"]),
+            "parsed_jobs_hard_to_get": parsed_cb["hard"].get(parsed_cb["current_period"]),
         })
         CB_HTTP_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
     except Exception as error:
