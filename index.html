@@ -60,6 +60,17 @@
     .au-chart-wrap{position:relative;height:190px;touch-action:none;user-select:none}.au-chart-wrap svg{display:block;width:100%;height:100%;overflow:visible}.au-axis-hit-y{cursor:ns-resize}.au-track-hit{cursor:ns-resize}.au-chart-wrap.is-panning{cursor:grabbing}.au-crosshair{pointer-events:none;display:none}.au-chart-wrap.crosshair-active .au-crosshair{display:block}.au-tooltip{position:fixed;z-index:50;display:none;pointer-events:none;padding:8px 10px;border-radius:8px;color:#fff;background:rgba(15,23,42,.94);box-shadow:0 5px 18px rgba(15,23,42,.3);font-size:12px;white-space:nowrap}.au-empty{padding:40px;text-align:center;color:var(--muted)}
     @media(max-width:1100px){.au-chart-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.au-summary{width:100%;margin-left:0}}
     @media(max-width:700px){.au-chart-grid{grid-template-columns:1fr}.au-chart-wrap{height:210px}}
+    .us-subtabs{display:inline-flex;gap:4px;margin-right:10px}
+    .us-subtab{padding:5px 13px;border:1px solid #cbd5e1;background:#fff;border-radius:8px;cursor:pointer;font-weight:700;font-size:13px}
+    .us-subtab.active{background:#142946;color:#fff;border-color:#142946}
+    #us-table-view .scroll{max-height:72vh;overflow:auto}
+    #us-table-view thead th{position:sticky;top:0;z-index:6;background:#142946;color:#fff}
+    #us-table-view thead th.item-head{z-index:7;left:0}
+    .us-section-cell{background:#0f2038!important;color:#fff!important;font-weight:800;letter-spacing:.5px}
+    .us-section-fill{background:#0f2038}
+    .us-toggle{cursor:pointer;display:inline-block;width:15px;color:#0f2038;font-size:11px;user-select:none;text-align:center}
+    .us-toggle-sp{display:inline-block;width:15px}
+    .us-mom{font-size:10px;font-weight:600;opacity:.72;margin-top:1px}
   </style>
 </head>
 <body>
@@ -165,11 +176,18 @@
     </section>
     <section id="us-panel" class="panel">
       <div class="au-toolbar">
+        <div class="us-subtabs"><button id="us-sub-table" class="us-subtab active" type="button">表格</button><button id="us-sub-chart" class="us-subtab" type="button">圖表</button></div>
+        <button class="macro-range-button us-range-button active" type="button" data-us-months="6">6M</button>
+        <button class="macro-range-button us-range-button" type="button" data-us-months="12">12M</button>
+        <button class="macro-range-button us-range-button" type="button" data-us-months="24">2Y</button>
+        <button class="macro-range-button us-range-button" type="button" data-us-months="36">3Y</button>
+        <button class="macro-range-button us-range-button" type="button" data-us-months="0">全部</button>
         <button id="us-update-button" class="update-button" type="button">更新美國資料</button>
         <span id="us-update-status" class="update-status"></span>
         <div id="us-summary" class="au-summary">正在載入美國經濟數據</div>
       </div>
-      <div id="us-content" class="loading">正在讀取 data/us_macro.json</div>
+      <div id="us-table-view"><div id="us-content" class="loading">正在讀取 data/us_macro.json</div></div>
+      <div id="us-chart-view" style="display:none"><div class="au-empty">圖表分頁準備中，稍後為你製作</div></div>
     </section>
   </main>
 
@@ -349,23 +367,87 @@
     $('au-update-button').addEventListener('click',triggerAuUpdate);
     function triggerUsUpdate(){return runWorkflowUpdate({workflow:'update-us-macro.yml',button:$('us-update-button'),statusEl:$('us-update-status'),idleLabel:'更新美國資料'})}
     $('us-update-button').addEventListener('click',triggerUsUpdate);
+    $('us-sub-table').addEventListener('click',()=>{usSub='table';$('us-sub-table').classList.add('active');$('us-sub-chart').classList.remove('active');$('us-table-view').style.display='';$('us-chart-view').style.display='none';renderUs()});
+    $('us-sub-chart').addEventListener('click',()=>{usSub='chart';$('us-sub-chart').classList.add('active');$('us-sub-table').classList.remove('active');$('us-table-view').style.display='none';$('us-chart-view').style.display=''});
+    document.querySelectorAll('.us-range-button').forEach(b=>b.addEventListener('click',()=>{usMonths=Number(b.dataset.usMonths);document.querySelectorAll('.us-range-button').forEach(x=>x.classList.toggle('active',x===b));renderUs()}));
+    $('us-table-view').addEventListener('click',e=>{const t=e.target.closest('.us-toggle');if(!t)return;const k=t.dataset.usKey;usExpand[k]=!usExpand[k];renderUsTable()});
     $('au-apply').addEventListener('click',()=>{clearMacroRangeActive('au');auYView.clear();renderAu()});
     $('au-all').addEventListener('click',()=>{const r=auRange();$('au-start').value=r.min;$('au-end').value=r.max;clearMacroRangeActive('au');auYView.clear();renderAu()});
-    let usData=null;
+    let usData=null,usMonths=6,usSub='table';const usExpand={};
     function loadUs(){return getJson('./data/us_macro.json').then(d=>{usData=d;renderUs()}).catch(e=>setError('us-content',e.message))}
-    function renderUs(){
-      if(!usData)return;
-      const upd=usData.generated_at?new Intl.DateTimeFormat('zh-TW',{dateStyle:'short',timeStyle:'short',timeZone:'Asia/Taipei'}).format(new Date(usData.generated_at)):'';
-      $('us-summary').textContent='美國經濟數據'+(upd?'（更新：'+upd+'）':'');
-      const sById={};(usData.series||[]).forEach(s=>{sById[s.id]=s});
-      let html='';
-      (usData.blocks||[]).forEach(b=>{
-        html+='<h3 style="margin:18px 0 6px;font-size:15px">'+b.title+'</h3><div class="scroll"><table class="data-table"><thead><tr><th style="text-align:left">指標</th><th>Ticker</th><th>最新月份</th><th>數值</th></tr></thead><tbody>';
-        (b.series||[]).forEach(id=>{const s=sById[id];if(!s)return;const last=s.data&&s.data.length?s.data[s.data.length-1]:null;html+='<tr><td style="text-align:left">'+s.name+'</td><td>'+s.ticker+'</td><td>'+(last?last.date.slice(0,7):'—')+'</td><td>'+(last?last.value:'—')+'</td></tr>'});
-        html+='</tbody></table></div>';
-      });
-      const c=$('us-content');c.className='';c.innerHTML=html;
+    const usFind=(block,name)=>(usData?.series||[]).find(s=>s.block===block&&s.name===name);
+    function usMap(block,name){const s=usFind(block,name),m={};(s?.data||[]).forEach(p=>{const v=Number(p.value);if(Number.isFinite(v))m[p.date.slice(0,7)]=v});return m}
+    const usPrevM=mk=>{const[y,m]=mk.split('-').map(Number);return m===1?`${y-1}-12`:`${y}-${String(m-1).padStart(2,'0')}`};
+    function usMomMap(map){const o={};Object.keys(map).forEach(k=>{const p=usPrevM(k);if(p in map)o[k]=Math.round((map[k]-map[p])*1000)/1000});return o}
+    function usYoyMap(map){const o={};Object.keys(map).forEach(k=>{const[y,m]=k.split('-');const p=`${+y-1}-${m}`;if(p in map&&map[p])o[k]=Math.round((map[k]/map[p]-1)*1000)/10});return o}
+    function usDiffMap(a,b){const o={};Object.keys(a).forEach(k=>{if(k in b)o[k]=Math.round((a[k]-b[k])*10)/10});return o}
+    function usPeriods(){const set=new Set();(usData?.series||[]).forEach(s=>(s.data||[]).forEach(p=>set.add(p.date.slice(0,7))));let a=[...set].sort();if(usMonths>0)a=a.slice(-usMonths);return a.reverse()}
+    function usFmtNum(v,r){if(v==null||!Number.isFinite(Number(v)))return '—';const o={minimumFractionDigits:r.digits,maximumFractionDigits:r.digits,useGrouping:!!r.grouping};if(r.sign)o.signDisplay='exceptZero';let t=new Intl.NumberFormat('en-US',o).format(Number(v));return t+(r.pct?'%':'')}
+    const US_CES=[['非農',0],['Private',1],['Goods-producing Sector',2],['Mining and Logging',3],['Construction',3],['Manufacturing',3],['Durable goods',4],['Nondurable goods',4],['Private Service-Providing',2],['Trade, Transportation, and Utilities',3],['Wholesale Trade',4],['Retail Trade',4],['Transportation and warehousing',4],['Utilities',4],['Information',3],['Financial Activities',3],['Professional and Business Services',3],['Temporary Help Services',5],['Education and Health Services',3],['Health care and social assistance',4],['Health Care',5],['Ambulatory health care services',6],['Hospitals',6],['Nursing and residential care facilities',6],['Social assistance',5],['Leisure and Hospitality',3],['Other Services',3]];
+    function usBuildSections(){
+      const S=[];
+      // 1) 就業-就業（非農月增減，階層）
+      {const B='就業-就業（月增減，千人）',rows=[],stack=[];
+        US_CES.forEach(([nm,lv])=>{while(stack.length&&stack[stack.length-1].lv>=lv)stack.pop();const parent=stack.length?stack[stack.length-1].key:null,key=B+'|'+nm;rows.push({key,name:nm,level:lv,parent,vals:usMap(B,nm),rule:{digits:0,grouping:true,sign:true}});stack.push({key,lv})});
+        rows.forEach(r=>r.expandable=rows.some(c=>c.parent===r.key));
+        S.push({title:'就業 - 就業（非農月增減，千人）',rows});}
+      // 2) 就業-失業（指定項目加月增減括號）
+      {const B='就業-失業',rows=[],mom=new Set(['Labor Force','Employed','Unemployed','Employed to Unemployed','Unemployed to Unemployed','Not in Labor Force to Unemployed','On temporary layoff','Permanent Job Losers','Completed Temp Job','Job leavers','Reentrants','New entrants']);
+        const pct=new Set(['失業率','Employed to Unemployed','Unemployed to Unemployed','Not in Labor Force to Unemployed']);
+        (usData.series||[]).filter(s=>s.block===B).forEach(s=>{const nm=s.name,vals=usMap(B,nm);let rule;if(nm==='失業率'||pct.has(nm))rule={digits:1,pct:true};else if(nm==='平均失業Duration')rule={digits:1};else rule={digits:0,grouping:true};const row={key:B+'|'+nm,name:nm,level:0,parent:null,vals,rule};if(mom.has(nm)){row.mom=true;row.momVals=usMomMap(vals)}rows.push(row)});
+        S.push({title:'就業 - 失業',rows});}
+      // 3) 就業-調查（新增 Plentiful - Hard to get，細項隱藏）
+      {const B='就業-調查',rows=[];
+        (usData.series||[]).filter(s=>s.block===B&&s.name!=='Job Plentiful'&&s.name!=='Job Hard to get').forEach(s=>rows.push({key:B+'|'+s.name,name:s.name,level:0,parent:null,vals:usMap(B,s.name),rule:{digits:1}}));
+        const P=usMap(B,'Job Plentiful'),H=usMap(B,'Job Hard to get'),pk=B+'|plentiful_minus_hard';
+        rows.push({key:pk,name:'Plentiful - Hard to get',level:0,parent:null,expandable:true,vals:usDiffMap(P,H),rule:{digits:1}});
+        rows.push({key:B+'|Job Plentiful',name:'Job Plentiful',level:1,parent:pk,vals:P,rule:{digits:1}});
+        rows.push({key:B+'|Job Hard to get',name:'Job Hard to get',level:1,parent:pk,vals:H,rule:{digits:1}});
+        S.push({title:'就業 - 調查',rows});}
+      // 4) 就業-職缺
+      {const B='就業-職缺',rows=[];(usData.series||[]).filter(s=>s.block===B).forEach(s=>{const nm=s.name;let rule=nm==='JOLTS'?{digits:0,grouping:true}:nm==='職缺/失業人口'?{digits:2}:{digits:1,pct:true};rows.push({key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule})});S.push({title:'就業 - 職缺',rows});}
+      // 5) 就業-薪水（switcher/stayer 分組）
+      {const B='就業-薪水',order=['時薪 MoM%','Atlanta Fed Job Switcher薪資','ADP Pay Job Changers薪資','Atlanta Fed Job Stayer薪資','ADP Pay Job Stayers薪資','Atlanta Fed最低25%薪資','Atlanta Fed 50%薪資','Atlanta Fed 75%薪資','Atlanta Fed最高25%薪資'],rows=[];
+        order.forEach(nm=>{if(usFind(B,nm))rows.push({key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule:{digits:1,pct:true}})});
+        S.push({title:'就業 - 薪水',rows});}
+      // 6) 物價
+      {const B='物價',rows=[];(usData.series||[]).filter(s=>s.block===B).forEach(s=>{const nm=s.name,pct=!/ISM/.test(nm);rows.push({key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule:{digits:nm.includes('Zillow')?2:1,pct}})});S.push({title:'物價',rows});}
+      // 7) 企業調查
+      {const B='企業調查',rows=[];(usData.series||[]).filter(s=>s.block===B).forEach(s=>rows.push({key:B+'|'+s.name,name:s.name,level:0,parent:null,vals:usMap(B,s.name),rule:{digits:1}}));S.push({title:'企業調查',rows});}
+      // 8) 消費（4項改YoY、CB移到密大前、密大細項隱藏）
+      {const B='消費',rows=[],yoy=new Set(['disposable personal income','Personal Outlays','Personal Saving','Interest Paid']);
+        rows.push({key:B+'|Real Personal Spending',name:'Real Personal Spending',level:0,parent:null,vals:usMap(B,'Real Personal Spending'),rule:{digits:1,pct:true}});
+        ['disposable personal income','Personal Outlays','Personal Saving','Interest Paid'].forEach(nm=>rows.push({key:B+'|'+nm,name:nm+'（YoY）',level:0,parent:null,vals:usYoyMap(usMap(B,nm)),rule:{digits:1,pct:true}}));
+        rows.push({key:B+'|CB',name:'CB',level:0,parent:null,vals:usMap(B,'CB'),rule:{digits:1}});
+        const mk=B+'|密大';rows.push({key:mk,name:'密大',level:0,parent:null,expandable:true,vals:usMap(B,'密大'),rule:{digits:1}});
+        rows.push({key:B+'|密大_Current',name:'密大_Current',level:1,parent:mk,vals:usMap(B,'密大_Current'),rule:{digits:1}});
+        rows.push({key:B+'|密大_Expect',name:'密大_Expect',level:1,parent:mk,vals:usMap(B,'密大_Expect'),rule:{digits:1}});
+        rows.push({key:B+'|家戶金融狀況vs一年前',name:'家戶金融狀況vs一年前',level:0,parent:null,vals:usMap(B,'家戶金融狀況vs一年前'),rule:{digits:1}});
+        rows.push({key:B+'|預計未來一年金融狀況',name:'預計未來一年金融狀況',level:0,parent:null,vals:usMap(B,'預計未來一年金融狀況'),rule:{digits:1}});
+        rows.push({key:B+'|零售控制 MoM%',name:'零售控制 MoM%',level:0,parent:null,vals:usMap(B,'零售控制 MoM%'),rule:{digits:1,pct:true}});
+        S.push({title:'消費',rows});}
+      return S;
     }
+    function usRowVisible(row,byKey){let p=row.parent;while(p){if(!usExpand[p])return false;p=byKey[p]?.parent}return true}
+    function renderUsTable(){
+      if(!usData)return;
+      const periods=usPeriods(),sections=usBuildSections(),byKey={};
+      sections.forEach(sec=>sec.rows.forEach(r=>byKey[r.key]=r));
+      let h='<div class="scroll"><table class="data-table us-table"><colgroup><col class="item">'+periods.map(()=>'<col class="month">').join('')+'</colgroup>';
+      h+='<thead><tr><th class="item-head">項目</th>'+periods.map((p,i)=>`<th class="${i===0?'latest':''}">${p.replace('-','/')}</th>`).join('')+'</tr></thead><tbody>';
+      sections.forEach(sec=>{
+        h+=`<tr class="us-section"><td class="item-cell us-section-cell">${esc(sec.title)}</td>${periods.map(()=>'<td class="us-section-fill"></td>').join('')}</tr>`;
+        sec.rows.forEach(row=>{
+          if(!usRowVisible(row,byKey))return;
+          const vis=periods.map(p=>row.vals[p]),s=scale(vis);
+          const tog=row.expandable?`<span class="us-toggle" data-us-key="${esc(row.key)}">${usExpand[row.key]?'▾':'▸'}</span>`:'<span class="us-toggle-sp"></span>';
+          const tds=periods.map(p=>{const v=row.vals[p];let sub='';if(row.mom&&row.momVals&&valid(row.momVals[p]))sub=`<div class="us-mom">(${usFmtNum(row.momVals[p],{...row.rule,sign:true})})</div>`;return `<td class="value ${valid(v)?'':'missing'}" style="background:${color(v,s)}">${usFmtNum(v,row.rule)}${sub}</td>`}).join('');
+          h+=`<tr><td class="item-cell" style="padding-left:${8+row.level*20}px"><div class="item-wrap">${tog}<span>${esc(row.name)}</span></div></td>${tds}</tr>`;
+        });
+      });
+      const c=$('us-content');c.className='';c.innerHTML=h+'</tbody></table></div>';
+    }
+    function renderUs(){if(!usData)return;const upd=usData.generated_at?new Intl.DateTimeFormat('zh-TW',{dateStyle:'short',timeStyle:'short',timeZone:'Asia/Taipei'}).format(new Date(usData.generated_at)):'';$('us-summary').textContent='美國經濟數據'+(upd?'（更新：'+upd+'）':'');if(usSub==='table')renderUsTable()}
     function activateTab(name){['inflation','employment','uk','eu','au','us'].forEach(id=>{const tab=$('tab-'+id),panel=$(id+'-panel');tab?.classList.toggle('active',id===name);panel?.classList.toggle('active',id===name)});if(name==='uk')renderUk();if(name==='eu')renderEu();if(name==='au')renderAu();if(name==='us')renderUs()}
     $('tab-inflation').addEventListener('click',()=>activateTab('inflation'));
     $('tab-employment').addEventListener('click',()=>activateTab('employment'));
