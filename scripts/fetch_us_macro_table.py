@@ -745,51 +745,80 @@ def main():
     current["就業-職缺|職缺/失業人口"]=merge(old.get("就業-職缺|職缺/失業人口",{}),{k:round(jolts[k]/unemployed[k],7) for k in jolts.keys()&unemployed.keys() if unemployed[k]})
     cache={"updated_at_utc":datetime.now(timezone.utc).isoformat(),"series":current,"errors":errors}
     CACHE.write_text(json.dumps(cache,ensure_ascii=False,indent=2),encoding="utf-8")
-    # Markdown僅輸出尚待確認的CB、ISM製造與ISM服務；所有已成功項目仍照常抓取並更新Cache。
-    # tuple: (Markdown 顯示名稱, cache section, cache 指標名稱)
-    md_rows = [
-        ("CB", "消費", "CB"),
-        ("ISM製造", "企業調查", "ISM製造"),
-        ("ISM服務", "企業調查", "ISM服務"),
-    ]
-    spec_by_key = {f"{s.section}|{s.name}": s for s in SPECS}
-    selected_keys = [f"{section}|{cache_name}" for _, section, cache_name in md_rows]
+    # Markdown暫時列出程式內所有指標，依SPECS既有分類與順序顯示。
+    # 已成功抓取的指標仍會持續更新，本區只控制Markdown呈現方式。
+    method_labels = {
+        "bls": "API（BLS Public Data API v2）",
+        "atlanta": "XLSX（Atlanta Fed官方下載檔）",
+        "adp": "ZIP／CSV（ADP Pay Insights動態下載連結）",
+        "zillow": "CSV（Zillow Research官方下載檔）",
+        "umich_csv": "CSV（University of Michigan官方下載檔）",
+        "fred": "API（FRED API）",
+        "nyfed_xlsx": "XLSX（New York Fed SCE官方下載檔）",
+        "ism": "HTML（ISM官方月報）",
+        "nfib": "HTML（NFIB官方頁面）",
+        "conference": "HTML（Conference Board官方頁面）",
+        "census": "API＋計算（Census MARTS API）",
+        "derived": "計算（由其他已抓取序列推導）",
+        "umich": "HTML（University of Michigan官方頁面）",
+        "nyfed": "HTML（New York Fed官方頁面）",
+    }
+
     all_periods = sorted({
         period
-        for key in selected_keys
-        for period in current.get(key, {})
+        for values in current.values()
+        for period in values
     })[-MONTHS:]
 
     lines = [
         "# 美國總體經濟數據",
         "",
         f"> 更新時間：{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}  ",
-        "> 日期為資料所屬月份月底。N/A 代表該月份尚未發布，或官方來源未提供可穩定自動下載的歷史值。",
+        "> 日期為資料所屬月份月底。N/A代表該月份尚未發布，或來源暫時未成功取得。",
         "",
-        "| 指標 | Bloomberg | 最新資料月份 | 來源 | 官方序列 / 定義 | "
-        + " | ".join(month_end(p) for p in reversed(all_periods)) + " |",
-        "|---|---|---:|---|---|" + "---:|" * len(all_periods),
     ]
-    for display_name, section, cache_name in md_rows:
-        key = f"{section}|{cache_name}"
-        s = spec_by_key[key]
-        vals = current.get(key, {})
-        latest = max(vals) if vals else None
-        lines.append("| " + " | ".join(
-            [display_name, s.ticker, month_end(latest) if latest else "N/A", s.source, s.series]
-            + [fmt(vals.get(p)) for p in reversed(all_periods)]
-        ) + " |")
 
-    lines.append("")
+    for section in dict.fromkeys(spec.section for spec in SPECS):
+        section_specs = [spec for spec in SPECS if spec.section == section]
+        lines += [
+            f"## {section}",
+            "",
+            "| 指標 | 最新資料月份 | 來源 | 抓取方式 | 官方序列／定義 | "
+            + " | ".join(month_end(period) for period in reversed(all_periods))
+            + " |",
+            "|---|---:|---|---|---|" + "---:|" * len(all_periods),
+        ]
+        for spec in section_specs:
+            key = f"{spec.section}|{spec.name}"
+            values = current.get(key, {})
+            latest = max(values) if values else None
+            display_name = "&nbsp;" * (spec.level * 4) + spec.name
+            method = method_labels.get(spec.provider, f"其他（{spec.provider}）")
+            lines.append("| " + " | ".join(
+                [
+                    display_name,
+                    month_end(latest) if latest else "N/A",
+                    spec.source,
+                    method,
+                    spec.series,
+                ]
+                + [fmt(values.get(period)) for period in reversed(all_periods)]
+            ) + " |")
+        lines.append("")
+
     if errors:
-        lines += ["## 更新警告", "", *[f"- {e}" for e in errors], ""]
+        lines += ["## 更新警告", "", *[f"- {error}" for error in errors], ""]
+
     lines += [
-        "## 來源策略",
+        "## 抓取方式說明",
         "",
-        "- BLS：Public Data API v2，涵蓋 CPI、PPI 等官方資料。",
-        "- Atlanta Fed、ADP：優先使用官方 XLSX、ZIP/CSV。",
-        "- University of Michigan：使用官方 tbmics.csv 與 tbmpx1px5.csv；BEA其餘序列沿用FRED API。",
-        "- NY Fed SCE使用官方FRBNY-SCE-Data.xlsx；ISM四項改用ISM官方月報；零售控制組使用Census MARTS API的季調月銷售額自行計算。",
+        "- API：直接呼叫官方或資料庫API並解析JSON。",
+        "- CSV：下載官方CSV後依月份與欄位名稱解析。",
+        "- XLSX：下載官方Excel後依工作表與欄位名稱解析。",
+        "- ZIP／CSV：先從官方頁面動態取得ZIP連結，再解壓縮並解析CSV。",
+        "- HTML：讀取官方月報或發布頁面中的文字與數值。",
+        "- API＋計算：取得官方組成項目後，再依定義計算衍生指標。",
+        "- 計算：完全由程式中其他已抓取序列推導，不另外下載。",
         "",
     ]
     OUT.write_text("\n".join(lines),encoding="utf-8")
