@@ -898,28 +898,107 @@ def _parse_conference_board_release(html):
         "hard": {current_period: float(hard.group(1))} if hard else {},
     }
 
+def _parse_nfib_jobs_report(source_html):
+    """Parse the NFIB reference month and Plans to Increase Employment value."""
+    text = _plain_html(source_html)
+    period = _reported_period(text)
+    patterns = [
+        r"(?:seasonally adjusted\s+)?net\s+(-?\d+(?:\.\d+)?)%\s+of owners\s+"
+        r"plan to create new jobs in the next three months",
+        r"(?:seasonally adjusted\s+)?net\s+(-?\d+(?:\.\d+)?)%\s+of owners\s+"
+        r"plan to (?:hire|increase employment)\b",
+    ]
+    match = None
+    for pattern in patterns:
+        match = re.search(pattern, text, flags=re.I)
+        if match:
+            break
+    if not period:
+        raise RuntimeError("NFIB survey reference month not found")
+    if not match:
+        raise RuntimeError("NFIB hiring-plan value not found")
+    value = float(match.group(1))
+    if not -100 <= value <= 100:
+        raise RuntimeError(f"NFIB hiring-plan value outside expected range: {value}")
+    return period, value, text
+
+
+def _fetch_nfib_with_playwright(url):
+    """Load the public NFIB page in Chromium when a normal HTTP request is challenged."""
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError as error:
+        raise RuntimeError("Playwright is not installed") from error
+
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch(
+            headless=True,
+            args=[
+                "--disable-dev-shm-usage",
+                "--no-sandbox",
+                "--disable-blink-features=AutomationControlled",
+            ],
+        )
+        context = browser.new_context(
+            user_agent=(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/131.0.0.0 Safari/537.36"
+            ),
+            locale="en-US",
+            timezone_id="America/New_York",
+            viewport={"width": 1440, "height": 1000},
+            extra_http_headers={
+                "Accept-Language": "en-US,en;q=0.9",
+                "Cache-Control": "no-cache",
+                "Pragma": "no-cache",
+            },
+        )
+        page = context.new_page()
+        response = page.goto(url, wait_until="domcontentloaded", timeout=120000)
+        try:
+            page.wait_for_function(
+                """() => {
+                    const t = document.body ? document.body.innerText : '';
+                    return /plan to create new jobs in the next three months/i.test(t)
+                        || /plan to (hire|increase employment)/i.test(t);
+                }""",
+                timeout=60000,
+            )
+        except Exception:
+            page.wait_for_timeout(5000)
+        source_html = page.content()
+        final_url = page.url
+        title = page.title()
+        status_code = response.status if response else None
+        browser.close()
+    return source_html, final_url, status_code, title
+
+
 def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
     """Fetch NFIB, Conference Board and ISM independently so one provider cannot erase another."""
     out = {}
-    headers = {"User-Agent": "Mozilla/5.0", "Accept": "text/html,application/xhtml+xml"}
-
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/131.0.0.0 Safari/537.36"
+        ),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
     nfib_url = "https://www.nfib.com/news/monthly_report/jobs-report/"
+    http_error = None
     try:
         response = SESSION.get(nfib_url, headers=headers, timeout=60, allow_redirects=True)
         raw = response.content
-        NFIB_RAW_HTML.write_bytes(raw)
         encoding = response.encoding or response.apparent_encoding or "utf-8"
         decoded = raw.decode(encoding, errors="replace")
-        text = _plain_html(decoded)
         response.raise_for_status()
-        period = _reported_period(text)
-        match = re.search(
-            r"(?:seasonally adjusted\s+)?net\s+(\d+(?:\.\d+)?)%\s+of owners "
-            r"plan to create new jobs in the next three months",
-            text,
-            flags=re.I,
-        )
+        period, value, plain_text = _parse_nfib_jobs_report(decoded)
+        NFIB_RAW_HTML.write_bytes(raw)
         diagnostic = {
+            "method": "requests",
             "requested_url": nfib_url,
             "final_url": response.url,
             "status_code": response.status_code,
@@ -927,32 +1006,45 @@ def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
             "response_bytes": len(raw),
             "encoding": encoding,
             "parsed_reference_period": period,
-            "parsed_hiring_plan": float(match.group(1)) if match else None,
-            "contains_survey_conducted": "survey was conducted in" in text.lower(),
-            "response_preview": text[:4000],
+            "parsed_hiring_plan": value,
+            "response_preview": plain_text[:4000],
             "saved_raw_html": str(NFIB_RAW_HTML.relative_to(ROOT)),
         }
         NFIB_HTTP_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
-        if not period:
-            raise RuntimeError("NFIB survey reference month not found")
-        if not match:
-            raise RuntimeError("NFIB hiring-plan value not found")
-        out[("nfib", "hiring_plan")] = {period: float(match.group(1))}
+        out[("nfib", "hiring_plan")] = {period: value}
     except Exception as error:
-        existing = {}
-        if NFIB_HTTP_JSON.exists():
-            try:
-                existing = json.loads(NFIB_HTTP_JSON.read_text(encoding="utf-8"))
-            except Exception:
-                existing = {}
-        existing.update({
-            "requested_url": nfib_url,
-            "error_type": type(error).__name__,
-            "error": str(error),
-            "saved_raw_html": str(NFIB_RAW_HTML.relative_to(ROOT)) if NFIB_RAW_HTML.exists() else None,
-        })
-        NFIB_HTTP_JSON.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
-
+        http_error = error
+        try:
+            decoded, final_url, status_code, title = _fetch_nfib_with_playwright(nfib_url)
+            period, value, plain_text = _parse_nfib_jobs_report(decoded)
+            NFIB_RAW_HTML.write_text(decoded, encoding="utf-8")
+            diagnostic = {
+                "method": "playwright_chromium",
+                "requested_url": nfib_url,
+                "final_url": final_url,
+                "status_code": status_code,
+                "title": title,
+                "response_bytes": len(decoded.encode("utf-8")),
+                "parsed_reference_period": period,
+                "parsed_hiring_plan": value,
+                "requests_error_type": type(http_error).__name__,
+                "requests_error": str(http_error),
+                "response_preview": plain_text[:4000],
+                "saved_raw_html": str(NFIB_RAW_HTML.relative_to(ROOT)),
+            }
+            NFIB_HTTP_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
+            out[("nfib", "hiring_plan")] = {period: value}
+        except Exception as browser_error:
+            diagnostic = {
+                "method": "playwright_chromium",
+                "requested_url": nfib_url,
+                "requests_error_type": type(http_error).__name__,
+                "requests_error": str(http_error),
+                "playwright_error_type": type(browser_error).__name__,
+                "playwright_error": str(browser_error),
+                "saved_raw_html": str(NFIB_RAW_HTML.relative_to(ROOT)) if NFIB_RAW_HTML.exists() else None,
+            }
+            NFIB_HTTP_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
     cb_url = "https://www.conference-board.org/topics/consumer-confidence/index.cfm"
     CB_DEBUG_DIR.mkdir(parents=True, exist_ok=True)
     try:
@@ -1060,7 +1152,7 @@ def main():
         "- `cb_consumer_confidence_raw.html`：GitHub Actions 實際收到的原始回應。\n"
         "- `cb_consumer_confidence_http.json`：CB的HTTP、頁面特徵與目前解析結果。\n"
         "- `nfib_jobs_report_raw.html`：NFIB Jobs Report原始回應。\n"
-        "- `nfib_jobs_report_http.json`：NFIB參考月份與Hiring Plan解析結果。\n\n"
+        "- `nfib_jobs_report_http.json`：NFIB請求方式、參考月份與Hiring Plan解析結果。\n\n"
         "注意：Git 不會追蹤空資料夾；GitHub Actions 必須將 `data/us_macro_debug/` 加入 commit。\n",
         encoding="utf-8",
     )
@@ -1145,7 +1237,7 @@ def main():
         "|---|---:|---|---|---|" + "---:|" * len(all_periods),
     ]
     method_labels = {
-        "nfib": "HTML（NFIB官方Jobs Report）",
+        "nfib": "HTML（requests；受阻時以Playwright Chromium載入NFIB官方Jobs Report）",
         "conference": "HTML（Conference Board官方發布頁）",
         "census": "API＋計算（Census MARTS）",
         "fred": "API（FRED）",

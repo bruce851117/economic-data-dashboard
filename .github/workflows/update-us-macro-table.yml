@@ -24,7 +24,12 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install pandas openpyxl xlrd requests
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas openpyxl xlrd requests playwright
+
+      - name: Install Playwright Chromium
+        run: python -m playwright install --with-deps chromium
 
       - name: Build US macro Markdown
         env:
