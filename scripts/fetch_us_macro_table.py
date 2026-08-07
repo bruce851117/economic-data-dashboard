@@ -121,7 +121,7 @@ Spec("就業-調查","自願離職調查","NYCNJSJV Index","Federal Reserve Bank
 Spec("就業-調查","Job Plentiful","CONCJOBP Index","The Conference Board","Jobs plentiful","conference","plentiful"),
 Spec("就業-調查","Job Hard to get","CONCJOBH Index","The Conference Board","Jobs hard to get","conference","hard"),
 Spec("消費","家戶金融狀況vs一年前","CONSPAGI Index","University of Michigan","PAGO_R_M (monthly data)","umich","pago"),
-Spec("消費","預計未來一年金融狀況","CONSEXFI Index","University of Michigan","PEXP_R_ALL","umich","pexp"),
+Spec("消費","預計未來一年金融狀況","CONSEXFI Index","University of Michigan","PEXP_R_M (monthly data)","umich","pexp"),
 Spec("消費","CB","CONCCONF Index","The Conference Board","Consumer Confidence Index","conference","confidence"),
 Spec("消費","零售控制 MoM%","RSTAXAGM Index","U.S. Census Bureau","44X72 - (4411,4412) - 447 - 444 - 722; seasonally adjusted monthly sales MoM%","census","retail_control"),]
 
@@ -591,7 +591,7 @@ def fetch_umich_financial():
     result = {}
     for key, chart_number, column in (
         ("pago", 6, "PAGO_R_M"),
-        ("pexp", 8, "PEXP_R"),
+        ("pexp", 8, "PEXP_R_M"),
     ):
         link = _find_umich_excel_link(page.text, chart_number)
         response = SESSION.get(link, headers=headers, timeout=90)
@@ -602,14 +602,47 @@ def fetch_umich_financial():
 
 CENSUS_CONTROL_CATEGORIES = {
     "total": "44X72",
+    # Temporary candidate pending user review of raw Census rows in Markdown.
     "auto_other_motor_vehicles": "4411,4412",
     "gasoline": "447",
     "building_materials": "444",
     "food_services": "722",
 }
 
+CENSUS_CATEGORY_LABELS = {
+    "44X72": "Retail Trade and Food Services, Total",
+    "44Y72": "Retail Trade and Food Services, ex Auto",
+    "44Z72": "Retail Trade and Food Services, ex Gas",
+    "44W72": "Retail Trade and Food Services, ex Auto and Gas",
+    "44000": "Retail Trade",
+    "441": "Motor Vehicle and Parts Dealers",
+    "4411": "Automobile Dealers",
+    "4412": "Other Motor Vehicle Dealers",
+    "4411,4412": "Auto and Other Motor Vehicle Dealers",
+    "441X": "Motor Vehicle and Parts Dealers (alternate aggregate)",
+    "442": "Furniture and Home Furnishings Stores",
+    "443": "Electronics and Appliance Stores",
+    "444": "Building Material and Garden Equipment and Supplies Dealers",
+    "445": "Food and Beverage Stores",
+    "4451": "Grocery Stores",
+    "446": "Health and Personal Care Stores",
+    "447": "Gasoline Stations",
+    "448": "Clothing and Clothing Accessories Stores",
+    "451": "Sporting Goods, Hobby, Musical Instrument, and Book Stores",
+    "452": "General Merchandise Stores",
+    "4521": "Department Stores",
+    "453": "Miscellaneous Store Retailers",
+    "454": "Nonstore Retailers",
+    "722": "Food Services and Drinking Places",
+}
+
+
+def _normalize_census_category(value):
+    return re.sub(r"\s+", "", str(value).strip()).upper()
+
 
 def _parse_census_marts_rows(payload):
+    """Return both selected formula components and every raw SA monthly-sales category."""
     if not isinstance(payload, list) or len(payload) < 2:
         raise RuntimeError("Census MARTS returned no data rows")
     headers = [str(header).strip() for header in payload[0]]
@@ -617,53 +650,53 @@ def _parse_census_marts_rows(payload):
     missing = required.difference(headers)
     if missing:
         raise RuntimeError("Census MARTS missing fields: " + ", ".join(sorted(missing)))
-
-    # 'time' is predicate-only in this API and must not be requested in get=.
-    # Census can return either time or time_slot_date depending on the query.
     date_field = "time" if "time" in headers else "time_slot_date" if "time_slot_date" in headers else None
     if not date_field:
         raise RuntimeError("Census MARTS response has no time or time_slot_date field")
 
     indexes = {name: headers.index(name) for name in required}
     date_index = headers.index(date_field)
-    values = {name: {} for name in CENSUS_CONTROL_CATEGORIES}
-    reverse_codes = {code: name for name, code in CENSUS_CONTROL_CATEGORIES.items()}
-
+    raw_categories = {}
     for row in payload[1:]:
-        category = str(row[indexes["category_code"]]).strip()
-        key = reverse_codes.get(category)
-        if not key:
-            continue
         if str(row[indexes["data_type_code"]]).strip().upper() != "SM":
             continue
         if str(row[indexes["seasonally_adj"]]).strip().lower() not in {"yes", "true", "1"}:
             continue
+        category = _normalize_census_category(row[indexes["category_code"]])
         period_match = re.search(r"(20\d{2})-(0[1-9]|1[0-2])", str(row[date_index]))
         value = num(row[indexes["cell_value"]])
-        if period_match and value is not None:
+        if category and period_match and value is not None:
             period = f"{period_match.group(1)}-{period_match.group(2)}"
-            values[key][period] = value
-    return values
+            raw_categories.setdefault(category, {})[period] = value
+
+    components = {}
+    for name, category_code in CENSUS_CONTROL_CATEGORIES.items():
+        normalized = _normalize_census_category(category_code)
+        components[name] = dict(raw_categories.get(normalized, {}))
+    return components, dict(sorted(raw_categories.items()))
+
 
 def fetch_census_retail_control():
-    """Calculate retail control group MoM% from Census MARTS seasonally adjusted monthly sales."""
+    """Return control-group MoM% and raw Census SA monthly-sales categories for inspection."""
     api_key = os.getenv("CENSUS_API_KEY", "").strip()
     if not api_key:
         raise RuntimeError("Missing CENSUS_API_KEY")
-
     start_year = datetime.now(timezone.utc).year - 3
     params = {
-        # time is predicate-only, so it is not included in get.
         "get": "cell_value,data_type_code,category_code,seasonally_adj,time_slot_date",
-        # Census Economic Indicators examples use 'from YYYY', not 'from YYYY-MM'.
         "time": f"from {start_year}",
         "key": api_key,
     }
     payload = request_json(CENSUS_MARTS_URL, params=params)
-    components = _parse_census_marts_rows(payload)
+    components, raw_categories = _parse_census_marts_rows(payload)
     missing = [name for name, values in components.items() if not values]
     if missing:
-        raise RuntimeError("Census MARTS missing control-group components: " + ", ".join(missing))
+        available = ", ".join(raw_categories.keys())
+        raise RuntimeError(
+            "Census MARTS missing candidate control-group components: "
+            + ", ".join(missing)
+            + f"; available category codes: {available}"
+        )
 
     common_periods = set.intersection(*(set(values) for values in components.values()))
     levels = {}
@@ -678,7 +711,7 @@ def fetch_census_retail_control():
         )
     if not levels:
         raise RuntimeError("Census MARTS has no common months for control-group calculation")
-    return transform(dict(sorted(levels.items())), "mom_pct")
+    return transform(dict(sorted(levels.items())), "mom_pct"), raw_categories
 
 NYFED_SCE_XLSX_URL = "https://www.newyorkfed.org/medialibrary/interactives/sce/sce/downloads/data/frbny-sce-data.xlsx"
 
@@ -869,8 +902,9 @@ def main():
     except Exception as e: umich={}; errors.append(f"University of Michigan CSV: {e}")
     try: umich_financial=fetch_umich_financial()
     except Exception as e: umich_financial={}; errors.append(f"University of Michigan financial charts: {e}")
-    try: retail_control=fetch_census_retail_control()
-    except Exception as e: retail_control={}; errors.append(f"Census retail control: {e}")
+    try: retail_control, census_retail_raw=fetch_census_retail_control()
+    except Exception as e:
+        retail_control={}; census_retail_raw={}; errors.append(f"Census retail control: {e}")
     for s in SPECS:
         key=f"{s.section}|{s.name}"
         try:
@@ -894,13 +928,12 @@ def main():
     current["就業-職缺|職缺/失業人口"]=merge(old.get("就業-職缺|職缺/失業人口",{}),{k:round(jolts[k]/unemployed[k],7) for k in jolts.keys()&unemployed.keys() if unemployed[k]})
     cache={"updated_at_utc":datetime.now(timezone.utc).isoformat(),"series":current,"errors":errors}
     CACHE.write_text(json.dumps(cache,ensure_ascii=False,indent=2),encoding="utf-8")
-    # Markdown僅顯示目前仍待確認的7項；其他指標仍照常抓取並更新Cache。
+    # Markdown僅顯示目前仍待確認的6項；其他指標仍照常抓取並更新Cache。
     md_rows = [
         ("中小企hiring plan", "就業-調查", "中小企hiring plan"),
         ("Job Plentiful", "就業-調查", "Job Plentiful"),
         ("Job Hard to get", "就業-調查", "Job Hard to get"),
         ("零售控制", "消費", "零售控制 MoM%"),
-        ("家戶金融狀況vs一年前", "消費", "家戶金融狀況vs一年前"),
         ("預計未來一年金融狀況", "消費", "預計未來一年金融狀況"),
         ("CB", "消費", "CB"),
     ]
@@ -941,6 +974,30 @@ def main():
             spec.series,
         ] + [fmt(values.get(period)) for period in reversed(all_periods)]) + " |")
     lines.append("")
+
+    # Show every raw Census MARTS category so the correct auto exclusion can be selected.
+    if census_retail_raw:
+        raw_periods = sorted({
+            period for values in census_retail_raw.values() for period in values
+        })[-MONTHS:]
+        lines += [
+            "## Census MARTS 零售銷售原始資料",
+            "",
+            "> 以下為API回傳的全部季調月銷售額（data_type_code=SM、seasonally_adj=yes）。",
+            "> 目前暫定控制組扣除代碼為 `4411,4412`，請依下表確認實際應使用哪個category_code。",
+            "",
+            "| category_code | Census分類名稱 | "
+            + " | ".join(month_end(period) for period in reversed(raw_periods)) + " |",
+            "|---|---|" + "---:|" * len(raw_periods),
+        ]
+        for category_code, values in census_retail_raw.items():
+            label = CENSUS_CATEGORY_LABELS.get(category_code, "Census API未附標籤，請依category_code判斷")
+            lines.append("| " + " | ".join([
+                category_code,
+                label,
+            ] + [fmt(values.get(period)) for period in reversed(raw_periods)]) + " |")
+        lines.append("")
+
     if errors:
         lines += ["## 更新警告", "", *[f"- {error}" for error in errors], ""]
     OUT.write_text("\n".join(lines),encoding="utf-8")
