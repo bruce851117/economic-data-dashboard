@@ -464,6 +464,22 @@ def _ism_number(text, patterns, label):
     raise RuntimeError(f"ISM {label} value not found")
 
 
+def _ism_number_optional(text, patterns):
+    """Like _ism_number but returns None instead of raising when absent."""
+    for pattern in patterns:
+        match = re.search(pattern, text, flags=re.I | re.S)
+        if match:
+            return float(match.group(1))
+    return None
+
+
+# ISM Prices Index wording, shared by manufacturing and services reports.
+_ISM_PRICE_PATTERNS = [
+    r"Prices Index[^.]{0,90}?(?:registered|reading of|at|was)\s+(\d+(?:\.\d+)?)\s*percent",
+    r"Prices Index[^.]{0,90}?(\d+(?:\.\d+)?)\s*percent",
+]
+
+
 def _parse_ism_report(html, sector, expected_year, expected_month):
     text = _plain_html(html)
     month_name = calendar.month_name[expected_month]
@@ -479,7 +495,11 @@ def _parse_ism_report(html, sector, expected_year, expected_month):
             r"Employment Index(?: reading)?(?: of)?\s+(\d+(?:\.\d+)?)\s*percent",
             r"Employment Index\s+(?:registered|at)\s+(\d+(?:\.\d+)?)\s*percent",
         ], "Manufacturing Employment")
-        return {"manufacturing_pmi": pmi, "manufacturing_employment": employment}
+        prices = _ism_number_optional(text, _ISM_PRICE_PATTERNS)
+        parsed = {"manufacturing_pmi": pmi, "manufacturing_employment": employment}
+        if prices is not None:
+            parsed["manufacturing_prices"] = prices
+        return parsed
 
     pmi = _ism_number(text, [
         r"Services PMI(?:®)?\s+(?:registered|at)\s+(\d+(?:\.\d+)?)\s*percent",
@@ -489,7 +509,11 @@ def _parse_ism_report(html, sector, expected_year, expected_month):
         r"Employment Index(?: returned[^.]{0,120}?with a reading of| registered| at)\s+(\d+(?:\.\d+)?)\s*percent",
         r"Employment Index[^.]{0,160}?reading of\s+(\d+(?:\.\d+)?)\s*percent",
     ], "Services Employment")
-    return {"services_pmi": pmi, "services_employment": employment}
+    prices = _ism_number_optional(text, _ISM_PRICE_PATTERNS)
+    parsed = {"services_pmi": pmi, "services_employment": employment}
+    if prices is not None:
+        parsed["services_prices"] = prices
+    return parsed
 
 
 def fetch_ism_official():
@@ -512,6 +536,14 @@ def fetch_ism_official():
         "services_employment": {
             "2026-01": 50.3, "2026-02": 51.8, "2026-03": 45.2,
             "2026-04": 48.0, "2026-05": 47.9, "2026-06": 51.2, "2026-07": 47.4,
+        },
+        "manufacturing_prices": {
+            "2026-01": 59.0, "2026-02": 70.5, "2026-03": 78.3,
+            "2026-04": 84.6, "2026-05": 82.1, "2026-06": 73.0, "2026-07": 71.1,
+        },
+        "services_prices": {
+            "2026-01": 66.6, "2026-02": 63.0, "2026-03": 70.7,
+            "2026-04": 70.7, "2026-05": 71.3, "2026-06": 67.7, "2026-07": 70.3,
         },
     }
     result = {key: dict(values) for key, values in bootstrap.items()}
