@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-08-07T02:51:57.781770+00:00",
+  "updated_at_utc": "2026-08-07T03:17:06.786715+00:00",
   "series": {
     "就業-就業（人數，千人）|非農": {
       "2023-01": 154776.0,
@@ -8367,11 +8367,52 @@
     "消費|CB": {
       "2026-08": 90.8
     },
-    "消費|零售控制 MoM%": {}
+    "消費|零售控制 MoM%": {
+      "2023-02": 0.072,
+      "2023-03": -0.957,
+      "2023-04": 1.047,
+      "2023-05": 0.219,
+      "2023-06": 0.438,
+      "2023-07": 0.692,
+      "2023-08": 0.312,
+      "2023-09": 0.219,
+      "2023-10": 0.308,
+      "2023-11": 0.111,
+      "2023-12": 0.231,
+      "2024-01": -0.599,
+      "2024-02": 0.171,
+      "2024-03": 0.816,
+      "2024-04": 0.05,
+      "2024-05": 0.589,
+      "2024-06": 1.148,
+      "2024-07": 0.243,
+      "2024-08": -0.26,
+      "2024-09": 1.528,
+      "2024-10": 0.023,
+      "2024-11": 0.0,
+      "2024-12": 1.24,
+      "2025-01": -0.916,
+      "2025-02": 1.284,
+      "2025-03": 0.225,
+      "2025-04": 0.048,
+      "2025-05": 0.165,
+      "2025-06": 0.659,
+      "2025-07": 0.88,
+      "2025-08": 0.654,
+      "2025-09": -0.188,
+      "2025-10": 0.515,
+      "2025-11": 0.154,
+      "2025-12": -0.055,
+      "2026-01": 0.493,
+      "2026-02": 0.89,
+      "2026-03": 0.955,
+      "2026-04": 0.559,
+      "2026-05": 0.865,
+      "2026-06": 0.551
+    }
   },
   "errors": [
     "BLS: ['Your request has failed. Please check your input parameters, and try your request again.']",
-    "University of Michigan financial charts: `Import xlrd` failed. Install xlrd >= 2.0.1 for xls Excel support Use pip or conda to install the xlrd package.",
-    "Census retail control: 400 Client Error:  for url: https://api.census.gov/data/timeseries/eits/marts?get=cell_value%2Cdata_type_code%2Ccategory_code%2Cseasonally_adj%2Ctime&time=from+2023-01&data_type_code=SM&key=fdf5925e609b0443a8812f1caa5b7703d6a235f3"
+    "University of Michigan financial charts: `Import xlrd` failed. Install xlrd >= 2.0.1 for xls Excel support Use pip or conda to install the xlrd package."
   ]
 }
