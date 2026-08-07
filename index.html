@@ -72,6 +72,10 @@
     .us-toggle:hover{color:#1d4ed8}
     .us-toggle-sp{display:inline-block;width:20px}
     .us-mom{font-size:10px;font-weight:600;opacity:.72;margin-top:1px}
+    tr.us-grp .item-cell{border-left:3px solid #f59e0b}
+    tr.us-grp td:last-child{border-right:3px solid #f59e0b}
+    tr.us-grp-top td{border-top:3px solid #f59e0b}
+    tr.us-grp-bot td{border-bottom:3px solid #f59e0b}
   </style>
 </head>
 <body>
@@ -395,11 +399,12 @@
       // 2) 就業-失業（指定項目加月增減括號）
       {const B='就業-失業',rows=[],mom=new Set(['Labor Force','Employed','Unemployed','Employed to Unemployed','Unemployed to Unemployed','Not in Labor Force to Unemployed','On temporary layoff','Permanent Job Losers','Completed Temp Job','Job leavers','Reentrants','New entrants']);
         const pct=new Set(['失業率']);
-        (usData.series||[]).filter(s=>s.block===B).forEach(s=>{const nm=s.name,vals=usMap(B,nm);let rule;if(nm==='失業率'||pct.has(nm))rule={digits:1,pct:true};else if(nm==='平均失業Duration')rule={digits:1};else rule={digits:0,grouping:true};const row={key:B+'|'+nm,name:nm,level:0,parent:null,vals,rule};if(mom.has(nm)){row.mom=true;row.momVals=usMomMap(vals)}rows.push(row)});
+        const gFlow=new Set(['Employed to Unemployed','Unemployed to Unemployed','Not in Labor Force to Unemployed']),gLose=new Set(['On temporary layoff','Permanent Job Losers','Completed Temp Job','Job leavers','Reentrants','New entrants']);
+        (usData.series||[]).filter(s=>s.block===B).forEach(s=>{const nm=s.name,vals=usMap(B,nm);let rule;if(nm==='失業率'||pct.has(nm))rule={digits:1,pct:true};else if(nm==='平均失業Duration')rule={digits:1};else rule={digits:0,grouping:true};const row={key:B+'|'+nm,name:nm,level:0,parent:null,vals,rule};if(mom.has(nm)){row.mom=true;row.momVals=usMomMap(vals)}if(gFlow.has(nm))row.group='u-flow';else if(gLose.has(nm))row.group='u-lose';rows.push(row)});
         S.push({title:'就業 - 失業',rows});}
       // 3) 就業-調查（新增 Plentiful - Hard to get，細項隱藏）
       {const B='就業-調查',rows=[];
-        (usData.series||[]).filter(s=>s.block===B&&s.name!=='Job Plentiful'&&s.name!=='Job Hard to get').forEach(s=>rows.push({key:B+'|'+s.name,name:s.name,level:0,parent:null,vals:usMap(B,s.name),rule:{digits:1}}));
+        (usData.series||[]).filter(s=>s.block===B&&s.name!=='Job Plentiful'&&s.name!=='Job Hard to get').forEach(s=>{const row={key:B+'|'+s.name,name:s.name,level:0,parent:null,vals:usMap(B,s.name),rule:{digits:1}};if(s.name==='失去工作機率調查'||s.name==='自願離職調查')row.group='sv-ny';rows.push(row)});
         const P=usMap(B,'Job Plentiful'),H=usMap(B,'Job Hard to get'),pk=B+'|plentiful_minus_hard';
         rows.push({key:pk,name:'Plentiful - Hard to get',level:0,parent:null,expandable:true,vals:usDiffMap(P,H),rule:{digits:1}});
         rows.push({key:B+'|Job Plentiful',name:'Job Plentiful',level:1,parent:pk,vals:P,rule:{digits:1}});
@@ -409,22 +414,22 @@
       {const B='就業-職缺',rows=[];(usData.series||[]).filter(s=>s.block===B).forEach(s=>{const nm=s.name;let rule=nm==='JOLTS'?{digits:0,grouping:true}:nm==='職缺/失業人口'?{digits:2}:{digits:1,pct:true};rows.push({key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule})});S.push({title:'就業 - 職缺',rows});}
       // 5) 就業-薪水（switcher/stayer 分組）
       {const B='就業-薪水',order=['時薪 MoM%','Atlanta Fed Job Switcher薪資','Atlanta Fed Job Stayer薪資','ADP Pay Job Changers薪資','ADP Pay Job Stayers薪資','Atlanta Fed最低25%薪資','Atlanta Fed 50%薪資','Atlanta Fed 75%薪資','Atlanta Fed最高25%薪資'],rows=[];
-        order.forEach(nm=>{if(usFind(B,nm))rows.push({key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule:{digits:1,pct:true}})});
+        order.forEach(nm=>{if(usFind(B,nm)){const row={key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule:{digits:1,pct:true}};if(/25%|50%|75%/.test(nm))row.group='wage-q';rows.push(row)}});
         S.push({title:'就業 - 薪水',rows});}
       // 6) 物價
-      {const B='物價',rows=[];(usData.series||[]).filter(s=>s.block===B).forEach(s=>{const nm=s.name,pct=!/ISM/.test(nm);rows.push({key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule:{digits:nm.includes('Zillow')?2:1,pct}})});S.push({title:'物價',rows});}
+      {const B='物價',rows=[];(usData.series||[]).filter(s=>s.block===B).forEach(s=>{const nm=s.name,pct=!/ISM/.test(nm);const row={key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule:{digits:nm.includes('Zillow')?2:1,pct}};if(nm.includes('密大'))row.group='px-mi';else if(nm.includes('NY FED'))row.group='px-ny';else if(nm.includes('ISM'))row.group='px-ism';rows.push(row)});S.push({title:'物價',rows});}
       // 7) 企業調查
       {const B='企業調查',rows=[];(usData.series||[]).filter(s=>s.block===B).forEach(s=>rows.push({key:B+'|'+s.name,name:s.name,level:0,parent:null,vals:usMap(B,s.name),rule:{digits:1}}));S.push({title:'企業調查',rows});}
       // 8) 消費（4項改YoY、CB移到密大前、密大細項隱藏）
       {const B='消費',rows=[],yoy=new Set(['disposable personal income','Personal Outlays','Personal Saving','Interest Paid']);
         rows.push({key:B+'|Real Personal Spending',name:'Real Personal Spending',level:0,parent:null,vals:usMap(B,'Real Personal Spending'),rule:{digits:1,pct:true}});
-        ['disposable personal income','Personal Outlays','Personal Saving','Interest Paid'].forEach(nm=>rows.push({key:B+'|'+nm,name:nm+'（YoY）',level:0,parent:null,vals:usYoyMap(usMap(B,nm)),rule:{digits:1,pct:true}}));
+        ['disposable personal income','Personal Outlays','Personal Saving','Interest Paid'].forEach(nm=>rows.push({key:B+'|'+nm,name:nm+'（YoY）',level:0,parent:null,vals:usYoyMap(usMap(B,nm)),rule:{digits:1,pct:true},group:'cs-inc'}));
         rows.push({key:B+'|CB',name:'CB',level:0,parent:null,vals:usMap(B,'CB'),rule:{digits:1}});
         const mk=B+'|密大';rows.push({key:mk,name:'密大',level:0,parent:null,expandable:true,vals:usMap(B,'密大'),rule:{digits:1}});
         rows.push({key:B+'|密大_Current',name:'密大_Current',level:1,parent:mk,vals:usMap(B,'密大_Current'),rule:{digits:1}});
         rows.push({key:B+'|密大_Expect',name:'密大_Expect',level:1,parent:mk,vals:usMap(B,'密大_Expect'),rule:{digits:1}});
-        rows.push({key:B+'|家戶金融狀況vs一年前',name:'家戶金融狀況vs一年前',level:0,parent:null,vals:usMap(B,'家戶金融狀況vs一年前'),rule:{digits:1}});
-        rows.push({key:B+'|預計未來一年金融狀況',name:'預計未來一年金融狀況',level:0,parent:null,vals:usMap(B,'預計未來一年金融狀況'),rule:{digits:1}});
+        rows.push({key:B+'|家戶金融狀況vs一年前',name:'家戶金融狀況vs一年前',level:0,parent:null,vals:usMap(B,'家戶金融狀況vs一年前'),rule:{digits:1},group:'cs-mi'});
+        rows.push({key:B+'|預計未來一年金融狀況',name:'預計未來一年金融狀況',level:0,parent:null,vals:usMap(B,'預計未來一年金融狀況'),rule:{digits:1},group:'cs-mi'});
         rows.push({key:B+'|零售控制 MoM%',name:'零售控制 MoM%',level:0,parent:null,vals:usMap(B,'零售控制 MoM%'),rule:{digits:1,pct:true}});
         S.push({title:'消費',rows});}
       return S;
@@ -438,12 +443,14 @@
       h+='<thead><tr><th class="item-head">項目</th>'+periods.map((p,i)=>`<th class="${i===0?'latest':''}">${p.replace('-','/')}</th>`).join('')+'</tr></thead><tbody>';
       sections.forEach(sec=>{
         h+=`<tr class="us-section"><td class="item-cell us-section-cell">${esc(sec.title)}</td>${periods.map(()=>'<td class="us-section-fill"></td>').join('')}</tr>`;
-        sec.rows.forEach(row=>{
-          if(!usRowVisible(row,byKey))return;
-          const vis=periods.map(p=>row.vals[p]),s=scale(vis);
+        const visRows=sec.rows.filter(row=>usRowVisible(row,byKey));
+        visRows.forEach((row,idx)=>{
+          const vv=periods.map(p=>row.vals[p]),s=scale(vv);
           const tog=row.expandable?`<span class="us-toggle" data-us-key="${esc(row.key)}">${usExpand[row.key]?'▾':'▸'}</span>`:'<span class="us-toggle-sp"></span>';
           const tds=periods.map(p=>{const v=row.vals[p];let sub='';if(row.mom&&row.momVals&&valid(row.momVals[p]))sub=`<div class="us-mom">(${usFmtNum(row.momVals[p],{...row.rule,sign:true})})</div>`;return `<td class="value ${valid(v)?'':'missing'}" style="background:${color(v,s)}">${usFmtNum(v,row.rule)}${sub}</td>`}).join('');
-          h+=`<tr><td class="item-cell" style="padding-left:${8+row.level*20}px"><div class="item-wrap">${tog}<span>${esc(row.name)}</span></div></td>${tds}</tr>`;
+          const g=row.group,pg=idx>0?visRows[idx-1].group:null,ng=idx<visRows.length-1?visRows[idx+1].group:null;
+          const cls=g?('us-grp'+(g!==pg?' us-grp-top':'')+(g!==ng?' us-grp-bot':'')):'';
+          h+=`<tr class="${cls}"><td class="item-cell" style="padding-left:${8+row.level*20}px"><div class="item-wrap">${tog}<span>${esc(row.name)}</span></div></td>${tds}</tr>`;
         });
       });
       const c=$('us-content');c.className='';c.innerHTML=h+'</tbody></table></div>';
