@@ -94,6 +94,8 @@ SPECS += [
     Spec("物價", "密大1y通膨預期", "CONSPXMD Index", "University of Michigan", "PX_MD", "umich_csv", "px1"),
     Spec("物價", "密大5~10y通膨預期", "CONSP5MD Index", "University of Michigan", "PX5_MD", "umich_csv", "px5"),
     Spec("消費", "密大", "CONSSENT Index", "University of Michigan", "ICS_ALL", "umich_csv", "sentiment"),
+    Spec("消費", "密大_Current", "ICC", "University of Michigan", "ICC", "umich_csv", "icc"),
+    Spec("消費", "密大_Expect", "ICE", "University of Michigan", "ICE", "umich_csv", "ice"),
 ]
 
 # FRED is retained for BEA series where it is already working.
@@ -368,6 +370,7 @@ def fetch_umichigan_csv():
     urls = {
         "sentiment": "https://www.sca.isr.umich.edu/files/tbmics.csv",
         "inflation": "https://www.sca.isr.umich.edu/files/tbmpx1px5.csv",
+        "components": "https://www.sca.isr.umich.edu/files/tbmiccice.csv",
     }
     frames = {}
     for key, url in urls.items():
@@ -375,15 +378,19 @@ def fetch_umichigan_csv():
         response.raise_for_status()
         frames[key] = pd.read_csv(io.BytesIO(response.content))
 
-    result = {"sentiment": {}, "px1": {}, "px5": {}}
+    result = {"sentiment": {}, "px1": {}, "px5": {}, "icc": {}, "ice": {}}
     sentiment = frames["sentiment"]
     inflation = frames["inflation"]
+    components = frames["components"]
     required_sentiment = {"Month", "YYYY", "ICS_ALL"}
     required_inflation = {"Month", "YYYY", "PX_MD", "PX5_MD"}
+    required_components = {"Month", "YYYY", "ICC", "ICE"}
     if not required_sentiment.issubset(sentiment.columns):
         raise RuntimeError(f"Michigan sentiment CSV missing columns: {sorted(required_sentiment - set(sentiment.columns))}")
     if not required_inflation.issubset(inflation.columns):
         raise RuntimeError(f"Michigan inflation CSV missing columns: {sorted(required_inflation - set(inflation.columns))}")
+    if not required_components.issubset(components.columns):
+        raise RuntimeError(f"Michigan ICC/ICE CSV missing columns: {sorted(required_components - set(components.columns))}")
 
     for _, row in sentiment.iterrows():
         period = _parse_month_name_period(row["Month"], row["YYYY"])
@@ -401,6 +408,17 @@ def fetch_umichigan_csv():
             result["px1"][period] = one_year
         if long_run is not None:
             result["px5"][period] = long_run
+
+    for _, row in components.iterrows():
+        period = _parse_month_name_period(row["Month"], row["YYYY"])
+        if not period:
+            continue
+        current = num(row["ICC"])
+        expected = num(row["ICE"])
+        if current is not None:
+            result["icc"][period] = current
+        if expected is not None:
+            result["ice"][period] = expected
 
     empty = [key for key, values in result.items() if not values]
     if empty:
@@ -930,6 +948,16 @@ def fmt(v):
 
 def main():
     OUT.parent.mkdir(parents=True,exist_ok=True)
+    CB_DEBUG_DIR.mkdir(parents=True, exist_ok=True)
+    debug_readme = CB_DEBUG_DIR / "README.md"
+    debug_readme.write_text(
+        "# Conference Board 抓取診斷\n\n"
+        "執行程式後，本資料夾會保存：\n\n"
+        "- `cb_consumer_confidence_raw.html`：GitHub Actions 實際收到的原始回應。\n"
+        "- `cb_consumer_confidence_http.json`：HTTP、頁面特徵與目前解析結果。\n\n"
+        "注意：Git 不會追蹤空資料夾；GitHub Actions 必須將 `data/us_macro_debug/` 加入 commit。\n",
+        encoding="utf-8",
+    )
     cache=json.loads(CACHE.read_text(encoding="utf-8")) if CACHE.exists() else {"series":{}}
     old=cache.get("series",{}); current={}; errors=[]
     bls_ids=sorted({s.source_id for s in SPECS if s.provider=="bls"})
@@ -981,6 +1009,8 @@ def main():
         ("Job Plentiful", "就業-調查", "Job Plentiful"),
         ("Job Hard to get", "就業-調查", "Job Hard to get"),
         ("CB", "消費", "CB"),
+        ("密大_Current", "消費", "密大_Current"),
+        ("密大_Expect", "消費", "密大_Expect"),
     ]
     spec_by_key = {f"{spec.section}|{spec.name}": spec for spec in SPECS}
     selected_keys = [f"{section}|{cache_name}" for _, section, cache_name in md_rows]
@@ -1006,6 +1036,7 @@ def main():
         "census": "API＋計算（Census MARTS）",
         "fred": "API（FRED）",
         "umich": "XLS（Michigan官方圖表下載）",
+        "umich_csv": "CSV（University of Michigan官方下載檔）",
     }
     for display_name, section, cache_name in md_rows:
         key = f"{section}|{cache_name}"
