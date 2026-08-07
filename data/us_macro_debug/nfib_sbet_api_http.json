@@ -1,0 +1,42 @@
+{
+  "method": "NFIB SBET REST API",
+  "endpoint": "https://api.nfib-sbet.org:443/rest/sbetdb/_proc/getIndicators2",
+  "procedure": "getIndicators2",
+  "indicator": "Plans to Increase Employment",
+  "request_body": {
+    "app_name": "sbet",
+    "params": [
+      {
+        "name": "minYear",
+        "param_type": "IN",
+        "value": 2023
+      },
+      {
+        "name": "minMonth",
+        "param_type": "IN",
+        "value": 1
+      },
+      {
+        "name": "maxYear",
+        "param_type": "IN",
+        "value": 2026
+      },
+      {
+        "name": "maxMonth",
+        "param_type": "IN",
+        "value": 12
+      },
+      {
+        "name": "indicator",
+        "param_type": "IN",
+        "value": "Plans to Increase Employment"
+      }
+    ]
+  },
+  "status_code": 500,
+  "content_type": "text/html; charset=utf-8",
+  "response_bytes": 25,
+  "response_preview": "Server error, check logs.",
+  "error_type": "HTTPError",
+  "error": "500 Server Error: Internal Server Error for url: https://api.nfib-sbet.org:443/rest/sbetdb/_proc/getIndicators2"
+}

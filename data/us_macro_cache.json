@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-08-07T07:51:48.751700+00:00",
+  "updated_at_utc": "2026-08-07T08:23:41.006168+00:00",
   "series": {
     "就業-就業（人數，千人）|非農": {
       "2023-01": 154776.0,
@@ -10022,5 +10022,7 @@
       "2026-06": 0.54
     }
   },
-  "errors": []
+  "errors": [
+    "NFIB SBET REST API: 500 Server Error: Internal Server Error for url: https://api.nfib-sbet.org:443/rest/sbetdb/_proc/getIndicators2"
+  ]
 }
