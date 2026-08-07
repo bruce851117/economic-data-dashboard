@@ -1,6 +1,9 @@
 {
+  "method": "playwright_chromium",
   "requested_url": "https://www.nfib.com/news/monthly_report/jobs-report/",
-  "error_type": "HTTPError",
-  "error": "403 Client Error: Forbidden for url: https://www.nfib.com/news/monthly_report/jobs-report/",
+  "requests_error_type": "HTTPError",
+  "requests_error": "403 Client Error: Forbidden for url: https://www.nfib.com/news/monthly_report/jobs-report/",
+  "playwright_error_type": "RuntimeError",
+  "playwright_error": "NFIB survey reference month not found",
   "saved_raw_html": "data/us_macro_debug/nfib_jobs_report_raw.html"
 }
