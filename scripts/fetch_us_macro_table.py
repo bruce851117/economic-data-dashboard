@@ -10,7 +10,7 @@ from __future__ import annotations
 import calendar, io, json, os, re, time, zipfile
 from urllib.parse import urljoin
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Callable
 
@@ -85,20 +85,22 @@ for name,ticker,sid,transform in [
     SPECS.append(Spec("物價",name,ticker,"Bureau of Labor Statistics",sid,"bls",sid,transform))
 SPECS.append(Spec("物價","US Zillow Rent Index All Homes MoM Smoothed SA","ZRIOAMOM Index","Zillow Research","National ZORI SA MoM","zillow","zori_mom"))
 
-# FRED is used only where the primary publisher has no stable open API used here.
+# University of Michigan public CSV files are the primary source for sentiment and inflation expectations.
+SPECS += [
+    Spec("物價", "密大1y通膨預期", "CONSPXMD Index", "University of Michigan", "PX_MD", "umich_csv", "px1"),
+    Spec("物價", "密大5~10y通膨預期", "CONSP5MD Index", "University of Michigan", "PX5_MD", "umich_csv", "px5"),
+    Spec("消費", "密大", "CONSSENT Index", "University of Michigan", "ICS_ALL", "umich_csv", "sentiment"),
+]
+
+# FRED is retained for BEA series where it is already working.
 for section,name,ticker,source,fred_id,transform in [
-("物價","密大1y通膨預期","CONSPXMD Index","University of Michigan","MICH","level"),
-("物價","密大5~10y通膨預期","CONSP5MD Index","University of Michigan","Long-run inflation expectations","umich_latest"),
 ("消費","Real Personal Spending","PCE CHY% Index","Bureau of Economic Analysis","PCEC96","yoy_pct"),
 ("消費","disposable personal income","PIDSDI Index","Bureau of Economic Analysis","DSPI","level"),
 ("消費","Personal Outlays","PIDSSO Index","Bureau of Economic Analysis","A068RC1","level"),
 ("消費","Personal Saving","PIDSS Index","Bureau of Economic Analysis","PSAVE","level"),
 ("消費","Interest Paid","PIDSINT Index","Bureau of Economic Analysis","B069RC1","level"),
-("消費","密大","CONSSENT Index","University of Michigan","UMCSENT","level")]:
-    if transform == "umich_latest":
-        SPECS.append(Spec(section,name,ticker,source,fred_id,"umich_latest","long_run","level"))
-    else:
-        SPECS.append(Spec(section,name,ticker,source,fred_id,"fred",fred_id,transform))
+]:
+    SPECS.append(Spec(section,name,ticker,source,fred_id,"fred",fred_id,transform))
 
 # Official downloadable/page sources. These parsers report unavailable rather than silently substituting a different concept.
 for name,ticker,key in [("NY FED 1y通膨預期","NYCNM1IR Index","one_year"),("NY FED 5y通膨預期","NYCN5IMD Index","five_year")]:
@@ -267,29 +269,65 @@ def _parse_adp_pay_history(content):
 
 
 def _adp_history_links(html, page_url):
-    pattern = r"href\s*=\s*[\"']([^\"']*ADP_PAY_history\.zip(?:\?[^\"']*)?)[\"']"
-    hrefs = re.findall(pattern, html, flags=re.IGNORECASE)
+    """Discover ADP_PAY_history.zip without assuming the dated directory name."""
+    decoded = html.replace("\\/", "/").replace("&amp;", "&")
+    patterns = [
+        r'''href\s*=\s*["']([^"']*ADP_PAY_history\.zip(?:\?[^"']*)?)["']''',
+        r'''((?:https?:)?//[^\s"']+/artifacts/us_wage/\d{8}/ADP_PAY_history\.zip)''',
+        r'''(/artifacts/us_wage/\d{8}/ADP_PAY_history\.zip)''',
+    ]
     links = []
-    for href in hrefs:
-        absolute = urljoin(page_url, href.replace("&amp;", "&"))
-        if absolute not in links:
-            links.append(absolute)
-    return links
+    for pattern in patterns:
+        for href in re.findall(pattern, decoded, flags=re.IGNORECASE):
+            absolute = urljoin(page_url, href)
+            if absolute not in links:
+                links.append(absolute)
+
+    # Prefer the newest official dated directory when more than one link is embedded.
+    def release_date(url):
+        match = re.search(r"/us_wage/(\d{8})/ADP_PAY_history\.zip", url, flags=re.I)
+        return match.group(1) if match else "00000000"
+    return sorted(links, key=release_date, reverse=True)
+
+
+def _adp_fallback_links(page_url):
+    """Last-resort dated candidates. The date is discovered by probing recent calendar dates, not hard-coded."""
+    today = datetime.now(timezone.utc).date()
+    return [
+        urljoin(page_url, f"/artifacts/us_wage/{(today - timedelta(days=offset)):%Y%m%d}/ADP_PAY_history.zip")
+        for offset in range(0, 15)
+    ]
 
 
 def fetch_adp():
     page_url = "https://payinsights.adp.com/"
-    page = SESSION.get(page_url, timeout=60)
+    browser_headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": page_url,
+    }
+    page = SESSION.get(page_url, headers=browser_headers, timeout=60)
     page.raise_for_status()
     links = _adp_history_links(page.text, page_url)
     if not links:
-        raise RuntimeError("ADP Pay Insights historical ZIP link not found")
+        links = _adp_fallback_links(page_url)
 
     failures = []
     for link in links:
         try:
-            response = SESSION.get(link, timeout=90)
+            response = SESSION.get(
+                link,
+                headers={
+                    **browser_headers,
+                    "Accept": "application/zip,application/octet-stream,*/*;q=0.8",
+                    "Referer": page_url,
+                },
+                timeout=90,
+            )
             response.raise_for_status()
+            if not response.content.startswith(b"PK"):
+                raise RuntimeError(f"response is not a ZIP file ({response.headers.get('content-type')})")
             with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
                 candidates = [
                     name for name in archive.namelist()
@@ -309,13 +347,137 @@ def fetch_adp():
             failures.append(f"{link}: {error}")
     raise RuntimeError("ADP Pay Insights ZIP could not be parsed; " + " | ".join(failures))
 
+
+def _parse_month_name_period(month_value, year_value):
+    month_text = str(month_value).strip().title()
+    if month_text not in calendar.month_name:
+        return None
+    return month_key(int(year_value), list(calendar.month_name).index(month_text))
+
+
+def fetch_umichigan_csv():
+    """Fetch official University of Michigan sentiment and inflation-expectation CSV files."""
+    urls = {
+        "sentiment": "https://www.sca.isr.umich.edu/files/tbmics.csv",
+        "inflation": "https://www.sca.isr.umich.edu/files/tbmpx1px5.csv",
+    }
+    frames = {}
+    for key, url in urls.items():
+        response = SESSION.get(url, timeout=90)
+        response.raise_for_status()
+        frames[key] = pd.read_csv(io.BytesIO(response.content))
+
+    result = {"sentiment": {}, "px1": {}, "px5": {}}
+    sentiment = frames["sentiment"]
+    inflation = frames["inflation"]
+    required_sentiment = {"Month", "YYYY", "ICS_ALL"}
+    required_inflation = {"Month", "YYYY", "PX_MD", "PX5_MD"}
+    if not required_sentiment.issubset(sentiment.columns):
+        raise RuntimeError(f"Michigan sentiment CSV missing columns: {sorted(required_sentiment - set(sentiment.columns))}")
+    if not required_inflation.issubset(inflation.columns):
+        raise RuntimeError(f"Michigan inflation CSV missing columns: {sorted(required_inflation - set(inflation.columns))}")
+
+    for _, row in sentiment.iterrows():
+        period = _parse_month_name_period(row["Month"], row["YYYY"])
+        value = num(row["ICS_ALL"])
+        if period and value is not None:
+            result["sentiment"][period] = value
+
+    for _, row in inflation.iterrows():
+        period = _parse_month_name_period(row["Month"], row["YYYY"])
+        if not period:
+            continue
+        one_year = num(row["PX_MD"])
+        long_run = num(row["PX5_MD"])
+        if one_year is not None:
+            result["px1"][period] = one_year
+        if long_run is not None:
+            result["px5"][period] = long_run
+
+    empty = [key for key, values in result.items() if not values]
+    if empty:
+        raise RuntimeError("Michigan CSV returned no usable data for: " + ", ".join(empty))
+    return result
+
+
+INVESTING_ISM_URLS = {
+    "services_employment": "https://www.investing.com/economic-calendar/ism-non-manufacturing-employment-1048",
+    "manufacturing_employment": "https://www.investing.com/economic-calendar/ism-manufacturing-employment-1046",
+    "manufacturing_pmi": "https://www.investing.com/economic-calendar/ism-manufacturing-pmi-173",
+    "services_pmi": "https://www.investing.com/economic-calendar/ism-non-manufacturing-pmi-176",
+}
+
+
+def _parse_investing_actual_table(html):
+    """Parse Release date and Actual columns and map '(Jul)' to the July reference period."""
+    tables = pd.read_html(io.StringIO(html))
+    for table in tables:
+        normalized = {str(column).strip().casefold(): column for column in table.columns}
+        release_col = normalized.get("release date")
+        actual_col = normalized.get("actual")
+        if release_col is None or actual_col is None:
+            continue
+        values = {}
+        for release_value, actual_value in zip(table[release_col], table[actual_col]):
+            release_text = str(release_value)
+            match = re.search(r"([A-Za-z]{3})\)?\s*$", release_text)
+            year_match = re.search(r"\b(20\d{2})\b", release_text)
+            value = num(actual_value)
+            if not match or not year_match or value is None:
+                continue
+            month_abbr = match.group(1).title()
+            try:
+                month_number = list(calendar.month_abbr).index(month_abbr)
+            except ValueError:
+                continue
+            values[month_key(int(year_match.group(1)), month_number)] = value
+        if values:
+            return values
+
+    # Fallback for HTML where the history table was serialized as plain text.
+    values = {}
+    row_pattern = re.compile(
+        r"[A-Z][a-z]{2}\s+\d{1,2},\s+(20\d{2})\s*\(([A-Z][a-z]{2})\)"
+        r".{0,250}?([+-]?\d+(?:\.\d+)?)",
+        flags=re.S,
+    )
+    for year_text, month_abbr, value_text in row_pattern.findall(html):
+        try:
+            month_number = list(calendar.month_abbr).index(month_abbr.title())
+        except ValueError:
+            continue
+        values[month_key(int(year_text), month_number)] = float(value_text)
+    if values:
+        return values
+    raise RuntimeError("Investing.com Actual history table not found")
+
+
+def fetch_investing_ism():
+    result = {}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+    failures = []
+    for key, url in INVESTING_ISM_URLS.items():
+        try:
+            response = SESSION.get(url, headers=headers, timeout=90)
+            response.raise_for_status()
+            result[key] = _parse_investing_actual_table(response.text)
+        except Exception as error:
+            failures.append(f"{key}: {error}")
+    if not result:
+        raise RuntimeError("All Investing.com ISM tables failed; " + " | ".join(failures))
+    return result
+
+
 def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
-    """Official-page latest values. Full history remains in cache when publisher offers no open history API."""
+    """Fetch latest official-page values plus Investing.com ISM Actual history tables."""
     out={}; now=datetime.now(); period=f"{now.year:04d}-{now.month:02d}"
     pages={
       "nfib":SESSION.get("https://nfib-sbet.org/MainPage.html",timeout=60).text,
       "conference":SESSION.get("https://www.conference-board.org/topics/consumer-confidence/index.cfm",timeout=60).text,
-      "ism":SESSION.get("https://www.ismworld.org/",timeout=60).text,
       "nyfed":SESSION.get("https://www.newyorkfed.org/microeconomics/sce",timeout=60).text,
     }
     patterns=[
@@ -324,10 +486,14 @@ def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
       (("conference","hard"),r"jobs[^\n]{0,40}hard to get[^\d]{0,80}(\d+(?:\.\d+)?)"),
       (("nyfed","one_year"),r"one-year ahead[^\d]{0,100}(\d+(?:\.\d+)?)\s*percent"),
       (("nyfed","five_year"),r"five-year-ahead[^\d]{0,100}(\d+(?:\.\d+)?)\s*percent"),
-      (("ism","services_pmi"),r"Services PMI[^\d]{0,100}(\d+(?:\.\d+)?)%"),]
+    ]
     for (provider,key),pat in patterns:
-        m=re.search(pat,pages[provider],re.I|re.S)
-        if m: out[(provider,key)]={period:float(m.group(1))}
+        match=re.search(pat,pages[provider],re.I|re.S)
+        if match:
+            out[(provider,key)]={period:float(match.group(1))}
+
+    for key, values in fetch_investing_ism().items():
+        out[("ism", key)] = values
     return out
 
 def fetch_michigan_long_run_latest():
@@ -380,6 +546,8 @@ def main():
     except Exception as e: zori={}; errors.append(f"Zillow: {e}")
     try: pages=fetch_page_latest()
     except Exception as e: pages={}; errors.append(f"Official pages: {e}")
+    try: umich=fetch_umichigan_csv()
+    except Exception as e: umich={}; errors.append(f"University of Michigan CSV: {e}")
     for s in SPECS:
         key=f"{s.section}|{s.name}"
         try:
@@ -387,7 +555,7 @@ def main():
             elif s.provider=="fred": vals=transform(fetch_fred(s.source_id),s.transform)
             elif s.provider=="atlanta": vals=atl.get(s.source_id,{})
             elif s.provider=="adp": vals=adp.get(s.source_id,{})
-            elif s.provider=="umich_latest": vals=fetch_michigan_long_run_latest()
+            elif s.provider=="umich_csv": vals=umich.get(s.source_id,{})
             elif s.provider=="zillow": vals=zori
             elif s.provider in {"ism","nfib","conference","nyfed"}: vals=pages.get((s.provider,s.source_id),{})
             else: vals={}
@@ -400,7 +568,7 @@ def main():
     current["就業-職缺|職缺/失業人口"]=merge(old.get("就業-職缺|職缺/失業人口",{}),{k:round(jolts[k]/unemployed[k],7) for k in jolts.keys()&unemployed.keys() if unemployed[k]})
     cache={"updated_at_utc":datetime.now(timezone.utc).isoformat(),"series":current,"errors":errors}
     CACHE.write_text(json.dumps(cache,ensure_ascii=False,indent=2),encoding="utf-8")
-    # Markdown 僅輸出尚待追蹤的 26 項；已確認成功的 6 項 Atlanta Fed 指標不再顯示。
+    # Markdown 僅輸出尚待追蹤的 21 項；已確認成功的 Atlanta Fed、SuperCore、Core PPI、Real Personal Spending、Personal Outlays、Interest Paid 不再顯示。
     # tuple: (Markdown 顯示名稱, cache section, cache 指標名稱)
     md_rows = [
         ("ADP Pay Job Changers薪資", "就業-薪水", "ADP Pay Job Changers薪資"),
@@ -411,18 +579,13 @@ def main():
         ("自願離職調查", "就業-調查", "自願離職調查"),
         ("Job Plentiful", "就業-調查", "Job Plentiful"),
         ("Job Hard to get", "就業-調查", "Job Hard to get"),
-        ("SuperCore", "物價", "Core Services less Shelter"),
-        ("Core PPI", "物價", "Core PPI"),
         ("NY FED 1y通膨預期", "物價", "NY FED 1y通膨預期"),
         ("NY FED 5y通膨預期", "物價", "NY FED 5y通膨預期"),
         ("密大1y通膨預期", "物價", "密大1y通膨預期"),
         ("密大5~10y通膨預期", "物價", "密大5~10y通膨預期"),
         ("零售控制", "消費", "零售控制 MoM%"),
-        ("Real Personal Spending", "消費", "Real Personal Spending"),
         ("disposable personal income", "消費", "disposable personal income"),
-        ("Personal Outlays", "消費", "Personal Outlays"),
         ("Personal Saving", "消費", "Personal Saving"),
-        ("Interest Paid", "消費", "Interest Paid"),
         ("家戶金融狀況vs一年前", "消費", "家戶金融狀況vs一年前"),
         ("預計未來一年金融狀況", "消費", "預計未來一年金融狀況"),
         ("密大", "消費", "密大"),
@@ -466,8 +629,8 @@ def main():
         "",
         "- BLS：Public Data API v2，涵蓋 CPI、PPI 等官方資料。",
         "- Atlanta Fed、ADP：優先使用官方 XLSX、ZIP/CSV。",
-        "- BEA 與密大公開序列：目前使用 FRED API。",
-        "- ISM、NFIB、紐約聯準銀行與 Conference Board：只補官方頁面可穩定辨識的最新值；未提供開放歷史 API 的月份不臆造，並保留先前成功資料。",
+        "- University of Michigan：使用官方 tbmics.csv 與 tbmpx1px5.csv；BEA其餘序列沿用FRED API。",
+        "- ISM四項：使用Investing.com經濟日曆歷史表的Actual欄；NFIB、紐約聯準銀行與Conference Board沿用既有頁面解析並保留先前成功資料。",
         "",
     ]
     OUT.write_text("\n".join(lines),encoding="utf-8")
