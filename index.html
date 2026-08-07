@@ -76,6 +76,16 @@
     tr.us-grp td:last-child{border-right:3px solid #f59e0b}
     tr.us-grp-top td{border-top:3px solid #f59e0b}
     tr.us-grp-bot td{border-bottom:3px solid #f59e0b}
+    #us-chart-view .us-chart-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(430px,1fr));gap:16px;margin-top:10px}
+    .us-chart-card{border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;background:#fff}
+    .us-chart-card.wide{grid-column:span 2}
+    @media(max-width:1000px){.us-chart-card.wide{grid-column:span 1}}
+    .us-chart-title{font-size:13px;font-weight:800;color:#0f2038;display:flex;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:2px}
+    .us-chart-latest{font-weight:600;color:#94a3b8;font-size:11px;white-space:nowrap}
+    .us-chart-card svg{width:100%;height:auto;display:block}
+    .us-chart-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px;font-size:11px;color:#475569}
+    .us-chart-legend .sw{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+    .us-chart-section{grid-column:1/-1;font-size:15px;font-weight:800;color:#0f2038;margin:8px 0 -4px;padding-top:8px;border-top:2px solid #e2e8f0}
   </style>
 </head>
 <body>
@@ -373,7 +383,7 @@
     function triggerUsUpdate(){return runWorkflowUpdate({workflow:'update-us-macro.yml',button:$('us-update-button'),statusEl:$('us-update-status'),idleLabel:'更新美國資料'})}
     $('us-update-button').addEventListener('click',triggerUsUpdate);
     $('us-sub-table').addEventListener('click',()=>{usSub='table';$('us-sub-table').classList.add('active');$('us-sub-chart').classList.remove('active');$('us-table-view').style.display='';$('us-chart-view').style.display='none';renderUs()});
-    $('us-sub-chart').addEventListener('click',()=>{usSub='chart';$('us-sub-chart').classList.add('active');$('us-sub-table').classList.remove('active');$('us-table-view').style.display='none';$('us-chart-view').style.display=''});
+    $('us-sub-chart').addEventListener('click',()=>{usSub='chart';$('us-sub-chart').classList.add('active');$('us-sub-table').classList.remove('active');$('us-table-view').style.display='none';$('us-chart-view').style.display='';renderUs()});
     document.querySelectorAll('.us-range-button').forEach(b=>b.addEventListener('click',()=>{usMonths=Number(b.dataset.usMonths);document.querySelectorAll('.us-range-button').forEach(x=>x.classList.toggle('active',x===b));renderUs()}));
     $('us-table-view').addEventListener('click',e=>{const t=e.target.closest('.us-toggle');if(!t)return;const k=t.dataset.usKey;const sc=$('us-content').querySelector('.scroll'),st=sc?sc.scrollTop:0,sl=sc?sc.scrollLeft:0;usExpand[k]=!usExpand[k];renderUsTable();const sc2=$('us-content').querySelector('.scroll');if(sc2){sc2.scrollTop=st;sc2.scrollLeft=sl}});
     $('au-apply').addEventListener('click',()=>{clearMacroRangeActive('au');auYView.clear();renderAu()});
@@ -455,7 +465,94 @@
       });
       const c=$('us-content');c.className='';c.innerHTML=h+'</tbody></table></div>';
     }
-    function renderUs(){if(!usData)return;const upd=usData.generated_at?new Intl.DateTimeFormat('zh-TW',{dateStyle:'short',timeStyle:'short',timeZone:'Asia/Taipei'}).format(new Date(usData.generated_at)):'';$('us-summary').textContent='美國經濟數據'+(upd?'（更新：'+upd+'）':'');if(usSub==='table')renderUsTable()}
+    function renderUs(){if(!usData)return;const upd=usData.generated_at?new Intl.DateTimeFormat('zh-TW',{dateStyle:'short',timeStyle:'short',timeZone:'Asia/Taipei'}).format(new Date(usData.generated_at)):'';$('us-summary').textContent='美國經濟數據'+(upd?'（更新：'+upd+'）':'');if(usSub==='table')renderUsTable();else renderUsChart()}
+    const US_COLORS=['#2563eb','#dc2626','#16a34a','#d97706','#7c3aed','#0891b2','#db2777','#65a30d'];
+    function usChartPeriods(){return usPeriods().slice().reverse()}
+    function usAxisFmt(v){if(!Number.isFinite(v))return '';return Math.abs(v)>=1000?new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(v):String(Math.round(v*100)/100)}
+    function usSeriesLatest(maps){let last='';maps.forEach(m=>{const ks=Object.keys(m);if(ks.length){const mx=ks.sort().at(-1);if(mx>last)last=mx}});return last?last.replace('-','/'):''}
+    function usLinePathFrom(pers,map,X,Y){let d='',pen=false;pers.forEach((p,i)=>{const v=map[p];if(v==null||!Number.isFinite(v)){pen=false;return}d+=(pen?'L':'M')+X(i).toFixed(1)+','+Y(v).toFixed(1)+' ';pen=true});return d.trim()}
+    function usNiceRange(arr){if(!arr.length)return[0,1];let mn=Math.min(...arr),mx=Math.max(...arr);if(mn===mx){mn-=1;mx+=1}const pad=(mx-mn)*0.1;return[mn-pad,mx+pad]}
+    function usResolveDef(d){if(d.compute==='plentiful-hard')return usDiffMap(usMap('就業-調查','Job Plentiful'),usMap('就業-調查','Job Hard to get'));let m=usMap(d.block,d.name);return d.mode==='yoy'?usYoyMap(m):m}
+    function usChartSVG(spec,pers){
+      const wide=spec.type!=='line',w=wide?760:600,h=wide?300:230,mL=54,mR=spec.type==='dual'?54:16,mT=14,mB=40,plotL=mL+6,plotR=w-mR-6,plotT=mT+6,plotB=h-mB-6;
+      const X=i=>pers.length<=1?(plotL+plotR)/2:plotL+i*(plotR-plotL)/(pers.length-1);
+      const lines=(spec.lines||[]).map((d,i)=>({label:d.label||d.name,color:US_COLORS[i%US_COLORS.length],map:usResolveDef(d)}));
+      const stack=(spec.stack||[]).map((d,i)=>({label:d.label||d.name,color:US_COLORS[(lines.length+i)%US_COLORS.length],map:usResolveDef(d)}));
+      const stackSum=pers.map(p=>stack.reduce((a,s)=>a+(Number.isFinite(s.map[p])?s.map[p]:0),0));
+      let leftMin,leftMax,rightMin,rightMax;
+      if(spec.type==='dual'){const a=[],b=[];pers.forEach(p=>{if(Number.isFinite(lines[0].map[p]))a.push(lines[0].map[p]);if(lines[1]&&Number.isFinite(lines[1].map[p]))b.push(lines[1].map[p])});[leftMin,leftMax]=usNiceRange(a);[rightMin,rightMax]=usNiceRange(b);}
+      else{let vals=[];lines.forEach(l=>pers.forEach(p=>{const v=l.map[p];if(Number.isFinite(v))vals.push(v)}));let mn=vals.length?Math.min(...vals):0,mx=vals.length?Math.max(...vals):1;if(stack.length){mn=Math.min(mn,0);mx=Math.max(mx,Math.max(0,...stackSum))}[leftMin,leftMax]=usNiceRange([mn,mx]);}
+      const YL=v=>plotT+(leftMax-v)*(plotB-plotT)/((leftMax-leftMin)||1),YR=v=>plotT+(rightMax-v)*(plotB-plotT)/((rightMax-rightMin)||1);
+      let grid='';for(let i=0;i<5;i++){const val=leftMax-(leftMax-leftMin)*i/4,yy=YL(val);grid+=`<line x1="${mL}" y1="${yy}" x2="${w-mR}" y2="${yy}" stroke="#eef2f7"/><text x="${mL-6}" y="${yy+4}" text-anchor="end" fill="#94a3b8" font-size="10">${usAxisFmt(val)}</text>`}
+      if(spec.type==='dual')for(let i=0;i<5;i++){const val=rightMax-(rightMax-rightMin)*i/4,yy=YR(val);grid+=`<text x="${w-mR+6}" y="${yy+4}" text-anchor="start" fill="${lines[1].color}" font-size="10">${usAxisFmt(val)}</text>`}
+      let xl='';const step=Math.max(1,Math.ceil(pers.length/6));pers.forEach((p,i)=>{if(i%step===0||i===pers.length-1)xl+=`<text x="${X(i)}" y="${h-12}" text-anchor="middle" fill="#94a3b8" font-size="10">${p.slice(2).replace('-','/')}</text>`});
+      let areas='',base=pers.map(()=>0);
+      stack.forEach(s=>{const top=pers.map((p,i)=>base[i]+(Number.isFinite(s.map[p])?s.map[p]:0));const tp=pers.map((p,i)=>`${X(i).toFixed(1)},${YL(top[i]).toFixed(1)}`);const bp=pers.map((p,i)=>`${X(i).toFixed(1)},${YL(base[i]).toFixed(1)}`).reverse();areas+=`<path d="M${tp.join(' L')} L${bp.join(' L')} Z" fill="${s.color}" fill-opacity="0.45" stroke="none"/>`;base=top;});
+      let paths='';lines.forEach((l,idx)=>{const Y=(spec.type==='dual'&&idx===1)?YR:YL;paths+=`<path d="${usLinePathFrom(pers,l.map,X,Y)}" fill="none" stroke="${l.color}" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>`});
+      return `<svg viewBox="0 0 ${w} ${h}" role="img">${grid}<line x1="${mL}" y1="${plotB}" x2="${w-mR}" y2="${plotB}" stroke="#cbd5e1"/>${xl}${areas}${paths}</svg>`;
+    }
+    function usChartLegend(spec){const items=[];(spec.lines||[]).forEach((d,i)=>{const ax=spec.type==='dual'?(i===0?'（左）':'（右）'):'';items.push(`<span><span class="sw" style="background:${US_COLORS[i%US_COLORS.length]}"></span>${esc(d.label||d.name)}${ax}</span>`)});(spec.stack||[]).forEach((d,i)=>{items.push(`<span><span class="sw" style="background:${US_COLORS[((spec.lines||[]).length+i)%US_COLORS.length]};opacity:.55"></span>${esc(d.label||d.name)}</span>`)});return items.join('')}
+    function usChartSpecs(){const E='就業-就業（人數，千人）',U='就業-失業',J='就業-職缺',SV='就業-調查',W='就業-薪水',P='物價',BZ='企業調查',C='消費',L=(b,n,mode)=>({block:b,name:n,mode});return [
+      {section:'就業',charts:[
+        {title:'非農就業：商品+服務（堆疊）＋非農（線）',type:'combo',stack:[L(E,'Goods-producing Sector'),L(E,'Private Service-Providing')],lines:[L(E,'非農')]},
+        {title:'Temporary Help Services',type:'line',lines:[L(E,'Temporary Help Services')]},
+        {title:'Multiple Jobholder',type:'line',lines:[L(U,'Multiple Jobholder')]},
+        {title:'失業率',type:'line',lines:[L(U,'失業率')]},
+        {title:'Labor Force',type:'line',lines:[L(U,'Labor Force')]},
+        {title:'失業流入（堆疊）',type:'stack',stack:[L(U,'Employed to Unemployed'),L(U,'Unemployed to Unemployed'),L(U,'Not in Labor Force to Unemployed')]},
+        {title:'失業原因（堆疊）',type:'stack',stack:[L(U,'On temporary layoff'),L(U,'Permanent Job Losers'),L(U,'Completed Temp Job'),L(U,'Job leavers'),L(U,'Reentrants'),L(U,'New entrants')]},
+        {title:'平均失業Duration',type:'line',lines:[L(U,'平均失業Duration')]},
+        {title:'JOLTS',type:'line',lines:[L(J,'JOLTS')]},
+        {title:'Quit Rate',type:'line',lines:[L(J,'Quit Rate')]},
+        {title:'Layoff Rate',type:'line',lines:[L(J,'Layoff Rate')]},
+        {title:'職缺/失業人口',type:'line',lines:[L(J,'職缺/失業人口')]},
+        {title:'ISM 就業：服務 / 製造',type:'multi',lines:[L(SV,'ISM服務就業'),L(SV,'ISM製造就業')]},
+        {title:'中小企 hiring plan',type:'line',lines:[L(SV,'中小企hiring plan')]},
+        {title:'NY Fed：失去工作 / 自願離職機率',type:'multi',lines:[L(SV,'失去工作機率調查'),L(SV,'自願離職調查')]},
+        {title:'Jobs Plentiful / Hard to get',type:'multi',lines:[L(SV,'Job Plentiful'),L(SV,'Job Hard to get')]},
+        {title:'Plentiful − Hard to get',type:'line',lines:[{compute:'plentiful-hard',label:'Plentiful - Hard to get'}]},
+      ]},
+      {section:'就業 - 薪水',charts:[
+        {title:'時薪 MoM%',type:'line',lines:[L(W,'時薪 MoM%')]},
+        {title:'Atlanta 薪資：Switcher / Stayer（雙軸）',type:'dual',lines:[L(W,'Atlanta Fed Job Switcher薪資'),L(W,'Atlanta Fed Job Stayer薪資')]},
+        {title:'Atlanta 薪資四分位',type:'multi',lines:[L(W,'Atlanta Fed最低25%薪資'),L(W,'Atlanta Fed 50%薪資'),L(W,'Atlanta Fed 75%薪資'),L(W,'Atlanta Fed最高25%薪資')]},
+        {title:'ADP 薪資：Changers / Stayers（雙軸）',type:'dual',lines:[L(W,'ADP Pay Job Changers薪資'),L(W,'ADP Pay Job Stayers薪資')]},
+      ]},
+      {section:'物價',charts:[
+        {title:'Core CPI',type:'line',lines:[L(P,'Core CPI')]},
+        {title:'Core Goods / Core Services',type:'multi',lines:[L(P,'Core Goods'),L(P,'Core Services')]},
+        {title:'US Zillow Rent MoM',type:'line',lines:[L(P,'US Zillow Rent Index All Homes MoM Smoothed SA')]},
+        {title:'密大通膨預期：1y / 5~10y',type:'multi',lines:[L(P,'密大1y通膨預期'),L(P,'密大5~10y通膨預期')]},
+        {title:'NY Fed 通膨預期：1y / 5y',type:'multi',lines:[L(P,'NY FED 1y通膨預期'),L(P,'NY FED 5y通膨預期')]},
+        {title:'ISM 價格：製造 / 服務',type:'multi',lines:[L(P,'ISM製造價格'),L(P,'ISM服務價格')]},
+      ]},
+      {section:'企業調查',charts:[
+        {title:'ISM PMI：製造 / 服務',type:'multi',lines:[L(BZ,'ISM製造'),L(BZ,'ISM服務')]},
+      ]},
+      {section:'消費',charts:[
+        {title:'Real Personal Spending',type:'line',lines:[L(C,'Real Personal Spending')]},
+        {title:'所得/支出/儲蓄/利息（年增率）',type:'multi',lines:[L(C,'disposable personal income','yoy'),L(C,'Personal Outlays','yoy'),L(C,'Personal Saving','yoy'),L(C,'Interest Paid','yoy')]},
+        {title:'密大 (sentiment)',type:'line',lines:[L(C,'密大')]},
+        {title:'家戶金融狀況 vs 一年前',type:'line',lines:[L(C,'家戶金融狀況vs一年前')]},
+        {title:'預計未來一年金融狀況',type:'line',lines:[L(C,'預計未來一年金融狀況')]},
+        {title:'CB (Consumer Confidence)',type:'line',lines:[L(C,'CB')]},
+      ]},
+    ]}
+    function renderUsChart(){
+      if(!usData)return;
+      const pers=usChartPeriods();
+      let h='<div class="us-chart-grid">';
+      usChartSpecs().forEach(g=>{
+        h+=`<div class="us-chart-section">${esc(g.section)}</div>`;
+        g.charts.forEach(spec=>{
+          const defs=[...(spec.lines||[]),...(spec.stack||[])];
+          const latest=usSeriesLatest(defs.map(usResolveDef));
+          const nSeries=defs.length;
+          h+=`<div class="us-chart-card ${spec.type!=='line'?'wide':''}"><div class="us-chart-title"><span>${esc(spec.title)}</span><span class="us-chart-latest">資料至 ${latest}</span></div>${usChartSVG(spec,pers)}${nSeries>1?`<div class="us-chart-legend">${usChartLegend(spec)}</div>`:''}</div>`;
+        });
+      });
+      $('us-chart-view').innerHTML=h+'</div>';
+    }
     function activateTab(name){['inflation','employment','uk','eu','au','us'].forEach(id=>{const tab=$('tab-'+id),panel=$(id+'-panel');tab?.classList.toggle('active',id===name);panel?.classList.toggle('active',id===name)});if(name==='uk')renderUk();if(name==='eu')renderEu();if(name==='au')renderAu();if(name==='us')renderUs()}
     $('tab-inflation').addEventListener('click',()=>activateTab('inflation'));
     $('tab-employment').addEventListener('click',()=>activateTab('employment'));
