@@ -7,7 +7,7 @@ Prior successful observations are retained in data/us_macro_cache.json when a so
 """
 from __future__ import annotations
 
-import calendar, importlib, io, json, os, re, subprocess, sys, time, zipfile
+import calendar, html, importlib, io, json, os, re, subprocess, sys, time, zipfile
 from urllib.parse import urljoin
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -23,6 +23,8 @@ CACHE = ROOT / "data" / "us_macro_cache.json"
 CB_DEBUG_DIR = ROOT / "data" / "us_macro_debug"
 CB_RAW_HTML = CB_DEBUG_DIR / "cb_consumer_confidence_raw.html"
 CB_HTTP_JSON = CB_DEBUG_DIR / "cb_consumer_confidence_http.json"
+NFIB_RAW_HTML = CB_DEBUG_DIR / "nfib_jobs_report_raw.html"
+NFIB_HTTP_JSON = CB_DEBUG_DIR / "nfib_jobs_report_http.json"
 MONTHS = 5
 BLS_URL = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
 FRED_URL = "https://api.stlouisfed.org/fred/series/observations"
@@ -442,10 +444,11 @@ def _month_candidates(count=8):
     return candidates
 
 
-def _plain_html(html):
-    text = re.sub(r"<script[^>]*>.*?</script>", " ", html, flags=re.I | re.S)
+def _plain_html(source_html):
+    text = re.sub(r"<script[^>]*>.*?</script>", " ", source_html, flags=re.I | re.S)
     text = re.sub(r"<style[^>]*>.*?</style>", " ", text, flags=re.I | re.S)
     text = re.sub(r"<[^>]+>", " ", text)
+    text = html.unescape(text)
     return re.sub(r"\s+", " ", text).strip()
 
 
@@ -900,16 +903,55 @@ def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
     out = {}
     headers = {"User-Agent": "Mozilla/5.0", "Accept": "text/html,application/xhtml+xml"}
 
+    nfib_url = "https://www.nfib.com/news/monthly_report/jobs-report/"
     try:
-        response = SESSION.get("https://www.nfib.com/news/monthly_report/jobs-report/", headers=headers, timeout=60)
+        response = SESSION.get(nfib_url, headers=headers, timeout=60, allow_redirects=True)
+        raw = response.content
+        NFIB_RAW_HTML.write_bytes(raw)
+        encoding = response.encoding or response.apparent_encoding or "utf-8"
+        decoded = raw.decode(encoding, errors="replace")
+        text = _plain_html(decoded)
         response.raise_for_status()
-        text = _plain_html(response.text)
         period = _reported_period(text)
-        match = re.search(r"net\s+(\d+(?:\.\d+)?)%\s+of owners plan to create new jobs", text, flags=re.I)
-        if period and match:
-            out[("nfib", "hiring_plan")] = {period: float(match.group(1))}
-    except Exception:
-        pass
+        match = re.search(
+            r"(?:seasonally adjusted\s+)?net\s+(\d+(?:\.\d+)?)%\s+of owners "
+            r"plan to create new jobs in the next three months",
+            text,
+            flags=re.I,
+        )
+        diagnostic = {
+            "requested_url": nfib_url,
+            "final_url": response.url,
+            "status_code": response.status_code,
+            "content_type": response.headers.get("Content-Type", ""),
+            "response_bytes": len(raw),
+            "encoding": encoding,
+            "parsed_reference_period": period,
+            "parsed_hiring_plan": float(match.group(1)) if match else None,
+            "contains_survey_conducted": "survey was conducted in" in text.lower(),
+            "response_preview": text[:4000],
+            "saved_raw_html": str(NFIB_RAW_HTML.relative_to(ROOT)),
+        }
+        NFIB_HTTP_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
+        if not period:
+            raise RuntimeError("NFIB survey reference month not found")
+        if not match:
+            raise RuntimeError("NFIB hiring-plan value not found")
+        out[("nfib", "hiring_plan")] = {period: float(match.group(1))}
+    except Exception as error:
+        existing = {}
+        if NFIB_HTTP_JSON.exists():
+            try:
+                existing = json.loads(NFIB_HTTP_JSON.read_text(encoding="utf-8"))
+            except Exception:
+                existing = {}
+        existing.update({
+            "requested_url": nfib_url,
+            "error_type": type(error).__name__,
+            "error": str(error),
+            "saved_raw_html": str(NFIB_RAW_HTML.relative_to(ROOT)) if NFIB_RAW_HTML.exists() else None,
+        })
+        NFIB_HTTP_JSON.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
 
     cb_url = "https://www.conference-board.org/topics/consumer-confidence/index.cfm"
     CB_DEBUG_DIR.mkdir(parents=True, exist_ok=True)
@@ -1016,7 +1058,9 @@ def main():
         "# Conference Board 抓取診斷\n\n"
         "執行程式後，本資料夾會保存：\n\n"
         "- `cb_consumer_confidence_raw.html`：GitHub Actions 實際收到的原始回應。\n"
-        "- `cb_consumer_confidence_http.json`：HTTP、頁面特徵與目前解析結果。\n\n"
+        "- `cb_consumer_confidence_http.json`：CB的HTTP、頁面特徵與目前解析結果。\n"
+        "- `nfib_jobs_report_raw.html`：NFIB Jobs Report原始回應。\n"
+        "- `nfib_jobs_report_http.json`：NFIB參考月份與Hiring Plan解析結果。\n\n"
         "注意：Git 不會追蹤空資料夾；GitHub Actions 必須將 `data/us_macro_debug/` 加入 commit。\n",
         encoding="utf-8",
     )
@@ -1056,7 +1100,15 @@ def main():
             elif s.provider=="census" and s.source_id=="retail_control": vals=retail_control
             elif s.provider in {"ism","nfib","conference","nyfed"}: vals=pages.get((s.provider,s.source_id),{})
             else: vals={}
-            current[key]=merge(old.get(key,{}),vals)
+            old_values = dict(old.get(key, {}))
+            if s.provider in {"conference", "nfib"} and vals:
+                latest_authoritative_period = max(vals)
+                old_values = {
+                    period: value
+                    for period, value in old_values.items()
+                    if period <= latest_authoritative_period
+                }
+            current[key]=merge(old_values,vals)
         except Exception as e:
             current[key]=old.get(key,{})
             errors.append(f"{s.name}: {e}")
