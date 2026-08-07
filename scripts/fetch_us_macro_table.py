@@ -7,7 +7,7 @@ Prior successful observations are retained in data/us_macro_cache.json when a so
 """
 from __future__ import annotations
 
-import calendar, io, json, os, re, time, zipfile
+import calendar, importlib, io, json, os, re, subprocess, sys, time, zipfile
 from urllib.parse import urljoin
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -123,7 +123,7 @@ Spec("就業-調查","Job Hard to get","CONCJOBH Index","The Conference Board","
 Spec("消費","家戶金融狀況vs一年前","CONSPAGI Index","University of Michigan","PAGO_R_M (monthly data)","umich","pago"),
 Spec("消費","預計未來一年金融狀況","CONSEXFI Index","University of Michigan","PEXP_R_ALL","umich","pexp"),
 Spec("消費","CB","CONCCONF Index","The Conference Board","Consumer Confidence Index","conference","confidence"),
-Spec("消費","零售控制 MoM%","RSTAXAGM Index","U.S. Census Bureau","MRTS control group","census","retail_control"),]
+Spec("消費","零售控制 MoM%","RSTAXAGM Index","U.S. Census Bureau","44X72 - (4411,4412) - 447 - 444 - 722; seasonally adjusted monthly sales MoM%","census","retail_control"),]
 
 def month_key(year:int, month:int)->str: return f"{year:04d}-{month:02d}"
 def month_end(period:str)->str:
@@ -530,9 +530,36 @@ def _normalize_excel_header(value):
     return re.sub(r"\s+", "", str(value)).upper()
 
 
+def _ensure_xlrd():
+    """Ensure legacy .xls support is available on GitHub Actions runners."""
+    try:
+        module = importlib.import_module("xlrd")
+        version = tuple(int(part) for part in module.__version__.split(".")[:3])
+        if version >= (2, 0, 1):
+            return
+    except Exception:
+        pass
+
+    subprocess.check_call([
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        "--disable-pip-version-check",
+        "--quiet",
+        "xlrd>=2.0.1",
+    ])
+    importlib.invalidate_caches()
+    module = importlib.import_module("xlrd")
+    version = tuple(int(part) for part in module.__version__.split(".")[:3])
+    if version < (2, 0, 1):
+        raise RuntimeError(f"xlrd>=2.0.1 is required, found {module.__version__}")
+
+
 def _parse_umich_chart_excel(content, wanted_column):
     """Parse one exact Michigan chart column, never substitute a moving average column."""
-    workbook = pd.ExcelFile(io.BytesIO(content))
+    _ensure_xlrd()
+    workbook = pd.ExcelFile(io.BytesIO(content), engine="xlrd")
     wanted = _normalize_excel_header(wanted_column)
     for sheet in workbook.sheet_names:
         raw = pd.read_excel(workbook, sheet_name=sheet, header=None)
@@ -575,7 +602,7 @@ def fetch_umich_financial():
 
 CENSUS_CONTROL_CATEGORIES = {
     "total": "44X72",
-    "motor_vehicles": "441",
+    "auto_other_motor_vehicles": "4411,4412",
     "gasoline": "447",
     "building_materials": "444",
     "food_services": "722",
@@ -643,7 +670,7 @@ def fetch_census_retail_control():
     for period in common_periods:
         levels[period] = round(
             components["total"][period]
-            - components["motor_vehicles"][period]
+            - components["auto_other_motor_vehicles"][period]
             - components["gasoline"][period]
             - components["building_materials"][period]
             - components["food_services"][period],
@@ -867,13 +894,12 @@ def main():
     current["就業-職缺|職缺/失業人口"]=merge(old.get("就業-職缺|職缺/失業人口",{}),{k:round(jolts[k]/unemployed[k],7) for k in jolts.keys()&unemployed.keys() if unemployed[k]})
     cache={"updated_at_utc":datetime.now(timezone.utc).isoformat(),"series":current,"errors":errors}
     CACHE.write_text(json.dumps(cache,ensure_ascii=False,indent=2),encoding="utf-8")
-    # Markdown僅顯示目前仍待確認的8項；其他指標仍照常抓取並更新Cache。
+    # Markdown僅顯示目前仍待確認的7項；其他指標仍照常抓取並更新Cache。
     md_rows = [
         ("中小企hiring plan", "就業-調查", "中小企hiring plan"),
         ("Job Plentiful", "就業-調查", "Job Plentiful"),
         ("Job Hard to get", "就業-調查", "Job Hard to get"),
         ("零售控制", "消費", "零售控制 MoM%"),
-        ("Personal Saving", "消費", "Personal Saving"),
         ("家戶金融狀況vs一年前", "消費", "家戶金融狀況vs一年前"),
         ("預計未來一年金融狀況", "消費", "預計未來一年金融狀況"),
         ("CB", "消費", "CB"),
