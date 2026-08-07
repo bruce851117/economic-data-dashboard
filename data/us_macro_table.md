@@ -1,15 +1,17 @@
 # 美國總體經濟數據：待確認項目
 
-> 更新時間：2026-08-07 06:15 UTC  
+> 更新時間：2026-08-07 06:36 UTC  
 > 其他已成功指標仍會在背景抓取、接受來源修訂並更新Cache，只是不顯示於本表。
 > Conference Board原始回應會保存至 `data/us_macro_debug/`，供後續判斷GitHub Actions實際收到的HTML。
 
-| 指標 | 最新資料月份 | 來源 | 抓取方式 | 官方序列／定義 | 2026/08/31 |
-|---|---:|---|---|---|---:|
-| 中小企hiring plan | 2026/08/31 | NFIB | HTML（NFIB官方Jobs Report） | Plans to Increase Employment | 12 |
-| Job Plentiful | N/A | The Conference Board | HTML（Conference Board官方發布頁） | Jobs plentiful | N/A |
-| Job Hard to get | 2026/08/31 | The Conference Board | HTML（Conference Board官方發布頁） | Jobs hard to get | 0.7 |
-| CB | 2026/08/31 | The Conference Board | HTML（Conference Board官方發布頁） | Consumer Confidence Index | 90.8 |
+| 指標 | 最新資料月份 | 來源 | 抓取方式 | 官方序列／定義 | 2026/08/31 | 2026/07/31 | 2026/06/30 | 2026/05/31 | 2026/04/30 |
+|---|---:|---|---|---|---:|---:|---:|---:|---:|
+| 中小企hiring plan | 2026/08/31 | NFIB | HTML（NFIB官方Jobs Report） | Plans to Increase Employment | 12 | N/A | N/A | N/A | N/A |
+| Job Plentiful | N/A | The Conference Board | HTML（Conference Board官方發布頁） | Jobs plentiful | N/A | N/A | N/A | N/A | N/A |
+| Job Hard to get | 2026/08/31 | The Conference Board | HTML（Conference Board官方發布頁） | Jobs hard to get | 0.7 | N/A | N/A | N/A | N/A |
+| CB | 2026/08/31 | The Conference Board | HTML（Conference Board官方發布頁） | Consumer Confidence Index | 90.8 | N/A | N/A | N/A | N/A |
+| 密大_Current | 2026/07/31 | University of Michigan | CSV（University of Michigan官方下載檔） | ICC | N/A | 54.8 | 47.7 | 45.8 | 52.5 |
+| 密大_Expect | 2026/07/31 | University of Michigan | CSV（University of Michigan官方下載檔） | ICE | N/A | 55.4 | 50.7 | 44.1 | 48.1 |
 
 ## Census MARTS 零售銷售原始資料
 
