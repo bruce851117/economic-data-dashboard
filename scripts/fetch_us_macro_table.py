@@ -23,12 +23,12 @@ CACHE = ROOT / "data" / "us_macro_cache.json"
 CB_DEBUG_DIR = ROOT / "data" / "us_macro_debug"
 CB_RAW_HTML = CB_DEBUG_DIR / "cb_consumer_confidence_raw.html"
 CB_HTTP_JSON = CB_DEBUG_DIR / "cb_consumer_confidence_http.json"
-NFIB_RAW_HTML = CB_DEBUG_DIR / "nfib_jobs_report_raw.html"
-NFIB_HTTP_JSON = CB_DEBUG_DIR / "nfib_jobs_report_http.json"
+NFIB_API_JSON = CB_DEBUG_DIR / "nfib_sbet_api_http.json"
 MONTHS = 5
 BLS_URL = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
 FRED_URL = "https://api.stlouisfed.org/fred/series/observations"
 CENSUS_MARTS_URL = "https://api.census.gov/data/timeseries/eits/marts"
+NFIB_SBET_API_URL = "https://api.nfib-sbet.org:443/rest/sbetdb/_proc/getIndicators2"
 UA = "USMacroDashboard/1.0 GitHub-Actions"
 SESSION = requests.Session(); SESSION.headers.update({"User-Agent": UA})
 
@@ -820,16 +820,6 @@ def fetch_nyfed_sce():
     return _parse_nyfed_sce_workbook(response.content)
 
 
-def _reported_period(text):
-    match = re.search(r"(?:survey was conducted in|Index.*?in)\s+([A-Za-z]+)\s+(20\d{2})", text, flags=re.I | re.S)
-    if not match:
-        return None
-    month_name = match.group(1).title()
-    if month_name not in calendar.month_name:
-        return None
-    return month_key(int(match.group(2)), list(calendar.month_name).index(month_name))
-
-
 def _month_name_period(year, month_name):
     month_name = month_name.title()
     if month_name not in calendar.month_name:
@@ -898,85 +888,154 @@ def _parse_conference_board_release(html):
         "hard": {current_period: float(hard.group(1))} if hard else {},
     }
 
-def _parse_nfib_jobs_report(source_html):
-    """Parse the NFIB reference month and Plans to Increase Employment value."""
-    text = _plain_html(source_html)
-    period = _reported_period(text)
-    patterns = [
-        r"(?:seasonally adjusted\s+)?net\s+(-?\d+(?:\.\d+)?)%\s+of owners\s+"
-        r"plan to create new jobs in the next three months",
-        r"(?:seasonally adjusted\s+)?net\s+(-?\d+(?:\.\d+)?)%\s+of owners\s+"
-        r"plan to (?:hire|increase employment)\b",
-    ]
-    match = None
-    for pattern in patterns:
-        match = re.search(pattern, text, flags=re.I)
-        if match:
+def _nfib_api_period(record):
+    """Return YYYY-MM from a REST API record without assuming exact field casing."""
+    normalized = {re.sub(r"[^a-z0-9]", "", str(key).lower()): value for key, value in record.items()}
+    year = None
+    month = None
+    for key in ("year", "yr", "surveyyear", "datayear"):
+        candidate = num(normalized.get(key))
+        if candidate is not None and 1970 <= int(candidate) <= 2100:
+            year = int(candidate)
             break
-    if not period:
-        raise RuntimeError("NFIB survey reference month not found")
-    if not match:
-        raise RuntimeError("NFIB hiring-plan value not found")
-    value = float(match.group(1))
-    if not -100 <= value <= 100:
-        raise RuntimeError(f"NFIB hiring-plan value outside expected range: {value}")
-    return period, value, text
+    for key in ("month", "mo", "surveymonth", "datamonth", "monthnumber"):
+        raw = normalized.get(key)
+        candidate = num(raw)
+        if candidate is not None and 1 <= int(candidate) <= 12:
+            month = int(candidate)
+            break
+        month_name = str(raw or "").strip().title()
+        if month_name in calendar.month_name:
+            month = list(calendar.month_name).index(month_name)
+            break
+        if month_name in calendar.month_abbr:
+            month = list(calendar.month_abbr).index(month_name)
+            break
+    if year and month:
+        return month_key(year, month)
+    for key in ("date", "period", "surveydate", "monthyear", "time"):
+        raw = normalized.get(key)
+        if raw is None:
+            continue
+        match = re.search(r"(20\d{2})[-/](0?[1-9]|1[0-2])", str(raw))
+        if match:
+            return month_key(int(match.group(1)), int(match.group(2)))
+        parsed = pd.to_datetime(raw, errors="coerce")
+        if pd.notna(parsed):
+            return parsed.strftime("%Y-%m")
+    return None
 
 
-def _fetch_nfib_with_playwright(url):
-    """Load the public NFIB page in Chromium when a normal HTTP request is challenged."""
-    try:
-        from playwright.sync_api import sync_playwright
-    except ImportError as error:
-        raise RuntimeError("Playwright is not installed") from error
+def _nfib_api_value(record):
+    """Prefer seasonally adjusted values, then generic value fields."""
+    normalized = {re.sub(r"[^a-z0-9]", "", str(key).lower()): value for key, value in record.items()}
+    preferred = (
+        "seasonallyadjusted", "seasonallyadjustedvalue", "savalue", "sa",
+        "indicatorvalue", "indexvalue", "value", "total", "percent", "netpercent",
+    )
+    for key in preferred:
+        value = num(normalized.get(key))
+        if value is not None and -100 <= value <= 100:
+            return float(value), key
+    candidates = []
+    for key, raw in normalized.items():
+        if any(token in key for token in ("year", "month", "date", "id", "count", "sample")):
+            continue
+        value = num(raw)
+        if value is not None and -100 <= value <= 100:
+            candidates.append((float(value), key))
+    if len(candidates) == 1:
+        return candidates[0]
+    return None, None
 
-    with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(
-            headless=True,
-            args=[
-                "--disable-dev-shm-usage",
-                "--no-sandbox",
-                "--disable-blink-features=AutomationControlled",
-            ],
-        )
-        context = browser.new_context(
-            user_agent=(
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/131.0.0.0 Safari/537.36"
-            ),
-            locale="en-US",
-            timezone_id="America/New_York",
-            viewport={"width": 1440, "height": 1000},
-            extra_http_headers={
-                "Accept-Language": "en-US,en;q=0.9",
-                "Cache-Control": "no-cache",
-                "Pragma": "no-cache",
+
+def _nfib_api_records(payload):
+    """Recursively collect JSON objects that look like monthly observations."""
+    records = []
+    def visit(node):
+        if isinstance(node, dict):
+            period = _nfib_api_period(node)
+            value, field = _nfib_api_value(node)
+            if period and value is not None:
+                records.append((period, value, field, node))
+            for child in node.values():
+                visit(child)
+        elif isinstance(node, list):
+            for child in node:
+                visit(child)
+    visit(payload)
+    return records
+
+
+def fetch_nfib_sbet_api():
+    """Fetch Plans to Increase Employment from NFIB's official SBET REST API."""
+    now = datetime.now(timezone.utc)
+    payload = {
+        "app_name": "sbet",
+        "params": [
+            {"name": "minYear", "param_type": "IN", "value": now.year - 3},
+            {"name": "minMonth", "param_type": "IN", "value": 1},
+            {"name": "maxYear", "param_type": "IN", "value": now.year},
+            {"name": "maxMonth", "param_type": "IN", "value": 12},
+            {
+                "name": "indicator",
+                "param_type": "IN",
+                "value": "Plans to Increase Employment",
             },
+        ],
+    }
+    diagnostic = {
+        "method": "NFIB SBET REST API",
+        "endpoint": NFIB_SBET_API_URL,
+        "procedure": "getIndicators2",
+        "indicator": "Plans to Increase Employment",
+        "request_body": payload,
+    }
+    try:
+        response = SESSION.post(
+            NFIB_SBET_API_URL,
+            json=payload,
+            headers={"Accept": "application/json", "Content-Type": "application/json"},
+            timeout=90,
         )
-        page = context.new_page()
-        response = page.goto(url, wait_until="domcontentloaded", timeout=120000)
+        diagnostic.update({
+            "status_code": response.status_code,
+            "content_type": response.headers.get("Content-Type", ""),
+            "response_bytes": len(response.content),
+            "response_preview": response.text[:4000],
+        })
+        response.raise_for_status()
         try:
-            page.wait_for_function(
-                """() => {
-                    const t = document.body ? document.body.innerText : '';
-                    return /plan to create new jobs in the next three months/i.test(t)
-                        || /plan to (hire|increase employment)/i.test(t);
-                }""",
-                timeout=60000,
+            data = response.json()
+        except ValueError as error:
+            raise RuntimeError("NFIB SBET API response is not valid JSON") from error
+        diagnostic["response_json"] = data
+        records = _nfib_api_records(data)
+        values = {}
+        value_fields = {}
+        for period, value, field, _record in records:
+            values[period] = value
+            value_fields[period] = field
+        if not values:
+            raise RuntimeError(
+                "NFIB SBET API returned JSON but no monthly Plans to Increase Employment observations were recognized"
             )
-        except Exception:
-            page.wait_for_timeout(5000)
-        source_html = page.content()
-        final_url = page.url
-        title = page.title()
-        status_code = response.status if response else None
-        browser.close()
-    return source_html, final_url, status_code, title
+        diagnostic.update({
+            "parsed_observations": dict(sorted(values.items())),
+            "parsed_value_fields": dict(sorted(value_fields.items())),
+            "latest_period": max(values),
+            "latest_value": values[max(values)],
+        })
+        NFIB_API_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
+        return dict(sorted(values.items()))
+    except Exception as error:
+        diagnostic.update({"error_type": type(error).__name__, "error": str(error)})
+        NFIB_API_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
+        raise
 
 
 def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
-    """Fetch NFIB, Conference Board and ISM independently so one provider cannot erase another."""
+    """Fetch Conference Board and ISM independently so one provider cannot erase another."""
     out = {}
     headers = {
         "User-Agent": (
@@ -987,64 +1046,6 @@ def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "en-US,en;q=0.9",
     }
-    nfib_url = "https://www.nfib.com/news/monthly_report/jobs-report/"
-    http_error = None
-    try:
-        response = SESSION.get(nfib_url, headers=headers, timeout=60, allow_redirects=True)
-        raw = response.content
-        encoding = response.encoding or response.apparent_encoding or "utf-8"
-        decoded = raw.decode(encoding, errors="replace")
-        response.raise_for_status()
-        period, value, plain_text = _parse_nfib_jobs_report(decoded)
-        NFIB_RAW_HTML.write_bytes(raw)
-        diagnostic = {
-            "method": "requests",
-            "requested_url": nfib_url,
-            "final_url": response.url,
-            "status_code": response.status_code,
-            "content_type": response.headers.get("Content-Type", ""),
-            "response_bytes": len(raw),
-            "encoding": encoding,
-            "parsed_reference_period": period,
-            "parsed_hiring_plan": value,
-            "response_preview": plain_text[:4000],
-            "saved_raw_html": str(NFIB_RAW_HTML.relative_to(ROOT)),
-        }
-        NFIB_HTTP_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
-        out[("nfib", "hiring_plan")] = {period: value}
-    except Exception as error:
-        http_error = error
-        try:
-            decoded, final_url, status_code, title = _fetch_nfib_with_playwright(nfib_url)
-            period, value, plain_text = _parse_nfib_jobs_report(decoded)
-            NFIB_RAW_HTML.write_text(decoded, encoding="utf-8")
-            diagnostic = {
-                "method": "playwright_chromium",
-                "requested_url": nfib_url,
-                "final_url": final_url,
-                "status_code": status_code,
-                "title": title,
-                "response_bytes": len(decoded.encode("utf-8")),
-                "parsed_reference_period": period,
-                "parsed_hiring_plan": value,
-                "requests_error_type": type(http_error).__name__,
-                "requests_error": str(http_error),
-                "response_preview": plain_text[:4000],
-                "saved_raw_html": str(NFIB_RAW_HTML.relative_to(ROOT)),
-            }
-            NFIB_HTTP_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
-            out[("nfib", "hiring_plan")] = {period: value}
-        except Exception as browser_error:
-            diagnostic = {
-                "method": "playwright_chromium",
-                "requested_url": nfib_url,
-                "requests_error_type": type(http_error).__name__,
-                "requests_error": str(http_error),
-                "playwright_error_type": type(browser_error).__name__,
-                "playwright_error": str(browser_error),
-                "saved_raw_html": str(NFIB_RAW_HTML.relative_to(ROOT)) if NFIB_RAW_HTML.exists() else None,
-            }
-            NFIB_HTTP_JSON.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
     cb_url = "https://www.conference-board.org/topics/consumer-confidence/index.cfm"
     CB_DEBUG_DIR.mkdir(parents=True, exist_ok=True)
     try:
@@ -1151,8 +1152,7 @@ def main():
         "執行程式後，本資料夾會保存：\n\n"
         "- `cb_consumer_confidence_raw.html`：GitHub Actions 實際收到的原始回應。\n"
         "- `cb_consumer_confidence_http.json`：CB的HTTP、頁面特徵與目前解析結果。\n"
-        "- `nfib_jobs_report_raw.html`：NFIB Jobs Report原始回應。\n"
-        "- `nfib_jobs_report_http.json`：NFIB請求方式、參考月份與Hiring Plan解析結果。\n\n"
+        "- `nfib_sbet_api_http.json`：NFIB SBET REST API請求、原始JSON與Hiring Plan解析結果。\n\n"
         "注意：Git 不會追蹤空資料夾；GitHub Actions 必須將 `data/us_macro_debug/` 加入 commit。\n",
         encoding="utf-8",
     )
@@ -1169,6 +1169,8 @@ def main():
     except Exception as e: zori={}; errors.append(f"Zillow: {e}")
     try: pages=fetch_page_latest()
     except Exception as e: pages={}; errors.append(f"Official pages: {e}")
+    try: nfib_hiring_plan=fetch_nfib_sbet_api()
+    except Exception as e: nfib_hiring_plan={}; errors.append(f"NFIB SBET REST API: {e}")
     try: nyfed_sce=fetch_nyfed_sce()
     except Exception as e: nyfed_sce={}; errors.append(f"NY Fed SCE: {e}")
     try: umich=fetch_umichigan_csv()
@@ -1190,7 +1192,8 @@ def main():
             elif s.provider=="zillow": vals=zori
             elif s.provider=="nyfed_xlsx": vals=nyfed_sce.get(s.source_id,{})
             elif s.provider=="census" and s.source_id=="retail_control": vals=retail_control
-            elif s.provider in {"ism","nfib","conference","nyfed"}: vals=pages.get((s.provider,s.source_id),{})
+            elif s.provider=="nfib": vals=nfib_hiring_plan
+            elif s.provider in {"ism","conference","nyfed"}: vals=pages.get((s.provider,s.source_id),{})
             else: vals={}
             old_values = dict(old.get(key, {}))
             if s.provider in {"conference", "nfib"} and vals:
@@ -1237,7 +1240,7 @@ def main():
         "|---|---:|---|---|---|" + "---:|" * len(all_periods),
     ]
     method_labels = {
-        "nfib": "HTML（requests；受阻時以Playwright Chromium載入NFIB官方Jobs Report）",
+        "nfib": "REST API（NFIB SBET getIndicators2）",
         "conference": "HTML（Conference Board官方發布頁）",
         "census": "API＋計算（Census MARTS）",
         "fred": "API（FRED）",

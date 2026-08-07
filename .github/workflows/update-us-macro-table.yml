@@ -26,10 +26,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas openpyxl xlrd requests playwright
-
-      - name: Install Playwright Chromium
-        run: python -m playwright install --with-deps chromium
+          pip install pandas openpyxl xlrd requests
 
       - name: Build US macro Markdown
         env:
