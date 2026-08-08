@@ -478,27 +478,31 @@
     function usLinePathFrom(pers,map,X,Y){let d='',pen=false;pers.forEach((p,i)=>{const v=map[p];if(v==null||!Number.isFinite(v)){pen=false;return}d+=(pen?'L':'M')+X(i).toFixed(1)+','+Y(v).toFixed(1)+' ';pen=true});return d.trim()}
     function usNiceRange(arr){if(!arr.length)return[0,1];let mn=Math.min(...arr),mx=Math.max(...arr);if(mn===mx){mn-=1;mx+=1}const pad=(mx-mn)*0.1;return[mn-pad,mx+pad]}
     function usResolveDef(d){if(d.compute==='plentiful-hard')return usDiffMap(usMap('就業-調查','Job Plentiful'),usMap('就業-調查','Job Hard to get'));let m=usMap(d.block,d.name);return d.mode==='yoy'?usYoyMap(m):m}
-    function usChartSVG(spec,pers,meta){
-      const wide=spec.type!=='line',w=wide?760:600,h=wide?300:230,mL=54,mR=spec.type==='dual'?54:16,mT=14,mB=40,plotL=mL+6,plotR=w-mR-6,plotT=mT+6,plotB=h-mB-6;
+    function usChartSVG(spec,pers,meta,view){
+      const needsRight=spec.type==='dual'||(spec.lines||[]).some(d=>d.axis==='R');
+      const wide=spec.type!=='line',w=wide?760:600,h=wide?300:230,mL=54,mR=needsRight?54:16,mT=14,mB=40,plotL=mL+6,plotR=w-mR-6,plotT=mT+6,plotB=h-mB-6;
       const X=i=>pers.length<=1?(plotL+plotR)/2:plotL+i*(plotR-plotL)/(pers.length-1);
-      const lines=(spec.lines||[]).map((d,i)=>({label:d.label||d.name,color:US_COLORS[i%US_COLORS.length],map:usResolveDef(d)}));
+      const lines=(spec.lines||[]).map((d,i)=>({label:d.label||d.name,color:US_COLORS[i%US_COLORS.length],map:usResolveDef(d),axis:((spec.type==='dual'&&i===1)||d.axis==='R')?'R':'L'}));
       const stack=(spec.stack||[]).map((d,i)=>({label:d.label||d.name,color:US_COLORS[(lines.length+i)%US_COLORS.length],map:usResolveDef(d)}));
       const stackSum=pers.map(p=>stack.reduce((a,s)=>a+(Number.isFinite(s.map[p])?s.map[p]:0),0));
-      let leftMin,leftMax,rightMin,rightMax;
-      if(spec.type==='dual'){const a=[],b=[];pers.forEach(p=>{if(Number.isFinite(lines[0].map[p]))a.push(lines[0].map[p]);if(lines[1]&&Number.isFinite(lines[1].map[p]))b.push(lines[1].map[p])});[leftMin,leftMax]=usNiceRange(a);[rightMin,rightMax]=usNiceRange(b);}
-      else{let vals=[];lines.forEach(l=>pers.forEach(p=>{const v=l.map[p];if(Number.isFinite(v))vals.push(v)}));let mn=vals.length?Math.min(...vals):0,mx=vals.length?Math.max(...vals):1;if(stack.length){mn=Math.min(mn,0);mx=Math.max(mx,Math.max(0,...stackSum))}[leftMin,leftMax]=usNiceRange([mn,mx]);}
+      const collect=f=>{const v=[];lines.filter(f).forEach(l=>pers.forEach(p=>{const x=l.map[p];if(Number.isFinite(x))v.push(x)}));return v};
+      let lv=collect(l=>l.axis!=='R'),lmn=lv.length?Math.min(...lv):0,lmx=lv.length?Math.max(...lv):1;
+      if(stack.length){lmn=Math.min(lmn,0);lmx=Math.max(lmx,Math.max(0,...stackSum))}
+      let [leftMin,leftMax]=usNiceRange([lmn,lmx]),rightMin=0,rightMax=1;
+      if(needsRight){const rv=collect(l=>l.axis==='R');[rightMin,rightMax]=usNiceRange(rv)}
+      if(view){if(view.lMin!=null){leftMin=view.lMin;leftMax=view.lMax}if(view.rMin!=null){rightMin=view.rMin;rightMax=view.rMax}}
       const YL=v=>plotT+(leftMax-v)*(plotB-plotT)/((leftMax-leftMin)||1),YR=v=>plotT+(rightMax-v)*(plotB-plotT)/((rightMax-rightMin)||1);
       let grid='';for(let i=0;i<5;i++){const val=leftMax-(leftMax-leftMin)*i/4,yy=YL(val);grid+=`<line x1="${mL}" y1="${yy}" x2="${w-mR}" y2="${yy}" stroke="#eef2f7"/><text x="${mL-6}" y="${yy+4}" text-anchor="end" fill="#94a3b8" font-size="10">${usAxisFmt(val)}</text>`}
-      if(spec.type==='dual')for(let i=0;i<5;i++){const val=rightMax-(rightMax-rightMin)*i/4,yy=YR(val);grid+=`<text x="${w-mR+6}" y="${yy+4}" text-anchor="start" fill="${lines[1].color}" font-size="10">${usAxisFmt(val)}</text>`}
+      if(needsRight){const rc=(lines.find(l=>l.axis==='R')||{}).color||'#94a3b8';for(let i=0;i<5;i++){const val=rightMax-(rightMax-rightMin)*i/4,yy=YR(val);grid+=`<text x="${w-mR+6}" y="${yy+4}" text-anchor="start" fill="${rc}" font-size="10">${usAxisFmt(val)}</text>`}}
       let xl='';const step=Math.max(1,Math.ceil(pers.length/6));pers.forEach((p,i)=>{if(i%step===0||i===pers.length-1)xl+=`<text x="${X(i)}" y="${h-12}" text-anchor="middle" fill="#94a3b8" font-size="10">${p.slice(2).replace('-','/')}</text>`});
       let areas='',base=pers.map(()=>0);
       stack.forEach(s=>{const top=pers.map((p,i)=>base[i]+(Number.isFinite(s.map[p])?s.map[p]:0));const tp=pers.map((p,i)=>`${X(i).toFixed(1)},${YL(top[i]).toFixed(1)}`);const bp=pers.map((p,i)=>`${X(i).toFixed(1)},${YL(base[i]).toFixed(1)}`).reverse();areas+=`<path d="M${tp.join(' L')} L${bp.join(' L')} Z" fill="${s.color}" fill-opacity="0.45" stroke="none"/>`;base=top;});
-      let paths='';lines.forEach((l,idx)=>{const Y=(spec.type==='dual'&&idx===1)?YR:YL;paths+=`<path d="${usLinePathFrom(pers,l.map,X,Y)}" fill="none" stroke="${l.color}" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>`});
-      if(meta){meta.pers=pers;meta.w=w;meta.plotL=plotL;meta.plotR=plotR;meta.n=pers.length;meta.series=[...lines.map((l,i)=>({label:l.label,color:l.color,map:l.map,axis:spec.type==='dual'&&i===1?'R':'L'})),...stack.map(s=>({label:s.label,color:s.color,map:s.map,axis:'L'}))];}
+      let paths='';lines.forEach(l=>{const Y=l.axis==='R'?YR:YL;paths+=`<path d="${usLinePathFrom(pers,l.map,X,Y)}" fill="none" stroke="${l.color}" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>`});
+      if(meta){meta.spec=spec;meta.pers=pers;meta.w=w;meta.plotL=plotL;meta.plotR=plotR;meta.n=pers.length;meta.series=[...lines.map(l=>({label:l.label,color:l.color,map:l.map,axis:l.axis})),...stack.map(s=>({label:s.label,color:s.color,map:s.map,axis:'L'}))];meta.dom={lMin:leftMin,lMax:leftMax,rMin:needsRight?rightMin:undefined,rMax:needsRight?rightMax:undefined};}
       const cross=`<line class="us-cross" x1="0" y1="${plotT}" x2="0" y2="${plotB}" stroke="#475569" stroke-width="1" stroke-dasharray="4 3" style="display:none" vector-effect="non-scaling-stroke"/>`;
       return `<svg viewBox="0 0 ${w} ${h}" role="img">${grid}<line x1="${mL}" y1="${plotB}" x2="${w-mR}" y2="${plotB}" stroke="#cbd5e1"/>${xl}${areas}${paths}${cross}</svg>`;
     }
-    function usChartLegend(spec){const items=[];(spec.lines||[]).forEach((d,i)=>{const ax=spec.type==='dual'?(i===0?'（左）':'（右）'):'';items.push(`<span><span class="sw" style="background:${US_COLORS[i%US_COLORS.length]}"></span>${esc(d.label||d.name)}${ax}</span>`)});(spec.stack||[]).forEach((d,i)=>{items.push(`<span><span class="sw" style="background:${US_COLORS[((spec.lines||[]).length+i)%US_COLORS.length]};opacity:.55"></span>${esc(d.label||d.name)}</span>`)});return items.join('')}
+    function usChartLegend(spec){const needsRight=spec.type==='dual'||(spec.lines||[]).some(d=>d.axis==='R');const items=[];(spec.lines||[]).forEach((d,i)=>{const isR=(spec.type==='dual'&&i===1)||d.axis==='R';const ax=needsRight?(isR?'（右）':'（左）'):'';items.push(`<span><span class="sw" style="background:${US_COLORS[i%US_COLORS.length]}"></span>${esc(d.label||d.name)}${ax}</span>`)});(spec.stack||[]).forEach((d,i)=>{items.push(`<span><span class="sw" style="background:${US_COLORS[((spec.lines||[]).length+i)%US_COLORS.length]};opacity:.55"></span>${esc(d.label||d.name)}</span>`)});return items.join('')}
     function usChartSpecs(){const E='就業-就業（人數，千人）',U='就業-失業',J='就業-職缺',SV='就業-調查',W='就業-薪水',P='物價',BZ='企業調查',C='消費',L=(b,n,mode)=>({block:b,name:n,mode});return [
       {section:'就業',charts:[
         {title:'非農就業：商品+服務（堆疊）＋非農（線）',type:'combo',stack:[L(E,'Goods-producing Sector'),L(E,'Private Service-Providing')],lines:[L(E,'非農')]},
@@ -538,17 +542,19 @@
       ]},
       {section:'消費',charts:[
         {title:'Real Personal Spending',type:'line',lines:[L(C,'Real Personal Spending')]},
-        {title:'所得/支出/儲蓄/利息（年增率）',type:'multi',lines:[L(C,'disposable personal income','yoy'),L(C,'Personal Outlays','yoy'),L(C,'Personal Saving','yoy'),L(C,'Interest Paid','yoy')]},
+        {title:'所得/支出/儲蓄/利息（年增率；儲蓄為右軸）',type:'multi',lines:[L(C,'disposable personal income','yoy'),L(C,'Personal Outlays','yoy'),{...L(C,'Personal Saving','yoy'),axis:'R'},L(C,'Interest Paid','yoy')]},
         {title:'密大 (sentiment)',type:'line',lines:[L(C,'密大')]},
         {title:'家戶金融狀況 vs 一年前',type:'line',lines:[L(C,'家戶金融狀況vs一年前')]},
         {title:'預計未來一年金融狀況',type:'line',lines:[L(C,'預計未來一年金融狀況')]},
         {title:'CB (Consumer Confidence)',type:'line',lines:[L(C,'CB')]},
       ]},
     ]}
-    let usChartMeta=[],usChartBound=false;
+    let usChartMeta=[],usChartBound=false,usChartView={},usPanning=false;
+    function usRerenderChart(idx){const meta=usChartMeta[idx];if(!meta||!meta.spec)return;const card=$('us-chart-view').querySelector('.us-chart-card[data-idx="'+idx+'"]');if(!card)return;const svgStr=usChartSVG(meta.spec,meta.pers,meta,usChartView[idx]);const old=card.querySelector('svg');if(old)old.outerHTML=svgStr}
     function bindUsCharts(){
       const host=$('us-chart-view'),tip=$('us-tooltip');
       host.addEventListener('pointermove',e=>{
+        if(usPanning)return;
         const card=e.target.closest('.us-chart-card');
         host.querySelectorAll('.us-cross').forEach(c=>c.style.display='none');
         if(!card){tip.style.display='none';return}
@@ -564,10 +570,13 @@
         tip.innerHTML=`<strong>${period.replace('-','/')}</strong>${rows}`;
       });
       host.addEventListener('pointerleave',()=>{tip.style.display='none';host.querySelectorAll('.us-cross').forEach(c=>c.style.display='none')});
+      host.addEventListener('wheel',e=>{const card=e.target.closest('.us-chart-card');if(!card)return;const idx=+card.dataset.idx,meta=usChartMeta[idx];if(!meta)return;e.preventDefault();const cur=usChartView[idx]||meta.dom,f=e.deltaY<0?0.82:1.22,nv={};['l','r'].forEach(k=>{const mn=cur[k+'Min'],mx=cur[k+'Max'];if(mn==null)return;const c=(mn+mx)/2,half=(mx-mn)*f/2;nv[k+'Min']=c-half;nv[k+'Max']=c+half});usChartView[idx]=nv;usRerenderChart(idx)},{passive:false});
+      host.addEventListener('pointerdown',e=>{const card=e.target.closest('.us-chart-card');if(!card)return;const idx=+card.dataset.idx,meta=usChartMeta[idx];if(!meta)return;const svg=card.querySelector('svg');if(!svg)return;const rect=svg.getBoundingClientRect();usPanning=true;tip.style.display='none';const startY=e.clientY,cur=Object.assign({},usChartView[idx]||meta.dom);const move=ev=>{const frac=(ev.clientY-startY)/(rect.height||1),nv={};['l','r'].forEach(k=>{const mn=cur[k+'Min'],mx=cur[k+'Max'];if(mn==null)return;const shift=frac*(mx-mn);nv[k+'Min']=mn+shift;nv[k+'Max']=mx+shift});usChartView[idx]=nv;usRerenderChart(idx)};const up=()=>{usPanning=false;document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up)};document.addEventListener('pointermove',move);document.addEventListener('pointerup',up)});
+      host.addEventListener('dblclick',e=>{const card=e.target.closest('.us-chart-card');if(!card)return;const idx=+card.dataset.idx;delete usChartView[idx];usRerenderChart(idx)});
     }
     function renderUsChart(){
       if(!usData)return;
-      const pers=usChartPeriods();usChartMeta=[];let idx=0,h='';
+      const pers=usChartPeriods();usChartMeta=[];usChartView={};let idx=0,h='';
       usChartSpecs().forEach(g=>{
         h+=`<section class="us-chart-block"><div class="us-chart-section">${esc(g.section)}</div><div class="us-chart-grid">`;
         g.charts.forEach(spec=>{
