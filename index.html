@@ -519,16 +519,16 @@
         {title:'失業率',type:'line',lines:[L(U,'失業率')]},
         {title:'Labor Force',type:'line',lines:[L(U,'Labor Force')]},
         {title:'就業人口 / 失業人口（雙軸）',type:'dual',size:'normal',lines:[{...L(U,'Employed'),label:'就業人口',axis:'L'},{...L(U,'Unemployed'),label:'失業人口',axis:'R'}]},
-        {title:'失業流入占失業人口比例',type:'stack',stack:[R(U,'Employed to Unemployed',U,'Unemployed','Employed to Unemployed'),R(U,'Unemployed to Unemployed',U,'Unemployed','Unemployed to Unemployed'),R(U,'Not in Labor Force to Unemployed',U,'Unemployed','Not in Labor Force to Unemployed')]},
-        {title:'失業原因占失業人口比例',type:'stack',stack:[R(U,'On temporary layoff',U,'Unemployed','On temporary layoff'),R(U,'Permanent Job Losers',U,'Unemployed','Permanent Job Losers'),R(U,'Completed Temp Job',U,'Unemployed','Completed Temp Job'),R(U,'Job leavers',U,'Unemployed','Job leavers'),R(U,'Reentrants',U,'Unemployed','Reentrants'),R(U,'New entrants',U,'Unemployed','New entrants')]},
+        {title:'失業流入占失業人口比例',type:'multi',lines:[R(U,'Employed to Unemployed',U,'Unemployed','Employed to Unemployed'),R(U,'Unemployed to Unemployed',U,'Unemployed','Unemployed to Unemployed'),R(U,'Not in Labor Force to Unemployed',U,'Unemployed','Not in Labor Force to Unemployed')]},
+        {title:'失業原因占失業人口比例',type:'multi',lines:[R(U,'On temporary layoff',U,'Unemployed','On temporary layoff'),R(U,'Permanent Job Losers',U,'Unemployed','Permanent Job Losers'),R(U,'Completed Temp Job',U,'Unemployed','Completed Temp Job'),R(U,'Job leavers',U,'Unemployed','Job leavers'),R(U,'Reentrants',U,'Unemployed','Reentrants'),R(U,'New entrants',U,'Unemployed','New entrants')]},
         {title:'平均失業Duration',type:'line',lines:[L(U,'平均失業Duration')]},
         {title:'JOLTS',type:'line',lines:[L(J,'JOLTS')]},{title:'Quit Rate',type:'line',lines:[L(J,'Quit Rate')]},{title:'Layoff Rate',type:'line',lines:[L(J,'Layoff Rate')]},{title:'職缺/失業人口',type:'line',lines:[L(J,'職缺/失業人口')]},
         {title:'ISM 就業：服務 / 製造',type:'multi',lines:[L(SV,'ISM服務就業'),L(SV,'ISM製造就業')]},{title:'中小企 hiring plan',type:'line',lines:[L(SV,'中小企hiring plan')]},{title:'NY Fed：失去工作 / 自願離職機率',type:'multi',lines:[L(SV,'失去工作機率調查'),L(SV,'自願離職調查')]},{title:'Jobs Plentiful / Hard to get',type:'multi',lines:[L(SV,'Job Plentiful'),L(SV,'Job Hard to get')]},{title:'Plentiful − Hard to get',type:'line',lines:[{compute:'plentiful-hard',label:'Plentiful - Hard to get'}]}
       ]},
       {section:'就業 - 薪水',charts:[
         {title:'時薪 MoM%',type:'line',size:'normal',lines:[L(W,'時薪 MoM%')]},
-        {title:'Atlanta 薪資：Switcher / Stayer（雙軸）',type:'dual',size:'normal',lines:[L(W,'Atlanta Fed Job Switcher薪資'),L(W,'Atlanta Fed Job Stayer薪資')]},
-        {title:'ADP 薪資：Changers / Stayers（雙軸）',type:'dual',size:'normal',lines:[L(W,'ADP Pay Job Changers薪資'),L(W,'ADP Pay Job Stayers薪資')]},
+        {title:'Atlanta 薪資：Switcher / Stayer',type:'multi',size:'normal',lines:[L(W,'Atlanta Fed Job Switcher薪資'),L(W,'Atlanta Fed Job Stayer薪資')]},
+        {title:'ADP 薪資：Changers / Stayers',type:'multi',size:'normal',lines:[L(W,'ADP Pay Job Changers薪資'),L(W,'ADP Pay Job Stayers薪資')]},
         {title:'Atlanta 薪資四分位',type:'multi',lines:[L(W,'Atlanta Fed最低25%薪資'),L(W,'Atlanta Fed 50%薪資'),L(W,'Atlanta Fed 75%薪資'),L(W,'Atlanta Fed最高25%薪資')]}
       ]},
       {section:'物價',charts:[
