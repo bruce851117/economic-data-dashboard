@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-06T04:58:55.976110+00:00",
+  "generated_at": "2026-08-11T03:27:47.962070+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
@@ -2686,7 +2686,7 @@
         },
         {
           "date": "2025-06-01",
-          "value": 7.6,
+          "value": 7.5,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
           "status": "A"
         },
@@ -2705,6 +2705,12 @@
         {
           "date": "2026-03-01",
           "value": 8.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 8.3,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
           "status": "A"
         }
@@ -6233,37 +6239,37 @@
       "data": [
         {
           "date": "2015-01-01",
-          "value": 2.1,
+          "value": 1.9,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2015-02-01",
-          "value": -0.1,
+          "value": 0,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2015-03-01",
-          "value": -0.2,
+          "value": -0.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2015-04-01",
-          "value": 0.1,
+          "value": 0,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2015-05-01",
-          "value": 2.4,
+          "value": 2.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2015-06-01",
-          "value": -0.8,
+          "value": -0.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6281,55 +6287,55 @@
         },
         {
           "date": "2015-09-01",
-          "value": -0.5,
+          "value": -0.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2015-10-01",
-          "value": 0.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
-        },
-        {
-          "date": "2015-11-01",
-          "value": 0.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
-        },
-        {
-          "date": "2015-12-01",
-          "value": 1.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
-        },
-        {
-          "date": "2016-01-01",
           "value": 0,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
+          "date": "2015-11-01",
+          "value": 0.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 1.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2016-01-01",
+          "value": -0.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
           "date": "2016-02-01",
-          "value": -0.5,
+          "value": -0.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2016-03-01",
-          "value": -1,
+          "value": -0.9,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2016-04-01",
-          "value": -0.7,
+          "value": -0.8,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2016-05-01",
-          "value": 1.3,
+          "value": 1.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6359,49 +6365,49 @@
         },
         {
           "date": "2016-10-01",
-          "value": 2.9,
+          "value": 2.6,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2016-11-01",
-          "value": -2.3,
+          "value": -2.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2016-12-01",
-          "value": 1.5,
+          "value": 1.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2017-01-01",
-          "value": -0.7,
+          "value": -1.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2017-02-01",
-          "value": 0.8,
+          "value": 1.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2017-03-01",
-          "value": 1.4,
+          "value": 1.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2017-04-01",
-          "value": -0.3,
+          "value": -0.6,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2017-05-01",
-          "value": 0.6,
+          "value": 0.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6413,7 +6419,7 @@
         },
         {
           "date": "2017-07-01",
-          "value": -0.2,
+          "value": -0.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6425,67 +6431,67 @@
         },
         {
           "date": "2017-09-01",
-          "value": 1.6,
+          "value": 1.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2017-10-01",
-          "value": -2,
+          "value": -2.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2017-11-01",
-          "value": 1.3,
+          "value": 1.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2017-12-01",
-          "value": 0.7,
+          "value": 0.8,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2018-01-01",
-          "value": -0.9,
+          "value": -1.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2018-02-01",
-          "value": -0.6,
+          "value": 0,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2018-03-01",
-          "value": -0.4,
+          "value": -0.6,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2018-04-01",
-          "value": 4.5,
+          "value": 4.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2018-05-01",
-          "value": -2.2,
+          "value": -2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2018-06-01",
-          "value": 0.3,
+          "value": 0.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2018-07-01",
-          "value": -0.2,
+          "value": -0.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6497,7 +6503,7 @@
         },
         {
           "date": "2018-09-01",
-          "value": 0,
+          "value": -0.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6509,61 +6515,61 @@
         },
         {
           "date": "2018-11-01",
-          "value": 0,
+          "value": 0.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2018-12-01",
-          "value": -0.5,
+          "value": -0.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2019-01-01",
-          "value": 3,
+          "value": 2.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2019-02-01",
-          "value": 0.2,
+          "value": 1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2019-03-01",
-          "value": -1.4,
+          "value": -1.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2019-04-01",
-          "value": 1.5,
+          "value": 1.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2019-05-01",
-          "value": -2,
+          "value": -1.9,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2019-06-01",
-          "value": 2.9,
+          "value": 3.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2019-07-01",
-          "value": -1.4,
+          "value": -1.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2019-08-01",
-          "value": 0.8,
+          "value": 0.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6575,85 +6581,85 @@
         },
         {
           "date": "2019-10-01",
-          "value": -1.3,
+          "value": -1.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2019-11-01",
-          "value": 0.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
-        },
-        {
-          "date": "2019-12-01",
-          "value": 0,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
-        },
-        {
-          "date": "2020-01-01",
-          "value": 2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
-        },
-        {
-          "date": "2020-02-01",
           "value": 0.9,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
+          "date": "2019-12-01",
+          "value": 0.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 1.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 1.6,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
           "date": "2020-03-01",
-          "value": -3.3,
+          "value": -3.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2020-04-01",
-          "value": -3.7,
+          "value": -3.9,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2020-05-01",
-          "value": 11.3,
+          "value": 11.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2020-06-01",
-          "value": -1.2,
+          "value": -1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2020-07-01",
-          "value": -0.1,
+          "value": -0.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2020-08-01",
-          "value": 2.5,
+          "value": 2.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2020-09-01",
-          "value": -1.7,
+          "value": -1.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2020-10-01",
-          "value": 2.5,
+          "value": 2.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2020-11-01",
-          "value": 0.5,
+          "value": 0.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6671,79 +6677,79 @@
         },
         {
           "date": "2021-02-01",
-          "value": 3.8,
+          "value": 4.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2021-03-01",
-          "value": 8.6,
+          "value": 8.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2021-04-01",
-          "value": -4.6,
+          "value": -5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2021-05-01",
-          "value": 3.7,
+          "value": 4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2021-06-01",
-          "value": 4.2,
+          "value": 4.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2021-07-01",
-          "value": -4.8,
+          "value": -5.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2021-08-01",
-          "value": 2.4,
+          "value": 2.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2021-09-01",
-          "value": -2.5,
+          "value": -2.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2021-10-01",
-          "value": 2.6,
+          "value": 2.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2021-11-01",
-          "value": -0.4,
+          "value": 0,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2021-12-01",
-          "value": -0.6,
+          "value": -0.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2022-01-01",
-          "value": 2.5,
+          "value": 2.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2022-02-01",
-          "value": -0.6,
+          "value": 0,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6755,49 +6761,49 @@
         },
         {
           "date": "2022-04-01",
-          "value": -1.4,
+          "value": -1.9,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2022-05-01",
-          "value": -0.9,
+          "value": -0.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2022-06-01",
-          "value": -0.5,
+          "value": -0.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2022-07-01",
-          "value": 0.7,
+          "value": 0.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2022-08-01",
-          "value": -1.2,
+          "value": -1.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2022-09-01",
-          "value": 1,
+          "value": 1.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2022-10-01",
-          "value": -1.8,
+          "value": -2.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2022-11-01",
-          "value": 0.2,
+          "value": 0.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6809,43 +6815,43 @@
         },
         {
           "date": "2023-01-01",
-          "value": -0.5,
+          "value": -0.6,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2023-02-01",
-          "value": 0.2,
+          "value": 0.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2023-03-01",
-          "value": -1.9,
+          "value": -1.8,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2023-04-01",
-          "value": 1.6,
+          "value": 1.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2023-05-01",
-          "value": 1.1,
+          "value": 1.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2023-06-01",
-          "value": 0.2,
+          "value": 0.6,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2023-07-01",
-          "value": -0.3,
+          "value": -0.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6857,13 +6863,13 @@
         },
         {
           "date": "2023-09-01",
-          "value": -0.8,
+          "value": -0.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2023-10-01",
-          "value": 1.6,
+          "value": 1.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6875,13 +6881,13 @@
         },
         {
           "date": "2023-12-01",
-          "value": -0.7,
+          "value": -0.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2024-01-01",
-          "value": 0.3,
+          "value": 0,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6893,7 +6899,7 @@
         },
         {
           "date": "2024-03-01",
-          "value": 1.1,
+          "value": 1.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6905,13 +6911,13 @@
         },
         {
           "date": "2024-05-01",
-          "value": 0.1,
+          "value": 0,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2024-06-01",
-          "value": -1,
+          "value": -0.9,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6929,13 +6935,13 @@
         },
         {
           "date": "2024-09-01",
-          "value": 1.2,
+          "value": 1.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2024-10-01",
-          "value": -0.8,
+          "value": -0.9,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6947,13 +6953,13 @@
         },
         {
           "date": "2024-12-01",
-          "value": -1.4,
+          "value": -1.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2025-01-01",
-          "value": 1.9,
+          "value": 1.8,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6965,25 +6971,25 @@
         },
         {
           "date": "2025-03-01",
-          "value": 0.3,
+          "value": 0.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2025-04-01",
-          "value": 1,
+          "value": 0.8,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2025-05-01",
-          "value": -1.3,
+          "value": -1.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2025-06-01",
-          "value": 1.2,
+          "value": 1.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -6995,31 +7001,31 @@
         },
         {
           "date": "2025-08-01",
-          "value": -0.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
-        },
-        {
-          "date": "2025-09-01",
           "value": -0.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
+          "date": "2025-09-01",
+          "value": 0,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
+          "status": "p"
+        },
+        {
           "date": "2025-10-01",
-          "value": 0.7,
+          "value": 0.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2025-11-01",
-          "value": -0.1,
+          "value": -0.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2025-12-01",
-          "value": 0.6,
+          "value": 0.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -7031,7 +7037,7 @@
         },
         {
           "date": "2026-02-01",
-          "value": -0.3,
+          "value": -0.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
@@ -7043,19 +7049,19 @@
         },
         {
           "date": "2026-04-01",
-          "value": -0.3,
+          "value": -0.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2026-05-01",
-          "value": 1.2,
+          "value": 1.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         },
         {
           "date": "2026-06-01",
-          "value": -1.1,
+          "value": -0.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
           "status": "p"
         }
@@ -7076,12 +7082,12 @@
         },
         {
           "date": "2015-02-01",
-          "value": 2.4,
+          "value": 2.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
           "date": "2015-03-01",
-          "value": 1.5,
+          "value": 1.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7091,7 +7097,7 @@
         },
         {
           "date": "2015-05-01",
-          "value": 2.9,
+          "value": 3.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7106,7 +7112,7 @@
         },
         {
           "date": "2015-08-01",
-          "value": 2.4,
+          "value": 2.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7116,7 +7122,7 @@
         },
         {
           "date": "2015-10-01",
-          "value": 1.6,
+          "value": 1.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7136,12 +7142,12 @@
         },
         {
           "date": "2016-02-01",
-          "value": 2,
+          "value": 2.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
           "date": "2016-03-01",
-          "value": 1.4,
+          "value": 1.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7151,7 +7157,7 @@
         },
         {
           "date": "2016-05-01",
-          "value": 0.8,
+          "value": 0.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7166,7 +7172,7 @@
         },
         {
           "date": "2016-08-01",
-          "value": 1.4,
+          "value": 1.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7201,7 +7207,7 @@
         },
         {
           "date": "2017-03-01",
-          "value": 3.1,
+          "value": 3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7236,7 +7242,7 @@
         },
         {
           "date": "2017-10-01",
-          "value": 0.2,
+          "value": 0.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7261,7 +7267,7 @@
         },
         {
           "date": "2018-03-01",
-          "value": 1.6,
+          "value": 1.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7296,7 +7302,7 @@
         },
         {
           "date": "2018-10-01",
-          "value": 2.8,
+          "value": 2.9,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7311,7 +7317,7 @@
         },
         {
           "date": "2019-01-01",
-          "value": 2.6,
+          "value": 2.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7346,7 +7352,7 @@
         },
         {
           "date": "2019-08-01",
-          "value": 2.8,
+          "value": 2.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7371,7 +7377,7 @@
         },
         {
           "date": "2020-01-01",
-          "value": 2,
+          "value": 2.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7391,7 +7397,7 @@
         },
         {
           "date": "2020-05-01",
-          "value": -2.8,
+          "value": -2.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7406,7 +7412,7 @@
         },
         {
           "date": "2020-08-01",
-          "value": 4.2,
+          "value": 4.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7451,7 +7457,7 @@
         },
         {
           "date": "2021-05-01",
-          "value": 9.5,
+          "value": 9.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7466,7 +7472,7 @@
         },
         {
           "date": "2021-08-01",
-          "value": 1.6,
+          "value": 1.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7476,7 +7482,7 @@
         },
         {
           "date": "2021-10-01",
-          "value": 2.6,
+          "value": 2.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7486,7 +7492,7 @@
         },
         {
           "date": "2021-12-01",
-          "value": 3.3,
+          "value": 3.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7501,7 +7507,7 @@
         },
         {
           "date": "2022-03-01",
-          "value": 3.4,
+          "value": 3.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7516,7 +7522,7 @@
         },
         {
           "date": "2022-06-01",
-          "value": -1.6,
+          "value": -1.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7526,7 +7532,7 @@
         },
         {
           "date": "2022-08-01",
-          "value": -0.7,
+          "value": -0.8,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7536,7 +7542,7 @@
         },
         {
           "date": "2022-10-01",
-          "value": -2.2,
+          "value": -2.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7561,7 +7567,7 @@
         },
         {
           "date": "2023-03-01",
-          "value": -3.5,
+          "value": -3.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7576,7 +7582,7 @@
         },
         {
           "date": "2023-06-01",
-          "value": -1.2,
+          "value": -1.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7591,7 +7597,7 @@
         },
         {
           "date": "2023-09-01",
-          "value": -3.3,
+          "value": -3.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7606,7 +7612,7 @@
         },
         {
           "date": "2023-12-01",
-          "value": -0.5,
+          "value": -0.6,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7691,7 +7697,7 @@
         },
         {
           "date": "2025-05-01",
-          "value": 2.3,
+          "value": 2.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7701,7 +7707,7 @@
         },
         {
           "date": "2025-07-01",
-          "value": 2.7,
+          "value": 2.8,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7711,7 +7717,7 @@
         },
         {
           "date": "2025-09-01",
-          "value": 1.3,
+          "value": 1.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
@@ -7721,37 +7727,42 @@
         },
         {
           "date": "2025-11-01",
-          "value": 2.5,
+          "value": 2.6,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
           "date": "2025-12-01",
-          "value": 2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
-        },
-        {
-          "date": "2026-01-01",
           "value": 2.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
+          "date": "2026-01-01",
+          "value": 2.2,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
           "date": "2026-02-01",
-          "value": 1.2,
+          "value": 1.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
           "date": "2026-03-01",
-          "value": 2.3,
+          "value": 2.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
           "date": "2026-04-01",
-          "value": 0.9,
+          "value": 1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         },
         {
           "date": "2026-05-01",
-          "value": 1.6,
+          "value": 1.9,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 0.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=EA21&unit=PCH_SM&s_adj=CA&nace_r2=G47"
         }
       ]
