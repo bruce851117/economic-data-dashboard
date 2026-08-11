@@ -16,7 +16,7 @@
   "request_encoding": "application/x-www-form-urlencoded",
   "status_code": 200,
   "content_type": "application/json; charset=utf-8",
-  "response_bytes": 28249,
+  "response_bytes": 28920,
   "response_preview": "[{\"DIM_SURVEY_id\":494,\"time_year\":2023,\"time_month\":1,\"monthyear\":\"1/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":0,\"percent\":1.29693,\"totalcount\":19},{\"DIM_SURVEY_id\":494,\"time_year\":2023,\"time_month\":1,\"monthyear\":\"1/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":1,\"percent\":25.11945,\"totalcount\":368},{\"DIM_SURVEY_id\":494,\"time_year\":2023,\"time_month\":1,\"monthyear\":\"1/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":2,\"percent\":69.89761,\"totalcount\":1024},{\"DIM_SURVEY_id\":494,\"time_year\":2023,\"time_month\":1,\"monthyear\":\"1/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":3,\"percent\":3.68601,\"totalcount\":54},{\"DIM_SURVEY_id\":495,\"time_year\":2023,\"time_month\":2,\"monthyear\":\"2/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":0,\"percent\":1.59744,\"totalcount\":10},{\"DIM_SURVEY_id\":495,\"time_year\":2023,\"time_month\":2,\"monthyear\":\"2/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":1,\"percent\":26.51757,\"totalcount\":166},{\"DIM_SURVEY_id\":495,\"time_year\":2023,\"time_month\":2,\"monthyear\":\"2/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":2,\"percent\":67.57188,\"totalcount\":423},{\"DIM_SURVEY_id\":495,\"time_year\":2023,\"time_month\":2,\"monthyear\":\"2/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":3,\"percent\":4.3131,\"totalcount\":27},{\"DIM_SURVEY_id\":496,\"time_year\":2023,\"time_month\":3,\"monthyear\":\"3/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":0,\"percent\":1.39616,\"totalcount\":8},{\"DIM_SURVEY_id\":496,\"time_year\":2023,\"time_month\":3,\"monthyear\":\"3/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":1,\"percent\":26.35253,\"totalcount\":151},{\"DIM_SURVEY_id\":496,\"time_year\":2023,\"time_month\":3,\"monthyear\":\"3/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":2,\"percent\":69.10995,\"totalcount\":396},{\"DIM_SURVEY_id\":496,\"time_year\":2023,\"time_month\":3,\"monthyear\":\"3/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":3,\"percent\":3.14136,\"totalcount\":18},{\"DIM_SURVEY_id\":497,\"time_year\":2023,\"time_month\":4,\"monthyear\":\"4/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":0,\"percent\":1.46628,\"totalcount\":20},{\"DIM_SURVEY_id\":497,\"time_year\":2023,\"time_month\":4,\"monthyear\":\"4/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":1,\"percent\":27.71261,\"totalcount\":378},{\"DIM_SURVEY_id\":497,\"time_year\":2023,\"time_month\":4,\"monthyear\":\"4/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":2,\"percent\":67.66862,\"totalcount\":923},{\"DIM_SURVEY_id\":497,\"time_year\":2023,\"time_month\":4,\"monthyear\":\"4/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":3,\"percent\":3.15249,\"totalcount\":43},{\"DIM_SURVEY_id\":498,\"time_year\":2023,\"time_month\":5,\"monthyear\":\"5/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":0,\"percent\":0.47393,\"totalcount\":3},{\"DIM_SURVEY_id\":498,\"time_year\":2023,\"time_month\":5,\"monthyear\":\"5/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":1,\"percent\":27.33017,\"totalcount\":173},{\"DIM_SURVEY_id\":498,\"time_year\":2023,\"time_month\":5,\"monthyear\":\"5/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":2,\"percent\":68.72038,\"totalcount\":435},{\"DIM_SURVEY_id\":498,\"time_year\":2023,\"time_month\":5,\"monthyear\":\"5/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":3,\"percent\":3.47551,\"totalcount\":22},{\"DIM_SURVEY_id\":499,\"time_year\":2023,\"time_month\":6,\"monthyear\":\"6/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":0,\"percent\":1.00806,\"totalcount\":5},{\"DIM_SURVEY_id\":499,\"time_year\":2023,\"time_month\":6,\"monthyear\":\"6/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":1,\"percent\":20.76613,\"totalcount\":103},{\"DIM_SURVEY_id\":499,\"time_year\":2023,\"time_month\":6,\"monthyear\":\"6/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":2,\"percent\":73.3871,\"totalcount\":364},{\"DIM_SURVEY_id\":499,\"time_year\":2023,\"time_month\":6,\"monthyear\":\"6/1/2023\",\"resp_q_short\":\"emp_count_change_expect\",\"resp_acode\":3,\"perce",
   "response_json": [
     {
@@ -1698,6 +1698,46 @@
       "resp_acode": 3,
       "percent": 3.97022,
       "totalcount": 16
+    },
+    {
+      "DIM_SURVEY_id": 536,
+      "time_year": 2026,
+      "time_month": 7,
+      "monthyear": "7/1/2026",
+      "resp_q_short": "emp_count_change_expect",
+      "resp_acode": 0,
+      "percent": 1.46561,
+      "totalcount": 13
+    },
+    {
+      "DIM_SURVEY_id": 536,
+      "time_year": 2026,
+      "time_month": 7,
+      "monthyear": "7/1/2026",
+      "resp_q_short": "emp_count_change_expect",
+      "resp_acode": 1,
+      "percent": 21.19504,
+      "totalcount": 188
+    },
+    {
+      "DIM_SURVEY_id": 536,
+      "time_year": 2026,
+      "time_month": 7,
+      "monthyear": "7/1/2026",
+      "resp_q_short": "emp_count_change_expect",
+      "resp_acode": 2,
+      "percent": 72.9425,
+      "totalcount": 647
+    },
+    {
+      "DIM_SURVEY_id": 536,
+      "time_year": 2026,
+      "time_month": 7,
+      "monthyear": "7/1/2026",
+      "resp_q_short": "emp_count_change_expect",
+      "resp_acode": 3,
+      "percent": 4.39684,
+      "totalcount": 39
     }
   ],
   "parsed_observations": {
@@ -1742,7 +1782,8 @@
     "2026-03": 4.40835,
     "2026-04": 3.77754,
     "2026-05": 3.57143,
-    "2026-06": 3.97022
+    "2026-06": 3.97022,
+    "2026-07": 4.39684
   },
   "parsed_value_fields": {
     "2023-01": "percent",
@@ -1786,8 +1827,9 @@
     "2026-03": "percent",
     "2026-04": "percent",
     "2026-05": "percent",
-    "2026-06": "percent"
+    "2026-06": "percent",
+    "2026-07": "percent"
   },
-  "latest_period": "2026-06",
-  "latest_value": 3.97022
+  "latest_period": "2026-07",
+  "latest_value": 4.39684
 }
