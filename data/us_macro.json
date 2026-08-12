@@ -766,7 +766,8 @@
           "date": "2026-07-01",
           "value": 158858
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "nfp_p",
@@ -1348,7 +1349,8 @@
           "date": "2026-07-01",
           "value": 135588
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "nfp_gp",
@@ -1930,7 +1932,8 @@
           "date": "2026-07-01",
           "value": 21561
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usmmnatr",
@@ -2512,7 +2515,8 @@
           "date": "2026-07-01",
           "value": 607
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usectot",
@@ -3094,7 +3098,8 @@
           "date": "2026-07-01",
           "value": 8343
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usmmmanu",
@@ -3676,7 +3681,8 @@
           "date": "2026-07-01",
           "value": 12611
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usedtot",
@@ -4258,7 +4264,8 @@
           "date": "2026-07-01",
           "value": 7869
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usentot",
@@ -4840,7 +4847,8 @@
           "date": "2026-07-01",
           "value": 4742
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usespriv",
@@ -5422,7 +5430,8 @@
           "date": "2026-07-01",
           "value": 114027
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "nfp_ttut",
@@ -6004,7 +6013,8 @@
           "date": "2026-07-01",
           "value": 28708
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usewtot",
@@ -6586,7 +6596,8 @@
           "date": "2026-07-01",
           "value": 6062.4
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usrttot",
@@ -7168,7 +7179,8 @@
           "date": "2026-07-01",
           "value": 15440.9
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usettot",
@@ -7750,7 +7762,8 @@
           "date": "2026-07-01",
           "value": 6596.1
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "nfp_utls",
@@ -8332,7 +8345,8 @@
           "date": "2026-07-01",
           "value": 608.1
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useitots",
@@ -8914,7 +8928,8 @@
           "date": "2026-07-01",
           "value": 2780
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useftot",
@@ -9496,7 +9511,8 @@
           "date": "2026-07-01",
           "value": 9090
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usestot",
@@ -10078,7 +10094,8 @@
           "date": "2026-07-01",
           "value": 22518
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usestemp",
@@ -10660,7 +10677,8 @@
           "date": "2026-07-01",
           "value": 2505
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useetots",
@@ -11242,7 +11260,8 @@
           "date": "2026-07-01",
           "value": 27962
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useeheal",
@@ -11824,7 +11843,8 @@
           "date": "2026-07-01",
           "value": 23912.2
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useehlcr",
@@ -12406,7 +12426,8 @@
           "date": "2026-07-01",
           "value": 18518.5
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useeambu",
@@ -12988,7 +13009,8 @@
           "date": "2026-07-01",
           "value": 9247.4
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useehosp",
@@ -13570,7 +13592,8 @@
           "date": "2026-07-01",
           "value": 5770.4
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useenurs",
@@ -14152,7 +14175,8 @@
           "date": "2026-07-01",
           "value": 3500.7
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useesoca",
@@ -14734,7 +14758,8 @@
           "date": "2026-07-01",
           "value": 5393.7
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usehtots",
@@ -15316,7 +15341,8 @@
           "date": "2026-07-01",
           "value": 16931
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useotots",
@@ -15898,7 +15924,8 @@
           "date": "2026-07-01",
           "value": 6038
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "nfp_t_2",
@@ -16476,7 +16503,8 @@
           "date": "2026-07-01",
           "value": -23
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "nfp_p_2",
@@ -17054,7 +17082,8 @@
           "date": "2026-07-01",
           "value": 30
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "nfp_gp_2",
@@ -17632,7 +17661,8 @@
           "date": "2026-07-01",
           "value": 25
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usmmnatr_2",
@@ -18210,7 +18240,8 @@
           "date": "2026-07-01",
           "value": -2
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usectot_2",
@@ -18788,7 +18819,8 @@
           "date": "2026-07-01",
           "value": 22
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usmmmanu_2",
@@ -19366,7 +19398,8 @@
           "date": "2026-07-01",
           "value": 5
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usedtot_2",
@@ -19944,7 +19977,8 @@
           "date": "2026-07-01",
           "value": 18
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usentot_2",
@@ -20522,7 +20556,8 @@
           "date": "2026-07-01",
           "value": -13
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usespriv_2",
@@ -21100,7 +21135,8 @@
           "date": "2026-07-01",
           "value": 5
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "nfp_ttut_2",
@@ -21678,7 +21714,8 @@
           "date": "2026-07-01",
           "value": -4
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usewtot_2",
@@ -22256,7 +22293,8 @@
           "date": "2026-07-01",
           "value": 4.7
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usrttot_2",
@@ -22834,7 +22872,8 @@
           "date": "2026-07-01",
           "value": -19.4
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usettot_2",
@@ -23412,7 +23451,8 @@
           "date": "2026-07-01",
           "value": 9.7
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "nfp_utls_2",
@@ -23990,7 +24030,8 @@
           "date": "2026-07-01",
           "value": 0.7
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useitots_2",
@@ -24568,7 +24609,8 @@
           "date": "2026-07-01",
           "value": 11
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useftot_2",
@@ -25146,7 +25188,8 @@
           "date": "2026-07-01",
           "value": -14
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usestot_2",
@@ -25724,7 +25767,8 @@
           "date": "2026-07-01",
           "value": 18
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usestemp_2",
@@ -26302,7 +26346,8 @@
           "date": "2026-07-01",
           "value": 3.4
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useetots_2",
@@ -26880,7 +26925,8 @@
           "date": "2026-07-01",
           "value": 25
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useeheal_2",
@@ -27458,7 +27504,8 @@
           "date": "2026-07-01",
           "value": 22.6
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useehlcr_2",
@@ -28036,7 +28083,8 @@
           "date": "2026-07-01",
           "value": 22
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useeambu_2",
@@ -28614,7 +28662,8 @@
           "date": "2026-07-01",
           "value": 18.1
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useehosp_2",
@@ -29192,7 +29241,8 @@
           "date": "2026-07-01",
           "value": -0.4
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useenurs_2",
@@ -29770,7 +29820,8 @@
           "date": "2026-07-01",
           "value": 4.3
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useesoca_2",
@@ -30348,7 +30399,8 @@
           "date": "2026-07-01",
           "value": 0.6
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usehtots_2",
@@ -30926,7 +30978,8 @@
           "date": "2026-07-01",
           "value": -40
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "useotots_2",
@@ -31504,7 +31557,8 @@
           "date": "2026-07-01",
           "value": 9
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usmjtmjs",
@@ -32082,7 +32136,8 @@
           "date": "2026-07-01",
           "value": 8693
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usurtot",
@@ -32660,7 +32715,8 @@
           "date": "2026-07-01",
           "value": 4.1
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "uslftot",
@@ -33238,7 +33294,8 @@
           "date": "2026-07-01",
           "value": 169094
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usemtot",
@@ -33816,7 +33873,8 @@
           "date": "2026-07-01",
           "value": 162177
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usuetot",
@@ -34394,7 +34452,8 @@
           "date": "2026-07-01",
           "value": 6916
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "blsfe2un",
@@ -34968,7 +35027,8 @@
           "date": "2026-07-01",
           "value": 1261
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "blsfu2u",
@@ -35542,7 +35602,8 @@
           "date": "2026-07-01",
           "value": 3699
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "blsfn2un",
@@ -36116,7 +36177,8 @@
           "date": "2026-07-01",
           "value": 1944
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usjltemp",
@@ -36694,7 +36756,8 @@
           "date": "2026-07-01",
           "value": 921
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usjlpjls",
@@ -37272,7 +37335,8 @@
           "date": "2026-07-01",
           "value": 1715
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usjlptjs",
@@ -37850,7 +37914,8 @@
           "date": "2026-07-01",
           "value": 673
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usjljobl",
@@ -38428,7 +38493,8 @@
           "date": "2026-07-01",
           "value": 793
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usjlreen",
@@ -39006,7 +39072,8 @@
           "date": "2026-07-01",
           "value": 2123
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usjlnent",
@@ -39584,7 +39651,8 @@
           "date": "2026-07-01",
           "value": 761
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "usdumean",
@@ -40162,7 +40230,8 @@
           "date": "2026-07-01",
           "value": 24.9
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "jolttotl",
@@ -40740,7 +40809,8 @@
           "date": "2026-06-01",
           "value": 7359
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "joltquis",
@@ -41318,7 +41388,8 @@
           "date": "2026-06-01",
           "value": 2
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "joltlays",
@@ -41896,7 +41967,8 @@
           "date": "2026-06-01",
           "value": 1.1
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "series",
@@ -42470,7 +42542,8 @@
           "date": "2026-06-01",
           "value": 1.0373555
         }
-      ]
+      ],
+      "source": "Derived"
     },
     {
       "id": "ahe_mom",
@@ -43052,7 +43125,8 @@
           "date": "2026-07-01",
           "value": 0.053
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "wgtrjbsw",
@@ -43626,7 +43700,8 @@
           "date": "2026-06-01",
           "value": 4.4
         }
-      ]
+      ],
+      "source": "Federal Reserve Bank of Atlanta"
     },
     {
       "id": "wgtrjbsy",
@@ -44200,7 +44275,8 @@
           "date": "2026-06-01",
           "value": 3.6
         }
-      ]
+      ],
+      "source": "Federal Reserve Bank of Atlanta"
     },
     {
       "id": "wgtrqua1",
@@ -44774,7 +44850,8 @@
           "date": "2026-06-01",
           "value": 3.6
         }
-      ]
+      ],
+      "source": "Federal Reserve Bank of Atlanta"
     },
     {
       "id": "wgtrqua2",
@@ -45348,7 +45425,8 @@
           "date": "2026-06-01",
           "value": 4
         }
-      ]
+      ],
+      "source": "Federal Reserve Bank of Atlanta"
     },
     {
       "id": "wgtrqua3",
@@ -45922,7 +46000,8 @@
           "date": "2026-06-01",
           "value": 3.9
         }
-      ]
+      ],
+      "source": "Federal Reserve Bank of Atlanta"
     },
     {
       "id": "wgtrqua4",
@@ -46496,7 +46575,8 @@
           "date": "2026-06-01",
           "value": 3.9
         }
-      ]
+      ],
+      "source": "Federal Reserve Bank of Atlanta"
     },
     {
       "id": "adpujcpg",
@@ -46786,7 +46866,8 @@
           "date": "2026-07-01",
           "value": 7
         }
-      ]
+      ],
+      "source": "ADP Research"
     },
     {
       "id": "adpujspg",
@@ -47076,7 +47157,8 @@
           "date": "2026-07-01",
           "value": 4.4
         }
-      ]
+      ],
+      "source": "ADP Research"
     },
     {
       "id": "cpi_xyoy",
@@ -47654,7 +47736,8 @@
           "date": "2026-07-01",
           "value": 2.478
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "cprpcxyy",
@@ -48232,7 +48315,8 @@
           "date": "2026-07-01",
           "value": 0.807
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "cprpsxyy",
@@ -48810,7 +48894,8 @@
           "date": "2026-07-01",
           "value": 3.011
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "cpupnfey",
@@ -49384,7 +49469,8 @@
           "date": "2026-06-01",
           "value": 2.051
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "fdiusgyo",
@@ -49962,7 +50048,8 @@
           "date": "2026-06-01",
           "value": 4.673
         }
-      ]
+      ],
+      "source": "Bureau of Labor Statistics"
     },
     {
       "id": "zrioamom",
@@ -50540,7 +50627,8 @@
           "date": "2026-06-01",
           "value": 0.266
         }
-      ]
+      ],
+      "source": "Zillow Research"
     },
     {
       "id": "conspxmd",
@@ -51122,7 +51210,8 @@
           "date": "2026-07-01",
           "value": 4.2
         }
-      ]
+      ],
+      "source": "University of Michigan"
     },
     {
       "id": "consp5md",
@@ -51704,7 +51793,8 @@
           "date": "2026-07-01",
           "value": 3.3
         }
-      ]
+      ],
+      "source": "University of Michigan"
     },
     {
       "id": "nycnm1ir",
@@ -52286,7 +52376,8 @@
           "date": "2026-07-01",
           "value": 3.632116079330444
         }
-      ]
+      ],
+      "source": "Federal Reserve Bank of New York"
     },
     {
       "id": "nycn5imd",
@@ -52516,7 +52607,8 @@
           "date": "2026-07-01",
           "value": 3.015459299087524
         }
-      ]
+      ],
+      "source": "Federal Reserve Bank of New York"
     },
     {
       "id": "napmpric",
@@ -53098,7 +53190,8 @@
           "date": "2026-07-01",
           "value": 71.1
         }
-      ]
+      ],
+      "source": "Institute for Supply Management"
     },
     {
       "id": "napmnprc",
@@ -53680,7 +53773,8 @@
           "date": "2026-07-01",
           "value": 70.3
         }
-      ]
+      ],
+      "source": "Institute for Supply Management"
     },
     {
       "id": "napmpmi",
@@ -54262,7 +54356,8 @@
           "date": "2026-07-01",
           "value": 55.6
         }
-      ]
+      ],
+      "source": "Institute for Supply Management"
     },
     {
       "id": "napmnmi",
@@ -54844,7 +54939,8 @@
           "date": "2026-07-01",
           "value": 54.1
         }
-      ]
+      ],
+      "source": "Institute for Supply Management"
     },
     {
       "id": "napmnemp",
@@ -55426,7 +55522,8 @@
           "date": "2026-07-01",
           "value": 47.4
         }
-      ]
+      ],
+      "source": "Institute for Supply Management"
     },
     {
       "id": "napmempl",
@@ -56008,7 +56105,8 @@
           "date": "2026-07-01",
           "value": 52.8
         }
-      ]
+      ],
+      "source": "Institute for Supply Management"
     },
     {
       "id": "sboihire",
@@ -56590,7 +56688,8 @@
           "date": "2026-07-01",
           "value": 20
         }
-      ]
+      ],
+      "source": "NFIB"
     },
     {
       "id": "nycnjsaj",
@@ -57172,7 +57271,8 @@
           "date": "2026-07-01",
           "value": 14.17631244659424
         }
-      ]
+      ],
+      "source": "Federal Reserve Bank of New York"
     },
     {
       "id": "nycnjsjv",
@@ -57754,7 +57854,8 @@
           "date": "2026-07-01",
           "value": 18.55720138549805
         }
-      ]
+      ],
+      "source": "Federal Reserve Bank of New York"
     },
     {
       "id": "concjobp",
@@ -58336,7 +58437,8 @@
           "date": "2026-07-01",
           "value": 24.6
         }
-      ]
+      ],
+      "source": "The Conference Board"
     },
     {
       "id": "concjobh",
@@ -58918,7 +59020,8 @@
           "date": "2026-07-01",
           "value": 21.5
         }
-      ]
+      ],
+      "source": "The Conference Board"
     },
     {
       "id": "pce_chy",
@@ -59496,7 +59599,8 @@
           "date": "2026-06-01",
           "value": 2.544
         }
-      ]
+      ],
+      "source": "Bureau of Economic Analysis"
     },
     {
       "id": "pidsdi",
@@ -60074,7 +60178,8 @@
           "date": "2026-06-01",
           "value": 23722.6
         }
-      ]
+      ],
+      "source": "Bureau of Economic Analysis"
     },
     {
       "id": "pidsso",
@@ -60652,7 +60757,8 @@
           "date": "2026-06-01",
           "value": 23076.5
         }
-      ]
+      ],
+      "source": "Bureau of Economic Analysis"
     },
     {
       "id": "pidss",
@@ -61230,7 +61336,8 @@
           "date": "2026-06-01",
           "value": 646.1
         }
-      ]
+      ],
+      "source": "Bureau of Economic Analysis"
     },
     {
       "id": "pidsint",
@@ -61808,7 +61915,8 @@
           "date": "2026-06-01",
           "value": 601.6
         }
-      ]
+      ],
+      "source": "Bureau of Economic Analysis"
     },
     {
       "id": "conssent",
@@ -62390,7 +62498,8 @@
           "date": "2026-07-01",
           "value": 55.2
         }
-      ]
+      ],
+      "source": "University of Michigan"
     },
     {
       "id": "conscurr",
@@ -62972,7 +63081,8 @@
           "date": "2026-07-01",
           "value": 54.8
         }
-      ]
+      ],
+      "source": "University of Michigan"
     },
     {
       "id": "consexp",
@@ -63554,7 +63664,8 @@
           "date": "2026-07-01",
           "value": 55.4
         }
-      ]
+      ],
+      "source": "University of Michigan"
     },
     {
       "id": "conspagi",
@@ -64132,7 +64243,8 @@
           "date": "2026-06-01",
           "value": 63
         }
-      ]
+      ],
+      "source": "University of Michigan"
     },
     {
       "id": "consexfi",
@@ -64710,7 +64822,8 @@
           "date": "2026-06-01",
           "value": 84
         }
-      ]
+      ],
+      "source": "University of Michigan"
     },
     {
       "id": "concconf",
@@ -65292,7 +65405,8 @@
           "date": "2026-07-01",
           "value": 90.8
         }
-      ]
+      ],
+      "source": "The Conference Board"
     },
     {
       "id": "rstaxagm",
@@ -65870,7 +65984,8 @@
           "date": "2026-06-01",
           "value": 0.54
         }
-      ]
+      ],
+      "source": "U.S. Census Bureau"
     }
   ]
 }

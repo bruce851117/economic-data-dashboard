@@ -9,7 +9,7 @@ Output schema matches the other countries (uk/eu/au):
   {generated_at, source, blocks:[{id,title,color,series:[ids]}], series:[{id,block,name,ticker,frequency,color,data:[{date,value}]}]}
 """
 from __future__ import annotations
-import json, re, unicodedata
+import json, re, sys, unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 import openpyxl
@@ -65,6 +65,21 @@ def main():
     header = rows[0]
     date_cols = [(i, month_key(header[i])) for i in range(3, len(header)) if month_key(header[i])]
 
+    # Per-series official source, taken from the fetcher's SPECS so the seed
+    # matches what update_us_macro.py records. Keyed by "section|name".
+    src_map: dict[str, str] = {}
+    try:
+        import importlib.util
+        _spec = importlib.util.spec_from_file_location(
+            "fetch_us_macro_table", str(Path(__file__).with_name("fetch_us_macro_table.py"))
+        )
+        _mod = importlib.util.module_from_spec(_spec)
+        sys.modules["fetch_us_macro_table"] = _mod
+        _spec.loader.exec_module(_mod)
+        src_map = {f"{s.section}|{s.name}": s.source for s in _mod.SPECS}
+    except Exception as exc:  # pragma: no cover - source is best-effort
+        print(f"warning: could not load SPECS for source map: {exc}")
+
     blocks: list[dict] = []
     block_index: dict[str, dict] = {}
     series: list[dict] = []
@@ -110,6 +125,8 @@ def main():
             "block": section,
             "name": name,
             "ticker": ticker,
+            "source": src_map.get(f"{section}|{name}",
+                                  "Derived" if ticker.lower() == "derived" else "Bloomberg (US_ECON.xlsx)"),
             "frequency": "monthly",
             "color": block_index[section]["color"],
             "data": data,

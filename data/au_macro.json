@@ -731,7 +731,10 @@
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "Australian Bureau of Statistics (ABS)",
+      "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD"
     },
     {
       "id": "auunemp",
@@ -1463,7 +1466,10 @@
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "Australian Bureau of Statistics (ABS)",
+      "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD"
     },
     {
       "id": "auvacancy",
@@ -1712,7 +1718,10 @@
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,JV/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs jv 1 0 m1 job vacancies 7 private and public tot all industries 20 seasonally adjusted aus australia q quarterly num number"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "Australian Bureau of Statistics (ABS)",
+      "source_url": "https://data.api.abs.gov.au/rest/data/ABS,JV/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD"
     },
     {
       "id": "auanzjobads",
@@ -2684,7 +2693,10 @@
           "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "ANZ",
+      "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx"
     },
     {
       "id": "auwageyoy",
@@ -3006,7 +3018,10 @@
           "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "Australian Bureau of Statistics (ABS)",
+      "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx"
     },
     {
       "id": "auexitleave",
@@ -3328,7 +3343,10 @@
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx",
           "note": "sheet=Data1; series=A85060262X"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "Australian Bureau of Statistics (ABS)",
+      "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/mar-2026/6291017.xlsx"
     },
     {
       "id": "auunempexp",
@@ -4031,7 +4049,10 @@
           "value": 129.9,
           "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/07/er20260714BullConsumerSentiment.pdf"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "Westpac–Melbourne Institute",
+      "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/07/er20260714BullConsumerSentiment.pdf"
     },
     {
       "id": "aucpi",
@@ -4142,7 +4163,10 @@
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "Australian Bureau of Statistics (ABS)",
+      "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD"
     },
     {
       "id": "autrimmed",
@@ -4253,7 +4277,10 @@
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "Australian Bureau of Statistics (ABS)",
+      "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD"
     },
     {
       "id": "auretail",
@@ -4984,7 +5011,10 @@
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs hsi m 1 6 0 8 household spending percentage change from previous period tot total cur current price 20 seasonally adjusted 3 queensland m monthly pct percent"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "Australian Bureau of Statistics (ABS)",
+      "source_url": "https://data.api.abs.gov.au/rest/data/ABS,HSI_M/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD"
     },
     {
       "id": "aunabprices",
@@ -5683,7 +5713,10 @@
           "value": 0.6,
           "source_url": "https://www.nab.com.au/content/dam/nab/documents/news/2026m06-nab-monthly-business-survey-mnb.pdf"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "NAB",
+      "source_url": "https://news.nab.com.au/content/dam/nab-news/documents/economics/202604%20NAB%20Monthly%20Business%20Survey%20April.pdf"
     },
     {
       "id": "auconsconf",
@@ -6386,7 +6419,10 @@
           "value": 83.9,
           "source_url": "https://www.westpac.com.au/news/making-news/2026/07/feeling-better-but-not-better-off-consumer-sentiment-and-the-cost-of-living-crunch/"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "Westpac–Melbourne Institute",
+      "source_url": "https://www.westpac.com.au/news/making-news/2026/06/consumer-sentiment-slips-again-as-cost-of-living-pressures-weigh-on-households/"
     },
     {
       "id": "aumanpmi",
@@ -6578,7 +6614,10 @@
           "release_type": "flash",
           "note": "July 2026 Flash"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "S&P Global",
+      "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df"
     },
     {
       "id": "auservpmi",
@@ -6770,7 +6809,10 @@
           "release_type": "flash",
           "note": "July 2026 Flash"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "S&P Global",
+      "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df"
     },
     {
       "id": "augdpyoy",
@@ -7012,7 +7054,10 @@
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,ANA_AGG/all?startPeriod=2024-Q1&dimensionAtObservation=TIME_PERIOD",
           "note": "abs ana agg 1 0 0 m1 chain volume measures gpm gross domestic product 20 seasonally adjusted aus australia q quarterly aud australian dollars"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "Australian Bureau of Statistics (ABS)",
+      "source_url": "https://data.api.abs.gov.au/rest/data/ABS,ANA_AGG/all?startPeriod=2024-Q1&dimensionAtObservation=TIME_PERIOD"
     },
     {
       "id": "auconsumptionyoy",
@@ -7334,7 +7379,10 @@
           "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx",
           "note": "ABS Table 8 Household Final Consumption Expenditure official XLSX; sheet=Data1; col=55; transform=yoy_pct_q"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "Australian Bureau of Statistics (ABS)",
+      "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx"
     },
     {
       "id": "auinvestmentyoy",
@@ -7656,7 +7704,10 @@
           "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
           "note": "ABS Table 2 Expenditure on GDP, chain volume measures official workbook; sheet=Data1; col=117; transform=yoy_pct_q"
         }
-      ]
+      ],
+      "ticker": "",
+      "source": "Australian Bureau of Statistics (ABS)",
+      "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx"
     }
   ],
   "script_version": "2026-07-31-update-au-macro-v1"
