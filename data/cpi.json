@@ -5,7 +5,7 @@
   "source_url": "https://www.bls.gov/news.release/cpi.t02.htm",
   "title": "Consumer Price Index - Seasonally Adjusted Monthly Change",
   "updated_at_utc": "2026-08-12T12:31:44.998009+00:00",
-  "data_changed": true,
+  "data_changed": false,
   "default_months": 6,
   "available_filter_options": [
     3,
