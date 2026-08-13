@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T03:39:10.019815+00:00",
+  "generated_at": "2026-08-13T09:29:35.918593+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -7767,47 +7767,52 @@
         },
         {
           "date": "2024-03-01",
-          "value": -0.9063538706103325,
+          "value": -0.912616214653883,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
         },
         {
           "date": "2024-06-01",
-          "value": -1.2515803996788755,
+          "value": -1.2446098155439178,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
         },
         {
           "date": "2024-09-01",
-          "value": 0.6727139529733028,
+          "value": 0.6033494534807504,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
         },
         {
           "date": "2024-12-01",
-          "value": 1.098260822927677,
+          "value": 1.1082560934582153,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
         },
         {
           "date": "2025-03-01",
-          "value": 0.9379777695136537,
+          "value": 0.9939449331657801,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
         },
         {
           "date": "2025-06-01",
-          "value": 1.1949068586047273,
+          "value": 1.2588352123371616,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
         },
         {
           "date": "2025-09-01",
-          "value": 0.627119914321006,
+          "value": 0.7468211113046408,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
         },
         {
           "date": "2025-12-01",
-          "value": 0.49216419620012886,
+          "value": 0.5041712880358817,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
         },
         {
           "date": "2026-03-01",
-          "value": 0.9453953515252467,
+          "value": 0.9037739482044893,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 1.0460834366917693,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/nationalaccounts/satelliteaccounts/timeseries/abjr/pn2"
         }
       ]
