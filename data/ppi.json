@@ -5,8 +5,8 @@
   "source_url": "https://www.bls.gov/ppi/",
   "title": "Selected Producer Price Indexes",
   "description": "Monthly percent changes calculated from selected BLS PPI index levels.",
-  "updated_at_utc": "2026-07-16T08:30:10.085691+00:00",
-  "data_changed": false,
+  "updated_at_utc": "2026-08-13T12:32:11.842780+00:00",
+  "data_changed": true,
   "default_months": 6,
   "available_filter_options": [
     3,
@@ -30,13 +30,6 @@
     "note": "Portfolio Management and Investment Advice were combined into one current industry series."
   },
   "periods": [
-    {
-      "year": 2025,
-      "month": 7,
-      "period": "2025-07",
-      "period_name": "July",
-      "label": "25 Jul"
-    },
     {
       "year": 2025,
       "month": 8,
@@ -113,6 +106,13 @@
       "period": "2026-06",
       "period_name": "June",
       "label": "26 Jun"
+    },
+    {
+      "year": 2026,
+      "month": 7,
+      "period": "2026-07",
+      "period_name": "July",
+      "label": "26 Jul"
     }
   ],
   "rows": [
@@ -126,7 +126,6 @@
       "available": true,
       "series_title": "PPI industry sub-sector data for Hospitals, not seasonally adjusted",
       "values": [
-        0.087,
         0.413713,
         -0.147817,
         1.410426,
@@ -134,13 +133,13 @@
         -0.403167,
         0.64477,
         0.012845,
-        0.19305,
-        0.064493,
-        0.13731,
-        0.695202
+        0.201479,
+        0.056477,
+        0.154923,
+        0.684285,
+        -0.012703
       ],
       "index_values": [
-        243.889,
         244.898,
         244.536,
         247.985,
@@ -148,10 +147,11 @@
         247.53,
         249.126,
         249.158,
-        249.639,
-        249.8,
-        250.143,
-        251.882
+        249.66,
+        249.801,
+        250.188,
+        251.9,
+        251.868
       ]
     },
     {
@@ -164,7 +164,6 @@
       "available": true,
       "series_title": "PPI industry group data for Offices of physicians, not seasonally adjusted",
       "values": [
-        0.102052,
         -0.016097,
         0.006037,
         0.065066,
@@ -172,13 +171,13 @@
         0.062343,
         0.717506,
         0.087802,
-        0.249219,
-        0.041765,
-        0.043073,
-        0.0
+        0.178109,
+        0.040468,
+        0.022547,
+        -0.007956,
+        -0.048402
       ],
       "index_values": [
-        149.095,
         149.071,
         149.08,
         149.177,
@@ -186,10 +185,11 @@
         149.267,
         150.338,
         150.47,
-        150.845,
-        150.908,
-        150.973,
-        150.973
+        150.738,
+        150.799,
+        150.833,
+        150.821,
+        150.748
       ]
     },
     {
@@ -202,7 +202,6 @@
       "available": true,
       "series_title": "PPI industry data for Portfolio management and investment advice, not seasonally adjusted",
       "values": [
-        5.744982,
         1.27551,
         -0.937144,
         3.400064,
@@ -210,13 +209,13 @@
         0.568949,
         2.429927,
         0.991168,
-        0.931662,
-        -1.440911,
-        4.542135,
-        0.635192
+        0.926281,
+        -1.445653,
+        4.744804,
+        0.717961,
+        5.623898
       ],
       "index_values": [
-        136.024,
         137.759,
         136.468,
         141.108,
@@ -224,10 +223,11 @@
         143.708,
         147.2,
         148.659,
-        150.044,
-        147.882,
-        154.599,
-        155.581
+        150.036,
+        147.867,
+        154.883,
+        155.995,
+        164.768
       ]
     },
     {
@@ -240,7 +240,6 @@
       "available": true,
       "series_title": "PPI industry data for Nursing care facilities, not seasonally adjusted",
       "values": [
-        0.098285,
         -0.059752,
         0.309775,
         1.224817,
@@ -250,11 +249,11 @@
         0.008848,
         0.314746,
         -0.060377,
-        0.236564,
-        0.0
+        0.191084,
+        0.0,
+        0.451561
       ],
       "index_values": [
-        286.185,
         286.014,
         286.9,
         290.414,
@@ -264,8 +263,9 @@
         293.888,
         294.813,
         294.635,
-        295.332,
-        295.332
+        295.198,
+        295.198,
+        296.531
       ]
     },
     {
@@ -278,7 +278,6 @@
       "available": true,
       "series_title": "PPI industry data for Direct health and medical insurance carriers, not seasonally adjusted",
       "values": [
-        0.358606,
         0.00091,
         0.0132,
         0.046423,
@@ -289,10 +288,10 @@
         0.0,
         0.000855,
         0.081632,
-        0.0
+        0.0,
+        0.076441
       ],
       "index_values": [
-        219.688,
         219.69,
         219.719,
         219.821,
@@ -303,7 +302,8 @@
         233.975,
         233.977,
         234.168,
-        234.168
+        234.168,
+        234.347
       ]
     },
     {
@@ -316,7 +316,6 @@
       "available": true,
       "series_title": "PPI industry group data for Home health care services, not seasonally adjusted",
       "values": [
-        0.078847,
         -0.002352,
         0.779045,
         0.297541,
@@ -324,13 +323,13 @@
         0.016869,
         0.469339,
         0.220549,
+        0.004621,
         0.0,
+        0.107428,
         0.0,
-        0.0,
-        0.0
+        0.040386
       ],
       "index_values": [
-        170.084,
         170.08,
         171.405,
         171.915,
@@ -338,10 +337,11 @@
         171.944,
         172.751,
         173.132,
-        173.132,
-        173.132,
-        173.132,
-        173.132
+        173.14,
+        173.14,
+        173.326,
+        173.326,
+        173.396
       ]
     },
     {
@@ -354,7 +354,6 @@
       "available": true,
       "series_title": "PPI industry data for Scheduled passenger air transportation-Domestic, not seasonally adjusted",
       "values": [
-        -2.232788,
         -0.489915,
         2.442747,
         6.571896,
@@ -364,11 +363,11 @@
         1.356958,
         4.239159,
         2.834021,
-        -0.328444,
-        1.883596
+        -0.323706,
+        1.77439,
+        -3.213883
       ],
       "index_values": [
-        388.435,
         386.532,
         395.974,
         421.997,
@@ -378,8 +377,9 @@
         433.152,
         451.514,
         464.31,
-        462.785,
-        471.502
+        462.807,
+        471.019,
+        455.881
       ]
     },
     {
@@ -392,7 +392,6 @@
       "available": true,
       "series_title": "PPI industry data for Direct property and casualty insurers-Private passenger auto insurance, not seasonally adjusted",
       "values": [
-        0.034039,
         0.017014,
         0.599118,
         0.016497,
@@ -400,13 +399,13 @@
         0.046848,
         0.134727,
         0.134136,
-        0.067592,
-        -0.00655,
-        -0.011463,
-        -0.120378
+        0.272828,
+        -0.006128,
+        -0.01144,
+        -0.120131,
+        -0.033955
       ],
       "index_values": [
-        240.98,
         241.021,
         242.465,
         242.505,
@@ -414,10 +413,11 @@
         243.455,
         243.783,
         244.11,
-        244.275,
-        244.259,
-        244.231,
-        243.937
+        244.776,
+        244.761,
+        244.733,
+        244.439,
+        244.356
       ]
     },
     {
@@ -430,7 +430,6 @@
       "available": true,
       "series_title": "PPI industry data for Medical laboratories-Primary services, not seasonally adjusted",
       "values": [
-        0.01992,
         0.0,
         0.0,
         0.0,
@@ -439,12 +438,12 @@
         0.090453,
         0.0,
         0.033993,
-        0.043927,
-        0.585716,
-        0.0
+        0.033981,
+        0.310701,
+        0.0,
+        -0.001652
       ],
       "index_values": [
-        120.504,
         120.504,
         120.504,
         120.504,
@@ -453,9 +452,10 @@
         120.613,
         120.613,
         120.654,
-        120.707,
-        121.414,
-        121.414
+        120.695,
+        121.07,
+        121.07,
+        121.068
       ]
     },
     {
@@ -468,7 +468,6 @@
       "available": true,
       "series_title": "PPI industry data for Diagnostic imaging centers-Diagnostic imaging services, not seasonally adjusted",
       "values": [
-        1.182584,
         0.0,
         0.0,
         0.0,
@@ -477,7 +476,8 @@
         0.6171,
         0.0,
         0.365519,
-        -0.022967,
+        -0.022147,
+        0.0,
         0.0,
         0.0
       ],
@@ -487,13 +487,13 @@
         120.726,
         120.726,
         120.726,
-        120.726,
         121.471,
         121.471,
         121.915,
-        121.887,
-        121.887,
-        121.887
+        121.888,
+        121.888,
+        121.888,
+        121.888
       ]
     },
     {
@@ -506,7 +506,6 @@
       "available": true,
       "series_title": "PPI Commodity data for Investment services-Securities brokerage and dealing related services, not seasonally adjusted",
       "values": [
-        2.535175,
         -0.305696,
         0.653275,
         -1.094502,
@@ -516,11 +515,11 @@
         0.139654,
         0.112433,
         0.039225,
-        0.643612,
-        -0.302342
+        0.605743,
+        -0.295639,
+        0.387774
       ],
       "index_values": [
-        702.004,
         699.858,
         704.43,
         696.72,
@@ -530,8 +529,9 @@
         669.73,
         670.483,
         670.746,
-        675.063,
-        673.022
+        674.809,
+        672.814,
+        675.423
       ]
     },
     {
@@ -544,7 +544,6 @@
       "available": true,
       "series_title": "PPI Commodity data for Investment services-Securities brokerage, dealing, and investment advice, not seasonally adjusted",
       "values": [
-        2.800495,
         0.033505,
         0.437994,
         2.008551,
@@ -552,13 +551,13 @@
         0.959456,
         -0.201209,
         5.361948,
-        -2.72324,
-        1.858189,
-        5.897422,
-        4.375316
+        -2.727194,
+        1.857452,
+        5.99427,
+        4.430256,
+        -1.310762
       ],
       "index_values": [
-        116.401,
         116.44,
         116.95,
         119.299,
@@ -566,10 +565,11 @@
         120.273,
         120.031,
         126.467,
-        123.023,
-        125.309,
-        132.699,
-        138.505
+        123.018,
+        125.303,
+        132.814,
+        138.698,
+        136.88
       ]
     },
     {
@@ -582,7 +582,6 @@
       "available": true,
       "series_title": "PPI industry data for Direct property and casualty insurers-Worker's compensation insurance, not seasonally adjusted",
       "values": [
-        -0.105758,
         0.029739,
         -0.044,
         0.142767,
@@ -590,13 +589,13 @@
         0.0,
         -0.724491,
         0.018004,
-        -0.226815,
-        0.012028,
-        -0.170778,
-        -0.880649
+        -0.320421,
+        0.012039,
+        -0.170938,
+        -0.881477,
+        0.110708
       ],
       "index_values": [
-        84.065,
         84.09,
         84.053,
         84.173,
@@ -604,10 +603,11 @@
         83.921,
         83.313,
         83.328,
-        83.139,
-        83.149,
-        83.007,
-        82.276
+        83.061,
+        83.071,
+        82.929,
+        82.198,
+        82.289
       ]
     },
     {
@@ -620,7 +620,6 @@
       "available": true,
       "series_title": "PPI industry data for Commercial banking-Trust services, not seasonally adjusted",
       "values": [
-        0.0,
         3.22774,
         0.0,
         0.039978,
@@ -631,10 +630,10 @@
         0.0,
         -0.015768,
         0.045735,
-        -4.696749
+        -4.69202,
+        0.0
       ],
       "index_values": [
-        101.774,
         105.059,
         105.059,
         105.101,
@@ -645,7 +644,8 @@
         126.837,
         126.817,
         126.875,
-        120.916
+        120.922,
+        120.922
       ]
     },
     {
@@ -658,7 +658,6 @@
       "available": true,
       "series_title": "PPI industry data for Premiums for property and casualty insurance-Premiums for homeowner's insurance, not seasonally adjusted",
       "values": [
-        0.353567,
         0.20461,
         4.456503,
         0.06444,
@@ -666,13 +665,13 @@
         0.120471,
         0.001078,
         -0.014008,
-        -0.00934,
-        0.063589,
-        0.198904,
-        0.061989
+        0.026224,
+        0.063567,
+        0.163302,
+        0.061989,
+        0.01325
       ],
       "index_values": [
-        265.383,
         265.926,
         277.777,
         277.956,
@@ -680,10 +679,11 @@
         278.411,
         278.414,
         278.375,
-        278.349,
-        278.526,
+        278.448,
+        278.625,
         279.08,
-        279.253
+        279.253,
+        279.29
       ]
     },
     {
@@ -696,7 +696,6 @@
       "available": true,
       "series_title": "PPI industry group data for Employment services, not seasonally adjusted",
       "values": [
-        0.205542,
         0.887058,
         0.143273,
         0.333035,
@@ -704,13 +703,13 @@
         0.281607,
         2.401095,
         -0.19876,
-        0.024822,
-        1.089027,
-        -0.134162,
-        0.082321
+        -0.009813,
+        1.084208,
+        0.038266,
+        -0.216375,
+        0.445703
       ],
       "index_values": [
-        166.731,
         168.21,
         168.451,
         169.012,
@@ -718,10 +717,11 @@
         169.506,
         173.576,
         173.231,
-        173.274,
-        175.161,
-        174.926,
-        175.07
+        173.214,
+        175.092,
+        175.159,
+        174.78,
+        175.559
       ]
     },
     {
@@ -734,7 +734,6 @@
       "available": true,
       "series_title": "PPI Commodity data for Retail trade services-Apparel, jewelry, footwear, and accessories retailing, seasonally adjusted",
       "values": [
-        -2.082754,
         1.069878,
         -0.656421,
         1.593113,
@@ -744,11 +743,11 @@
         -2.565263,
         3.395501,
         -1.532156,
-        -2.216029,
-        3.641744
+        -2.219593,
+        3.092971,
+        0.901538
       ],
       "index_values": [
-        133.847,
         135.279,
         134.391,
         136.532,
@@ -758,8 +757,9 @@
         137.8,
         142.479,
         140.296,
-        137.187,
-        142.183
+        137.182,
+        141.425,
+        142.7
       ]
     }
   ],
@@ -775,7 +775,6 @@
     "available": true,
     "series_title": "Weighted impact estimated from selected PPI components",
     "values": [
-      0.105706,
       0.055526,
       0.018335,
       0.274565,
@@ -783,159 +782,14 @@
       0.006139,
       0.243448,
       0.044769,
-      0.090231,
-      0.011867,
-      0.10273,
-      0.086391
+      0.088783,
+      0.011025,
+      0.107148,
+      0.085484,
+      0.071118
     ],
     "unit": "percentage_point",
     "calculation_details": [
-      {
-        "period": "2025-07",
-        "result": 0.105706,
-        "unit": "percentage_point",
-        "complete": true,
-        "available_weight": 21.195,
-        "total_weight": 21.195,
-        "components": [
-          {
-            "name": "PPI for Hospitals",
-            "series_id": "PCU622---622---",
-            "seasonality": "NSA",
-            "ppi_mom": 0.087,
-            "pce_weight": 8.569,
-            "contribution": 0.00745503
-          },
-          {
-            "name": "PPI for Offices of Physicians",
-            "series_id": "PCU6211--6211--",
-            "seasonality": "NSA",
-            "ppi_mom": 0.102052,
-            "pce_weight": 4.473,
-            "contribution": 0.00456479
-          },
-          {
-            "name": "PPI for Portfolio Management and Investment Advice",
-            "series_id": "PCU523940523940",
-            "seasonality": "NSA",
-            "ppi_mom": 5.744982,
-            "pce_weight": 1.78,
-            "contribution": 0.10226068
-          },
-          {
-            "name": "PPI for Nursing Care Facilities",
-            "series_id": "PCU623110623110",
-            "seasonality": "NSA",
-            "ppi_mom": 0.098285,
-            "pce_weight": 1.445,
-            "contribution": 0.00142022
-          },
-          {
-            "name": "PPI for Direct Health and Medical Insurance Carriers",
-            "series_id": "PCU524114524114",
-            "seasonality": "NSA",
-            "ppi_mom": 0.358606,
-            "pce_weight": 1.299,
-            "contribution": 0.00465829
-          },
-          {
-            "name": "PPI for Home Health Care Services",
-            "series_id": "PCU6216--6216--",
-            "seasonality": "NSA",
-            "ppi_mom": 0.078847,
-            "pce_weight": 1.109,
-            "contribution": 0.00087441
-          },
-          {
-            "name": "PPI for Domestic Scheduled Passenger Air Transportation",
-            "series_id": "PCU4811114811111",
-            "seasonality": "NSA",
-            "ppi_mom": -2.232788,
-            "pce_weight": 1.023,
-            "contribution": -0.02284142
-          },
-          {
-            "name": "PPI for Private Passenger Auto Insurance",
-            "series_id": "PCU5241265241261",
-            "seasonality": "NSA",
-            "ppi_mom": 0.034039,
-            "pce_weight": 0.587,
-            "contribution": 0.00019981
-          },
-          {
-            "name": "PPI for Medical Laboratories",
-            "series_id": "PCU621511621511P",
-            "seasonality": "NSA",
-            "ppi_mom": 0.01992,
-            "pce_weight": 0.145,
-            "contribution": 2.888e-05
-          },
-          {
-            "name": "PPI for Diagnostic Imaging Centers",
-            "series_id": "PCU6215126215124",
-            "seasonality": "NSA",
-            "ppi_mom": 1.182584,
-            "pce_weight": 0.145,
-            "contribution": 0.00171475
-          },
-          {
-            "name": "PPI for Brokerage Services",
-            "series_id": "WPU40110201",
-            "seasonality": "NSA",
-            "ppi_mom": 2.535175,
-            "pce_weight": 0.098,
-            "contribution": 0.00248447
-          },
-          {
-            "name": "PPI for Dealer Transactions",
-            "series_id": "WPU40110101",
-            "seasonality": "NSA",
-            "ppi_mom": 2.800495,
-            "pce_weight": 0.098,
-            "contribution": 0.00274449
-          },
-          {
-            "name": "PPI for Workers' Compensation Insurance",
-            "series_id": "PCU5241265241266",
-            "seasonality": "NSA",
-            "ppi_mom": -0.105758,
-            "pce_weight": 0.192,
-            "contribution": -0.00020306
-          },
-          {
-            "name": "PPI for Commercial Bank Trust Services",
-            "series_id": "PCU5221105221103",
-            "seasonality": "NSA",
-            "ppi_mom": 0.0,
-            "pce_weight": 0.117,
-            "contribution": 0.0
-          },
-          {
-            "name": "PPI for Homeowners' Insurance",
-            "series_id": "PCU9241269241262",
-            "seasonality": "NSA",
-            "ppi_mom": 0.353567,
-            "pce_weight": 0.104,
-            "contribution": 0.00036771
-          },
-          {
-            "name": "PPI for Employment Placement Agencies",
-            "series_id": "PCU5613--5613--",
-            "seasonality": "NSA",
-            "ppi_mom": 0.205542,
-            "pce_weight": 0.009,
-            "contribution": 1.85e-05
-          },
-          {
-            "name": "PPI for Apparel",
-            "series_id": "WPS5831",
-            "seasonality": "SA",
-            "ppi_mom": -2.082754,
-            "pce_weight": 0.002,
-            "contribution": -4.166e-05
-          }
-        ]
-      },
       {
         "period": "2025-08",
         "result": 0.055526,
@@ -1960,7 +1814,7 @@
       },
       {
         "period": "2026-03",
-        "result": 0.090231,
+        "result": 0.088783,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -1970,25 +1824,25 @@
             "name": "PPI for Hospitals",
             "series_id": "PCU622---622---",
             "seasonality": "NSA",
-            "ppi_mom": 0.19305,
+            "ppi_mom": 0.201479,
             "pce_weight": 8.569,
-            "contribution": 0.01654245
+            "contribution": 0.01726474
           },
           {
             "name": "PPI for Offices of Physicians",
             "series_id": "PCU6211--6211--",
             "seasonality": "NSA",
-            "ppi_mom": 0.249219,
+            "ppi_mom": 0.178109,
             "pce_weight": 4.473,
-            "contribution": 0.01114757
+            "contribution": 0.00796682
           },
           {
             "name": "PPI for Portfolio Management and Investment Advice",
             "series_id": "PCU523940523940",
             "seasonality": "NSA",
-            "ppi_mom": 0.931662,
+            "ppi_mom": 0.926281,
             "pce_weight": 1.78,
-            "contribution": 0.01658358
+            "contribution": 0.0164878
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -2010,9 +1864,9 @@
             "name": "PPI for Home Health Care Services",
             "series_id": "PCU6216--6216--",
             "seasonality": "NSA",
-            "ppi_mom": 0.0,
+            "ppi_mom": 0.004621,
             "pce_weight": 1.109,
-            "contribution": 0.0
+            "contribution": 5.125e-05
           },
           {
             "name": "PPI for Domestic Scheduled Passenger Air Transportation",
@@ -2026,9 +1880,9 @@
             "name": "PPI for Private Passenger Auto Insurance",
             "series_id": "PCU5241265241261",
             "seasonality": "NSA",
-            "ppi_mom": 0.067592,
+            "ppi_mom": 0.272828,
             "pce_weight": 0.587,
-            "contribution": 0.00039677
+            "contribution": 0.0016015
           },
           {
             "name": "PPI for Medical Laboratories",
@@ -2058,17 +1912,17 @@
             "name": "PPI for Dealer Transactions",
             "series_id": "WPU40110101",
             "seasonality": "NSA",
-            "ppi_mom": -2.72324,
+            "ppi_mom": -2.727194,
             "pce_weight": 0.098,
-            "contribution": -0.00266878
+            "contribution": -0.00267265
           },
           {
             "name": "PPI for Workers' Compensation Insurance",
             "series_id": "PCU5241265241266",
             "seasonality": "NSA",
-            "ppi_mom": -0.226815,
+            "ppi_mom": -0.320421,
             "pce_weight": 0.192,
-            "contribution": -0.00043548
+            "contribution": -0.00061521
           },
           {
             "name": "PPI for Commercial Bank Trust Services",
@@ -2082,17 +1936,17 @@
             "name": "PPI for Homeowners' Insurance",
             "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": -0.00934,
+            "ppi_mom": 0.026224,
             "pce_weight": 0.104,
-            "contribution": -9.71e-06
+            "contribution": 2.727e-05
           },
           {
             "name": "PPI for Employment Placement Agencies",
             "series_id": "PCU5613--5613--",
             "seasonality": "NSA",
-            "ppi_mom": 0.024822,
+            "ppi_mom": -0.009813,
             "pce_weight": 0.009,
-            "contribution": 2.23e-06
+            "contribution": -8.8e-07
           },
           {
             "name": "PPI for Apparel",
@@ -2106,7 +1960,7 @@
       },
       {
         "period": "2026-04",
-        "result": 0.011867,
+        "result": 0.011025,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -2116,25 +1970,25 @@
             "name": "PPI for Hospitals",
             "series_id": "PCU622---622---",
             "seasonality": "NSA",
-            "ppi_mom": 0.064493,
+            "ppi_mom": 0.056477,
             "pce_weight": 8.569,
-            "contribution": 0.00552641
+            "contribution": 0.00483951
           },
           {
             "name": "PPI for Offices of Physicians",
             "series_id": "PCU6211--6211--",
             "seasonality": "NSA",
-            "ppi_mom": 0.041765,
+            "ppi_mom": 0.040468,
             "pce_weight": 4.473,
-            "contribution": 0.00186815
+            "contribution": 0.00181013
           },
           {
             "name": "PPI for Portfolio Management and Investment Advice",
             "series_id": "PCU523940523940",
             "seasonality": "NSA",
-            "ppi_mom": -1.440911,
+            "ppi_mom": -1.445653,
             "pce_weight": 1.78,
-            "contribution": -0.02564822
+            "contribution": -0.02573262
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -2172,25 +2026,25 @@
             "name": "PPI for Private Passenger Auto Insurance",
             "series_id": "PCU5241265241261",
             "seasonality": "NSA",
-            "ppi_mom": -0.00655,
+            "ppi_mom": -0.006128,
             "pce_weight": 0.587,
-            "contribution": -3.845e-05
+            "contribution": -3.597e-05
           },
           {
             "name": "PPI for Medical Laboratories",
             "series_id": "PCU621511621511P",
             "seasonality": "NSA",
-            "ppi_mom": 0.043927,
+            "ppi_mom": 0.033981,
             "pce_weight": 0.145,
-            "contribution": 6.369e-05
+            "contribution": 4.927e-05
           },
           {
             "name": "PPI for Diagnostic Imaging Centers",
             "series_id": "PCU6215126215124",
             "seasonality": "NSA",
-            "ppi_mom": -0.022967,
+            "ppi_mom": -0.022147,
             "pce_weight": 0.145,
-            "contribution": -3.33e-05
+            "contribution": -3.211e-05
           },
           {
             "name": "PPI for Brokerage Services",
@@ -2204,17 +2058,17 @@
             "name": "PPI for Dealer Transactions",
             "series_id": "WPU40110101",
             "seasonality": "NSA",
-            "ppi_mom": 1.858189,
+            "ppi_mom": 1.857452,
             "pce_weight": 0.098,
-            "contribution": 0.00182103
+            "contribution": 0.0018203
           },
           {
             "name": "PPI for Workers' Compensation Insurance",
             "series_id": "PCU5241265241266",
             "seasonality": "NSA",
-            "ppi_mom": 0.012028,
+            "ppi_mom": 0.012039,
             "pce_weight": 0.192,
-            "contribution": 2.309e-05
+            "contribution": 2.311e-05
           },
           {
             "name": "PPI for Commercial Bank Trust Services",
@@ -2228,17 +2082,17 @@
             "name": "PPI for Homeowners' Insurance",
             "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": 0.063589,
+            "ppi_mom": 0.063567,
             "pce_weight": 0.104,
-            "contribution": 6.613e-05
+            "contribution": 6.611e-05
           },
           {
             "name": "PPI for Employment Placement Agencies",
             "series_id": "PCU5613--5613--",
             "seasonality": "NSA",
-            "ppi_mom": 1.089027,
+            "ppi_mom": 1.084208,
             "pce_weight": 0.009,
-            "contribution": 9.801e-05
+            "contribution": 9.758e-05
           },
           {
             "name": "PPI for Apparel",
@@ -2252,7 +2106,7 @@
       },
       {
         "period": "2026-05",
-        "result": 0.10273,
+        "result": 0.107148,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -2262,33 +2116,33 @@
             "name": "PPI for Hospitals",
             "series_id": "PCU622---622---",
             "seasonality": "NSA",
-            "ppi_mom": 0.13731,
+            "ppi_mom": 0.154923,
             "pce_weight": 8.569,
-            "contribution": 0.01176609
+            "contribution": 0.01327535
           },
           {
             "name": "PPI for Offices of Physicians",
             "series_id": "PCU6211--6211--",
             "seasonality": "NSA",
-            "ppi_mom": 0.043073,
+            "ppi_mom": 0.022547,
             "pce_weight": 4.473,
-            "contribution": 0.00192666
+            "contribution": 0.00100853
           },
           {
             "name": "PPI for Portfolio Management and Investment Advice",
             "series_id": "PCU523940523940",
             "seasonality": "NSA",
-            "ppi_mom": 4.542135,
+            "ppi_mom": 4.744804,
             "pce_weight": 1.78,
-            "contribution": 0.08085
+            "contribution": 0.08445751
           },
           {
             "name": "PPI for Nursing Care Facilities",
             "series_id": "PCU623110623110",
             "seasonality": "NSA",
-            "ppi_mom": 0.236564,
+            "ppi_mom": 0.191084,
             "pce_weight": 1.445,
-            "contribution": 0.00341835
+            "contribution": 0.00276116
           },
           {
             "name": "PPI for Direct Health and Medical Insurance Carriers",
@@ -2302,33 +2156,33 @@
             "name": "PPI for Home Health Care Services",
             "series_id": "PCU6216--6216--",
             "seasonality": "NSA",
-            "ppi_mom": 0.0,
+            "ppi_mom": 0.107428,
             "pce_weight": 1.109,
-            "contribution": 0.0
+            "contribution": 0.00119138
           },
           {
             "name": "PPI for Domestic Scheduled Passenger Air Transportation",
             "series_id": "PCU4811114811111",
             "seasonality": "NSA",
-            "ppi_mom": -0.328444,
+            "ppi_mom": -0.323706,
             "pce_weight": 1.023,
-            "contribution": -0.00335998
+            "contribution": -0.00331151
           },
           {
             "name": "PPI for Private Passenger Auto Insurance",
             "series_id": "PCU5241265241261",
             "seasonality": "NSA",
-            "ppi_mom": -0.011463,
+            "ppi_mom": -0.01144,
             "pce_weight": 0.587,
-            "contribution": -6.729e-05
+            "contribution": -6.715e-05
           },
           {
             "name": "PPI for Medical Laboratories",
             "series_id": "PCU621511621511P",
             "seasonality": "NSA",
-            "ppi_mom": 0.585716,
+            "ppi_mom": 0.310701,
             "pce_weight": 0.145,
-            "contribution": 0.00084929
+            "contribution": 0.00045052
           },
           {
             "name": "PPI for Diagnostic Imaging Centers",
@@ -2342,25 +2196,25 @@
             "name": "PPI for Brokerage Services",
             "series_id": "WPU40110201",
             "seasonality": "NSA",
-            "ppi_mom": 0.643612,
+            "ppi_mom": 0.605743,
             "pce_weight": 0.098,
-            "contribution": 0.00063074
+            "contribution": 0.00059363
           },
           {
             "name": "PPI for Dealer Transactions",
             "series_id": "WPU40110101",
             "seasonality": "NSA",
-            "ppi_mom": 5.897422,
+            "ppi_mom": 5.99427,
             "pce_weight": 0.098,
-            "contribution": 0.00577947
+            "contribution": 0.00587438
           },
           {
             "name": "PPI for Workers' Compensation Insurance",
             "series_id": "PCU5241265241266",
             "seasonality": "NSA",
-            "ppi_mom": -0.170778,
+            "ppi_mom": -0.170938,
             "pce_weight": 0.192,
-            "contribution": -0.00032789
+            "contribution": -0.0003282
           },
           {
             "name": "PPI for Commercial Bank Trust Services",
@@ -2374,31 +2228,31 @@
             "name": "PPI for Homeowners' Insurance",
             "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": 0.198904,
+            "ppi_mom": 0.163302,
             "pce_weight": 0.104,
-            "contribution": 0.00020686
+            "contribution": 0.00016983
           },
           {
             "name": "PPI for Employment Placement Agencies",
             "series_id": "PCU5613--5613--",
             "seasonality": "NSA",
-            "ppi_mom": -0.134162,
+            "ppi_mom": 0.038266,
             "pce_weight": 0.009,
-            "contribution": -1.207e-05
+            "contribution": 3.44e-06
           },
           {
             "name": "PPI for Apparel",
             "series_id": "WPS5831",
             "seasonality": "SA",
-            "ppi_mom": -2.216029,
+            "ppi_mom": -2.219593,
             "pce_weight": 0.002,
-            "contribution": -4.432e-05
+            "contribution": -4.439e-05
           }
         ]
       },
       {
         "period": "2026-06",
-        "result": 0.086391,
+        "result": 0.085484,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 21.195,
@@ -2408,25 +2262,25 @@
             "name": "PPI for Hospitals",
             "series_id": "PCU622---622---",
             "seasonality": "NSA",
-            "ppi_mom": 0.695202,
+            "ppi_mom": 0.684285,
             "pce_weight": 8.569,
-            "contribution": 0.05957186
+            "contribution": 0.05863638
           },
           {
             "name": "PPI for Offices of Physicians",
             "series_id": "PCU6211--6211--",
             "seasonality": "NSA",
-            "ppi_mom": 0.0,
+            "ppi_mom": -0.007956,
             "pce_weight": 4.473,
-            "contribution": 0.0
+            "contribution": -0.00035587
           },
           {
             "name": "PPI for Portfolio Management and Investment Advice",
             "series_id": "PCU523940523940",
             "seasonality": "NSA",
-            "ppi_mom": 0.635192,
+            "ppi_mom": 0.717961,
             "pce_weight": 1.78,
-            "contribution": 0.01130642
+            "contribution": 0.01277971
           },
           {
             "name": "PPI for Nursing Care Facilities",
@@ -2456,17 +2310,17 @@
             "name": "PPI for Domestic Scheduled Passenger Air Transportation",
             "series_id": "PCU4811114811111",
             "seasonality": "NSA",
-            "ppi_mom": 1.883596,
+            "ppi_mom": 1.77439,
             "pce_weight": 1.023,
-            "contribution": 0.01926919
+            "contribution": 0.01815201
           },
           {
             "name": "PPI for Private Passenger Auto Insurance",
             "series_id": "PCU5241265241261",
             "seasonality": "NSA",
-            "ppi_mom": -0.120378,
+            "ppi_mom": -0.120131,
             "pce_weight": 0.587,
-            "contribution": -0.00070662
+            "contribution": -0.00070517
           },
           {
             "name": "PPI for Medical Laboratories",
@@ -2488,33 +2342,33 @@
             "name": "PPI for Brokerage Services",
             "series_id": "WPU40110201",
             "seasonality": "NSA",
-            "ppi_mom": -0.302342,
+            "ppi_mom": -0.295639,
             "pce_weight": 0.098,
-            "contribution": -0.0002963
+            "contribution": -0.00028973
           },
           {
             "name": "PPI for Dealer Transactions",
             "series_id": "WPU40110101",
             "seasonality": "NSA",
-            "ppi_mom": 4.375316,
+            "ppi_mom": 4.430256,
             "pce_weight": 0.098,
-            "contribution": 0.00428781
+            "contribution": 0.00434165
           },
           {
             "name": "PPI for Workers' Compensation Insurance",
             "series_id": "PCU5241265241266",
             "seasonality": "NSA",
-            "ppi_mom": -0.880649,
+            "ppi_mom": -0.881477,
             "pce_weight": 0.192,
-            "contribution": -0.00169085
+            "contribution": -0.00169244
           },
           {
             "name": "PPI for Commercial Bank Trust Services",
             "series_id": "PCU5221105221103",
             "seasonality": "NSA",
-            "ppi_mom": -4.696749,
+            "ppi_mom": -4.69202,
             "pce_weight": 0.117,
-            "contribution": -0.0054952
+            "contribution": -0.00548966
           },
           {
             "name": "PPI for Homeowners' Insurance",
@@ -2528,17 +2382,163 @@
             "name": "PPI for Employment Placement Agencies",
             "series_id": "PCU5613--5613--",
             "seasonality": "NSA",
-            "ppi_mom": 0.082321,
+            "ppi_mom": -0.216375,
             "pce_weight": 0.009,
-            "contribution": 7.41e-06
+            "contribution": -1.947e-05
           },
           {
             "name": "PPI for Apparel",
             "series_id": "WPS5831",
             "seasonality": "SA",
-            "ppi_mom": 3.641744,
+            "ppi_mom": 3.092971,
             "pce_weight": 0.002,
-            "contribution": 7.283e-05
+            "contribution": 6.186e-05
+          }
+        ]
+      },
+      {
+        "period": "2026-07",
+        "result": 0.071118,
+        "unit": "percentage_point",
+        "complete": true,
+        "available_weight": 21.195,
+        "total_weight": 21.195,
+        "components": [
+          {
+            "name": "PPI for Hospitals",
+            "series_id": "PCU622---622---",
+            "seasonality": "NSA",
+            "ppi_mom": -0.012703,
+            "pce_weight": 8.569,
+            "contribution": -0.00108852
+          },
+          {
+            "name": "PPI for Offices of Physicians",
+            "series_id": "PCU6211--6211--",
+            "seasonality": "NSA",
+            "ppi_mom": -0.048402,
+            "pce_weight": 4.473,
+            "contribution": -0.00216502
+          },
+          {
+            "name": "PPI for Portfolio Management and Investment Advice",
+            "series_id": "PCU523940523940",
+            "seasonality": "NSA",
+            "ppi_mom": 5.623898,
+            "pce_weight": 1.78,
+            "contribution": 0.10010538
+          },
+          {
+            "name": "PPI for Nursing Care Facilities",
+            "series_id": "PCU623110623110",
+            "seasonality": "NSA",
+            "ppi_mom": 0.451561,
+            "pce_weight": 1.445,
+            "contribution": 0.00652506
+          },
+          {
+            "name": "PPI for Direct Health and Medical Insurance Carriers",
+            "series_id": "PCU524114524114",
+            "seasonality": "NSA",
+            "ppi_mom": 0.076441,
+            "pce_weight": 1.299,
+            "contribution": 0.00099297
+          },
+          {
+            "name": "PPI for Home Health Care Services",
+            "series_id": "PCU6216--6216--",
+            "seasonality": "NSA",
+            "ppi_mom": 0.040386,
+            "pce_weight": 1.109,
+            "contribution": 0.00044788
+          },
+          {
+            "name": "PPI for Domestic Scheduled Passenger Air Transportation",
+            "series_id": "PCU4811114811111",
+            "seasonality": "NSA",
+            "ppi_mom": -3.213883,
+            "pce_weight": 1.023,
+            "contribution": -0.03287802
+          },
+          {
+            "name": "PPI for Private Passenger Auto Insurance",
+            "series_id": "PCU5241265241261",
+            "seasonality": "NSA",
+            "ppi_mom": -0.033955,
+            "pce_weight": 0.587,
+            "contribution": -0.00019932
+          },
+          {
+            "name": "PPI for Medical Laboratories",
+            "series_id": "PCU621511621511P",
+            "seasonality": "NSA",
+            "ppi_mom": -0.001652,
+            "pce_weight": 0.145,
+            "contribution": -2.4e-06
+          },
+          {
+            "name": "PPI for Diagnostic Imaging Centers",
+            "series_id": "PCU6215126215124",
+            "seasonality": "NSA",
+            "ppi_mom": 0.0,
+            "pce_weight": 0.145,
+            "contribution": 0.0
+          },
+          {
+            "name": "PPI for Brokerage Services",
+            "series_id": "WPU40110201",
+            "seasonality": "NSA",
+            "ppi_mom": 0.387774,
+            "pce_weight": 0.098,
+            "contribution": 0.00038002
+          },
+          {
+            "name": "PPI for Dealer Transactions",
+            "series_id": "WPU40110101",
+            "seasonality": "NSA",
+            "ppi_mom": -1.310762,
+            "pce_weight": 0.098,
+            "contribution": -0.00128455
+          },
+          {
+            "name": "PPI for Workers' Compensation Insurance",
+            "series_id": "PCU5241265241266",
+            "seasonality": "NSA",
+            "ppi_mom": 0.110708,
+            "pce_weight": 0.192,
+            "contribution": 0.00021256
+          },
+          {
+            "name": "PPI for Commercial Bank Trust Services",
+            "series_id": "PCU5221105221103",
+            "seasonality": "NSA",
+            "ppi_mom": 0.0,
+            "pce_weight": 0.117,
+            "contribution": 0.0
+          },
+          {
+            "name": "PPI for Homeowners' Insurance",
+            "series_id": "PCU9241269241262",
+            "seasonality": "NSA",
+            "ppi_mom": 0.01325,
+            "pce_weight": 0.104,
+            "contribution": 1.378e-05
+          },
+          {
+            "name": "PPI for Employment Placement Agencies",
+            "series_id": "PCU5613--5613--",
+            "seasonality": "NSA",
+            "ppi_mom": 0.445703,
+            "pce_weight": 0.009,
+            "contribution": 4.011e-05
+          },
+          {
+            "name": "PPI for Apparel",
+            "series_id": "WPS5831",
+            "seasonality": "SA",
+            "ppi_mom": 0.901538,
+            "pce_weight": 0.002,
+            "contribution": 1.803e-05
           }
         ]
       }
