@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-13T09:29:35.918593+00:00",
+  "generated_at": "2026-08-14T01:05:27.615190+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -7336,7 +7336,13 @@
         },
         {
           "date": "2026-05-01",
-          "value": 0.1,
+          "value": 0.0,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/ecyx/mgdp",
+          "source_frequency": "monthly"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 0.3,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/ecyx/mgdp",
           "source_frequency": "monthly"
         }
