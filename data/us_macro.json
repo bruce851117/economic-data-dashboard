@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T15:35:46.373544+00:00",
+  "generated_at": "2026-08-16T03:52:17.974456+00:00",
   "source": {
     "type": "excel_import",
     "file": "US_ECON.xlsx",
@@ -43699,6 +43699,10 @@
         {
           "date": "2026-06-01",
           "value": 4.4
+        },
+        {
+          "date": "2026-07-01",
+          "value": 4.4
         }
       ],
       "source": "Federal Reserve Bank of Atlanta"
@@ -44273,6 +44277,10 @@
         },
         {
           "date": "2026-06-01",
+          "value": 3.6
+        },
+        {
+          "date": "2026-07-01",
           "value": 3.6
         }
       ],
@@ -44849,6 +44857,10 @@
         {
           "date": "2026-06-01",
           "value": 3.6
+        },
+        {
+          "date": "2026-07-01",
+          "value": 3.7
         }
       ],
       "source": "Federal Reserve Bank of Atlanta"
@@ -45424,6 +45436,10 @@
         {
           "date": "2026-06-01",
           "value": 4
+        },
+        {
+          "date": "2026-07-01",
+          "value": 3.9
         }
       ],
       "source": "Federal Reserve Bank of Atlanta"
@@ -45999,6 +46015,10 @@
         {
           "date": "2026-06-01",
           "value": 3.9
+        },
+        {
+          "date": "2026-07-01",
+          "value": 4
         }
       ],
       "source": "Federal Reserve Bank of Atlanta"
@@ -46574,6 +46594,10 @@
         {
           "date": "2026-06-01",
           "value": 3.9
+        },
+        {
+          "date": "2026-07-01",
+          "value": 3.8
         }
       ],
       "source": "Federal Reserve Bank of Atlanta"
@@ -50034,19 +50058,23 @@
         },
         {
           "date": "2026-03-01",
-          "value": 3.949
+          "value": 3.941
         },
         {
           "date": "2026-04-01",
-          "value": 4.889
+          "value": 4.925
         },
         {
           "date": "2026-05-01",
-          "value": 4.579
+          "value": 4.431
         },
         {
           "date": "2026-06-01",
-          "value": 4.673
+          "value": 4.725
+        },
+        {
+          "date": "2026-07-01",
+          "value": 4.158
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -65934,15 +65962,15 @@
         },
         {
           "date": "2025-06-01",
-          "value": 0.615
+          "value": 0.513
         },
         {
           "date": "2025-07-01",
-          "value": 0.841
+          "value": 0.963
         },
         {
           "date": "2025-08-01",
-          "value": 0.665
+          "value": 0.645
         },
         {
           "date": "2025-09-01",
@@ -65978,11 +66006,15 @@
         },
         {
           "date": "2026-05-01",
-          "value": 0.827
+          "value": 0.597
         },
         {
           "date": "2026-06-01",
-          "value": 0.54
+          "value": 0.358
+        },
+        {
+          "date": "2026-07-01",
+          "value": -0.437
         }
       ],
       "source": "U.S. Census Bureau"
