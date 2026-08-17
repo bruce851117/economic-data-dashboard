@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-16T02:53:35.184865+00:00",
+  "generated_at": "2026-08-17T01:18:41.148523+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
@@ -10989,10 +10989,10 @@
         },
         {
           "date": "2026-07-01",
-          "value": 50,
-          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/f038eb3da49f48d0bac1e765131005b5",
+          "value": 49.8,
+          "source_url": "https://tradingeconomics.com/france/manufacturing-pmi",
           "status": "flash",
-          "note": "matched UK-template label: Flash France Manufacturing PMI: 50.0",
+          "note": "public indicator page; underlying source explicitly S&P Global; flash",
           "release_type": "flash"
         }
       ]
@@ -12101,10 +12101,10 @@
         },
         {
           "date": "2026-07-01",
-          "value": 49.8,
-          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/f038eb3da49f48d0bac1e765131005b5",
+          "value": 49.6,
+          "source_url": "https://tradingeconomics.com/france/services-pmi",
           "status": "flash",
-          "note": "matched UK-template label: Flash France Services PMI Business Activity Index: 49.8",
+          "note": "public indicator page; underlying source explicitly S&P Global; flash",
           "release_type": "flash"
         }
       ]
