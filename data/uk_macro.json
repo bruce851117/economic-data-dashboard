@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-16T02:55:31.844974+00:00",
+  "generated_at": "2026-08-18T08:21:41.556715+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -2767,6 +2767,12 @@
           "value": 4.9,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsx/lms",
           "source_frequency": "monthly"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 4.9,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsx/lms",
+          "source_frequency": "monthly"
         }
       ]
     },
@@ -3533,6 +3539,12 @@
           "value": 4.4,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peoplenotinwork/outofworkbenefits/timeseries/bcje/unem",
           "source_frequency": "monthly"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 4.3,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peoplenotinwork/outofworkbenefits/timeseries/bcje/unem",
+          "source_frequency": "monthly"
         }
       ]
     },
@@ -3786,7 +3798,7 @@
         },
         {
           "date": "2019-05-01",
-          "value": 3.4,
+          "value": 3.3,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -3864,7 +3876,7 @@
         },
         {
           "date": "2020-06-01",
-          "value": -1.1,
+          "value": -1.2,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -3876,7 +3888,7 @@
         },
         {
           "date": "2020-08-01",
-          "value": 0.1,
+          "value": 0.2,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -3930,7 +3942,7 @@
         },
         {
           "date": "2021-05-01",
-          "value": 7.5,
+          "value": 7.4,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -3954,7 +3966,7 @@
         },
         {
           "date": "2021-09-01",
-          "value": 5.9,
+          "value": 6.0,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -3990,7 +4002,7 @@
         },
         {
           "date": "2022-03-01",
-          "value": 7.3,
+          "value": 7.2,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -4008,7 +4020,7 @@
         },
         {
           "date": "2022-06-01",
-          "value": 5.2,
+          "value": 5.3,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -4062,13 +4074,13 @@
         },
         {
           "date": "2023-03-01",
-          "value": 6.3,
+          "value": 6.2,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
         {
           "date": "2023-04-01",
-          "value": 6.8,
+          "value": 6.7,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -4086,7 +4098,7 @@
         },
         {
           "date": "2023-07-01",
-          "value": 8.4,
+          "value": 8.5,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -4098,7 +4110,7 @@
         },
         {
           "date": "2023-09-01",
-          "value": 7.8,
+          "value": 7.9,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -4122,7 +4134,7 @@
         },
         {
           "date": "2024-01-01",
-          "value": 5.7,
+          "value": 5.8,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -4134,19 +4146,19 @@
         },
         {
           "date": "2024-03-01",
-          "value": 5.9,
+          "value": 5.8,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
         {
           "date": "2024-04-01",
-          "value": 5.8,
+          "value": 5.7,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
         {
           "date": "2024-05-01",
-          "value": 5.8,
+          "value": 5.7,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -4170,7 +4182,7 @@
         },
         {
           "date": "2024-09-01",
-          "value": 4.8,
+          "value": 4.6,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -4182,19 +4194,19 @@
         },
         {
           "date": "2024-11-01",
-          "value": 5.6,
+          "value": 5.5,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
         {
           "date": "2024-12-01",
-          "value": 5.9,
+          "value": 6.0,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
         {
           "date": "2025-01-01",
-          "value": 5.6,
+          "value": 5.7,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -4206,19 +4218,19 @@
         },
         {
           "date": "2025-03-01",
-          "value": 5.4,
+          "value": 5.5,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
         {
           "date": "2025-04-01",
-          "value": 5.2,
+          "value": 5.3,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
         {
           "date": "2025-05-01",
-          "value": 4.9,
+          "value": 5.0,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -4230,7 +4242,7 @@
         },
         {
           "date": "2025-07-01",
-          "value": 4.8,
+          "value": 4.9,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         },
@@ -4290,7 +4302,13 @@
         },
         {
           "date": "2026-05-01",
-          "value": 4.3,
+          "value": 4.4,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
+          "source_frequency": "monthly"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 4.1,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms",
           "source_frequency": "monthly"
         }
@@ -4324,7 +4342,7 @@
         },
         {
           "date": "2016-04-01",
-          "value": 2.6,
+          "value": 2.5,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -4366,7 +4384,7 @@
         },
         {
           "date": "2016-11-01",
-          "value": 2.9,
+          "value": 3.0,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -4390,7 +4408,7 @@
         },
         {
           "date": "2017-03-01",
-          "value": 2.0,
+          "value": 2.1,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -4408,7 +4426,7 @@
         },
         {
           "date": "2017-06-01",
-          "value": 2.3,
+          "value": 2.2,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -4534,7 +4552,7 @@
         },
         {
           "date": "2019-03-01",
-          "value": 3.6,
+          "value": 3.7,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -4630,7 +4648,7 @@
         },
         {
           "date": "2020-07-01",
-          "value": -0.8,
+          "value": -0.9,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -4732,7 +4750,7 @@
         },
         {
           "date": "2021-12-01",
-          "value": 4.2,
+          "value": 4.1,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -4768,7 +4786,7 @@
         },
         {
           "date": "2022-06-01",
-          "value": 5.7,
+          "value": 5.6,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -4840,7 +4858,7 @@
         },
         {
           "date": "2023-06-01",
-          "value": 8.2,
+          "value": 8.1,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -4894,7 +4912,7 @@
         },
         {
           "date": "2024-03-01",
-          "value": 5.9,
+          "value": 5.8,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -4912,7 +4930,7 @@
         },
         {
           "date": "2024-06-01",
-          "value": 5.3,
+          "value": 5.4,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -4942,7 +4960,7 @@
         },
         {
           "date": "2024-11-01",
-          "value": 6.0,
+          "value": 5.9,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -4954,13 +4972,13 @@
         },
         {
           "date": "2025-01-01",
-          "value": 6.0,
+          "value": 5.9,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
         {
           "date": "2025-02-01",
-          "value": 6.0,
+          "value": 5.9,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -4990,7 +5008,7 @@
         },
         {
           "date": "2025-07-01",
-          "value": 4.6,
+          "value": 4.7,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         },
@@ -5051,6 +5069,12 @@
         {
           "date": "2026-05-01",
           "value": 2.9,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
+          "source_frequency": "monthly"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 2.8,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kaj4/lms",
           "source_frequency": "monthly"
         }
@@ -5750,7 +5774,7 @@
         },
         {
           "date": "2025-07-01",
-          "value": 724.0,
+          "value": 727.0,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem",
           "source_frequency": "monthly"
         },
@@ -5816,7 +5840,13 @@
         },
         {
           "date": "2026-06-01",
-          "value": 712.0,
+          "value": 711.0,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem",
+          "source_frequency": "monthly"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 707.0,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem",
           "source_frequency": "monthly"
         }
