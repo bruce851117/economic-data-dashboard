@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-19T07:15:43.961054+00:00",
+  "generated_at": "2026-08-19T07:24:21.719626+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -4059,7 +4059,16 @@
         {
           "date": "2026-07-01",
           "value": 129.9,
-          "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/07/er20260714BullConsumerSentiment.pdf"
+          "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/07/er20260714BullConsumerSentiment.pdf",
+          "release_type": "final",
+          "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin PDF"
+        },
+        {
+          "date": "2026-08-01",
+          "value": 135.7,
+          "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/08/er20260818BullConsumerSentiment.pdf",
+          "release_type": "final",
+          "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin PDF"
         }
       ],
       "ticker": "",
@@ -7736,5 +7745,5 @@
       "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx"
     }
   ],
-  "script_version": "2026-08-19-update-au-macro-v4"
+  "script_version": "2026-08-19-update-au-macro-v5"
 }
