@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-16T03:07:53.254087+00:00",
+  "generated_at": "2026-08-19T03:25:36.860974+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -2708,314 +2708,320 @@
           "date": "2015-03-01",
           "value": 2.4659863945578175,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2015-06-01",
           "value": 2.6248941574936513,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2015-09-01",
           "value": 2.34113712374584,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2015-12-01",
           "value": 2.244389027431426,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2016-03-01",
           "value": 2.4896265560165887,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2016-06-01",
           "value": 1.980198019801982,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2016-09-01",
           "value": 1.7156862745097978,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2016-12-01",
           "value": 1.8699186991869787,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2017-03-01",
           "value": 1.538461538461533,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2017-06-01",
           "value": 2.184466019417486,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2017-09-01",
           "value": 2.168674698795181,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2017-12-01",
           "value": 2.0750199521149204,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2018-03-01",
           "value": 2.631578947368407,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2018-06-01",
           "value": 2.454473475851149,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2018-09-01",
           "value": 2.672955974842761,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2018-12-01",
           "value": 2.81469898358091,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2019-03-01",
           "value": 2.6418026418026486,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2019-06-01",
           "value": 2.472952086553315,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2019-09-01",
           "value": 2.833078101071984,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2019-12-01",
           "value": 2.205323193916353,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2020-03-01",
           "value": 2.0439061317184093,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2020-06-01",
           "value": 1.6591251885369696,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2020-09-01",
           "value": 0.9679821295606628,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2020-12-01",
           "value": 1.2648809523809534,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2021-03-01",
           "value": 1.780415430267035,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2021-06-01",
           "value": 1.85459940652819,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2021-09-01",
           "value": 2.06489675516226,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2021-12-01",
           "value": 2.792064658339455,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2022-03-01",
           "value": 2.4052478134110933,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2022-06-01",
           "value": 3.1318281136198056,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2022-09-01",
           "value": 3.7572254335260125,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2022-12-01",
           "value": 3.5025017869907193,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2023-03-01",
           "value": 3.9145907473309594,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2023-06-01",
           "value": 3.742937853107353,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2023-09-01",
           "value": 4.108635097493041,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2023-12-01",
           "value": 4.143646408839774,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2024-03-01",
           "value": 4.178082191780819,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2024-06-01",
           "value": 3.8801906058543167,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2024-09-01",
           "value": 3.6120401337792707,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2024-12-01",
           "value": 3.44827586206895,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2025-03-01",
           "value": 3.5502958579881616,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2025-06-01",
           "value": 3.669724770642202,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2025-09-01",
           "value": 3.7443511943189067,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2025-12-01",
           "value": 3.4615384615384714,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         },
         {
           "date": "2026-03-01",
           "value": 2.984126984126978,
-          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/mar-2026/634507b.xlsx",
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
+          "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 3.034134007585343,
+          "source_url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/jun-2026/634507b.xlsx",
           "note": "Table 7b Data1; series=A2615579C; calculated from quarterly index"
         }
       ],
