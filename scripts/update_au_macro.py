@@ -31,7 +31,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-07-31-update-au-macro-v1"
+VERSION = "2026-08-19-update-au-macro-v3"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -386,9 +386,68 @@ def exact_series_from_workbook(content: bytes, series_id: str, source_url: str, 
     raise RuntimeError(f"Series ID {series_id} was found only in metadata sheets or had no dated observations")
 
 
+def month_shift(value: date, months: int) -> date:
+    total = value.year * 12 + value.month - 1 + months
+    return date(total // 12, total % 12 + 1, 1)
+
+
+def discover_latest_anz_job_ads() -> tuple[requests.Response, dict[str, Any]]:
+    """Find the newest ANZ-Indeed Job Ads workbook.
+
+    ANZ publishes data for month T in the following month's folder.  Start with
+    the latest theoretically available data month and step backwards.  The
+    official release-dates page is retained in diagnostics, while generated
+    URLs make the updater independent of a manually maintained month URL.
+    """
+    today = datetime.now(timezone.utc).date().replace(day=1)
+    release_page = "https://www.anz.com.au/newsroom/media/release-dates/"
+    discovery: dict[str, Any] = {"release_page": release_page, "attempts": []}
+    try:
+        page = get(release_page)
+        soup = BeautifulSoup(page.text, "html.parser")
+        for anchor in soup.find_all("a", href=True):
+            href = urljoin(page.url, anchor.get("href", ""))
+            if re.search(r"ANZ-Indeed.*Job.*Ads.*data.*\.xlsx(?:$|\?)", href, re.I):
+                try:
+                    response = get(href)
+                    if response.content.startswith(b"PK"):
+                        discovery["discovered_from_page"] = response.url
+                        return response, discovery
+                except Exception as error:
+                    discovery["attempts"].append({"url": href, "error": f"{type(error).__name__}: {error}"})
+    except Exception as error:
+        discovery["release_page_error"] = f"{type(error).__name__}: {error}"
+
+    # A release folder normally contains the prior month's data.  Test the
+    # current release month first, then future/previous release folders to
+    # tolerate early and delayed publication timing.
+    release_months = [month_shift(today, offset) for offset in (1, 0, -1, -2, -3, -4)]
+    hosts = ("www.anz.com.au", "www.exclusives.anz.com.au")
+    for release_month in release_months:
+        data_month = month_shift(release_month, -1)
+        folder = release_month.strftime("%Y/%B").lower()
+        data_tokens = [data_month.strftime("%b%y"), data_month.strftime("%B%y")]
+        for host in hosts:
+            for token in data_tokens:
+                url = (
+                    f"https://{host}/content/dam/anzcomau/mediacentre/pdfs/jobads/"
+                    f"{folder}/ANZ-Indeed%20Australian%20Job%20Ads%20data_{token}.xlsx"
+                )
+                try:
+                    response = get(url)
+                    valid = response.content.startswith(b"PK")
+                    discovery["attempts"].append({"url": response.url, "valid_xlsx": valid})
+                    if valid:
+                        discovery["selected_release_month"] = release_month.strftime("%Y-%m")
+                        discovery["selected_data_month"] = data_month.strftime("%Y-%m")
+                        return response, discovery
+                except Exception as error:
+                    discovery["attempts"].append({"url": url, "error": f"{type(error).__name__}: {error}"})
+    raise RuntimeError("No current ANZ-Indeed Job Ads XLSX found")
+
+
 def fetch_anz_job_ads(expected: dict[str, float]) -> tuple[list[Point], dict[str, Any]]:
-    url = "https://www.anz.com.au/content/dam/anzcomau/mediacentre/pdfs/jobads/2026/july/ANZ-Indeed%20Australian%20Job%20Ads%20data_Jun26.xlsx"
-    response = get(url)
+    response, discovery = discover_latest_anz_job_ads()
     (OUT / "anz_job_ads_raw.xlsx").write_bytes(response.content)
     books = workbook_rows(response.content)
     candidates: list[dict[str, Any]] = []
@@ -426,8 +485,11 @@ def fetch_anz_job_ads(expected: dict[str, float]) -> tuple[list[Point], dict[str
         raise RuntimeError("ANZ XLSX contained no series matching reference periods")
     best = candidates[0]
     points = [Point(period, value, response.url, note=f"sheet={best['sheet']}; col={best['value_col']}") for period, value in sorted(best["values"].items())]
-    return points, {"request_url": response.url, "candidates": [{k: v for k, v in item.items() if k != "values"} for item in candidates[:30]]}
-
+    return points, {
+        "request_url": response.url,
+        "discovery": discovery,
+        "candidates": [{k: v for k, v in item.items() if k != "values"} for item in candidates[:30]],
+    }
 
 def fetch_abs_workbook_candidate(
     urls: list[str],
@@ -639,20 +701,57 @@ def parse_sp_release_date(value: str) -> datetime | None:
     return None
 
 
-def extract_sp_reference_month(text: str) -> str | None:
-    head = clean(text[:5000])
-    matches = list(re.finditer(
-        r"\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})\b",
-        head,
-        re.I,
-    ))
-    if not matches:
-        return None
+def month_name_to_period(month_name: str, year: str) -> str:
     month_map = {name.lower(): index for index, name in enumerate(
         "January February March April May June July August September October November December".split(), 1
     )}
-    match = matches[0]
-    return f"{int(match.group(2)):04d}-{month_map[match.group(1).lower()]:02d}"
+    return f"{int(year):04d}-{month_map[month_name.lower()]:02d}"
+
+
+def extract_sp_reference_month(text: str) -> str | None:
+    """Extract the survey reference month, not the PDF publication month.
+
+    Final Australia Manufacturing/Services releases are normally published in
+    the following calendar month.  Looking for the first Month YYYY in the PDF
+    can therefore incorrectly return the embargo/publication month.  Search the
+    portion immediately following the PMI report title first, where S&P states
+    the survey month, and only then use bounded fallbacks.
+    """
+    compact = clean(text).replace("™", "").replace("®", "")
+    month = r"(January|February|March|April|May|June|July|August|September|October|November|December)"
+
+    title_patterns = [
+        r"S&P Global Flash Australia PMI",
+        r"S&P Global Australia Manufacturing PMI",
+        r"S&P Global Australia Services PMI",
+    ]
+    for title_pattern in title_patterns:
+        title_match = re.search(title_pattern, compact, re.I)
+        if not title_match:
+            continue
+        after_title = compact[title_match.end():title_match.end() + 1800]
+        reference_match = re.search(rf"\b{month}\s+(20\d{{2}})\b", after_title, re.I)
+        if reference_match:
+            return month_name_to_period(reference_match.group(1), reference_match.group(2))
+
+    # Flash releases list the month immediately before the labelled flash values.
+    flash_match = re.search(
+        rf"\b{month}\s+(20\d{{2}}).{{0,500}}?Flash Australia (?:Composite|Services|Manufacturing) PMI",
+        compact,
+        re.I | re.S,
+    )
+    if flash_match:
+        return month_name_to_period(flash_match.group(1), flash_match.group(2))
+
+    # Final releases contain a data-collection note that refers to the survey month.
+    collected_match = re.search(
+        rf"Data were collected[^.]*?\b{month}\s+(20\d{{2}})\b",
+        compact,
+        re.I | re.S,
+    )
+    if collected_match:
+        return month_name_to_period(collected_match.group(1), collected_match.group(2))
+    return None
 
 
 def discover_australia_pmi_releases() -> list[dict[str, str]]:
@@ -673,17 +772,13 @@ def discover_australia_pmi_releases() -> list[dict[str, str]]:
             anchor.parent.get_text(" ", strip=True) if anchor.parent else "",
             sp_preceding_context(anchor),
         ) if part))
+        # Keep all three official Australia release types:
+        # combined Flash, final Manufacturing, and final Services.
         title_match = re.search(
-            r"(S&P Global\s+(?:Flash\s+)?Australia(?:\s+(?:Manufacturing|Services))?\s+PMI(?:[^|]{0,80})?)",
+            r"((?:S&P Global\s+)?(?:Flash\s+)?Australia(?:\s+(?:Manufacturing|Services))?\s+PMI(?:[^|]{0,100})?)",
             context,
             re.I,
         )
-        if not title_match:
-            title_match = re.search(
-                r"((?:Flash\s+)?Australia(?:\s+(?:Manufacturing|Services))?\s+PMI(?:[^|]{0,80})?)",
-                context,
-                re.I,
-            )
         if not title_match:
             continue
         title = clean(title_match.group(1))
@@ -699,14 +794,13 @@ def discover_australia_pmi_releases() -> list[dict[str, str]]:
             "release_date": release_date_match.group(1).replace(",", "") if release_date_match else "",
         })
         seen.add(url)
-    cutoff = datetime.now(timezone.utc) - timedelta(days=150)
-    recent_candidates: list[dict[str, str]] = []
-    for candidate in candidates:
-        release_date = parse_sp_release_date(candidate.get("release_date", ""))
-        if release_date is not None and release_date >= cutoff:
-            recent_candidates.append(candidate)
+    cutoff = datetime.now(timezone.utc) - timedelta(days=210)
+    recent_candidates = [
+        candidate for candidate in candidates
+        if (parse_sp_release_date(candidate.get("release_date", "")) or datetime.min.replace(tzinfo=timezone.utc)) >= cutoff
+    ]
     if not recent_candidates:
-        recent_candidates = candidates[:30]
+        recent_candidates = candidates[:60]
     recent_candidates.sort(
         key=lambda item: parse_sp_release_date(item.get("release_date", ""))
         or datetime.min.replace(tzinfo=timezone.utc),
@@ -715,43 +809,64 @@ def discover_australia_pmi_releases() -> list[dict[str, str]]:
     (OUT / "sp_global_australia_release_candidates.json").write_text(
         json.dumps(recent_candidates, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    log(
-        f"[S&P PMI] Australia discovered={len(candidates)} "
-        f"recent_to_process={len(recent_candidates)}"
-    )
+    log(f"[S&P PMI] Australia discovered={len(candidates)} recent_to_process={len(recent_candidates)}")
     return recent_candidates
 
 
-def extract_australia_pmi_value(text: str, sector: str) -> float | None:
+def classify_sp_australia_release(title: str, text: str) -> str | None:
+    """Return flash, manufacturing_final, or services_final."""
+    sample = clean(f"{title} {text[:2500]}").replace("™", "").replace("®", "")
+    if re.search(r"S&P Global Flash Australia PMI|Flash Australia Composite PMI", sample, re.I):
+        return "flash"
+    if re.search(r"S&P Global Australia Manufacturing PMI", sample, re.I):
+        return "manufacturing_final"
+    if re.search(r"S&P Global Australia Services PMI", sample, re.I):
+        return "services_final"
+    return None
+
+
+def extract_australia_pmi_value(text: str, sector: str, release_kind: str) -> float | None:
     compact = clean(text).replace("™", "").replace("®", "")
     number_pattern = r"([0-9]{1,2}(?:\.[0-9]+)?)"
     if sector == "manufacturing":
-        patterns = [
-            rf"\bFlash Australia Manufacturing PMI\s*:\s*{number_pattern}\b",
-            rf"\bAustralia Manufacturing PMI\s*:\s*{number_pattern}\b",
+        patterns = []
+        if release_kind == "flash":
+            patterns.extend([
+                rf"\bFlash Australia Manufacturing PMI\s*:\s*{number_pattern}\b",
+                rf"\bFlash Australia Manufacturing PMI\b[^0-9]{{0,30}}{number_pattern}\b",
+            ])
+        patterns.extend([
+            r"\bheadline seasonally adjusted S&P Global Australia Manufacturing Purchasing Managers['’]? Index(?:\s*\(PMI\))?\s+"
+            rf"(?:posted|registered|stood at|rose to|fell to)?\s*{number_pattern}\b",
             r"\bseasonally adjusted S&P Global Australia Manufacturing PMI\s+"
             rf"(?:posted|registered|stood at|rose to|fell to)\s+{number_pattern}\b",
-        ]
+            rf"\bAustralia Manufacturing PMI\s*:\s*{number_pattern}\b",
+        ])
     else:
-        patterns = [
-            rf"\bFlash Australia Services PMI Business Activity Index\s*:\s*{number_pattern}\b",
-            rf"\bAustralia Services PMI Business Activity Index\s*:\s*{number_pattern}\b",
+        patterns = []
+        if release_kind == "flash":
+            patterns.extend([
+                rf"\bFlash Australia Services PMI Business Activity Index\s*:\s*{number_pattern}\b",
+                rf"\bFlash Australia Services PMI Business Activity Index\b[^0-9]{{0,30}}{number_pattern}\b",
+            ])
+        patterns.extend([
+            r"\bheadline seasonally adjusted S&P Global Australia Services PMI Business Activity Index\s+"
+            rf"(?:increased|decreased|rose|fell|posted|registered|stood)(?:\s+\w+){{0,4}}?\s+to\s+{number_pattern}\b",
             r"\bS&P Global Australia Services PMI Business Activity Index\s+"
-            rf"(?:posted|registered|stood at|rose to|fell to)\s+{number_pattern}\b",
-        ]
+            rf"(?:posted|registered|stood at|rose to|fell to|increased to|decreased to)\s+{number_pattern}\b",
+            rf"\bAustralia Services PMI Business Activity Index\s*:\s*{number_pattern}\b",
+        ])
     for priority, pattern in enumerate(patterns, 1):
         for match in re.finditer(pattern, compact, re.I):
             value = float(match.group(1))
             context = compact[max(0, match.start() - 120):match.end() + 150]
-            if 20.0 <= value <= 80.0 and not (
-                value == 50.0 and re.search(r">\s*50|50\s*=", context)
-            ):
-                log(f"[S&P PMI PARSER] sector={sector} value={value} priority={priority}")
+            if 20.0 <= value <= 80.0 and not (value == 50.0 and re.search(r">\s*50|50\s*=", context)):
+                log(f"[S&P PMI PARSER] kind={release_kind} sector={sector} value={value} priority={priority}")
                 return value
     return None
 
 
-def extract_previous_june_value(text: str, sector: str) -> float | None:
+def extract_previous_pmi_value(text: str, sector: str) -> tuple[str, float] | None:
     compact = clean(text).replace("™", "").replace("®", "")
     label = (
         r"Flash Australia Manufacturing PMI"
@@ -759,63 +874,110 @@ def extract_previous_june_value(text: str, sector: str) -> float | None:
         else r"Flash Australia Services PMI Business Activity Index"
     )
     match = re.search(
-        label + r"\s*:\s*[0-9]{1,2}(?:\.[0-9]+)?\s*\(\s*Jun\s*:\s*([0-9]{1,2}(?:\.[0-9]+)?)\s*\)",
+        label + r"\s*:\s*[0-9]{1,2}(?:\.[0-9]+)?\s*\(\s*([A-Za-z]{3})\s*:\s*([0-9]{1,2}(?:\.[0-9]+)?)\s*\)",
         compact,
         re.I,
     )
-    return float(match.group(1)) if match else None
+    if not match:
+        return None
+    month_map = {name.lower(): index for index, name in enumerate(
+        "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(), 1
+    )}
+    month = month_map.get(match.group(1).lower())
+    return (f"{month:02d}", float(match.group(2))) if month else None
 
 
 def sp_australia_pmi(label: str) -> tuple[list[Point], dict[str, Any]]:
+    """Build a monthly series using final sector releases over combined flash.
+
+    Release order is normally: combined Flash Australia PMI, final Australia
+    Manufacturing PMI, then final Australia Services PMI.  For each reference
+    month and sector, retain the sector-specific final value when available;
+    otherwise retain the flash estimate.  A later service release must never
+    displace the manufacturing final, and vice versa.
+    """
     sector = "manufacturing" if label == "製造業PMI" else "services"
+    desired_final_kind = f"{sector}_final"
     candidates = discover_australia_pmi_releases()
     attempts: list[dict[str, Any]] = []
+    selected_by_period: dict[str, tuple[int, datetime, Point, dict[str, Any]]] = {}
+
     for candidate in candidates:
-        title = candidate.get("title", "").lower()
-        if "australia" not in title or "pmi" not in title:
-            continue
         try:
             response = get(candidate["url"])
             text = sp_response_to_text(response)
             safe_id = candidate["url"].rstrip("/").split("/")[-1]
             (OUT / f"sp_global_australia_{safe_id}.txt").write_text(text, encoding="utf-8")
+            release_kind = classify_sp_australia_release(candidate.get("title", ""), text)
             reference_month = extract_sp_reference_month(text)
-            current = extract_australia_pmi_value(text, sector)
-            previous = extract_previous_june_value(text, sector)
+            relevant = release_kind in {"flash", desired_final_kind}
+            current = extract_australia_pmi_value(text, sector, release_kind or "") if relevant else None
+            release_date = parse_sp_release_date(candidate.get("release_date", "")) or datetime.min.replace(tzinfo=timezone.utc)
             attempt = {
                 "url": response.url,
                 "title": candidate.get("title", ""),
-                "content_type": response.headers.get("content-type", ""),
-                "content_length": len(response.content),
-                "text_length": len(text),
-                "contains_australia": "Australia" in text,
-                "contains_manufacturing": "Manufacturing PMI" in text,
-                "contains_services": "Services PMI" in text,
+                "release_date": candidate.get("release_date", ""),
+                "release_kind": release_kind,
+                "relevant_for_sector": relevant,
                 "reference_month": reference_month,
                 "current": current,
-                "previous": previous,
+                "content_type": response.headers.get("content-type", ""),
+                "text_length": len(text),
                 "text_preview": clean(text[:800]),
             }
             attempts.append(attempt)
-            if reference_month != "2026-07" or current is None:
+            if not relevant or reference_month is None or current is None:
                 continue
-            points = [Point("2026-07", current, response.url, status="flash", note="July 2026 Flash")]
-            if previous is not None:
-                points.insert(0, Point("2026-06", previous, response.url, status="final", note="Previous value in July Flash release"))
-            (OUT / "sp_global_australia_release_parsed.json").write_text(
-                json.dumps(attempts, ensure_ascii=False, indent=2), encoding="utf-8"
+
+            priority = 2 if release_kind == desired_final_kind else 1
+            release_type = "final" if priority == 2 else "flash"
+            point = Point(
+                reference_month,
+                current,
+                response.url,
+                status=release_type,
+                note=f"S&P Australia {sector} PMI; source={release_kind}; release={candidate.get('release_date', '')}",
             )
-            return points, {
-                "note": "Same calendar discovery and labelled-value parser used by successful UK PMI pipeline",
-                "selected_release": attempt,
-                "release_candidates": candidates,
-            }
+            existing = selected_by_period.get(reference_month)
+            if existing is None or (priority, release_date) > (existing[0], existing[1]):
+                selected_by_period[reference_month] = (priority, release_date, point, attempt)
+
+            # The combined flash PDF also contains the prior month's final value.
+            # Keep it only as a low-priority historical fallback.
+            if release_kind == "flash":
+                previous = extract_previous_pmi_value(text, sector)
+                if previous is not None:
+                    previous_month, previous_value = previous
+                    reference_year = int(reference_month[:4])
+                    reference_month_number = int(reference_month[5:7])
+                    previous_year = reference_year if int(previous_month) < reference_month_number else reference_year - 1
+                    previous_period = f"{previous_year:04d}-{previous_month}"
+                    previous_point = Point(
+                        previous_period,
+                        previous_value,
+                        response.url,
+                        status="final",
+                        note=f"Previous final value quoted in {reference_month} Flash release",
+                    )
+                    if previous_period not in selected_by_period:
+                        selected_by_period[previous_period] = (0, release_date, previous_point, attempt)
         except Exception as error:
             attempts.append({"url": candidate.get("url", ""), "error": f"{type(error).__name__}: {error}"})
-    (OUT / "sp_global_australia_release_parsed.json").write_text(
+
+    (OUT / f"sp_global_australia_{sector}_release_parsed.json").write_text(
         json.dumps(attempts, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    raise RuntimeError("No Australia PMI value parsed from discovered official S&P releases")
+    if not selected_by_period:
+        raise RuntimeError(f"No Australia {sector} PMI value parsed from official S&P releases")
+
+    points = [selected_by_period[period][2] for period in sorted(selected_by_period)]
+    selected_releases = [selected_by_period[period][3] for period in sorted(selected_by_period)]
+    return points, {
+        "note": "Sector final overrides combined flash for the same reference month",
+        "sector": sector,
+        "selected_releases": selected_releases,
+        "release_candidates": candidates,
+    }
 
 def pdf_value(url: str, patterns: list[str], period: str, raw_name: str) -> list[Point]:
     response = get(url)
@@ -948,22 +1110,27 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "GDP YoY":
         return fetch_abs_target("ANA_AGG", "2024-Q1", ["gross domestic product", "chain volume", "index", "seasonally adjusted"], ["per capita", "percentage changes"], target.expected, "yoy_pct_q")
     if label == "GDP私人消費YoY":
-        return fetch_abs_workbook_candidate(
-            ["https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206008_Household_Final_Consumption_Expenditure.xlsx"],
-            target.expected,
-            "abs_5206008_household_consumption.xlsx",
+        response, discovery = discover_abs_workbook(
+            ["https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/latest-release#data-downloads"],
+            "5206008", "Table 8", [],
+        )
+        points, diagnostics = fetch_abs_workbook_candidate(
+            [response.url], target.expected, "abs_5206008_household_consumption.xlsx",
             "ABS Table 8 Household Final Consumption Expenditure official XLSX",
         )
+        diagnostics.update(discovery)
+        return points, diagnostics
     if label == "GDP投資YoY":
-        return fetch_abs_workbook_candidate(
-            [
-                "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx",
-                "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xls",
-            ],
-            target.expected,
-            "abs_5206002_expenditure_volume_measures.xlsx",
+        response, discovery = discover_abs_workbook(
+            ["https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/latest-release#data-downloads"],
+            "5206002", "Table 2", [],
+        )
+        points, diagnostics = fetch_abs_workbook_candidate(
+            [response.url], target.expected, "abs_5206002_expenditure_volume_measures.xlsx",
             "ABS Table 2 Expenditure on GDP, chain volume measures official workbook",
         )
+        diagnostics.update(discovery)
+        return points, diagnostics
     raise RuntimeError(f"No test mapping for {label}")
 
 
