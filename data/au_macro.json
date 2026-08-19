@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-19T07:24:21.719626+00:00",
+  "generated_at": "2026-08-19T08:36:22.566890+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -6828,17 +6828,10 @@
           "value": 50.5,
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df",
           "release_type": "final",
-          "note": "Previous value in July Flash release"
+          "note": "Previous final value quoted in 2026-07 Flash release"
         },
         {
           "date": "2026-07-01",
-          "value": 53.0,
-          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df",
-          "release_type": "flash",
-          "note": "July 2026 Flash"
-        },
-        {
-          "date": "2026-08-01",
           "value": 53.6,
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/b3fd013847fc487592b073fa32c5c0c1",
           "release_type": "final",
@@ -7745,5 +7738,5 @@
       "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx"
     }
   ],
-  "script_version": "2026-08-19-update-au-macro-v5"
+  "script_version": "2026-08-19-update-au-macro-v6"
 }
