@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-19-update-au-macro-v4"
+VERSION = "2026-08-19-update-au-macro-v5"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -660,14 +660,139 @@ def fetch_wpi_including_bonuses_yoy(series_id: str = "A2615579C") -> tuple[list[
     return points, selected
 
 
-def fetch_westpac_unemployment_expectations() -> tuple[list[Point], dict[str, Any]]:
-    url = "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/07/er20260714BullConsumerSentiment.pdf"
+def discover_westpac_consumer_sentiment_reports(months_back: int = 8) -> list[dict[str, Any]]:
+    """Discover recent official Westpac-MI Consumer Sentiment PDFs.
+
+    Westpac IQ article URLs are stable by reference month and link to the full
+    official bulletin PDF.  Discover from the article rather than guessing the
+    PDF publication day, then retain recent reports so revisions/history can be
+    refreshed as well as the latest observation.
+    """
+    current_month = datetime.now(timezone.utc).date().replace(day=1)
+    reports: list[dict[str, Any]] = []
+    attempts: list[dict[str, Any]] = []
+    seen_pdfs: set[str] = set()
+
+    for offset in range(0, -months_back, -1):
+        reference_date = month_shift(current_month, offset)
+        period = reference_date.strftime("%Y-%m")
+        month_name = reference_date.strftime("%B").lower()
+        article_url = (
+            f"https://www.westpaciq.com.au/economics/{reference_date:%Y/%m}/"
+            f"consumer-sentiment-{month_name}-{reference_date:%Y}"
+        )
+        try:
+            article = get(article_url)
+            soup = BeautifulSoup(article.text, "html.parser")
+            pdf_urls: list[str] = []
+            for anchor in soup.find_all("a", href=True):
+                href = urljoin(article.url, anchor.get("href", ""))
+                anchor_text = clean(anchor.get_text(" ", strip=True))
+                if re.search(r"BullConsumerSentiment\.pdf(?:$|\?)", href, re.I) or (
+                    href.lower().endswith(".pdf")
+                    and "consumer sentiment" in anchor_text.lower()
+                ):
+                    pdf_urls.append(href)
+            attempts.append({"period": period, "article_url": article.url, "pdf_urls": pdf_urls})
+            for pdf_url in pdf_urls:
+                if pdf_url in seen_pdfs:
+                    continue
+                reports.append({
+                    "period": period,
+                    "month_name": reference_date.strftime("%B"),
+                    "article_url": article.url,
+                    "pdf_url": pdf_url,
+                })
+                seen_pdfs.add(pdf_url)
+        except Exception as error:
+            attempts.append({
+                "period": period,
+                "article_url": article_url,
+                "error": f"{type(error).__name__}: {error}",
+            })
+
+    (OUT / "westpac_consumer_sentiment_discovery.json").write_text(
+        json.dumps({"reports": reports, "attempts": attempts}, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    if not reports:
+        raise RuntimeError("No recent official Westpac-MI Consumer Sentiment PDF discovered")
+    return reports
+
+
+def extract_westpac_unemployment_expectations(text: str, month_name: str) -> float | None:
+    """Extract the current-month Unemployment Expectations Index from a bulletin."""
+    compact = clean(text).replace("−", "-").replace("–", "-")
+    escaped_month = re.escape(month_name)
     patterns = [
-        r"Unemployment Expectations Index\s+(?:dropped|fell)\s+[0-9]+(?:\.[0-9]+)?%\s+to\s+([0-9]+(?:\.[0-9]+)?)",
-        r"unemployment expectations.{0,240}?to\s+([0-9]+(?:\.[0-9]+)?)\s+in July",
+        # Narrative wording, e.g. "increased to 135.7 in August from 129.9 in July".
+        rf"(?:Westpac(?:-Melbourne Institute)?\s+)?Unemployment Expectations(?: Index)?"
+        rf".{{0,180}}?\b(?:increased|decreased|rose|fell|lifted|declined|dropped|edged)\b"
+        rf".{{0,120}}?\b(?:to|at|of)\s+([0-9]{{2,3}}(?:\.[0-9]+)?)\s+in\s+{escaped_month}\b",
+        # Simpler narrative wording used in some older bulletins.
+        r"Unemployment Expectations Index\s+(?:increased|decreased|rose|fell|lifted|declined|dropped)"
+        r"(?:\s+[0-9]+(?:\.[0-9]+)?%)?\s+to\s+([0-9]{2,3}(?:\.[0-9]+)?)",
+        # Table fallback: row label followed by historical columns and current-month value.
+        r"Unemployment Expectations Index\s+"
+        r"(?:[0-9]{2,3}(?:\.[0-9]+)?\s+){3,8}([0-9]{2,3}(?:\.[0-9]+)?)\s+"
+        r"[+-]?[0-9]+(?:\.[0-9]+)?\s+[+-]?[0-9]+(?:\.[0-9]+)?",
     ]
-    points = pdf_value(url, patterns, "2026-07", "westpac_consumer_sentiment_july.pdf")
-    return points, {"request_url": url, "note": "Official Westpac-MI Consumer Sentiment Bulletin PDF"}
+    for priority, pattern in enumerate(patterns, 1):
+        match = re.search(pattern, compact, re.I | re.S)
+        if match:
+            value = number(match.group(1))
+            if value is not None and 50.0 <= value <= 250.0:
+                log(f"[WESTPAC UNEMP PARSER] month={month_name} value={value} priority={priority}")
+                return value
+    return None
+
+
+def fetch_westpac_unemployment_expectations() -> tuple[list[Point], dict[str, Any]]:
+    reports = discover_westpac_consumer_sentiment_reports(months_back=8)
+    points: list[Point] = []
+    attempts: list[dict[str, Any]] = []
+
+    for report in reports:
+        try:
+            response = get(report["pdf_url"])
+            if not response.content.startswith(b"%PDF"):
+                raise RuntimeError("Downloaded Westpac report is not a PDF")
+            raw_name = f"westpac_consumer_sentiment_{report['period']}.pdf"
+            (OUT / raw_name).write_bytes(response.content)
+            reader = PdfReader(io.BytesIO(response.content))
+            text = "\n".join(page.extract_text() or "" for page in reader.pages)
+            value = extract_westpac_unemployment_expectations(text, report["month_name"])
+            attempt = {
+                **report,
+                "resolved_pdf_url": response.url,
+                "pages": len(reader.pages),
+                "text_length": len(text),
+                "value": value,
+            }
+            attempts.append(attempt)
+            if value is not None:
+                points.append(Point(
+                    report["period"],
+                    value,
+                    response.url,
+                    status="final",
+                    note="Official Westpac-Melbourne Institute Consumer Sentiment Bulletin PDF",
+                ))
+        except Exception as error:
+            attempts.append({**report, "error": f"{type(error).__name__}: {error}"})
+
+    (OUT / "westpac_unemployment_expectations_parsed.json").write_text(
+        json.dumps(attempts, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    points = dedupe(points)
+    if not points:
+        raise RuntimeError("No unemployment expectations value parsed from recent Westpac bulletins")
+    return points, {
+        "note": "Official Westpac IQ article discovery; linked Westpac-MI bulletin PDFs",
+        "reports_processed": len(reports),
+        "parsed_periods": [point.period for point in points],
+        "attempts": attempts,
+    }
 
 
 def official_html_value(url: str, patterns: list[str], period: str, raw_name: str) -> list[Point]:
