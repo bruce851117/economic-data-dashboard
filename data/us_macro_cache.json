@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-08-18T14:54:51.460062+00:00",
+  "updated_at_utc": "2026-08-19T14:55:15.877086+00:00",
   "series": {
     "就業-就業（人數，千人）|非農": {
       "2023-01": 154776.0,
@@ -10167,5 +10167,7 @@
       "2026-07": -0.437
     }
   },
-  "errors": []
+  "errors": [
+    "BLS: ['Your request has failed. Please check your input parameters, and try your request again.']"
+  ]
 }
