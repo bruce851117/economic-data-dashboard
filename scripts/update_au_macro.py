@@ -18,6 +18,7 @@ import math
 import re
 import sys
 import traceback
+import time
 from dataclasses import asdict, dataclass
 from datetime import date, datetime
 from datetime import timedelta as dt_timedelta
@@ -31,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-19-update-au-macro-v3"
+VERSION = "2026-08-19-update-au-macro-v4"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -126,10 +127,29 @@ def period_key(value: Any) -> str | None:
 
 
 def get(url: str, **kwargs: Any) -> requests.Response:
-    response = SESSION.get(url, timeout=90, allow_redirects=True, **kwargs)
-    log(f"[HTTP] {response.status_code} {response.url} bytes={len(response.content)}")
-    response.raise_for_status()
-    return response
+    """GET with bounded retries for S&P's transient 202/429 responses."""
+    retry_statuses = {202, 429, 500, 502, 503, 504}
+    last_response: requests.Response | None = None
+    for attempt in range(5):
+        response = SESSION.get(url, timeout=90, allow_redirects=True, **kwargs)
+        last_response = response
+        log(f"[HTTP] {response.status_code} {response.url} bytes={len(response.content)} attempt={attempt + 1}")
+        if response.status_code not in retry_statuses and response.content:
+            response.raise_for_status()
+            return response
+        if response.status_code == 200 and response.content:
+            return response
+        retry_after = response.headers.get("Retry-After", "")
+        try:
+            delay = max(float(retry_after), 1.5 * (attempt + 1)) if retry_after else 1.5 * (attempt + 1)
+        except ValueError:
+            delay = 1.5 * (attempt + 1)
+        time.sleep(min(delay, 8.0))
+    if last_response is not None:
+        if last_response.status_code == 202 and not last_response.content:
+            raise RuntimeError(f"Upstream still processing after retries: {last_response.url}")
+        last_response.raise_for_status()
+    raise RuntimeError(f"GET failed without response: {url}")
 
 
 def dedupe(points: list[Point]) -> list[Point]:
@@ -667,6 +687,8 @@ def official_html_value(url: str, patterns: list[str], period: str, raw_name: st
 
 
 SP_RELEASES_URL = "https://www.pmi.spglobal.com/Public/Release/PressReleases"
+SP_RELEASE_CANDIDATES_CACHE: list[dict[str, str]] | None = None
+SP_RELEASE_TEXT_CACHE: dict[str, tuple[requests.Response, str]] = {}
 
 
 def sp_response_to_text(response: requests.Response) -> str:
@@ -755,6 +777,9 @@ def extract_sp_reference_month(text: str) -> str | None:
 
 
 def discover_australia_pmi_releases() -> list[dict[str, str]]:
+    global SP_RELEASE_CANDIDATES_CACHE
+    if SP_RELEASE_CANDIDATES_CACHE is not None:
+        return SP_RELEASE_CANDIDATES_CACHE
     response = get(SP_RELEASES_URL)
     (OUT / "sp_global_release_calendar.html").write_bytes(response.content)
     soup = BeautifulSoup(response.text, "html.parser")
@@ -810,7 +835,22 @@ def discover_australia_pmi_releases() -> list[dict[str, str]]:
         json.dumps(recent_candidates, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     log(f"[S&P PMI] Australia discovered={len(candidates)} recent_to_process={len(recent_candidates)}")
+    SP_RELEASE_CANDIDATES_CACHE = recent_candidates
     return recent_candidates
+
+
+def fetch_sp_release_text(url: str) -> tuple[requests.Response, str]:
+    cached = SP_RELEASE_TEXT_CACHE.get(url)
+    if cached is not None:
+        return cached
+    response = get(url)
+    text = sp_response_to_text(response)
+    if not text.strip():
+        raise RuntimeError(f"Empty S&P release body: {url}")
+    SP_RELEASE_TEXT_CACHE[url] = (response, text)
+    # Gentle pacing reduces transient HTTP 202 responses from S&P.
+    time.sleep(0.35)
+    return response, text
 
 
 def classify_sp_australia_release(title: str, text: str) -> str | None:
@@ -833,31 +873,31 @@ def extract_australia_pmi_value(text: str, sector: str, release_kind: str) -> fl
         if release_kind == "flash":
             patterns.extend([
                 rf"\bFlash Australia Manufacturing PMI\s*:\s*{number_pattern}\b",
-                rf"\bFlash Australia Manufacturing PMI\b[^0-9]{{0,30}}{number_pattern}\b",
+                rf"\bFlash Australia Manufacturing PMI\b.{{0,80}}?{number_pattern}\b",
             ])
         patterns.extend([
-            r"\bheadline seasonally adjusted S&P Global Australia Manufacturing Purchasing Managers['’]? Index(?:\s*\(PMI\))?\s+"
-            rf"(?:posted|registered|stood at|rose to|fell to)?\s*{number_pattern}\b",
-            r"\bseasonally adjusted S&P Global Australia Manufacturing PMI\s+"
-            rf"(?:posted|registered|stood at|rose to|fell to)\s+{number_pattern}\b",
-            rf"\bAustralia Manufacturing PMI\s*:\s*{number_pattern}\b",
+            # Final release wording: "... Index (PMI) posted 52.0 in July"
+            r"\bheadline seasonally adjusted S&P Global Australia Manufacturing Purchasing Managers['’]? Index"
+            rf".{{0,180}}?\b(?:posted|registered|stood at|rose to|fell to)\s+{number_pattern}\b",
+            r"\bS&P Global Australia Manufacturing PMI\b"
+            rf".{{0,180}}?\b(?:posted|registered|stood at|rose to|fell to)\s+{number_pattern}\b",
         ])
     else:
         patterns = []
         if release_kind == "flash":
             patterns.extend([
                 rf"\bFlash Australia Services PMI Business Activity Index\s*:\s*{number_pattern}\b",
-                rf"\bFlash Australia Services PMI Business Activity Index\b[^0-9]{{0,30}}{number_pattern}\b",
+                rf"\bFlash Australia Services PMI Business Activity Index\b.{{0,80}}?{number_pattern}\b",
             ])
         patterns.extend([
-            r"\bheadline seasonally adjusted S&P Global Australia Services PMI Business Activity Index\s+"
-            rf"(?:increased|decreased|rose|fell|posted|registered|stood)(?:\s+\w+){{0,4}}?\s+to\s+{number_pattern}\b",
-            r"\bS&P Global Australia Services PMI Business Activity Index\s+"
-            rf"(?:posted|registered|stood at|rose to|fell to|increased to|decreased to)\s+{number_pattern}\b",
-            rf"\bAustralia Services PMI Business Activity Index\s*:\s*{number_pattern}\b",
+            # Final release wording: "... Index increased to a six-month high of 53.6 in July"
+            r"\bseasonally adjusted S&P Global Australia Services PMI Business Activity Index\b"
+            rf".{{0,220}}?\b(?:increased|decreased|rose|fell|posted|registered|stood)\b.{{0,100}}?\b(?:to|at|of)\s+{number_pattern}\b",
+            r"\bS&P Global Australia Services PMI Business Activity Index\b"
+            rf".{{0,220}}?\b(?:increased|decreased|rose|fell|posted|registered|stood)\b.{{0,100}}?\b(?:to|at|of)\s+{number_pattern}\b",
         ])
     for priority, pattern in enumerate(patterns, 1):
-        for match in re.finditer(pattern, compact, re.I):
+        for match in re.finditer(pattern, compact, re.I | re.S):
             value = float(match.group(1))
             context = compact[max(0, match.start() - 120):match.end() + 150]
             if 20.0 <= value <= 80.0 and not (value == 50.0 and re.search(r">\s*50|50\s*=", context)):
@@ -904,8 +944,7 @@ def sp_australia_pmi(label: str) -> tuple[list[Point], dict[str, Any]]:
 
     for candidate in candidates:
         try:
-            response = get(candidate["url"])
-            text = sp_response_to_text(response)
+            response, text = fetch_sp_release_text(candidate["url"])
             safe_id = candidate["url"].rstrip("/").split("/")[-1]
             (OUT / f"sp_global_australia_{safe_id}.txt").write_text(text, encoding="utf-8")
             release_kind = classify_sp_australia_release(candidate.get("title", ""), text)
