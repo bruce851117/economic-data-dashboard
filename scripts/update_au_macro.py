@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-19-update-au-macro-v6"
+VERSION = "2026-08-19-update-au-macro-v7"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -1591,7 +1591,10 @@ def main() -> int:
     logs=[]
     for target in TARGETS:
         series_id=SERIES_MAP[target.label]
+        target_started=time.perf_counter()
+        started_at=datetime.now(timezone.utc).isoformat()
         log(f"\n[UPDATE] {target.label} -> {series_id}")
+        log(f"[TIMER START] {target.label} started_at={started_at}")
         try:
             points,diagnostics=run_target(target)
             points=dedupe(points)
@@ -1604,6 +1607,14 @@ def main() -> int:
             entry={"label":target.label,"series_id":series_id,"status":"ERROR","added":0,"revised":0,
                    "latest_period":"","latest_value":"","error":f"{type(error).__name__}: {error}"}
             log(f"[ERROR] {entry['error']}")
+        finally:
+            elapsed_seconds=time.perf_counter()-target_started
+            entry["started_at"]=started_at
+            entry["elapsed_seconds"]=round(elapsed_seconds,3)
+            log(
+                f"[TIMER END] {target.label} -> {series_id} "
+                f"status={entry['status']} elapsed={elapsed_seconds:.3f}s"
+            )
         logs.append(entry)
     database["generated_at"]=datetime.now(timezone.utc).isoformat()
     database["script_version"]=VERSION
