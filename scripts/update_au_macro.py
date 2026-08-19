@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-19-update-au-macro-v5"
+VERSION = "2026-08-19-update-au-macro-v6"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -856,48 +856,74 @@ def month_name_to_period(month_name: str, year: str) -> str:
 
 
 def extract_sp_reference_month(text: str) -> str | None:
-    """Extract the survey reference month, not the PDF publication month.
+    """Extract the PMI survey reference month, never the publication month.
 
-    Final Australia Manufacturing/Services releases are normally published in
-    the following calendar month.  Looking for the first Month YYYY in the PDF
-    can therefore incorrectly return the embargo/publication month.  Search the
-    portion immediately following the PMI report title first, where S&P states
-    the survey month, and only then use bounded fallbacks.
+    Final sector reports are normally released in the following month.  The
+    most reliable marker is S&P's "Data were collected ... <Month> <Year>"
+    note.  Narrative references beside the headline index are second-best.
+    Embargo/publication dates are used only to supply the year, never the month.
     """
     compact = clean(text).replace("™", "").replace("®", "")
     month = r"(January|February|March|April|May|June|July|August|September|October|November|December)"
 
+    # 1. Highest confidence: survey collection dates explicitly identify the
+    # reference month, e.g. "Data were collected 9-28 July 2026".
+    collected_patterns = [
+        rf"Data were collected.{{0,120}}?\b{month}\s+(20\d{{2}})\b",
+        rf"Data collection.{{0,120}}?\b{month}\s+(20\d{{2}})\b",
+        rf"Survey responses were collected.{{0,120}}?\b{month}\s+(20\d{{2}})\b",
+    ]
+    for pattern in collected_patterns:
+        match = re.search(pattern, compact, re.I | re.S)
+        if match:
+            return month_name_to_period(match.group(1), match.group(2))
+
+    # Determine the release year without using its month.  This handles final
+    # July data released in August 2026.
+    year_match = re.search(r"Embargoed until.{0,100}?\b(20\d{2})\b", compact, re.I | re.S)
+    if not year_match:
+        year_match = re.search(r"\b(20\d{2})\b", compact)
+    release_year = year_match.group(1) if year_match else None
+
+    # 2. Headline narrative: "posted 52.0 in July" or "increased ... 53.6 in July".
+    narrative_patterns = [
+        rf"Australia Manufacturing Purchasing Managers['’]? Index.{{0,240}}?\b(?:posted|registered|stood|rose|fell|increased|decreased)\b.{{0,140}}?\bin\s+{month}\b",
+        rf"Australia Services PMI Business Activity Index.{{0,260}}?\b(?:posted|registered|stood|rose|fell|increased|decreased)\b.{{0,160}}?\bin\s+{month}\b",
+        rf"Flash Australia (?:Composite|Services|Manufacturing) PMI.{{0,160}}?\bin\s+{month}\b",
+    ]
+    if release_year:
+        for pattern in narrative_patterns:
+            match = re.search(pattern, compact, re.I | re.S)
+            if match:
+                reference_month = match.group(1)
+                reference_year = int(release_year)
+                # January data may be released in February of the same year;
+                # December data may be released in January of the next year.
+                release_month_match = re.search(rf"Embargoed until.{{0,80}}?\b{month}\s+\d{{1,2}}\s+20\d{{2}}", compact, re.I | re.S)
+                if release_month_match:
+                    month_order = {name.lower(): i for i, name in enumerate(
+                        "January February March April May June July August September October November December".split(), 1
+                    )}
+                    release_month_number = month_order[release_month_match.group(1).lower()]
+                    reference_month_number = month_order[reference_month.lower()]
+                    if release_month_number == 1 and reference_month_number == 12:
+                        reference_year -= 1
+                return month_name_to_period(reference_month, str(reference_year))
+
+    # 3. Report-body month label after the title.  Keep the window tight and
+    # reject a month equal to the embargo month when a prior-month label exists.
     title_patterns = [
         r"S&P Global Flash Australia PMI",
         r"S&P Global Australia Manufacturing PMI",
         r"S&P Global Australia Services PMI",
     ]
     for title_pattern in title_patterns:
-        title_match = re.search(title_pattern, compact, re.I)
-        if not title_match:
-            continue
-        after_title = compact[title_match.end():title_match.end() + 1800]
-        reference_match = re.search(rf"\b{month}\s+(20\d{{2}})\b", after_title, re.I)
-        if reference_match:
-            return month_name_to_period(reference_match.group(1), reference_match.group(2))
-
-    # Flash releases list the month immediately before the labelled flash values.
-    flash_match = re.search(
-        rf"\b{month}\s+(20\d{{2}}).{{0,500}}?Flash Australia (?:Composite|Services|Manufacturing) PMI",
-        compact,
-        re.I | re.S,
-    )
-    if flash_match:
-        return month_name_to_period(flash_match.group(1), flash_match.group(2))
-
-    # Final releases contain a data-collection note that refers to the survey month.
-    collected_match = re.search(
-        rf"Data were collected[^.]*?\b{month}\s+(20\d{{2}})\b",
-        compact,
-        re.I | re.S,
-    )
-    if collected_match:
-        return month_name_to_period(collected_match.group(1), collected_match.group(2))
+        title_matches = list(re.finditer(title_pattern, compact, re.I))
+        for title_match in reversed(title_matches):
+            after_title = compact[title_match.end():title_match.end() + 700]
+            reference_match = re.search(rf"\b{month}\s+(20\d{{2}})\b", after_title, re.I)
+            if reference_match:
+                return month_name_to_period(reference_match.group(1), reference_match.group(2))
     return None
 
 
@@ -1315,6 +1341,7 @@ SERIES_MAP = {
 AUTHORITATIVE = {
     "就業新增", "失業率", "職缺", "ANZ職缺廣告", "時薪YoY", "預計離職",
     "CPI YoY", "Trimmed Mean YoY", "零售", "GDP YoY", "GDP私人消費YoY", "GDP投資YoY",
+    "製造業PMI", "服務業PMI",
 }
 
 def point_date(period: str) -> str:
@@ -1339,6 +1366,22 @@ def merge_points(database: dict[str, Any], series_id: str, points: list[Point], 
         **({"release_type":p.status} if p.status else {}), **({"note":p.note} if p.note else {})
     } for p in points}
     if not incoming: return 0,0
+
+    # Repair PMI rows previously assigned to the PDF publication month instead
+    # of the survey reference month.  If the newest parsed official observation
+    # is July, any later S&P PMI row already stored in August is stale and must
+    # be removed before the July final replaces the July flash.
+    if series_id in {"aumanpmi", "auservpmi"}:
+        latest_incoming = max(incoming)
+        stale_keys = [
+            key for key, row in old.items()
+            if key > latest_incoming
+            and "pmi.spglobal.com" in str(row.get("source_url", "")).lower()
+        ]
+        for key in stale_keys:
+            log(f"[PMI CLEANUP] {series_id} remove stale publication-month row {key}")
+            old.pop(key, None)
+
     if authoritative:
         earliest=min(old) if old else min(incoming)
         keys=[k for k in incoming if k>=earliest]
