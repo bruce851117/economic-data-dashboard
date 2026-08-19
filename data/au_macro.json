@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-19T08:36:22.566890+00:00",
+  "generated_at": "2026-08-19T09:44:50.914012+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -7738,5 +7738,5 @@
       "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx"
     }
   ],
-  "script_version": "2026-08-19-update-au-macro-v6"
+  "script_version": "2026-08-19-update-au-macro-v7"
 }
