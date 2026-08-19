@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-19T07:08:09.284650+00:00",
+  "generated_at": "2026-08-19T07:15:43.961054+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -6625,6 +6625,13 @@
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df",
           "release_type": "flash",
           "note": "July 2026 Flash"
+        },
+        {
+          "date": "2026-08-01",
+          "value": 52.0,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5149c64752724271bf43801c1aa1e2ab",
+          "release_type": "final",
+          "note": "S&P Australia manufacturing PMI; source=manufacturing_final; release=August 03 2026"
         }
       ],
       "ticker": "",
@@ -6820,6 +6827,13 @@
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df",
           "release_type": "flash",
           "note": "July 2026 Flash"
+        },
+        {
+          "date": "2026-08-01",
+          "value": 53.6,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/b3fd013847fc487592b073fa32c5c0c1",
+          "release_type": "final",
+          "note": "S&P Australia services PMI; source=services_final; release=August 05 2026"
         }
       ],
       "ticker": "",
@@ -7722,5 +7736,5 @@
       "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx"
     }
   ],
-  "script_version": "2026-08-19-update-au-macro-v3"
+  "script_version": "2026-08-19-update-au-macro-v4"
 }
