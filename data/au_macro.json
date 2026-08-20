@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-19T09:44:50.914012+00:00",
+  "generated_at": "2026-08-20T01:55:57.884165+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -6630,13 +6630,6 @@
         },
         {
           "date": "2026-07-01",
-          "value": 51.7,
-          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5e210a2556224269a36d74a5288687df",
-          "release_type": "flash",
-          "note": "July 2026 Flash"
-        },
-        {
-          "date": "2026-08-01",
           "value": 52.0,
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5149c64752724271bf43801c1aa1e2ab",
           "release_type": "final",
