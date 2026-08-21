@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-21-update-au-macro-v14-x28-x29"
+VERSION = "2026-08-21-update-au-macro-v15-x28-x29-month-fix"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -417,6 +417,14 @@ def workbook_rows(content: bytes) -> list[dict[str, Any]]:
 
 
 def excel_period(value: Any, frequency: str = "Q") -> str | None:
+    # Monthly workbooks must preserve every calendar month.  period_key()
+    # intentionally maps Mar/Jun/Sep/Dec date objects to quarters for national
+    # accounts, so calling it first would turn June 2026 into 2026-Q2 and make
+    # X28/X29 fail the four-month verification.
+    if isinstance(value, (datetime, date)):
+        if frequency == "M":
+            return f"{value.year:04d}-{value.month:02d}"
+        return f"{value.year:04d}-Q{(value.month - 1) // 3 + 1}"
     if isinstance(value, (int, float)) and 20000 <= float(value) <= 80000:
         converted = datetime(1899, 12, 30) + dt_timedelta(days=float(value))
         if frequency == "Q":
