@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-08-20T02:03:46.614032+00:00
+更新時間：2026-08-21T01:05:27.239967+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -20,16 +20,16 @@
       <th rowspan="7" align="center" valign="middle">就業</th>
       <td>就業新增</td>
       <td align="right"></td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#f86971">76</td>
-      <td align="right" bgcolor="#63be7b">44</td>
+      <td align="right" bgcolor="#63be7b">-16</td>
+      <td align="right" bgcolor="#f86971">80</td>
+      <td align="right" bgcolor="#feeced">38</td>
     </tr>
     <tr>
       <td>失業率</td>
       <td align="right"></td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#f86971">4.43</td>
-      <td align="right" bgcolor="#63be7b">4.37</td>
+      <td align="right" bgcolor="#f86971">4.46</td>
+      <td align="right" bgcolor="#fdd7da">4.43</td>
+      <td align="right" bgcolor="#63be7b">4.38</td>
     </tr>
     <tr>
       <td>職缺</td>
@@ -105,14 +105,14 @@
     </tr>
     <tr>
       <td>PMI製造業</td>
-      <td align="right"></td>
+      <td align="right" bgcolor="#f86971">52.0</td>
       <td align="right" bgcolor="#f86971">52.0</td>
       <td align="right" bgcolor="#fddcde">51.5</td>
       <td align="right" bgcolor="#63be7b">50.7</td>
     </tr>
     <tr>
       <td>PMI服務業</td>
-      <td align="right"></td>
+      <td align="right" bgcolor="#fa949a">52.9</td>
       <td align="right" bgcolor="#f86971">53.6</td>
       <td align="right" bgcolor="#d6eedc">50.5</td>
       <td align="right" bgcolor="#63be7b">48.7</td>
@@ -163,8 +163,8 @@
 
 | 指標 | 狀態 | 新增 | 修訂 | 官方最新期 | 官方最新值 | 錯誤 |
 |---|---|---:|---:|---|---:|---|
-| 就業新增 | OK | 0 | 0 | 2026-06 | 76.3425194399988 |  |
-| 失業率 | OK | 0 | 0 | 2026-06 | 4.42834371 |  |
+| 就業新增 | OK | 1 | 17 | 2026-07 | -15.826502660000187 |  |
+| 失業率 | OK | 1 | 18 | 2026-07 | 4.46182469 |  |
 | 職缺 | OK | 0 | 0 | 2026-05 | 329.5 |  |
 | ANZ職缺廣告 | OK | 0 | 0 | 2026-07 | 117.05328933535768 |  |
 | 時薪YoY | OK | 0 | 0 | 2026-Q2 | 3.034134007585343 |  |
@@ -175,8 +175,8 @@
 | 零售 | OK | 0 | 0 | 2026-06 | 0.4 |  |
 | NAB企業售價 | OK | 0 | 0 | 2026-06 | 0.6 |  |
 | 消費信心 | OK | 0 | 0 | 2026-07 | 83.9 |  |
-| 製造業PMI | ERROR | 0 | 0 |  |  | RuntimeError: No Australia manufacturing PMI value parsed from official S&P releases |
-| 服務業PMI | OK | 0 | 0 | 2026-07 | 53.6 |  |
+| 製造業PMI | OK | 1 | 0 | 2026-08 | 52.0 |  |
+| 服務業PMI | OK | 1 | 0 | 2026-08 | 52.9 |  |
 | GDP YoY | OK | 0 | 0 | 2026-Q1 | 2.5197395557126967 |  |
 | GDP私人消費YoY | OK | 0 | 0 | 2026-Q1 | 2.4727989254179406 |  |
 | GDP投資YoY | OK | 0 | 0 | 2026-Q1 | 6.474938173333422 |  |

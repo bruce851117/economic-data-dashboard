@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-20T02:03:46.614032+00:00",
+  "generated_at": "2026-08-21T01:05:27.239967+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -616,118 +616,124 @@
         },
         {
           "date": "2025-02-01",
-          "value": -74.82556076000037,
+          "value": -75.23829938000017,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-03-01",
-          "value": 31.057537450000382,
+          "value": 30.656294820000767,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-04-01",
-          "value": 104.04457288999947,
+          "value": 107.16729544000009,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-05-01",
-          "value": -6.280428599999141,
+          "value": -11.274693060000573,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-06-01",
-          "value": -26.78603843000019,
+          "value": -25.236652909999975,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-07-01",
-          "value": 40.54412554999908,
+          "value": 45.98408994000056,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-08-01",
-          "value": -13.051932329999545,
+          "value": -14.5619501400015,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-09-01",
-          "value": 9.946429190000345,
+          "value": 9.279826000001776,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-10-01",
-          "value": 33.645743229999425,
+          "value": 33.221289609999076,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-11-01",
-          "value": -38.136134889999084,
+          "value": -39.19557707000058,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2025-12-01",
-          "value": 57.713069319999704,
+          "value": 57.32011113000044,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2026-01-01",
-          "value": 36.433740660000694,
+          "value": 36.076094390000435,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2026-02-01",
-          "value": 22.859785229999034,
+          "value": 22.136522549999427,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2026-03-01",
-          "value": 20.346457280000322,
+          "value": 19.958692260001044,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2026-04-01",
-          "value": -38.598929940000744,
+          "value": -34.938773620000575,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2026-05-01",
-          "value": 43.99409126000137,
+          "value": 38.15091199999915,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         },
         {
           "date": "2026-06-01",
-          "value": 76.3425194399988,
+          "value": 80.24885390000054,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
+        },
+        {
+          "date": "2026-07-01",
+          "value": -15.826502660000187,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m3 employed persons 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly num number"
         }
@@ -1344,125 +1350,131 @@
         },
         {
           "date": "2025-01-01",
-          "value": 4.12502218,
+          "value": 4.12696564,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-02-01",
-          "value": 4.07150954,
+          "value": 4.07412539,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-03-01",
-          "value": 4.0778075,
+          "value": 4.08263692,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-04-01",
-          "value": 4.05369904,
+          "value": 4.05470281,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-05-01",
-          "value": 4.09400022,
+          "value": 4.10135811,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-06-01",
-          "value": 4.31226639,
+          "value": 4.31786391,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-07-01",
-          "value": 4.24567843,
+          "value": 4.23574342,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-08-01",
-          "value": 4.2480821,
+          "value": 4.2447033,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-09-01",
-          "value": 4.45184649,
+          "value": 4.43769854,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-10-01",
-          "value": 4.33310794,
+          "value": 4.33154786,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-11-01",
-          "value": 4.32260832,
+          "value": 4.32231223,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2025-12-01",
-          "value": 4.116373,
+          "value": 4.11812027,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2026-01-01",
-          "value": 4.07986795,
+          "value": 4.08233441,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2026-02-01",
-          "value": 4.30162554,
+          "value": 4.30501689,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2026-03-01",
-          "value": 4.27833862,
+          "value": 4.28407589,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2026-04-01",
-          "value": 4.49048465,
+          "value": 4.49108004,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2026-05-01",
-          "value": 4.37134808,
+          "value": 4.37960612,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         },
         {
           "date": "2026-06-01",
-          "value": 4.42834371,
+          "value": 4.43154789,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 4.46182469,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs lf 1 0 0 m13 unemployment rate 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
         }
@@ -6631,9 +6643,16 @@
         {
           "date": "2026-07-01",
           "value": 52.0,
-          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/5149c64752724271bf43801c1aa1e2ab",
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/fc9666a5c84d437f94e0fa46202d0aec",
           "release_type": "final",
-          "note": "S&P Australia manufacturing PMI; source=manufacturing_final; release=August 03 2026"
+          "note": "Previous final value quoted in 2026-08 Flash release"
+        },
+        {
+          "date": "2026-08-01",
+          "value": 52.0,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/fc9666a5c84d437f94e0fa46202d0aec",
+          "release_type": "flash",
+          "note": "S&P Australia manufacturing PMI; source=flash; release=August 21 2026"
         }
       ],
       "ticker": "",
@@ -6826,9 +6845,16 @@
         {
           "date": "2026-07-01",
           "value": 53.6,
-          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/b3fd013847fc487592b073fa32c5c0c1",
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/fc9666a5c84d437f94e0fa46202d0aec",
           "release_type": "final",
-          "note": "S&P Australia services PMI; source=services_final; release=August 05 2026"
+          "note": "Previous final value quoted in 2026-08 Flash release"
+        },
+        {
+          "date": "2026-08-01",
+          "value": 52.9,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/fc9666a5c84d437f94e0fa46202d0aec",
+          "release_type": "flash",
+          "note": "S&P Australia services PMI; source=flash; release=August 21 2026"
         }
       ],
       "ticker": "",
