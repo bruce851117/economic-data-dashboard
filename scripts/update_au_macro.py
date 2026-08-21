@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-21-update-au-macro-v9-dynamic-sources"
+VERSION = "2026-08-21-update-au-macro-v10-labour-underutilisation"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -1217,6 +1217,8 @@ def compare(expected: dict[str, float], points: list[Point], tolerance: float = 
 TARGETS = [
     Target("就業新增", "M", {"2026-06": 76.3, "2026-05": 44.0, "2026-04": -38.6}, "API/CSV", "ABS LF"),
     Target("失業率", "M", {"2026-06": 4.428344, "2026-05": 4.3713481, "2026-04": 4.4904846}, "API/CSV", "ABS LF"),
+    Target("就業不足率", "M", {"2026-07": 6.4}, "API/CSV", "ABS LF"),
+    Target("勞動力未充分利用率", "M", {"2026-07": 10.9}, "API/CSV", "ABS LF"),
     Target("職缺", "Q", {"2026-05": 329.5}, "API/CSV", "ABS JV"),
     Target("ANZ職缺廣告", "M", {"2026-06": 115.837847, "2026-05": 116.016520, "2026-04": 113.793843}, "XLSX", "ANZ official download"),
     Target("時薪YoY", "Q", {}, "API/CSV", "ABS WPI candidate"),
@@ -1240,7 +1242,11 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "就業新增":
         return fetch_abs_target("LF", "2025-01", ["employed", "persons", "australia", "seasonally adjusted"], ["rate", "hours", "state"], target.expected, "mom_diff")
     if label == "失業率":
-        return fetch_abs_target("LF", "2025-01", ["unemployment rate", "australia", "seasonally adjusted"], ["state", "youth"], target.expected)
+        return fetch_abs_target("LF", "2025-01", ["unemployment rate", "australia", "seasonally adjusted"], ["state", "youth", "underemployment", "underutilisation"], target.expected)
+    if label == "就業不足率":
+        return fetch_abs_target("LF", "2025-01", ["underemployment rate", "australia", "persons", "seasonally adjusted"], ["state", "youth", "trend", "original", "underutilisation"], target.expected)
+    if label == "勞動力未充分利用率":
+        return fetch_abs_target("LF", "2025-01", ["underutilisation rate", "australia", "persons", "seasonally adjusted"], ["state", "youth", "trend", "original", "hours based", "hours-based"], target.expected)
     if label == "職缺":
         return fetch_abs_target("JV", "2025-01", ["job vacancies", "australia", "seasonally adjusted", "private and public"], ["trend", "original"], target.expected)
     if label == "ANZ職缺廣告":
@@ -1382,7 +1388,9 @@ DATA_FILE = Path("data/au_macro.json")
 MD_FILE = Path("au_macro_all_data.md")
 
 SERIES_MAP = {
-    "就業新增": "auempchg", "失業率": "auunemp", "職缺": "auvacancy",
+    "就業新增": "auempchg", "失業率": "auunemp",
+    "就業不足率": "auunderemp", "勞動力未充分利用率": "auunderutil",
+    "職缺": "auvacancy",
     "ANZ職缺廣告": "auanzjobads", "時薪YoY": "auwageyoy",
     "預計離職": "auexitleave", "失業預期": "auunempexp",
     "CPI YoY": "aucpi", "Trimmed Mean YoY": "autrimmed", "零售": "auretail",
@@ -1392,7 +1400,8 @@ SERIES_MAP = {
     "GDP投資YoY": "auinvestmentyoy",
 }
 AUTHORITATIVE = {
-    "就業新增", "失業率", "職缺", "ANZ職缺廣告", "時薪YoY", "預計離職",
+    "就業新增", "失業率", "就業不足率", "勞動力未充分利用率",
+    "職缺", "ANZ職缺廣告", "時薪YoY", "預計離職",
     "CPI YoY", "Trimmed Mean YoY", "零售", "GDP YoY", "GDP私人消費YoY", "GDP投資YoY",
     "製造業PMI", "服務業PMI",
 }
@@ -1405,10 +1414,66 @@ def point_date(period: str) -> str:
         return f"{match.group(1)}-{int(match.group(2))*3:02d}-01"
     raise ValueError(f"Unsupported period: {period}")
 
+NEW_SERIES_DEFINITIONS = {
+    "auunderemp": {
+        "name": "就業不足率",
+        "ticker": "ABS Underemployment Rate",
+        "source": "Australian Bureau of Statistics",
+        "frequency": "monthly",
+        "unit": "%",
+        "color": "#0d9488",
+        "data": [],
+    },
+    "auunderutil": {
+        "name": "勞動力未充分利用率",
+        "ticker": "ABS Labour Force Underutilisation Rate",
+        "source": "Australian Bureau of Statistics",
+        "frequency": "monthly",
+        "unit": "%",
+        "color": "#14b8a6",
+        "data": [],
+    },
+}
+
+
+def ensure_new_series(database: dict[str, Any]) -> None:
+    """Create newly introduced series and place them after unemployment."""
+    series_list = database.setdefault("series", [])
+    existing = {str(item.get("id")) for item in series_list}
+    try:
+        insert_at = next(i for i, item in enumerate(series_list) if item.get("id") == "auunemp") + 1
+    except StopIteration:
+        insert_at = len(series_list)
+    for series_id in ("auunderemp", "auunderutil"):
+        if series_id not in existing:
+            series_list.insert(insert_at, {"id": series_id, **NEW_SERIES_DEFINITIONS[series_id]})
+            insert_at += 1
+            existing.add(series_id)
+
+    blocks = database.get("blocks")
+    if isinstance(blocks, list):
+        for block in blocks:
+            if block.get("title") != "就業":
+                continue
+            ids = [sid for sid in block.setdefault("series", []) if sid not in {"auunderemp", "auunderutil"}]
+            try:
+                position = ids.index("auunemp") + 1
+            except ValueError:
+                position = len(ids)
+            ids[position:position] = ["auunderemp", "auunderutil"]
+            block["series"] = ids
+            break
+
+
 def by_id(database: dict[str, Any], series_id: str) -> dict[str, Any]:
     for item in database.get("series", []):
         if item.get("id") == series_id:
             return item
+    if series_id in NEW_SERIES_DEFINITIONS:
+        ensure_new_series(database)
+        for item in database.get("series", []):
+            if item.get("id") == series_id:
+                return item
     raise KeyError(series_id)
 
 def merge_points(database: dict[str, Any], series_id: str, points: list[Point], authoritative: bool) -> tuple[int,int]:
@@ -1641,6 +1706,7 @@ def write_markdown(database: dict[str, Any], logs: list[dict[str, Any]]) -> None
 def main() -> int:
     OUT.mkdir(parents=True,exist_ok=True)
     database=json.loads(DATA_FILE.read_text(encoding="utf-8"))
+    ensure_new_series(database)
     logs=[]
     for target in TARGETS:
         series_id=SERIES_MAP[target.label]
