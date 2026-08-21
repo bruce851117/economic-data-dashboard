@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-19-update-au-macro-v7"
+VERSION = "2026-08-21-update-au-macro-v8-fast-pmi"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -1079,95 +1079,99 @@ def extract_previous_pmi_value(text: str, sector: str) -> tuple[str, float] | No
 
 
 def sp_australia_pmi(label: str) -> tuple[list[Point], dict[str, Any]]:
-    """Build a monthly series using final sector releases over combined flash.
+    """Fetch only the newest Australia flash PMI release.
 
-    Release order is normally: combined Flash Australia PMI, final Australia
-    Manufacturing PMI, then final Australia Services PMI.  For each reference
-    month and sector, retain the sector-specific final value when available;
-    otherwise retain the flash estimate.  A later service release must never
-    displace the manufacturing final, and vice versa.
+    The production updater only needs the newest observation.  The former
+    implementation opened every Australia PMI release from the last 210 days,
+    then retried transient HTTP 202 responses five times.  That was useful for
+    historical validation but unnecessarily slow for a routine update.
+
+    This fast path scans at most the newest three release links, stops as soon
+    as it finds a combined Flash Australia PMI release, and uses a short request
+    timeout without retrying HTTP 202.  The same flash release contains both
+    manufacturing and services values, so the in-memory cache makes the second
+    PMI target effectively free during the same run.
     """
     sector = "manufacturing" if label == "製造業PMI" else "services"
-    desired_final_kind = f"{sector}_final"
-    candidates = discover_australia_pmi_releases()
+    candidates = discover_australia_pmi_releases()[:3]
     attempts: list[dict[str, Any]] = []
-    selected_by_period: dict[str, tuple[int, datetime, Point, dict[str, Any]]] = {}
 
     for candidate in candidates:
+        url = candidate["url"]
         try:
-            response, text = fetch_sp_release_text(candidate["url"])
-            safe_id = candidate["url"].rstrip("/").split("/")[-1]
-            (OUT / f"sp_global_australia_{safe_id}.txt").write_text(text, encoding="utf-8")
+            cached = SP_RELEASE_TEXT_CACHE.get(url)
+            if cached is not None:
+                response, text = cached
+            else:
+                started = time.perf_counter()
+                response = SESSION.get(url, timeout=(2.5, 4.0), allow_redirects=True)
+                elapsed = time.perf_counter() - started
+                log(f"[S&P PMI FAST HTTP] {response.status_code} {response.url} bytes={len(response.content)} elapsed={elapsed:.3f}s")
+                if response.status_code != 200 or not response.content:
+                    attempts.append({
+                        "url": response.url,
+                        "status": response.status_code,
+                        "error": "Skipped without retry; fast PMI mode",
+                    })
+                    continue
+                response.raise_for_status()
+                text = sp_response_to_text(response)
+                if not text.strip():
+                    attempts.append({"url": response.url, "error": "Empty release body"})
+                    continue
+                SP_RELEASE_TEXT_CACHE[url] = (response, text)
+
             release_kind = classify_sp_australia_release(candidate.get("title", ""), text)
+            if release_kind != "flash":
+                attempts.append({
+                    "url": response.url,
+                    "release_kind": release_kind,
+                    "skipped": "Not the newest combined flash release",
+                })
+                continue
+
             reference_month = extract_sp_reference_month(text)
-            relevant = release_kind in {"flash", desired_final_kind}
-            current = extract_australia_pmi_value(text, sector, release_kind or "") if relevant else None
-            release_date = parse_sp_release_date(candidate.get("release_date", "")) or datetime.min.replace(tzinfo=timezone.utc)
+            value = extract_australia_pmi_value(text, sector, "flash")
             attempt = {
                 "url": response.url,
                 "title": candidate.get("title", ""),
                 "release_date": candidate.get("release_date", ""),
                 "release_kind": release_kind,
-                "relevant_for_sector": relevant,
                 "reference_month": reference_month,
-                "current": current,
-                "content_type": response.headers.get("content-type", ""),
+                "value": value,
                 "text_length": len(text),
-                "text_preview": clean(text[:800]),
             }
             attempts.append(attempt)
-            if not relevant or reference_month is None or current is None:
+            if reference_month is None or value is None:
                 continue
 
-            priority = 2 if release_kind == desired_final_kind else 1
-            release_type = "final" if priority == 2 else "flash"
             point = Point(
                 reference_month,
-                current,
+                value,
                 response.url,
-                status=release_type,
-                note=f"S&P Australia {sector} PMI; source={release_kind}; release={candidate.get('release_date', '')}",
+                status="flash",
+                note=f"Latest S&P Flash Australia {sector} PMI; release={candidate.get('release_date', '')}",
             )
-            existing = selected_by_period.get(reference_month)
-            if existing is None or (priority, release_date) > (existing[0], existing[1]):
-                selected_by_period[reference_month] = (priority, release_date, point, attempt)
-
-            # The combined flash PDF also contains the prior month's final value.
-            # Keep it only as a low-priority historical fallback.
-            if release_kind == "flash":
-                previous = extract_previous_pmi_value(text, sector)
-                if previous is not None:
-                    previous_month, previous_value = previous
-                    reference_year = int(reference_month[:4])
-                    reference_month_number = int(reference_month[5:7])
-                    previous_year = reference_year if int(previous_month) < reference_month_number else reference_year - 1
-                    previous_period = f"{previous_year:04d}-{previous_month}"
-                    previous_point = Point(
-                        previous_period,
-                        previous_value,
-                        response.url,
-                        status="final",
-                        note=f"Previous final value quoted in {reference_month} Flash release",
-                    )
-                    if previous_period not in selected_by_period:
-                        selected_by_period[previous_period] = (0, release_date, previous_point, attempt)
+            (OUT / f"sp_global_australia_{sector}_release_parsed.json").write_text(
+                json.dumps(attempts, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+            return [point], {
+                "note": "Fast mode: newest combined Flash Australia PMI only; maximum three release-page requests; no retry on HTTP 202",
+                "sector": sector,
+                "selected_release": attempt,
+                "candidates_checked": len(attempts),
+            }
+        except (requests.Timeout, requests.ConnectionError) as error:
+            attempts.append({"url": url, "error": f"{type(error).__name__}: {error}", "retry": False})
         except Exception as error:
-            attempts.append({"url": candidate.get("url", ""), "error": f"{type(error).__name__}: {error}"})
+            attempts.append({"url": url, "error": f"{type(error).__name__}: {error}"})
 
     (OUT / f"sp_global_australia_{sector}_release_parsed.json").write_text(
         json.dumps(attempts, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    if not selected_by_period:
-        raise RuntimeError(f"No Australia {sector} PMI value parsed from official S&P releases")
-
-    points = [selected_by_period[period][2] for period in sorted(selected_by_period)]
-    selected_releases = [selected_by_period[period][3] for period in sorted(selected_by_period)]
-    return points, {
-        "note": "Sector final overrides combined flash for the same reference month",
-        "sector": sector,
-        "selected_releases": selected_releases,
-        "release_candidates": candidates,
-    }
+    raise RuntimeError(
+        f"Fast PMI mode could not parse the latest Australia {sector} flash PMI from the newest three releases"
+    )
 
 def pdf_value(url: str, patterns: list[str], period: str, raw_name: str) -> list[Point]:
     response = get(url)
