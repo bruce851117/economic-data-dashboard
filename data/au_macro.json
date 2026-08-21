@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-21T07:41:29.406295+00:00",
+  "generated_at": "2026-08-21T07:51:20.574452+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -1484,6 +1484,131 @@
       "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD"
     },
     {
+      "id": "auempratio",
+      "name": "Employment Ratio",
+      "ticker": "ABS Employment-to-Population Ratio",
+      "source": "Australian Bureau of Statistics",
+      "frequency": "monthly",
+      "unit": "%",
+      "color": "#22c55e",
+      "data": [
+        {
+          "date": "2025-01-01",
+          "value": 64.41738092,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 63.95744862,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 63.96650162,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 64.36569529,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 64.24262569,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 64.05844328,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 64.15909984,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 63.99406247,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 63.93388519,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 64.00015462,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 63.75014526,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 63.92154478,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 63.96261864,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 63.94300062,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 63.9139961,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 63.68471942,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 63.77215842,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 64.0412664,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 63.87044554,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs lf 1 0 0 m16 employment to population ratio 3 persons 1599 total age 20 seasonally adjusted aus australia m monthly pct percent"
+        }
+      ]
+    },
+    {
       "id": "auunderemp",
       "name": "就業不足率",
       "ticker": "ABS Underemployment Rate",
@@ -1494,117 +1619,117 @@
       "data": [
         {
           "date": "2025-01-01",
-          "value": 5.32844054,
+          "value": 4.79213378,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2025-02-01",
-          "value": 5.31548701,
+          "value": 4.29218648,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2025-03-01",
-          "value": 5.32645307,
+          "value": 3.49213359,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2025-04-01",
-          "value": 5.37476706,
+          "value": 3.42856962,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2025-05-01",
-          "value": 5.47598408,
+          "value": 3.90948184,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2025-06-01",
-          "value": 5.61901063,
+          "value": 3.90537588,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2025-07-01",
-          "value": 5.79785,
+          "value": 4.2586278,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2025-08-01",
-          "value": 5.99031267,
+          "value": 3.77656135,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2025-09-01",
-          "value": 6.17772957,
+          "value": 4.46560926,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2025-10-01",
-          "value": 6.31166361,
+          "value": 3.95061631,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2025-11-01",
-          "value": 6.37846709,
+          "value": 4.81022033,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2025-12-01",
-          "value": 6.39891053,
+          "value": 4.31411224,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2026-01-01",
-          "value": 6.39440587,
+          "value": 5.64509105,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2026-02-01",
-          "value": 6.38102308,
+          "value": 5.20527382,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2026-03-01",
-          "value": 6.36984997,
+          "value": 4.83385491,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2026-04-01",
-          "value": 6.36706111,
+          "value": 5.77819951,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2026-05-01",
-          "value": 6.35872416,
+          "value": 6.06172709,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2026-06-01",
-          "value": 6.35119536,
+          "value": 6.39415708,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         },
         {
           "date": "2026-07-01",
-          "value": 6.34930168,
+          "value": 6.61114715,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m15 unemployment rate looking for part time work 1 males 1599 total age 30 trend aus australia m monthly pct percent"
+          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
         }
       ]
     },
@@ -8021,5 +8146,5 @@
       "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx"
     }
   ],
-  "script_version": "2026-08-21-update-au-macro-v10-labour-underutilisation"
+  "script_version": "2026-08-21-update-au-macro-v11-employment-ratio"
 }
