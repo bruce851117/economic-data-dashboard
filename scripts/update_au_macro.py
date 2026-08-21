@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-21-update-au-macro-v8-fast-pmi"
+VERSION = "2026-08-21-update-au-macro-v9-dynamic-sources"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -1224,7 +1224,7 @@ TARGETS = [
     Target("失業預期", "M", {"2026-07": 129.924065, "2026-06": 139.834025, "2026-05": 140.019870, "2026-04": 147.758451}, "HTML", "Westpac-Melbourne Institute official release"),
     Target("CPI YoY", "M", {"2026-06": 3.8, "2026-05": 4.0, "2026-04": 4.2}, "API/CSV", "ABS CPI_MONTHLY"),
     Target("Trimmed Mean YoY", "M", {"2026-06": 3.6, "2026-05": 3.6, "2026-04": 3.4}, "API/CSV", "ABS CPI_MONTHLY"),
-    Target("零售", "M", {"2026-05": 1.3, "2026-04": -1.1}, "API/CSV", "ABS HSI_M Monthly Household Spending"),
+    Target("零售", "M", {"2026-06": 7.0, "2026-05": 4.3}, "API/CSV", "ABS HSI_M Retail spending YoY original"),
     Target("NAB企業售價", "M", {"2026-06": 0.59057, "2026-05": 0.92126, "2026-04": 1.79622}, "PDF", "NAB Monthly Business Survey"),
     Target("消費信心", "M", {"2026-07": 83.933514, "2026-06": 80.612096, "2026-05": 82.978906, "2026-04": 80.149167}, "HTML", "Westpac-Melbourne Institute official release"),
     Target("製造業PMI", "M", {"2026-07": 51.7, "2026-06": 51.5, "2026-05": 50.7, "2026-04": 51.3}, "HTML", "S&P Global official releases"),
@@ -1254,49 +1254,98 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "Trimmed Mean YoY":
         return fetch_abs_target("CPI_MONTHLY", "2025-01", ["trimmed mean", "australia", "annual"], [], target.expected)
     if label == "零售":
-        return fetch_abs_target("HSI_M", "2025-01", ["household spending", "australia", "seasonally adjusted", "monthly"], ["trend", "through the year"], target.expected)
+        return fetch_abs_target("HSI_M", "2025-01", ["retail spending", "australia", "original", "through the year"], ["seasonally adjusted", "trend", "monthly percentage change"], target.expected)
     if label == "NAB企業售價":
-        releases = [
-            ("2026-06", "https://www.nab.com.au/content/dam/nab/documents/news/2026m06-nab-monthly-business-survey-mnb.pdf", "nab_june_2026.pdf"),
-            ("2026-05", "https://news.nab.com.au/content/dam/nab-news/documents/economics/nab-monthly-business-survey-may-26.pdf", "nab_may_2026.pdf"),
-            ("2026-04", "https://news.nab.com.au/content/dam/nab-news/documents/economics/202604%20NAB%20Monthly%20Business%20Survey%20April.pdf", "nab_april_2026.pdf"),
+        # Discover recent official NAB Monthly Business Survey pages/PDFs instead
+        # of keeping month-specific PDF URLs in the source code.
+        current_month = datetime.now(timezone.utc).date().replace(day=1)
+        points: list[Point] = []
+        attempts: list[dict[str, Any]] = []
+        patterns = [
+            r"Product prices\s+(?:To\s*)?([+-]?\d+(?:\.\d+)?)%",
+            r"product price growth.{0,160}?(?:at|to)\s*([+-]?\d+(?:\.\d+)?)%",
+            r"product prices growth.{0,160}?(?:at|to)\s*([+-]?\d+(?:\.\d+)?)%",
         ]
-        points = []
-        errors = []
-        patterns = [r"Product prices\s+To\s*([+-]?\d+(?:\.\d+)?)%", r"product price growth.{0,120}?(?:at|to)\s*([+-]?\d+(?:\.\d+)?)%", r"final product prices.{0,100}?([+-]?\d+(?:\.\d+)?)%"]
-        for period, url, raw_name in releases:
-            try:
-                points.extend(pdf_value(url, patterns, period, raw_name))
-            except Exception as error:
-                errors.append(f"{period}: {error}")
+        for offset in range(0, -4, -1):
+            reference_date = month_shift(current_month, offset)
+            period = reference_date.strftime("%Y-%m")
+            month_slug = reference_date.strftime("%B").lower()
+            page_urls = [
+                f"https://www.nab.com.au/news/economy-markets/nab-business-survey-{month_slug}-{reference_date:%Y}",
+                f"https://business.nab.com.au/nab-monthly-business-survey-{month_slug}-{reference_date:%Y}/",
+            ]
+            parsed = False
+            for page_url in page_urls:
+                try:
+                    page = get(page_url)
+                    soup = BeautifulSoup(page.text, "html.parser")
+                    links = []
+                    for anchor in soup.find_all("a", href=True):
+                        href = urljoin(page.url, anchor.get("href", ""))
+                        context = clean(anchor.get_text(" ", strip=True))
+                        if href.lower().split("?")[0].endswith(".pdf") and (
+                            "business survey" in context.lower() or "monthly business" in href.lower()
+                        ):
+                            links.append(href)
+                    # Parse the HTML first, then its official report PDF if needed.
+                    sources = [(page.url, clean(soup.get_text(" ", strip=True)), "html")]
+                    for pdf_url in links[:2]:
+                        response = get(pdf_url)
+                        if response.content.startswith(b"%PDF"):
+                            text = sp_response_to_text(response)
+                            sources.append((response.url, clean(text), "pdf"))
+                    for source_url, body, source_type in sources:
+                        for pattern in patterns:
+                            match = re.search(pattern, body, re.I | re.S)
+                            if match:
+                                value = number(match.group(1))
+                                if value is not None:
+                                    points.append(Point(period, value, source_url, status="final", note="Official NAB Monthly Business Survey; product prices quarterly rate"))
+                                    attempts.append({"period": period, "url": source_url, "source_type": source_type, "value": value})
+                                    parsed = True
+                                    break
+                        if parsed:
+                            break
+                    if parsed:
+                        break
+                except Exception as error:
+                    attempts.append({"period": period, "url": page_url, "error": f"{type(error).__name__}: {error}"})
+            if parsed:
+                break
         if not points:
-            raise RuntimeError("NAB monthly PDFs failed: " + " | ".join(errors))
-        return points, {"note": "Official monthly PDFs; no public API/CSV found", "errors": errors}
+            raise RuntimeError("No latest NAB product prices value parsed from dynamically discovered official release")
+        return points, {"note": "Dynamic official NAB release discovery; no month-specific URLs", "attempts": attempts}
     if label == "消費信心":
-        releases = [
-            (
-                "2026-07",
-                "https://www.westpac.com.au/news/making-news/2026/07/feeling-better-but-not-better-off-consumer-sentiment-and-the-cost-of-living-crunch/",
-                [r"Consumer Sentiment Index rose.{0,120}?to\s*([0-9]+(?:\.\d+)?)"],
-                "westpac_consumer_sentiment_july.html",
-            ),
-            (
-                "2026-06",
-                "https://www.westpac.com.au/news/making-news/2026/06/consumer-sentiment-slips-again-as-cost-of-living-pressures-weigh-on-households/",
-                [r"Consumer Sentiment Index dropped.{0,120}?to\s*([0-9]+(?:\.\d+)?)"],
-                "westpac_consumer_sentiment_june.html",
-            ),
+        # Reuse dynamic Westpac IQ discovery and parse the newest linked bulletin.
+        reports = discover_westpac_consumer_sentiment_reports(months_back=4)
+        points: list[Point] = []
+        attempts: list[dict[str, Any]] = []
+        patterns = [
+            r"Consumer Sentiment Index\s+(?:rose|fell|increased|decreased|lifted|declined|dropped).{0,100}?\bto\s+([0-9]{2,3}(?:\.[0-9]+)?)",
+            r"Consumer Sentiment Index.{0,100}?\b(?:at|of)\s+([0-9]{2,3}(?:\.[0-9]+)?)",
         ]
-        points = []
-        errors = []
-        for period, url, patterns, raw_name in releases:
+        for report in sorted(reports, key=lambda item: item["period"], reverse=True):
             try:
-                points.extend(official_html_value(url, patterns, period, raw_name))
+                response = get(report["pdf_url"])
+                if not response.content.startswith(b"%PDF"):
+                    raise RuntimeError("Downloaded Westpac report is not a PDF")
+                text = clean(sp_response_to_text(response))
+                value = None
+                for pattern in patterns:
+                    match = re.search(pattern, text, re.I | re.S)
+                    if match:
+                        value = number(match.group(1))
+                        if value is not None:
+                            break
+                attempts.append({"period": report["period"], "url": response.url, "value": value})
+                if value is not None:
+                    points.append(Point(report["period"], value, response.url, status="final", note="Official Westpac-Melbourne Institute Consumer Sentiment Bulletin"))
+                    break
             except Exception as error:
-                errors.append(f"{period}: {error}")
+                attempts.append({**report, "error": f"{type(error).__name__}: {error}"})
         if not points:
-            raise RuntimeError("Westpac official releases failed: " + " | ".join(errors))
-        return points, {"note": "Official Westpac releases; full precision history is licensed", "errors": errors}
+            raise RuntimeError("No latest consumer sentiment value parsed from dynamically discovered Westpac bulletin")
+        return points, {"note": "Dynamic Westpac IQ article and linked bulletin discovery; no month-specific URLs", "attempts": attempts}
     if label == "失業預期":
         return fetch_westpac_unemployment_expectations()
     if label in {"製造業PMI", "服務業PMI"}:
