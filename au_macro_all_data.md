@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-08-21T08:02:33.076381+00:00
+更新時間：2026-08-21T08:16:12.262046+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -165,8 +165,8 @@
 |---|---|---:|---:|---|---:|---|
 | 就業新增 | OK | 0 | 0 | 2026-07 | -15.826502660000187 |  |
 | 失業率 | OK | 0 | 0 | 2026-07 | 4.46182469 |  |
-| 就業不足率 | ERROR | 0 | 0 |  |  | RuntimeError: ABS response contained no numeric time series |
-| 勞動力未充分利用率 | ERROR | 0 | 0 |  |  | RuntimeError: ABS response contained no numeric time series |
+| 就業不足率 | ERROR | 0 | 0 |  |  | RuntimeError: ABS series selection failed published-value verification: [{"period": "2026-04", "published": 5.9, "downloaded": 5.77819951, "difference": -0.12180049000000004, "match": false}, {"period": "2026-05", "published": 6.3, "downloaded": 6.06172709, "difference": -0.23827291000000006, "match": false}, {"period": "2026-06", "published": 6.4, "downloaded": 6.39415708, "difference": -0.005842920000000085, "match": true}, {"period": "2026-07", "published": 6.4, "downloaded": 6.61114715, "difference": 0.2111471499999995, "match": false}] |
+| 勞動力未充分利用率 | ERROR | 0 | 0 |  |  | RuntimeError: ABS series selection failed published-value verification: [{"period": "2026-04", "published": 10.4, "downloaded": 10.01777758, "difference": -0.38222241999999973, "match": false}, {"period": "2026-05", "published": 10.7, "downloaded": 11.0212063, "difference": 0.32120630000000006, "match": false}, {"period": "2026-06", "published": 10.9, "downloaded": 10.22059256, "difference": -0.6794074400000003, "match": false}, {"period": "2026-07", "published": 10.8, "downloaded": 10.68597398, "difference": -0.11402602000000073, "match": false}] |
 | Employment Ratio | OK | 0 | 0 | 2026-07 | 63.87044554 |  |
 | 職缺 | OK | 0 | 0 | 2026-05 | 329.5 |  |
 | ANZ職缺廣告 | OK | 0 | 0 | 2026-07 | 117.05328933535768 |  |
