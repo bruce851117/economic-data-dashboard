@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-21-update-au-macro-v13-verified-lf-series"
+VERSION = "2026-08-21-update-au-macro-v14-x28-x29"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -635,6 +635,103 @@ def fetch_abs_workbook_candidate(
         except Exception as error:
             errors.append(f"{url}: {type(error).__name__}: {error}")
     raise RuntimeError("ABS national accounts workbook attempts failed: " + " | ".join(errors))
+
+
+def fetch_verified_monthly_workbook_series(
+    response: requests.Response,
+    expected: dict[str, float],
+    *,
+    label_terms: list[str],
+    exclude_terms: list[str],
+    raw_name: str,
+    tolerance: float = 0.051,
+) -> tuple[list[Point], dict[str, Any]]:
+    """Find the exact monthly series in an official ABS workbook.
+
+    Used for corrected Labour Force Tables X28/X29.  The LF API currently
+    returns different values from the corrected headline workbook series, so
+    these indicators must come from the official spreadsheet, not ABS,LF/all.
+    """
+    (OUT / raw_name).write_bytes(response.content)
+    candidates: list[dict[str, Any]] = []
+    for book in workbook_rows(response.content):
+        rows = book["rows"]
+        max_cols = max((len(row) for row in rows), default=0)
+        for date_col in range(min(6, max_cols)):
+            periods: dict[int, str] = {}
+            for row_index, row in enumerate(rows):
+                if date_col >= len(row):
+                    continue
+                period = excel_period(row[date_col], "M")
+                if period and re.fullmatch(r"20\d{2}-\d{2}", period):
+                    periods[row_index] = period
+            if len(periods) < 4:
+                continue
+            for value_col in range(max_cols):
+                values: dict[str, float] = {}
+                for row_index, period in periods.items():
+                    if value_col < len(rows[row_index]):
+                        value = number(rows[row_index][value_col])
+                        if value is not None:
+                            values[period] = value
+                checks = []
+                for period, published in expected.items():
+                    actual = values.get(period)
+                    checks.append(actual is not None and abs(actual - published) <= tolerance)
+                if not checks or not all(checks):
+                    continue
+                context_cells = []
+                for row_index in range(max(0, min(periods) - 25), min(periods)):
+                    row = rows[row_index]
+                    for col in range(max(0, value_col - 2), min(len(row), value_col + 2)):
+                        if row[col] not in (None, ""):
+                            context_cells.append(clean(row[col]))
+                context = norm(" ".join(context_cells))
+                include_hits = sum(term in context for term in label_terms)
+                exclude_hits = sum(term in context for term in exclude_terms)
+                candidates.append({
+                    "sheet": book["sheet"], "date_col": date_col + 1,
+                    "value_col": value_col + 1, "context": context,
+                    "include_hits": include_hits, "exclude_hits": exclude_hits,
+                    "values": values,
+                })
+    if not candidates:
+        raise RuntimeError("Official ABS workbook contained no series matching all published reference values")
+    candidates.sort(key=lambda item: (-item["include_hits"], item["exclude_hits"], item["value_col"]))
+    best = candidates[0]
+    points = [
+        Point(period, value, response.url, status="final", note=f"Official corrected ABS workbook; sheet={best['sheet']}; col={best['value_col']}")
+        for period, value in sorted(best["values"].items())
+    ]
+    return points, {
+        "request_url": response.url,
+        "selected_sheet": best["sheet"],
+        "selected_date_col": best["date_col"],
+        "selected_value_col": best["value_col"],
+        "selected_context": best["context"],
+        "reference_checks": [
+            {"period": period, "published": published, "downloaded": best["values"].get(period)}
+            for period, published in sorted(expected.items())
+        ],
+        "candidate_count": len(candidates),
+    }
+
+
+def fetch_corrected_lf_table(table: str, expected: dict[str, float], label_terms: list[str], exclude_terms: list[str]) -> tuple[list[Point], dict[str, Any]]:
+    landing = "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/latest-release#data-downloads"
+    response, discovery = discover_abs_workbook(
+        [landing], table.lower(), f"Table {table}", []
+    )
+    points, diagnostics = fetch_verified_monthly_workbook_series(
+        response, expected,
+        label_terms=label_terms,
+        exclude_terms=exclude_terms,
+        raw_name=f"abs_labour_force_{table.lower()}_raw.xlsx",
+    )
+    diagnostics.update(discovery)
+    diagnostics["table"] = table
+    diagnostics["note"] = "Corrected official ABS Labour Force workbook; API LF values are not used for this indicator"
+    return points, diagnostics
 
 
 def discover_abs_workbook(landing_urls: list[str], filename_stem: str, title_token: str, fallback_urls: list[str]) -> tuple[requests.Response, dict[str, Any]]:
@@ -1294,18 +1391,16 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "失業率":
         return fetch_abs_target("LF", "2025-01", ["unemployment rate", "australia", "seasonally adjusted"], ["state", "youth", "underemployment", "underutilisation"], target.expected)
     if label == "就業不足率":
-        return fetch_abs_verified_target(
-            "LF", "2025-01",
-            ["underemployment rate", "australia", "seasonally adjusted"],
-            ["state", "youth", "trend", "original", "hours based"],
-            target.expected,
+        return fetch_corrected_lf_table(
+            "X28", target.expected,
+            ["underemployment rate", "proportion of labour force", "persons", "seasonally adjusted"],
+            ["trend", "original", "male", "female", "hours based", "u series"],
         )
     if label == "勞動力未充分利用率":
-        return fetch_abs_verified_target(
-            "LF", "2025-01",
-            ["underutilisation rate", "australia", "seasonally adjusted"],
-            ["state", "youth", "trend", "original", "hours based"],
-            target.expected,
+        return fetch_corrected_lf_table(
+            "X29", target.expected,
+            ["underutilisation rate", "persons", "seasonally adjusted"],
+            ["trend", "original", "male", "female", "hours based", "u series"],
         )
     if label == "Employment Ratio":
         return fetch_abs_verified_target(
