@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-21T01:05:27.239967+00:00",
+  "generated_at": "2026-08-21T03:19:39.067023+00:00",
   "series": [
     {
       "id": "auempchg",
