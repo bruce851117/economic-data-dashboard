@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-08-21T08:38:16.999372+00:00
+更新時間：2026-08-21T08:42:16.562411+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -165,8 +165,8 @@
 |---|---|---:|---:|---|---:|---|
 | 就業新增 | OK | 0 | 0 | 2026-07 | -15.826502660000187 |  |
 | 失業率 | OK | 0 | 0 | 2026-07 | 4.46182469 |  |
-| 就業不足率 | ERROR | 0 | 0 |  |  | RuntimeError: Official ABS workbook contained no series matching all published reference values |
-| 勞動力未充分利用率 | ERROR | 0 | 0 |  |  | RuntimeError: Official ABS workbook contained no series matching all published reference values |
+| 就業不足率 | OK | 0 | 19 | 2026-07 | 6.3612462 |  |
+| 勞動力未充分利用率 | OK | 0 | 19 | 2026-07 | 10.8230708 |  |
 | Employment Ratio | OK | 0 | 0 | 2026-07 | 63.87044554 |  |
 | 職缺 | OK | 0 | 0 | 2026-05 | 329.5 |  |
 | ANZ職缺廣告 | OK | 0 | 0 | 2026-07 | 117.05328933535768 |  |

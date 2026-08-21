@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-21T08:38:16.999372+00:00",
+  "generated_at": "2026-08-21T08:42:16.562411+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -1619,117 +1619,136 @@
       "data": [
         {
           "date": "2025-01-01",
-          "value": 4.79213378,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.9851673,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-02-01",
-          "value": 4.29218648,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.9519472,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-03-01",
-          "value": 3.49213359,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.8983002,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-04-01",
-          "value": 3.42856962,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 6.0491542,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-05-01",
-          "value": 3.90948184,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.8277901,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-06-01",
-          "value": 3.90537588,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.8647034,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-07-01",
-          "value": 4.2586278,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.8295032,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-08-01",
-          "value": 3.77656135,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.7076093,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-09-01",
-          "value": 4.46560926,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.9243758,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-10-01",
-          "value": 3.95061631,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.7136324,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-11-01",
-          "value": 4.81022033,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 6.1835449,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-12-01",
-          "value": 4.31411224,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.7384296,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-01-01",
-          "value": 5.64509105,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.9282263,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-02-01",
-          "value": 5.20527382,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.9078279,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-03-01",
-          "value": 4.83385491,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.9870328,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-04-01",
-          "value": 5.77819951,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 5.9278271,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-05-01",
-          "value": 6.06172709,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 6.3101573,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-06-01",
-          "value": 6.39415708,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 6.449338,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-07-01",
-          "value": 6.61114715,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m14 unemployment rate looking for full time work 1 males 1599 total age 10 original 6 tasmania m monthly pct percent"
+          "value": 6.3612462,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         }
       ]
     },
@@ -1744,117 +1763,136 @@
       "data": [
         {
           "date": "2025-01-01",
-          "value": 7.99870132,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.1121329,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-02-01",
-          "value": 8.411164,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.0260726,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-03-01",
-          "value": 7.03716634,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 9.9809371,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-04-01",
-          "value": 6.70541733,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.103857,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-05-01",
-          "value": 8.00738983,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 9.9291482,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-06-01",
-          "value": 8.06791879,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.1825674,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-07-01",
-          "value": 8.01827508,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.0652466,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-08-01",
-          "value": 7.98623047,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 9.9523126,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-09-01",
-          "value": 9.64354627,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.3620743,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-10-01",
-          "value": 8.30733317,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.0451803,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-11-01",
-          "value": 9.4728168,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.5058571,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-12-01",
-          "value": 9.64383512,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 9.8565499,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-01-01",
-          "value": 10.87195567,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.0105607,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-02-01",
-          "value": 10.38425181,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.2128448,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-03-01",
-          "value": 9.89486505,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.2711087,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-04-01",
-          "value": 10.01777758,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.4189072,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-05-01",
-          "value": 11.0212063,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.6897635,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-06-01",
-          "value": 10.22059256,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.880885899999999,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-07-01",
-          "value": 10.68597398,
-          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs lf 1 0 0 m4 unemployed looking for full time work 3 persons 1599 total age 10 original 6 tasmania m monthly num number"
+          "value": 10.8230708,
+          "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         }
       ]
     },
@@ -8146,5 +8184,5 @@
       "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx"
     }
   ],
-  "script_version": "2026-08-21-update-au-macro-v14-x28-x29"
+  "script_version": "2026-08-21-update-au-macro-v15-x28-x29-month-fix"
 }
