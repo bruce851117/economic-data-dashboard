@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T01:31:00.340670+00:00",
+  "generated_at": "2026-08-21T02:57:56.542930+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -823,6 +823,12 @@
           "value": 2.6,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/inflationandpriceindices/timeseries/dko8/mm23",
           "source_frequency": "monthly"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 2.6,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/inflationandpriceindices/timeseries/dko8/mm23",
+          "source_frequency": "monthly"
         }
       ]
     },
@@ -1587,6 +1593,12 @@
         {
           "date": "2026-06-01",
           "value": 3.6,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/inflationandpriceindices/timeseries/d7nn/mm23",
+          "source_frequency": "monthly"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 3.4,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/inflationandpriceindices/timeseries/d7nn/mm23",
           "source_frequency": "monthly"
         }
@@ -6609,6 +6621,12 @@
           "value": 2.5,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/jpc5/unem",
           "source_frequency": "monthly"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 2.5,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/jpc5/unem",
+          "source_frequency": "monthly"
         }
       ]
     },
@@ -9873,6 +9891,11 @@
         {
           "date": "2026-07-01",
           "value": -17.0,
+          "source_url": "https://tradingeconomics.com/united-kingdom/consumer-confidence"
+        },
+        {
+          "date": "2026-08-01",
+          "value": -14.0,
           "source_url": "https://tradingeconomics.com/united-kingdom/consumer-confidence"
         }
       ]
