@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-21T03:19:39.067023+00:00",
+  "generated_at": "2026-08-21T07:12:55.168738+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -6652,7 +6652,7 @@
           "value": 52.0,
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/fc9666a5c84d437f94e0fa46202d0aec",
           "release_type": "flash",
-          "note": "S&P Australia manufacturing PMI; source=flash; release=August 21 2026"
+          "note": "Latest S&P Flash Australia manufacturing PMI; release=August 21 2026"
         }
       ],
       "ticker": "",
@@ -6854,7 +6854,7 @@
           "value": 52.9,
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/fc9666a5c84d437f94e0fa46202d0aec",
           "release_type": "flash",
-          "note": "S&P Australia services PMI; source=flash; release=August 21 2026"
+          "note": "Latest S&P Flash Australia services PMI; release=August 21 2026"
         }
       ],
       "ticker": "",
@@ -7757,5 +7757,5 @@
       "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx"
     }
   ],
-  "script_version": "2026-08-19-update-au-macro-v7"
+  "script_version": "2026-08-21-update-au-macro-v8-fast-pmi"
 }
