@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-21-update-au-macro-v11-employment-ratio"
+VERSION = "2026-08-21-update-au-macro-v12-strict-lf-series"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -257,6 +257,7 @@ def rank_abs_series(
     expected: dict[str, float],
     *,
     transform: str = "level",
+    strict_metadata: bool = False,
 ) -> tuple[list[Point], list[dict[str, Any]]]:
     """Rank every ABS series by numerical agreement, then metadata relevance.
 
@@ -275,6 +276,11 @@ def rank_abs_series(
         include_hits = sum(1 for term in include if term in text)
         exclude_hits = sum(1 for term in exclude if term in text)
         metadata_score = include_hits * 10 - exclude_hits * 20
+        # For closely related Labour Force series, numerical best-fit ranking can
+        # select the wrong concept.  Strict mode requires every requested label
+        # and rejects any excluded label before values are compared.
+        if strict_metadata and (include_hits != len(include) or exclude_hits > 0):
+            continue
 
         levels: dict[str, float] = {}
         for row in series_rows:
@@ -342,9 +348,9 @@ def rank_abs_series(
     ]
     return points, public_candidates
 
-def fetch_abs_target(flow: str, start: str, include: list[str], exclude: list[str], expected: dict[str, float], transform: str = "level") -> tuple[list[Point], dict[str, Any]]:
+def fetch_abs_target(flow: str, start: str, include: list[str], exclude: list[str], expected: dict[str, float], transform: str = "level", strict_metadata: bool = False) -> tuple[list[Point], dict[str, Any]]:
     rows, url = abs_csv(flow, start)
-    points, candidates = rank_abs_series(rows, include, exclude, expected, transform=transform)
+    points, candidates = rank_abs_series(rows, include, exclude, expected, transform=transform, strict_metadata=strict_metadata)
     if flow == "JV":
         quarter_month = {"Q1": "02", "Q2": "05", "Q3": "08", "Q4": "11"}
         for point in points:
@@ -1245,9 +1251,23 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "失業率":
         return fetch_abs_target("LF", "2025-01", ["unemployment rate", "australia", "seasonally adjusted"], ["state", "youth", "underemployment", "underutilisation"], target.expected)
     if label == "就業不足率":
-        return fetch_abs_target("LF", "2025-01", ["underemployment rate", "australia", "persons", "seasonally adjusted"], ["state", "youth", "trend", "original", "underutilisation"], target.expected)
+        # ABS legacy headline series used by Bloomberg AUUPAUE Index.  Exclude
+        # the new u-series UD-1 measure, which is a different concept and level.
+        return fetch_abs_target(
+            "LF", "2025-01",
+            ["underemployment rate", "australia", "persons", "seasonally adjusted"],
+            ["state", "youth", "trend", "original", "u series", "ud 1", "reduced employment", "hours based"],
+            target.expected, strict_metadata=True,
+        )
     if label == "勞動力未充分利用率":
-        return fetch_abs_target("LF", "2025-01", ["labour force underutilisation rate", "australia", "persons", "seasonally adjusted"], ["state", "youth", "trend", "original", "hours based", "hours-based"], target.expected)
+        # ABS legacy headline labour-force underutilisation series used by
+        # Bloomberg AUNDUR Index.  Exclude new u-series UU-1 and hours measures.
+        return fetch_abs_target(
+            "LF", "2025-01",
+            ["underutilisation rate", "australia", "persons", "seasonally adjusted"],
+            ["state", "youth", "trend", "original", "u series", "uu 1", "potential labour force", "hours based"],
+            target.expected, strict_metadata=True,
+        )
     if label == "Employment Ratio":
         return fetch_abs_target("LF", "2025-01", ["employment to population ratio", "australia", "persons", "seasonally adjusted"], ["state", "youth", "trend", "original", "full time", "part time"], target.expected)
     if label == "職缺":
