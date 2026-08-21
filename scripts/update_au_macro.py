@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-21-update-au-macro-v12-strict-lf-series"
+VERSION = "2026-08-21-update-au-macro-v13-verified-lf-series"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -360,6 +360,49 @@ def fetch_abs_target(flow: str, start: str, include: list[str], exclude: list[st
     for point in points:
         point.source_url = url
     return points, {"flow": flow, "request_url": url, "candidates": candidates}
+
+
+def fetch_abs_verified_target(
+    flow: str,
+    start: str,
+    include: list[str],
+    exclude: list[str],
+    expected: dict[str, float],
+    *,
+    tolerance: float = 0.051,
+) -> tuple[list[Point], dict[str, Any]]:
+    """Select by published reference values and fail if the series is not exact.
+
+    ABS LF labels do not contain every descriptive phrase assumed by the former
+    strict metadata filter.  Requiring all phrases removed every candidate and
+    caused 'no numeric time series'.  For these closely related headline labour
+    indicators, use four official reference observations to identify the series,
+    then require every reference observation to agree within rounding tolerance.
+    """
+    points, diagnostics = fetch_abs_target(
+        flow, start, include, exclude, expected, strict_metadata=False
+    )
+    values = {point.period: point.value for point in points}
+    checks = []
+    for period, published in sorted(expected.items()):
+        actual = values.get(period)
+        difference = None if actual is None else actual - published
+        checks.append({
+            "period": period,
+            "published": published,
+            "downloaded": actual,
+            "difference": difference,
+            "match": actual is not None and abs(difference) <= tolerance,
+        })
+    diagnostics["reference_checks"] = checks
+    if not checks or not all(item["match"] for item in checks):
+        raise RuntimeError(
+            "ABS series selection failed published-value verification: "
+            + json.dumps(checks, ensure_ascii=False)
+        )
+    diagnostics["selected_identity"] = diagnostics.get("candidates", [{}])[0].get("identity", "")
+    diagnostics["selected_description"] = diagnostics.get("candidates", [{}])[0].get("description", "")
+    return points, diagnostics
 
 
 def workbook_rows(content: bytes) -> list[dict[str, Any]]:
@@ -1251,25 +1294,26 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "失業率":
         return fetch_abs_target("LF", "2025-01", ["unemployment rate", "australia", "seasonally adjusted"], ["state", "youth", "underemployment", "underutilisation"], target.expected)
     if label == "就業不足率":
-        # ABS legacy headline series used by Bloomberg AUUPAUE Index.  Exclude
-        # the new u-series UD-1 measure, which is a different concept and level.
-        return fetch_abs_target(
+        return fetch_abs_verified_target(
             "LF", "2025-01",
-            ["underemployment rate", "australia", "persons", "seasonally adjusted"],
-            ["state", "youth", "trend", "original", "u series", "ud 1", "reduced employment", "hours based"],
-            target.expected, strict_metadata=True,
+            ["underemployment rate", "australia", "seasonally adjusted"],
+            ["state", "youth", "trend", "original", "hours based"],
+            target.expected,
         )
     if label == "勞動力未充分利用率":
-        # ABS legacy headline labour-force underutilisation series used by
-        # Bloomberg AUNDUR Index.  Exclude new u-series UU-1 and hours measures.
-        return fetch_abs_target(
+        return fetch_abs_verified_target(
             "LF", "2025-01",
-            ["underutilisation rate", "australia", "persons", "seasonally adjusted"],
-            ["state", "youth", "trend", "original", "u series", "uu 1", "potential labour force", "hours based"],
-            target.expected, strict_metadata=True,
+            ["underutilisation rate", "australia", "seasonally adjusted"],
+            ["state", "youth", "trend", "original", "hours based"],
+            target.expected,
         )
     if label == "Employment Ratio":
-        return fetch_abs_target("LF", "2025-01", ["employment to population ratio", "australia", "persons", "seasonally adjusted"], ["state", "youth", "trend", "original", "full time", "part time"], target.expected)
+        return fetch_abs_verified_target(
+            "LF", "2025-01",
+            ["employment to population ratio", "australia", "seasonally adjusted"],
+            ["state", "youth", "trend", "original", "full time", "part time"],
+            target.expected,
+        )
     if label == "職缺":
         return fetch_abs_target("JV", "2025-01", ["job vacancies", "australia", "seasonally adjusted", "private and public"], ["trend", "original"], target.expected)
     if label == "ANZ職缺廣告":
