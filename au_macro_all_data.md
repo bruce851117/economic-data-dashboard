@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-08-21T07:12:55.168738+00:00
+更新時間：2026-08-21T07:18:46.794268+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -85,23 +85,23 @@
       <td>零售</td>
       <td align="right"></td>
       <td align="right"></td>
-      <td align="right" bgcolor="#63be7b">0.40</td>
-      <td align="right" bgcolor="#f86971">1.20</td>
+      <td align="right" bgcolor="#f86971">7.00</td>
+      <td align="right" bgcolor="#63be7b">4.30</td>
     </tr>
     <tr>
       <th rowspan="4" align="center" valign="middle">調查</th>
       <td>NAB企業調查 售價</td>
       <td align="right"></td>
-      <td align="right"></td>
+      <td align="right" bgcolor="#f86971">1.10</td>
       <td align="right" bgcolor="#63be7b">0.60</td>
-      <td align="right" bgcolor="#f86971">0.90</td>
+      <td align="right" bgcolor="#fee1e3">0.90</td>
     </tr>
     <tr>
       <td>消費信心</td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#63be7b">83.90</td>
+      <td align="right" bgcolor="#63be7b">88.90</td>
+      <td align="right" bgcolor="#fee0e2">83.90</td>
       <td align="right" bgcolor="#f86971">80.60</td>
-      <td align="right" bgcolor="#bae2c5">82.98</td>
+      <td align="right" bgcolor="#fcbfc2">82.98</td>
     </tr>
     <tr>
       <td>PMI製造業</td>
@@ -172,9 +172,9 @@
 | 失業預期 | OK | 0 | 0 | 2026-08 | 135.7 |  |
 | CPI YoY | OK | 0 | 0 | 2026-06 | 3.8 |  |
 | Trimmed Mean YoY | OK | 0 | 0 | 2026-06 | 3.6 |  |
-| 零售 | OK | 0 | 0 | 2026-06 | 0.4 |  |
-| NAB企業售價 | OK | 0 | 0 | 2026-06 | 0.6 |  |
-| 消費信心 | OK | 0 | 0 | 2026-07 | 83.9 |  |
+| 零售 | OK | 0 | 18 | 2026-06 | 7.0 |  |
+| NAB企業售價 | OK | 1 | 0 | 2026-07 | 1.1 |  |
+| 消費信心 | OK | 1 | 0 | 2026-08 | 88.9 |  |
 | 製造業PMI | OK | 0 | 0 | 2026-08 | 52.0 |  |
 | 服務業PMI | OK | 0 | 0 | 2026-08 | 52.9 |  |
 | GDP YoY | OK | 0 | 0 | 2026-Q1 | 2.5197395557126967 |  |
