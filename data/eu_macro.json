@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-08-24T09:09:15.454304+00:00",
+  "generated_at": "2026-08-24T09:11:40.985562+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
-    "script_version": "2026-08-24-eu-production-v15-germany-core-cpi-html-2dp",
+    "script_version": "2026-08-24-eu-production-v16-germany-retail-yoy-nsa",
     "note": "Existing Excel-import history preserved; official observations overwrite matching periods."
   },
   "blocks": [
@@ -13609,9 +13609,9 @@
         },
         {
           "date": "2026-06-01",
-          "value": 92.2,
-          "source_url": "https://www.ifo.de/sites/default/files/secure/timeseries/empl-e-202607.xlsx",
-          "note": "sheet=ifo Beschäftigungsbarometer; row=303; col=2"
+          "value": 85.7,
+          "source_url": "https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026",
+          "note": "previous month revised in official July release"
         },
         {
           "date": "2026-07-01",
