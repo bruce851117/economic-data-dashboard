@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-08-24T08:58:16.554372+00:00",
+  "generated_at": "2026-08-24T09:09:15.454304+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
-    "script_version": "2026-08-24-eu-production-v12-germany-core-cpi-dynamic",
+    "script_version": "2026-08-24-eu-production-v15-germany-core-cpi-html-2dp",
     "note": "Existing Excel-import history preserved; official observations overwrite matching periods."
   },
   "blocks": [
@@ -1676,333 +1676,333 @@
         },
         {
           "date": "2022-01-01",
-          "value": 2.6812313803376453,
+          "value": 2.68,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2022-02-01",
-          "value": 2.769535113748778,
+          "value": 2.77,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2022-03-01",
-          "value": 2.9556650246305383,
+          "value": 2.96,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2022-04-01",
-          "value": 3.4414945919370776,
+          "value": 3.44,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2022-05-01",
-          "value": 3.725490196078418,
+          "value": 3.73,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2022-06-01",
-          "value": 3.3203125,
+          "value": 3.32,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2022-07-01",
-          "value": 3.5019455252918386,
+          "value": 3.5,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2022-08-01",
-          "value": 3.6929057337220517,
+          "value": 3.69,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2022-09-01",
-          "value": 4.55868089233753,
+          "value": 4.56,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2022-10-01",
-          "value": 4.8402710551790795,
+          "value": 4.84,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2022-11-01",
-          "value": 5.03388189738625,
+          "value": 5.03,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2022-12-01",
-          "value": 5.207328833172609,
+          "value": 5.21,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2023-01-01",
-          "value": 5.609284332688591,
+          "value": 5.61,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2023-02-01",
-          "value": 5.678537054860433,
+          "value": 5.68,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2023-03-01",
-          "value": 5.837320574162663,
+          "value": 5.84,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2023-04-01",
-          "value": 5.798479087452457,
+          "value": 5.8,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2023-05-01",
-          "value": 5.387523629489599,
+          "value": 5.39,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2023-06-01",
-          "value": 5.765595463137996,
+          "value": 5.77,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2023-07-01",
-          "value": 5.545112781954886,
+          "value": 5.55,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2023-08-01",
-          "value": 5.529522024367384,
+          "value": 5.53,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2023-09-01",
-          "value": 4.638218923933213,
+          "value": 4.64,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2023-10-01",
-          "value": 4.339796860572487,
+          "value": 4.34,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2023-11-01",
-          "value": 3.778801843317958,
+          "value": 3.78,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2023-12-01",
-          "value": 3.4830430797433642,
+          "value": 3.48,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2024-01-01",
-          "value": 3.3882783882783984,
+          "value": 3.39,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2024-02-01",
-          "value": 3.3697632058287796,
+          "value": 3.37,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2024-03-01",
-          "value": 3.345388788426762,
+          "value": 3.35,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2024-04-01",
-          "value": 2.96495956873315,
+          "value": 2.96,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2024-05-01",
-          "value": 3.0493273542600896,
+          "value": 3.05,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2024-06-01",
-          "value": 2.9490616621983934,
+          "value": 2.95,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2024-07-01",
-          "value": 2.9385574354407806,
+          "value": 2.94,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2024-08-01",
-          "value": 2.7531083481350027,
+          "value": 2.75,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2024-09-01",
-          "value": 2.7482269503546153,
+          "value": 2.75,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2024-10-01",
-          "value": 2.920353982300883,
+          "value": 2.92,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2024-11-01",
-          "value": 3.0195381882770933,
+          "value": 3.02,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2024-12-01",
-          "value": 3.2772364924712027,
+          "value": 3.28,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2025-01-01",
-          "value": 2.9229406554472925,
+          "value": 2.92,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2025-02-01",
-          "value": 2.7312775330396333,
+          "value": 2.73,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2025-03-01",
-          "value": 2.6246719160105014,
+          "value": 2.62,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2025-04-01",
-          "value": 2.8795811518324665,
+          "value": 2.88,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2025-05-01",
-          "value": 2.7850304612706545,
+          "value": 2.79,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2025-06-01",
-          "value": 2.69097222222221,
+          "value": 2.69,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2025-07-01",
-          "value": 2.6816608996539815,
+          "value": 2.68,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2025-08-01",
-          "value": 2.6793431287813307,
+          "value": 2.68,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2025-09-01",
-          "value": 2.761000862812768,
+          "value": 2.76,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2025-10-01",
-          "value": 2.837489251934655,
+          "value": 2.84,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2025-11-01",
-          "value": 2.672413793103434,
+          "value": 2.67,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2025-12-01",
-          "value": 2.401372212692987,
+          "value": 2.4,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2026-01-01",
-          "value": 2.495697074010317,
+          "value": 2.5,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2026-02-01",
-          "value": 2.487135506003435,
+          "value": 2.49,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2026-03-01",
-          "value": 2.4722932651321416,
+          "value": 2.47,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2026-04-01",
-          "value": 2.2900763358778553,
+          "value": 2.29,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2026-05-01",
-          "value": 2.5402201524132195,
+          "value": 2.54,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2026-06-01",
-          "value": 2.4513947590870666,
+          "value": 2.45,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         },
         {
           "date": "2026-07-01",
-          "value": 2.4431339511373107,
+          "value": 2.44,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
-          "note": "YoY from official Destatis core CPI levels; all available months; API preferred, official HTML table fallback"
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         }
       ]
     },
@@ -4919,9 +4919,15 @@
         },
         {
           "date": "2026-06-01",
-          "value": 92.53,
+          "value": 92.531,
+          "source_url": "https://revista.seg-social.es/-/espa%C3%B1a-suma-621.925-afiliados-en-los-primeros-seis-meses-del-a%C3%B1o-y-supera-la-cota-de-los-22-4-millones-de-ocupados",
+          "note": "official adjusted monthly change; persons converted to thousand"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 79.567,
           "source_url": "https://revista.seg-social.es/estadisticas",
-          "note": "official seasonally adjusted affiliation change, thousand persons"
+          "note": "official seasonally and calendar adjusted affiliation change, thousand persons"
         }
       ]
     },
