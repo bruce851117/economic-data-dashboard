@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-08-24T09:16:33.795133+00:00",
+  "generated_at": "2026-08-24T09:24:19.953787+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
-    "script_version": "2026-08-24-eu-production-v17-germany-retail-yoy-nsa-index",
+    "script_version": "2026-08-24-eu-production-v18-germany-industry-dynamic",
     "note": "Existing Excel-import history preserved; official observations overwrite matching periods."
   },
   "blocks": [
@@ -8551,27 +8551,39 @@
         },
         {
           "date": "2026-01-01",
-          "value": -2.04326923076923
+          "value": -2.043269230769229,
+          "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
+          "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-02-01",
-          "value": -0.685714285714278
+          "value": -0.6857142857142784,
+          "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
+          "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-03-01",
-          "value": -3.42465753424658
+          "value": -3.424657534246578,
+          "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
+          "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-04-01",
           "value": -0.8762322015334001,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
-          "note": "YoY from GENESIS X13 calendar-adjusted production levels"
+          "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-05-01",
           "value": 0,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
-          "note": "YoY from GENESIS X13 calendar-adjusted production levels"
+          "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
+        },
+        {
+          "date": "2026-06-01",
+          "value": -0.10638297872339608,
+          "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
+          "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         }
       ]
     },
