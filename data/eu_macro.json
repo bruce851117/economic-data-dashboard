@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-08-24T09:11:40.985562+00:00",
+  "generated_at": "2026-08-24T09:16:33.795133+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
-    "script_version": "2026-08-24-eu-production-v16-germany-retail-yoy-nsa",
+    "script_version": "2026-08-24-eu-production-v17-germany-retail-yoy-nsa-index",
     "note": "Existing Excel-import history preserved; official observations overwrite matching periods."
   },
   "blocks": [
@@ -6431,759 +6431,885 @@
         },
         {
           "date": "2016-01-01",
-          "value": -0.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 0.6203473945409321,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2016-02-01",
-          "value": -0.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 7.48031496062993,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2016-03-01",
-          "value": -0.9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.699530516431925,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2016-04-01",
-          "value": -0.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 4.935370152761465,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2016-05-01",
-          "value": 1.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.8503562945368044,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2016-06-01",
-          "value": -0.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.619047619047632,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2016-07-01",
-          "value": 1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -1.4891179839633395,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2016-08-01",
-          "value": 0.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 4.294478527607359,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2016-09-01",
-          "value": -0.9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 1.4388489208633004,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2016-10-01",
-          "value": 2.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 0.11376564277587597,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2016-11-01",
-          "value": -2.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 4.498269896193752,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2016-12-01",
-          "value": 1.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.3483365949119372,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2017-01-01",
-          "value": -1.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 3.6991368680641123,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2017-02-01",
-          "value": 1.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -1.465201465201471,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2017-03-01",
-          "value": 1.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 5.600000000000005,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2017-04-01",
-          "value": -0.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 1.1198208286674172,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2017-05-01",
-          "value": 0.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 6.6974595842956175,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2017-06-01",
-          "value": 0.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 3.0162412993039345,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2017-07-01",
-          "value": -0.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 3.023255813953485,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2017-08-01",
-          "value": -0.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.8235294117647136,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2017-09-01",
-          "value": 1.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 4.84633569739954,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2017-10-01",
-          "value": -2.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -0.5681818181818232,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2017-11-01",
-          "value": 1.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 4.856512141280356,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2017-12-01",
-          "value": 0.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 0.47801147227533036,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2018-01-01",
-          "value": -1.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.497027348394787,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2018-02-01",
-          "value": 0,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 1.486988847583648,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2018-03-01",
-          "value": -0.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.4891774891774965,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2018-04-01",
-          "value": 4.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 1.9933554817275656,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2018-05-01",
-          "value": -2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -0.43290043290044045,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2018-06-01",
-          "value": 0.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 4.279279279279269,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2018-07-01",
-          "value": -0.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 1.9187358916478603,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2018-08-01",
-          "value": 0.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.517162471395862,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2018-09-01",
-          "value": -0.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -2.4802705749718212,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2018-10-01",
-          "value": 0.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 6.742857142857139,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2018-11-01",
-          "value": 0.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.5263157894736876,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2018-12-01",
-          "value": -0.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -0.8563273073263433,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2019-01-01",
-          "value": 2.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 4.17633410672853,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2019-02-01",
-          "value": 1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 5.12820512820511,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2019-03-01",
-          "value": -1.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -0.9503695881731833,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2019-04-01",
-          "value": 1.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 6.1889250814332275,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2019-05-01",
-          "value": -1.9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 4.239130434782612,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2019-06-01",
-          "value": 3.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -1.0799136069114423,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2019-07-01",
-          "value": -1.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 5.980066445182741,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2019-08-01",
-          "value": 0.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 3.571428571428581,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2019-09-01",
-          "value": 0.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 3.6994219653179172,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2019-10-01",
-          "value": -1.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.1413276231263323,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2019-11-01",
-          "value": 0.9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 3.0800821355236208,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2019-12-01",
-          "value": 0.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.303262955854124,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2020-01-01",
-          "value": 1.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.2271714922049046,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2020-02-01",
-          "value": 1.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 6.50406504065042,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2020-03-01",
-          "value": -3.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 1.8123667377398789,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2020-04-01",
-          "value": -3.9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -4.805725971370145,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2020-05-01",
-          "value": 11.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 5.6308654848800765,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2020-06-01",
-          "value": -1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 7.5327510917030605,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2020-07-01",
-          "value": -0.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 6.269592476489039,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2020-08-01",
-          "value": 2.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 3.9870689655172376,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2020-09-01",
-          "value": -1.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 8.807134894091394,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2020-10-01",
-          "value": 2.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 10.482180293501052,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2020-11-01",
-          "value": 0.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 7.370517928286846,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2020-12-01",
-          "value": -3.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 6.660412757973733,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2021-01-01",
-          "value": -9.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -9.694989106753804,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2021-02-01",
-          "value": 4.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -7.306434023991281,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2021-03-01",
-          "value": 8.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 13.403141361256532,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2021-04-01",
-          "value": -5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 4.511278195488733,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2021-05-01",
-          "value": 4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -1.9743336623889385,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2021-06-01",
-          "value": 4.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 6.700507614213191,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2021-07-01",
-          "value": -5.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 0.1966568338249708,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2021-08-01",
-          "value": 2.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -0.2072538860103612,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2021-09-01",
-          "value": -2.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -0.7172131147540894,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2021-10-01",
-          "value": 2.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -3.0360531309297945,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2021-11-01",
-          "value": 0,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 1.4842300556586308,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2021-12-01",
-          "value": -0.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 1.4951627088830355,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2022-01-01",
-          "value": 2.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 14.113389626055483,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2022-02-01",
-          "value": 0,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 9.64705882352941,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2022-03-01",
-          "value": -1.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -2.4007386888273308,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2022-04-01",
-          "value": -1.9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 5.035971223021596,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2022-05-01",
-          "value": -0.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.9204431017120003,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2022-06-01",
-          "value": -0.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -7.231208372978115,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2022-07-01",
-          "value": 0.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -3.4347399411187474,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2022-08-01",
-          "value": -1.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -1.0384215991692591,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2022-09-01",
-          "value": 1.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -0.20639834881320818,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2022-10-01",
-          "value": -2.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -5.283757338551864,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2022-11-01",
-          "value": 0.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -3.9305301645338298,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2022-12-01",
-          "value": -1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -4.93934142114385,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2023-01-01",
-          "value": -0.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -4.8625792811839315,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2023-02-01",
-          "value": 0.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -7.296137339055786,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2023-03-01",
-          "value": -1.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -5.581835383159895,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2023-04-01",
-          "value": 1.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -8.414872798434448,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2023-05-01",
-          "value": 1.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -3.7181996086105618,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2023-06-01",
-          "value": 0.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 0.512820512820511,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2023-07-01",
-          "value": -0.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -2.6422764227642337,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2023-08-01",
-          "value": -1.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -2.3084994753410304,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2023-09-01",
-          "value": -0.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -4.239917269906934,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2023-10-01",
-          "value": 1.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -0.8264462809917328,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2023-11-01",
-          "value": -0.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -1.4272121788772574,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2023-12-01",
-          "value": -0.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -3.4639927073837673,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2024-01-01",
-          "value": 0,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -0.7777777777777772,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2024-02-01",
-          "value": 0.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.662037037037024,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2024-03-01",
-          "value": 1.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -0.8016032064128265,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2024-04-01",
-          "value": 0,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 3.7393162393162482,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2024-05-01",
-          "value": 0,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -0.8130081300813163,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2024-06-01",
-          "value": -0.9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -3.7755102040816335,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2024-07-01",
-          "value": 1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.8183716075156573,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2024-08-01",
-          "value": 1.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 3.1149301825993625,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2024-09-01",
-          "value": 1.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 1.7278617710583255,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2024-10-01",
-          "value": -0.9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 5.729166666666674,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2024-11-01",
-          "value": 0.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 3.7644787644787625,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2024-12-01",
-          "value": -1.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.2662889518413554,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-01-01",
-          "value": 1.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 4.815229563269874,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-02-01",
-          "value": 0.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 0.5636978579481422,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-03-01",
-          "value": 0.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.020202020202011,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-04-01",
-          "value": 0.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 5.973223480947487,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-05-01",
-          "value": -1.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 5.430327868852469,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-06-01",
-          "value": 1.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 3.0752916224814575,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-07-01",
-          "value": -0.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 4.060913705583746,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-08-01",
-          "value": -0.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -1.1458333333333237,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-09-01",
-          "value": 0,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 3.5031847133757843,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-10-01",
-          "value": 0.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.1674876847290747,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-11-01",
-          "value": -0.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -1.4883720930232491,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-12-01",
-          "value": 0.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 5.078485687903966,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2026-01-01",
-          "value": 0.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 1.2820512820512775,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2026-02-01",
-          "value": -0.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 1.0089686098654571,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2026-03-01",
-          "value": 0.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 2.970297029702973,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2026-04-01",
-          "value": -0.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -2.235179786200203,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2026-05-01",
-          "value": 1.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": -2.818270165208947,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2026-06-01",
-          "value": -0.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&unit=PCH_PRE&s_adj=SCA&nace_r2=G47",
-          "status": "p"
+          "value": 5.144032921810693,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         }
       ]
     },
