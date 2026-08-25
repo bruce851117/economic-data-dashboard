@@ -221,6 +221,49 @@ def year_over_year(levels: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return output
 
 
+def ensure_industrial_production_series(database: dict[str, Any]) -> None:
+    """Create metadata and a chart block for Industrial Production YoY."""
+    series_id = "ukipiyoy"
+    official_url = (
+        "https://www.ons.gov.uk/economy/economicoutputandproductivity/output/"
+        "timeseries/k222/diop"
+    )
+    defaults = {
+        "id": series_id,
+        "name": "Industrial Production YoY",
+        "name_zh": "工業生產年增率",
+        "ticker": "ONS K222",
+        "source": "Office for National Statistics (ONS)",
+        "source_url": official_url,
+        "frequency": "monthly",
+        "unit": "%",
+        "seasonality": "SA",
+        "measure": "YoY calculated from official ONS K222 seasonally adjusted index",
+        "color": "#0f766e",
+        "data": [],
+    }
+    series_list = database.setdefault("series", [])
+    series = next((item for item in series_list if item.get("id") == series_id), None)
+    if series is None:
+        series = defaults.copy()
+        series_list.append(series)
+        print("[CONFIG] created series ukipiyoy", flush=True)
+    else:
+        for key, value in defaults.items():
+            series.setdefault(key, [] if key == "data" else value)
+
+    blocks = database.setdefault("blocks", [])
+    block = next(
+        (item for item in blocks if item.get("title") in {"生產", "產出", "Production"}),
+        None,
+    )
+    if block is None:
+        block = {"title": "生產", "color": "#0f766e", "series": []}
+        blocks.append(block)
+    if series_id not in block.setdefault("series", []):
+        block["series"].append(series_id)
+
+
 def by_id(database: dict[str, Any], series_id: str) -> dict[str, Any] | None:
     return next(
         (item for item in database["series"] if item["id"] == series_id),
@@ -1439,6 +1482,7 @@ def main() -> None:
     started_at = time.monotonic()
     print(f"[START] Update UK macro data version={SCRIPT_VERSION}", flush=True)
     database = json.loads(DATA_FILE.read_text(encoding="utf-8"))
+    ensure_industrial_production_series(database)
     logs = []
 
     for series_id, (dataset, cdid, path, month_shift) in ONS.items():
