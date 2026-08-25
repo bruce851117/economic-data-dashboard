@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-25T03:04:32.088022+00:00",
+  "generated_at": "2026-08-25T07:14:01.901473+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -10266,7 +10266,6 @@
       "measure": "YoY calculated from official ONS K222 seasonally adjusted index",
       "color": "#0f766e",
       "data": [
-
         {
           "date": "2015-01-01",
           "value": 2.092050209205021,
