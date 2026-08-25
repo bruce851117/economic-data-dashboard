@@ -17,7 +17,7 @@ from openpyxl import load_workbook
 
 DATA_FILE = Path("data/uk_macro.json")
 DEBUG_DIR = Path("debug/uk_macro_sources")
-SCRIPT_VERSION = "2026-07-28-ap2y-monthly-only-v3"
+SCRIPT_VERSION = "2026-08-25-industrial-production-yoy"
 USER_AGENT = "Mozilla/5.0 (compatible; UKMacroDashboard/1.0)"
 
 SESSION = requests.Session()
@@ -43,6 +43,9 @@ LEVELS = {
     "ukgrabiy": ("QNA", "ABMI", "economy/grossdomesticproductgdp"),
     "ukgeabry": ("PN2", "ABJR", "economy/nationalaccounts/satelliteaccounts"),
     "ukgvnpqy": ("UKEA", "NPQT", "economy/grossdomesticproductgdp"),
+    # Official ONS monthly seasonally adjusted Index of Production level.
+    # Calculate YoY against the same month one year earlier.
+    "ukipiyoy": ("DIOP", "K222", "economy/economicoutputandproductivity/output"),
 }
 
 MONTHS = {
@@ -222,7 +225,7 @@ def year_over_year(levels: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def ensure_industrial_production_series(database: dict[str, Any]) -> None:
-    """Create metadata and a chart block for Industrial Production YoY."""
+    """Create Industrial Production YoY metadata and its UK chart block."""
     series_id = "ukipiyoy"
     official_url = (
         "https://www.ons.gov.uk/economy/economicoutputandproductivity/output/"
@@ -251,12 +254,8 @@ def ensure_industrial_production_series(database: dict[str, Any]) -> None:
     else:
         for key, value in defaults.items():
             series.setdefault(key, [] if key == "data" else value)
-
     blocks = database.setdefault("blocks", [])
-    block = next(
-        (item for item in blocks if item.get("title") in {"生產", "產出", "Production"}),
-        None,
-    )
+    block = next((item for item in blocks if item.get("title") in {"生產", "產出", "Production"}), None)
     if block is None:
         block = {"title": "生產", "color": "#0f766e", "series": []}
         blocks.append(block)
