@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-21-update-au-macro-v15-x28-x29-month-fix"
+VERSION = "2026-08-25-update-au-macro-v16-labour-history-2015"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -707,9 +707,15 @@ def fetch_verified_monthly_workbook_series(
         raise RuntimeError("Official ABS workbook contained no series matching all published reference values")
     candidates.sort(key=lambda item: (-item["include_hits"], item["exclude_hits"], item["value_col"]))
     best = candidates[0]
+    history_start = "2015-01"
+    selected_values = {
+        period: value
+        for period, value in best["values"].items()
+        if period >= history_start
+    }
     points = [
         Point(period, value, response.url, status="final", note=f"Official corrected ABS workbook; sheet={best['sheet']}; col={best['value_col']}")
-        for period, value in sorted(best["values"].items())
+        for period, value in sorted(selected_values.items())
     ]
     return points, {
         "request_url": response.url,
@@ -722,6 +728,10 @@ def fetch_verified_monthly_workbook_series(
             for period, published in sorted(expected.items())
         ],
         "candidate_count": len(candidates),
+        "history_start": history_start,
+        "returned_observation_count": len(selected_values),
+        "returned_first_period": min(selected_values) if selected_values else None,
+        "returned_last_period": max(selected_values) if selected_values else None,
     }
 
 
@@ -1412,7 +1422,7 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
         )
     if label == "Employment Ratio":
         return fetch_abs_verified_target(
-            "LF", "2025-01",
+            "LF", "2015-01",
             ["employment to population ratio", "australia", "seasonally adjusted"],
             ["state", "youth", "trend", "original", "full time", "part time"],
             target.expected,
@@ -1679,9 +1689,15 @@ def merge_points(database: dict[str, Any], series_id: str, points: list[Point], 
             log(f"[PMI CLEANUP] {series_id} remove stale publication-month row {key}")
             old.pop(key, None)
 
+    history_backfill_ids = {"auunderemp", "auunderutil", "auempratio"}
     if authoritative:
-        earliest=min(old) if old else min(incoming)
-        keys=[k for k in incoming if k>=earliest]
+        if series_id in history_backfill_ids:
+            # These three series intentionally backfill official monthly history
+            # to 2015-01, even when the current JSON begins later.
+            keys = [key for key in incoming if key >= "2015-01"]
+        else:
+            earliest=min(old) if old else min(incoming)
+            keys=[k for k in incoming if k>=earliest]
     else:
         latest=max(old) if old else ""
         keys=[k for k in incoming if not latest or k>=latest]

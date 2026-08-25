@@ -17,7 +17,7 @@ from openpyxl import load_workbook
 
 DATA_FILE = Path("data/uk_macro.json")
 DEBUG_DIR = Path("debug/uk_macro_sources")
-SCRIPT_VERSION = "2026-08-25-industrial-production-yoy"
+SCRIPT_VERSION = "2026-08-25-industrial-production-latest-12m"
 USER_AGENT = "Mozilla/5.0 (compatible; UKMacroDashboard/1.0)"
 
 SESSION = requests.Session()
@@ -1509,6 +1509,16 @@ def main() -> None:
         print(f"[ONS LEVEL] updating {series_id} ({cdid})", flush=True)
         try:
             points = year_over_year(ons_series(dataset, cdid, path))
+            if series_id == "ukipiyoy":
+                # Preserve older JSON history and overwrite only the latest
+                # 12 monthly Industrial Production YoY observations.
+                points = sorted(points, key=lambda point: point["date"])[-12:]
+                print(
+                    f"[ONS LEVEL] {series_id} overwrite_range="
+                    f"{points[0]['date'][:7]}..{points[-1]['date'][:7]} "
+                    f"observations={len(points)}",
+                    flush=True,
+                )
             logs.append((series_id, *merge(
                 database,
                 series_id,
