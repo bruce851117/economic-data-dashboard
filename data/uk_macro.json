@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-24T01:36:41.073179+00:00",
+  "generated_at": "2026-08-25T02:56:06.394508+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -56,6 +56,13 @@
         "ukcci",
         "mpmigbma",
         "mpmigbsa"
+      ]
+    },
+    {
+      "title": "生產",
+      "color": "#0f766e",
+      "series": [
+        "ukipiyoy"
       ]
     }
   ],
@@ -10245,6 +10252,20 @@
           "release_type": "flash"
         }
       ]
+    },
+    {
+      "id": "ukipiyoy",
+      "name": "Industrial Production YoY",
+      "name_zh": "工業生產年增率",
+      "ticker": "ONS K222",
+      "source": "Office for National Statistics (ONS)",
+      "source_url": "https://www.ons.gov.uk/economy/economicoutputandproductivity/output/timeseries/k222/diop",
+      "frequency": "monthly",
+      "unit": "%",
+      "seasonality": "SA",
+      "measure": "YoY calculated from official ONS K222 seasonally adjusted index",
+      "color": "#0f766e",
+      "data": []
     }
   ]
 }
