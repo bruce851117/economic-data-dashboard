@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-24T09:24:19.953787+00:00",
+  "generated_at": "2026-08-26T02:58:36.949669+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
@@ -9198,6 +9198,12 @@
           "value": 86,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
           "status": "A"
+        },
+        {
+          "date": "2026-08-01",
+          "value": 86,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
         }
       ]
     },
@@ -13753,9 +13759,9 @@
         },
         {
           "date": "2026-07-01",
-          "value": 93,
-          "source_url": "https://www.ifo.de/sites/default/files/secure/timeseries/empl-e-202607.xlsx",
-          "note": "sheet=ifo Beschäftigungsbarometer; row=304; col=2"
+          "value": 86.6,
+          "source_url": "https://www.ifo.de/en/survey/ifo-business-climate-index-germany",
+          "note": "official ifo survey/time-series page"
         }
       ]
     },
@@ -13953,15 +13959,15 @@
         },
         {
           "date": "2026-03-01",
-          "value": 0.5,
+          "value": 0.8,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/81000-0002_00.csv",
           "note": "Destatis 81000-0002; Originalwerte; preisbereinigt Kettenindex; GDP YoY"
         },
         {
           "date": "2026-06-01",
-          "value": 0.9,
-          "source_url": "https://www.destatis.de/EN/Press/2026/07/PE26_269_811.html",
-          "note": "Destatis preliminary GDP estimate; price-adjusted YoY"
+          "value": 1,
+          "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/81000-0002_00.csv",
+          "note": "Destatis 81000-0002; Originalwerte; preisbereinigt Kettenindex; GDP YoY"
         }
       ]
     },
