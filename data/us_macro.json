@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-25T14:01:37.406662+00:00",
+  "generated_at": "2026-08-26T01:19:27.497970+00:00",
   "source": {
     "type": "excel_import",
     "file": "US_ECON.xlsx",
@@ -58468,6 +58468,10 @@
         {
           "date": "2026-07-01",
           "value": 24.6
+        },
+        {
+          "date": "2026-08-01",
+          "value": 27
         }
       ],
       "source": "The Conference Board"
@@ -59051,6 +59055,10 @@
         {
           "date": "2026-07-01",
           "value": 21.5
+        },
+        {
+          "date": "2026-08-01",
+          "value": 19.5
         }
       ],
       "source": "The Conference Board"
@@ -65435,7 +65443,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 90.8
+          "value": 90.2
+        },
+        {
+          "date": "2026-08-01",
+          "value": 89.4
         }
       ],
       "source": "The Conference Board"
