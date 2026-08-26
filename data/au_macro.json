@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-25T07:12:56.382739+00:00",
+  "generated_at": "2026-08-26T03:14:11.003859+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -7008,6 +7008,12 @@
           "value": 3.8,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 3.5,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         }
       ],
       "ticker": "",
@@ -7043,7 +7049,7 @@
         },
         {
           "date": "2025-07-01",
-          "value": 3.0,
+          "value": 3.1,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
@@ -7113,12 +7119,18 @@
         },
         {
           "date": "2026-05-01",
-          "value": 3.6,
+          "value": 3.5,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-06-01",
+          "value": 3.6,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+        },
+        {
+          "date": "2026-07-01",
           "value": 3.6,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"

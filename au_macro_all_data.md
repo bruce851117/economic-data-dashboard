@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-08-25T07:12:56.382739+00:00
+更新時間：2026-08-26T03:14:11.003859+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -70,16 +70,16 @@
       <th rowspan="3" align="center" valign="middle">通膨</th>
       <td>CPI</td>
       <td align="right"></td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#63be7b">3.80</td>
+      <td align="right" bgcolor="#63be7b">3.50</td>
+      <td align="right" bgcolor="#fee1e3">3.80</td>
       <td align="right" bgcolor="#f86971">4.00</td>
     </tr>
     <tr>
       <td>Trim mean</td>
       <td align="right"></td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#ffffff">3.60</td>
-      <td align="right" bgcolor="#ffffff">3.60</td>
+      <td align="right" bgcolor="#f86971">3.60</td>
+      <td align="right" bgcolor="#f86971">3.60</td>
+      <td align="right" bgcolor="#63be7b">3.50</td>
     </tr>
     <tr>
       <td>零售</td>
@@ -165,16 +165,16 @@
 |---|---|---:|---:|---|---:|---|
 | 就業新增 | OK | 0 | 0 | 2026-07 | -15.826502660000187 |  |
 | 失業率 | OK | 0 | 0 | 2026-07 | 4.46182469 |  |
-| 就業不足率 | OK | 120 | 0 | 2026-07 | 6.3612462 |  |
-| 勞動力未充分利用率 | OK | 120 | 0 | 2026-07 | 10.8230708 |  |
-| Employment Ratio | OK | 120 | 0 | 2026-07 | 63.87044554 |  |
+| 就業不足率 | OK | 0 | 0 | 2026-07 | 6.3612462 |  |
+| 勞動力未充分利用率 | OK | 0 | 0 | 2026-07 | 10.8230708 |  |
+| Employment Ratio | OK | 0 | 0 | 2026-07 | 63.87044554 |  |
 | 職缺 | OK | 0 | 0 | 2026-05 | 329.5 |  |
 | ANZ職缺廣告 | OK | 0 | 0 | 2026-07 | 117.05328933535768 |  |
 | 時薪YoY | OK | 0 | 0 | 2026-Q2 | 3.034134007585343 |  |
 | 預計離職 | OK | 0 | 0 | 2026-Q1 | 1310.8837533 |  |
 | 失業預期 | OK | 0 | 0 | 2026-08 | 135.7 |  |
-| CPI YoY | OK | 0 | 0 | 2026-06 | 3.8 |  |
-| Trimmed Mean YoY | OK | 0 | 0 | 2026-06 | 3.6 |  |
+| CPI YoY | OK | 1 | 0 | 2026-07 | 3.5 |  |
+| Trimmed Mean YoY | OK | 1 | 2 | 2026-07 | 3.6 |  |
 | 零售 | OK | 0 | 0 | 2026-06 | 7.0 |  |
 | NAB企業售價 | OK | 0 | 0 | 2026-07 | 1.1 |  |
 | 消費信心 | OK | 0 | 0 | 2026-08 | 88.9 |  |
