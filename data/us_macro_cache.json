@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-08-27T23:48:46.799667+00:00",
+  "updated_at_utc": "2026-08-28T23:34:34.719211+00:00",
   "series": {
     "就業-就業（人數，千人）|非農": {
       "2023-01": 154776.0,
@@ -6394,7 +6394,8 @@
       "2026-04": 4.7,
       "2026-05": 4.8,
       "2026-06": 4.6,
-      "2026-07": 4.2
+      "2026-07": 4.2,
+      "2026-08": 4.0
     },
     "物價|密大5~10y通膨預期": {
       "1978-01": NaN,
@@ -6979,7 +6980,8 @@
       "2026-04": 3.5,
       "2026-05": 3.9,
       "2026-06": 3.3,
-      "2026-07": 3.3
+      "2026-07": 3.3,
+      "2026-08": 3.3
     },
     "消費|密大": {
       "1952-11": 86.2,
@@ -7656,7 +7658,8 @@
       "2026-04": 49.8,
       "2026-05": 44.8,
       "2026-06": 49.5,
-      "2026-07": 55.2
+      "2026-07": 55.2,
+      "2026-08": 51.7
     },
     "消費|密大_Current": {
       "1951-02": 67.7,
@@ -8333,7 +8336,8 @@
       "2026-04": 52.5,
       "2026-05": 45.8,
       "2026-06": 47.7,
-      "2026-07": 54.8
+      "2026-07": 54.8,
+      "2026-08": 51.9
     },
     "消費|密大_Expect": {
       "1951-02": NaN,
@@ -9010,7 +9014,8 @@
       "2026-04": 48.1,
       "2026-05": 44.1,
       "2026-06": 50.7,
-      "2026-07": 55.4
+      "2026-07": 55.4,
+      "2026-08": 51.5
     },
     "消費|Real Personal Spending": {
       "2024-01": 1.885,
@@ -9995,7 +10000,8 @@
       "2026-03": 74.0,
       "2026-04": 67.0,
       "2026-05": 58.0,
-      "2026-06": 63.0
+      "2026-06": 63.0,
+      "2026-07": 70.0
     },
     "消費|預計未來一年金融狀況": {
       "2016-01": 124.0,
@@ -10123,7 +10129,8 @@
       "2026-03": 84.0,
       "2026-04": 80.0,
       "2026-05": 73.0,
-      "2026-06": 84.0
+      "2026-06": 84.0,
+      "2026-07": 88.0
     },
     "消費|CB": {
       "2026-06": 92.2,
@@ -10176,6 +10183,6 @@
     }
   },
   "errors": [
-    "ADP: ADP Pay Insights ZIP could not be parsed; https://payinsights.adp.com/artifacts/us_wage/20260827/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260826/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260825/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260824/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260823/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260822/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260821/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260820/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260819/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260818/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260817/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260816/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260815/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260814/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260813/ADP_PAY_history.zip: response is not a ZIP file (text/html)"
+    "ADP: ADP Pay Insights ZIP could not be parsed; https://payinsights.adp.com/artifacts/us_wage/20260828/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260827/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260826/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260825/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260824/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260823/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260822/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260821/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260820/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260819/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260818/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260817/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260816/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260815/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260814/ADP_PAY_history.zip: response is not a ZIP file (text/html)"
   ]
 }
