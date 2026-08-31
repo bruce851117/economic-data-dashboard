@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-08-31T09:14:00.513742+00:00",
+  "generated_at": "2026-08-31T09:25:42.418613+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -1482,6 +1482,26 @@
       "ticker": "",
       "source": "Australian Bureau of Statistics (ABS)",
       "source_url": "https://data.api.abs.gov.au/rest/data/ABS,LF/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD"
+    },
+    {
+      "id": "aucreditownermom",
+      "name": "Housing Credit月增率 房屋持有人",
+      "ticker": "DGFACOHM",
+      "source": "Reserve Bank of Australia",
+      "frequency": "monthly",
+      "unit": "%",
+      "color": "#ea580c",
+      "data": []
+    },
+    {
+      "id": "aucreditinvestormom",
+      "name": "Housing Credit月增率 投資人",
+      "ticker": "DGFACIHM",
+      "source": "Reserve Bank of Australia",
+      "frequency": "monthly",
+      "unit": "%",
+      "color": "#f97316",
+      "data": []
     },
     {
       "id": "auwageprivate",

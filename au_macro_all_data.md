@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-08-31T09:14:00.513742+00:00
+更新時間：2026-08-31T09:25:42.418613+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -183,23 +183,25 @@
 | GDP YoY | OK | 0 | 0 | 2026-Q1 | 2.5197395557126967 |  |
 | GDP私人消費YoY | OK | 0 | 0 | 2026-Q1 | 2.4727989254179406 |  |
 | GDP投資YoY | OK | 0 | 0 | 2026-Q1 | 6.474938173333422 |  |
-| 私人企業時薪ex bonus(季度) | OK | 46 | 0 | 2026-Q2 | 3.2 |  |
-| 政府時薪ex bonus(季度) | OK | 46 | 0 | 2026-Q2 | 3.3 |  |
-| 就業新增-全職 | OK | 0 | 0 | 2026-07 | 16.333391529999062 |  |
-| 就業新增-兼職 | OK | 0 | 0 | 2026-07 | -32.15989419000016 |  |
+| 私人企業時薪ex bonus(季度) | OK | 0 | 0 | 2026-Q2 | 3.2 |  |
+| 政府時薪ex bonus(季度) | OK | 0 | 0 | 2026-Q2 | 3.3 |  |
+| 就業新增-全職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
+| 就業新增-兼職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | 勞參率 | OK | 0 | 0 | 2026-07 | 66.85332364 |  |
 | 工時 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| Indeed職缺 | OK | 79 | 0 | 2026-08 | 149.45 |  |
-| 家戶消費-Goods | OK | 0 | 0 | 2026-07 | 7.2 |  |
-| 家戶消費-Services | OK | 0 | 0 | 2026-07 | 6.8 |  |
-| 資本支出_住房 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook candidate failed reference validation: VALUE_MISMATCH |
-| 資本支出 設備廠房 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook candidate failed reference validation: VALUE_MISMATCH |
-| Building Approvals YoY | ERROR | 0 | 0 |  |  | RuntimeError: ABS national accounts workbook attempts failed: https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jun-2026/8731001.xlsx: RuntimeError: workbook contained no quarterly candidate series |
+| Indeed職缺 | OK | 0 | 0 | 2026-08 | 149.45 |  |
+| 家戶消費-Goods | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
+| 家戶消費-Services | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
+| 資本支出_住房 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
+| 資本支出 設備廠房 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
+| Building Approvals YoY | ERROR | 0 | 0 |  |  | RuntimeError: No monthly workbook candidate matched reference periods |
+| Housing Credit月增率 房屋持有人 | ERROR | 0 | 0 |  |  | RuntimeError: RBA series DGFACOHM had no observations |
+| Housing Credit月增率 投資人 | ERROR | 0 | 0 |  |  | RuntimeError: RBA series DGFACIHM had no observations |
 | 房租季增率 | OK | 0 | 0 | 2026-Q2 | 0.8 |  |
-| Income | OK | 0 | 45 | 2026-Q1 | 622128.0 |  |
-| 利息支出等 | OK | 0 | 45 | 2026-Q1 | 38720.0 |  |
-| 所得稅 保險 | OK | 0 | 45 | 2026-Q1 | 127153.0 |  |
-| DPI | OK | 0 | 45 | 2026-Q1 | 456254.0 |  |
-| 支出 | OK | 0 | 45 | 2026-Q1 | 382863.0 |  |
-| 購買固定資本 | OK | 0 | 45 | 2026-Q1 | 47895.0 |  |
-| Net Saving | OK | 0 | 45 | 2026-Q1 | 25496.0 |  |
+| Income | OK | 0 | 0 | 2026-Q1 | 622128.0 |  |
+| 利息支出等 | OK | 0 | 0 | 2026-Q1 | 38720.0 |  |
+| 所得稅 保險 | OK | 0 | 0 | 2026-Q1 | 127153.0 |  |
+| DPI | OK | 0 | 0 | 2026-Q1 | 456254.0 |  |
+| 支出 | OK | 0 | 0 | 2026-Q1 | 382863.0 |  |
+| 購買固定資本 | OK | 0 | 0 | 2026-Q1 | 47895.0 |  |
+| Net Saving | OK | 0 | 0 | 2026-Q1 | 25496.0 |  |
