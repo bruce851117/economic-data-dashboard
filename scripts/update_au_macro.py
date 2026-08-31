@@ -166,6 +166,8 @@ ABS_FLOW_ALIASES = {
     "CPI_MONTHLY": ["CPI", "CPI_M"],
     "HSI_M": ["HSI_M", "MHSI", "HSI"],
     "ANA_AGG": ["ANA_AGG"],
+    "CAPEX": ["CAPEX", "PNCE"],
+    "BA": ["BA"],
 }
 
 
@@ -1337,6 +1339,114 @@ def sp_australia_pmi(label: str) -> tuple[list[Point], dict[str, Any]]:
         f"Fast PMI mode could not parse the latest Australia {sector} flash PMI from the newest three releases"
     )
 
+
+def fetch_indeed_job_postings() -> tuple[list[Point], dict[str, Any]]:
+    """Fetch the official Indeed Hiring Lab Australia CSV, using each month's latest daily observation."""
+    url = "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/AU/aggregate_job_postings_AU.csv"
+    response = get(url)
+    rows = list(csv.DictReader(io.StringIO(response.content.decode("utf-8-sig", "replace"))))
+    latest: dict[str, tuple[str, float]] = {}
+    for row in rows:
+        if norm(row.get("variable")) != "total postings":
+            continue
+        observation_date = clean(row.get("date"))
+        value = number(row.get("indeed_job_postings_index_SA"))
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", observation_date) or value is None:
+            continue
+        month = observation_date[:7]
+        if month not in latest or observation_date > latest[month][0]:
+            latest[month] = (observation_date, value)
+    if not latest:
+        raise RuntimeError("Indeed official CSV contained no Australia total-postings observations")
+    points = [Point(month, pair[1], response.url, note=f"latest daily observation in month: {pair[0]}") for month, pair in sorted(latest.items())]
+    return points, {"request_url": response.url, "months": len(points), "latest_observation": latest[max(latest)][0]}
+
+
+def fetch_rba_ranked_series(expected: dict[str, float], include: list[str], exclude: list[str]) -> tuple[list[Point], dict[str, Any]]:
+    """Select an RBA monthly series by exact reference values, then metadata."""
+    candidates: list[dict[str, Any]] = []
+    errors: list[str] = []
+    for table in ("b1", "b18", "b19", "b29", "b30", "d2"):
+        try:
+            url = f"https://www.rba.gov.au/statistics/tables/csv/{table}-data.csv"
+            response = get(url)
+            rows = list(csv.reader(io.StringIO(response.content.decode("utf-8-sig", "replace"))))
+            id_row = next((i for i, row in enumerate(rows) if row and clean(row[0]).lower() == "series id"), None)
+            if id_row is None:
+                continue
+            titles = rows[0]; ids = rows[id_row]
+            for col in range(1, len(ids)):
+                values: dict[str, float] = {}
+                for row in rows[id_row + 1:]:
+                    if col >= len(row): continue
+                    text = clean(row[0]); mt = re.match(r"(\d{1,2})[-/](\w{3}|\d{1,2})[-/](\d{4})", text, re.I)
+                    if not mt: continue
+                    _, mon, year = mt.groups(); month_names={x.lower():i for i,x in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(),1)}
+                    month=month_names.get(mon.lower(), int(mon) if mon.isdigit() else 0); value=number(row[col])
+                    if month and value is not None: values[f"{int(year):04d}-{month:02d}"]=value
+                common=sorted(set(values)&set(expected))
+                if not common: continue
+                mae=sum(abs(values[x]-expected[x]) for x in common)/len(common)
+                text=norm(" ".join([titles[col] if col<len(titles) else "", ids[col]]))
+                metadata=sum(10 for term in include if norm(term) in text)-sum(20 for term in exclude if norm(term) in text)
+                candidates.append({"table":table,"id":clean(ids[col]),"title":clean(titles[col] if col<len(titles) else ""),"values":values,"matches":len(common),"mae":mae,"metadata":metadata,"url":response.url})
+        except Exception as error:
+            errors.append(f"{table}: {type(error).__name__}: {error}")
+    candidates.sort(key=lambda x:(-x["matches"],x["mae"],-x["metadata"]))
+    if not candidates or candidates[0]["mae"]>0.051:
+        raise RuntimeError("No exact RBA series matched reference values; " + "; ".join(errors))
+    best=candidates[0]
+    points=[Point(period,value,best["url"],note=f"RBA {best['table'].upper()}; series={best['id']}") for period,value in sorted(best["values"].items())]
+    return points,{k:v for k,v in best.items() if k!="values"}
+
+def fetch_rba_csv_series(table: str, series_id: str, frequency: str) -> tuple[list[Point], dict[str, Any]]:
+    """Read one exact Series ID from an official RBA table CSV."""
+    url = f"https://www.rba.gov.au/statistics/tables/csv/{table.lower()}-data.csv"
+    response = get(url)
+    rows = list(csv.reader(io.StringIO(response.content.decode("utf-8-sig", "replace"))))
+    id_row = next((i for i, row in enumerate(rows) if row and clean(row[0]).lower() == "series id"), None)
+    if id_row is None:
+        raise RuntimeError(f"RBA {table} CSV has no Series ID row")
+    ids = rows[id_row]
+    try:
+        value_col = next(i for i, value in enumerate(ids) if clean(value).upper() == series_id.upper())
+    except StopIteration as error:
+        raise RuntimeError(f"RBA {table} series {series_id} not found") from error
+    points: list[Point] = []
+    for row in rows[id_row + 1:]:
+        if value_col >= len(row):
+            continue
+        text = clean(row[0])
+        match = re.match(r"(\d{1,2})[-/](\w{3}|\d{1,2})[-/](\d{4})", text, re.I)
+        if not match:
+            continue
+        day, month_text, year = match.groups()
+        month_map = {name.lower(): i for i, name in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(), 1)}
+        month = month_map.get(month_text.lower(), int(month_text) if month_text.isdigit() else 0)
+        if not month:
+            continue
+        period = f"{int(year):04d}-Q{(month - 1) // 3 + 1}" if frequency == "Q" else f"{int(year):04d}-{month:02d}"
+        value = number(row[value_col])
+        if value is not None:
+            points.append(Point(period, value, response.url, note=f"RBA {table}; series={series_id}"))
+    if not points:
+        raise RuntimeError(f"RBA {table} series {series_id} had no observations")
+    return dedupe(points), {"request_url": response.url, "table": table, "series_id": series_id, "observations": len(points)}
+
+
+def calculate_yoy_from_database(database: dict[str, Any], source_id: str, source_url: str = "") -> list[Point]:
+    source = by_id(database, source_id)
+    levels = {str(row.get("date", ""))[:7]: number(row.get("value")) for row in source.get("data", [])}
+    points: list[Point] = []
+    for period, value in sorted(levels.items()):
+        if value is None or not re.fullmatch(r"\d{4}-\d{2}", period):
+            continue
+        prior = f"{int(period[:4]) - 1:04d}-{period[5:7]}"
+        previous = levels.get(prior)
+        if previous not in (None, 0):
+            points.append(Point(period, (value / previous - 1.0) * 100.0, source_url, note=f"YoY calculated from {source_id}"))
+    return points
+
 def pdf_value(url: str, patterns: list[str], period: str, raw_name: str) -> list[Point]:
     response = get(url)
     (OUT / raw_name).write_bytes(response.content)
@@ -1399,6 +1509,33 @@ TARGETS = [
     Target("GDP YoY", "Q", {"2026-Q1": 2.51974}, "API/CSV", "ABS ANA_AGG"),
     Target("GDP私人消費YoY", "Q", {"2026-Q1": 2.4728}, "API/CSV", "ABS ANA_AGG"),
     Target("GDP投資YoY", "Q", {"2026-Q1": 6.47494}, "API/CSV", "ABS ANA_AGG"),
+    Target("就業新增-全職", "M", {"2026-07": 16.3, "2026-06": 48.9}, "API/CSV", "ABS LF"),
+    Target("就業新增-兼職", "M", {"2026-07": -32.2, "2026-06": 31.4}, "API/CSV", "ABS LF"),
+    Target("勞參率", "M", {"2026-07": 66.8533236, "2026-06": 67.0108859}, "API/CSV", "ABS LF"),
+    Target("工時", "M", {"2026-07": 1997868.82584, "2026-06": 2010341.69766}, "API/CSV", "ABS LF"),
+    Target("Indeed職缺", "M", {"2026-08": 149.45, "2026-07": 146.04, "2026-06": 145.75}, "CSV", "Indeed Hiring Lab"),
+    Target("私人企業時薪ex bonus", "Q", {"2026-Q2": 3.2, "2026-Q1": 3.3, "2025-Q4": 3.3}, "API/CSV", "ABS WPI"),
+    Target("政府時薪ex bonus", "Q", {"2026-Q2": 3.3, "2026-Q1": 3.4, "2025-Q4": 3.9}, "API/CSV", "ABS WPI"),
+    Target("家戶消費 Goods", "M", {"2026-07": 7.2, "2026-06": 5.8, "2026-05": 5.7}, "API/CSV", "ABS HSI_M"),
+    Target("家戶消費 Services", "M", {"2026-07": 6.8, "2026-06": 6.4, "2026-05": 5.0}, "API/CSV", "ABS HSI_M"),
+    Target("資本支出_住房", "Q", {"2026-Q2": 2.1031, "2026-Q1": -3.26577, "2025-Q4": 2.79896}, "API/CSV", "ABS CAPEX"),
+    Target("資本支出 設備廠房", "Q", {"2026-Q2": -8.91491, "2026-Q1": 18.38705, "2025-Q4": -1.22101}, "API/CSV", "ABS CAPEX"),
+    Target("Building Approvals YoY", "M", {"2026-06": 14.58006, "2026-05": 1.35569}, "API/CSV", "ABS BA"),
+    Target("房貸總還款", "Q", {"2026-Q2": 33442.475, "2026-Q1": 31956.004, "2025-Q4": 31636.717}, "CSV", "RBA E13"),
+    Target("房貸利息還款", "Q", {"2026-Q2": 21334.45, "2026-Q1": 19439.391, "2025-Q4": 19127.986}, "CSV", "RBA E13"),
+    Target("房租季增率", "Q", {"2026-Q2": 0.8, "2026-Q1": 0.9, "2025-Q4": 0.8}, "API/CSV", "ABS CPI"),
+    Target("Income", "Q", {"2026-Q1": 622128, "2025-Q4": 618019, "2025-Q3": 604919}, "API/CSV", "ABS ANA_AGG"),
+    Target("利息支出等", "Q", {"2026-Q1": 38720, "2025-Q4": 37041, "2025-Q3": 37051}, "API/CSV", "ABS ANA_AGG"),
+    Target("所得稅 保險", "Q", {"2026-Q1": 127153, "2025-Q4": 126478, "2025-Q3": 122566}, "API/CSV", "ABS ANA_AGG"),
+    Target("DPI", "Q", {"2026-Q1": 456254, "2025-Q4": 454500, "2025-Q3": 445302}, "API/CSV", "ABS ANA_AGG"),
+    Target("支出", "Q", {"2026-Q1": 382863, "2025-Q4": 378740, "2025-Q3": 374133}, "API/CSV", "ABS ANA_AGG"),
+    Target("固定資本消耗", "Q", {"2026-Q1": 47895, "2025-Q4": 47332, "2025-Q3": 46752}, "API/CSV", "ABS ANA_AGG"),
+    Target("Net Saving", "Q", {"2026-Q1": 25496, "2025-Q4": 28428, "2025-Q3": 24417}, "API/CSV", "ABS ANA_AGG"),
+    Target("房貸餘額(房屋持有)", "M", {"2026-07": 1665.078, "2026-06": 1659.954, "2026-05": 1649.611}, "CSV", "RBA"),
+    Target("房貸餘額(投資人)", "M", {"2026-07": 815.11, "2026-06": 813.865, "2026-05": 806.411}, "CSV", "RBA"),
+    Target("房貸餘額(房屋持有) YoY", "M", {"2026-07": 5.860587184, "2026-06": 5.824796457, "2026-05": 5.910560874}, "Derived", "RBA"),
+    Target("房貸餘額(投資人) YoY", "M", {"2026-07": 8.736571512, "2026-06": 9.113127789, "2026-05": 9.043127158}, "Derived", "RBA"),
+    Target("Disposable Income", "Q", {"2026-Q1": 456254, "2025-Q4": 454500}, "API/CSV", "ABS ANA_AGG"),
 ]
 
 
@@ -1560,6 +1697,70 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
         )
         diagnostics.update(discovery)
         return points, diagnostics
+    if label == "就業新增-全職":
+        return fetch_abs_target("LF", "2015-01", ["employed", "full time", "persons", "australia", "seasonally adjusted"], ["part time", "rate", "hours", "state"], target.expected, "mom_diff")
+    if label == "就業新增-兼職":
+        return fetch_abs_target("LF", "2015-01", ["employed", "part time", "persons", "australia", "seasonally adjusted"], ["full time", "rate", "hours", "state"], target.expected, "mom_diff")
+    if label == "勞參率":
+        return fetch_abs_target("LF", "2015-01", ["participation rate", "persons", "australia", "seasonally adjusted"], ["state", "trend", "original"], target.expected)
+    if label == "工時":
+        return fetch_abs_target("LF", "2015-01", ["aggregate monthly hours worked", "all jobs", "australia", "seasonally adjusted"], ["state", "trend", "original", "average"], target.expected)
+    if label == "Indeed職缺":
+        return fetch_indeed_job_postings()
+    if label == "私人企業時薪ex bonus":
+        return fetch_abs_target("WPI", "2015-Q1", ["private sector", "hourly rates of pay", "excluding bonuses", "through the year"], ["public sector", "including bonuses"], target.expected)
+    if label == "政府時薪ex bonus":
+        return fetch_abs_target("WPI", "2015-Q1", ["public sector", "hourly rates of pay", "excluding bonuses", "through the year"], ["private sector", "including bonuses"], target.expected)
+    if label == "家戶消費 Goods":
+        return fetch_abs_target("HSI_M", "2019-01", ["goods", "australia", "seasonally adjusted", "through the year"], ["services", "total", "monthly percentage change"], target.expected)
+    if label == "家戶消費 Services":
+        return fetch_abs_target("HSI_M", "2019-01", ["services", "australia", "seasonally adjusted", "through the year"], ["goods", "total", "monthly percentage change"], target.expected)
+    if label == "資本支出_住房":
+        return fetch_abs_target("CAPEX", "2015-Q1", ["buildings and structures", "chain volume", "seasonally adjusted", "percentage change"], ["equipment", "expected"], target.expected)
+    if label == "資本支出 設備廠房":
+        return fetch_abs_target("CAPEX", "2015-Q1", ["equipment plant and machinery", "chain volume", "seasonally adjusted", "percentage change"], ["buildings", "expected"], target.expected)
+    if label == "Building Approvals YoY":
+        return fetch_abs_target("BA", "2014-01", ["total dwelling units approved", "australia", "original"], ["seasonally adjusted", "trend", "private sector"], target.expected, "yoy_pct_m")
+    if label == "房貸總還款":
+        return fetch_rba_csv_series("e13", "LPHOSP", "Q")
+    if label == "房貸利息還款":
+        return fetch_rba_csv_series("e13", "LPHOIC", "Q")
+    if label == "房租季增率":
+        return fetch_abs_target("CPI_MONTHLY", "2015-Q1", ["rents", "weighted average", "eight capital cities", "quarterly percentage change"], ["annual", "monthly"], target.expected)
+    if label == "Income":
+        return fetch_abs_target("ANA_AGG", "2015-Q1", ["households", "gross income", "seasonally adjusted", "current prices"], ["percentage", "disposable"], target.expected)
+    if label == "利息支出等":
+        return fetch_abs_target("ANA_AGG", "2015-Q1", ["households", "property income payable", "seasonally adjusted", "current prices"], ["percentage", "receivable"], target.expected)
+    if label == "所得稅 保險":
+        return fetch_abs_target("ANA_AGG", "2015-Q1", ["households", "secondary income payable", "seasonally adjusted", "current prices"], ["percentage", "receivable"], target.expected)
+    if label == "DPI":
+        return fetch_abs_target("ANA_AGG", "2015-Q1", ["households", "gross disposable income", "seasonally adjusted", "current prices"], ["percentage", "per capita"], target.expected)
+    if label == "支出":
+        return fetch_abs_target("ANA_AGG", "2015-Q1", ["households", "final consumption expenditure", "seasonally adjusted", "current prices"], ["percentage", "chain volume"], target.expected)
+    if label == "固定資本消耗":
+        return fetch_abs_target("ANA_AGG", "2015-Q1", ["households", "consumption of fixed capital", "seasonally adjusted", "current prices"], ["percentage"], target.expected)
+    if label == "Net Saving":
+        return fetch_abs_target("ANA_AGG", "2015-Q1", ["households", "net saving", "seasonally adjusted", "current prices"], ["percentage", "ratio"], target.expected)
+    if label == "房貸餘額(房屋持有)":
+        return fetch_rba_ranked_series(target.expected, ["household", "owner", "housing"], ["investor", "business"])
+    if label == "房貸餘額(投資人)":
+        return fetch_rba_ranked_series(target.expected, ["household", "investor", "housing"], ["owner", "business"])
+    if label == "房貸餘額(房屋持有) YoY":
+        levels, diagnostics = fetch_rba_ranked_series({"2026-07":1665.078,"2026-06":1659.954,"2026-05":1649.611}, ["household","owner","housing"], ["investor","business"])
+        mapping={p.period:p for p in levels}; points=[]
+        for period,p in sorted(mapping.items()):
+            prior=f"{int(period[:4])-1:04d}-{period[5:7]}"
+            if prior in mapping and mapping[prior].value: points.append(Point(period,(p.value/mapping[prior].value-1)*100,p.source_url,note="YoY calculated from official RBA level"))
+        return points, diagnostics
+    if label == "房貸餘額(投資人) YoY":
+        levels, diagnostics = fetch_rba_ranked_series({"2026-07":815.11,"2026-06":813.865,"2026-05":806.411}, ["household","investor","housing"], ["owner","business"])
+        mapping={p.period:p for p in levels}; points=[]
+        for period,p in sorted(mapping.items()):
+            prior=f"{int(period[:4])-1:04d}-{period[5:7]}"
+            if prior in mapping and mapping[prior].value: points.append(Point(period,(p.value/mapping[prior].value-1)*100,p.source_url,note="YoY calculated from official RBA level"))
+        return points, diagnostics
+    if label == "Disposable Income":
+        return fetch_abs_target("ANA_AGG", "2015-Q1", ["households","gross disposable income","seasonally adjusted","current prices"], ["percentage","per capita"], target.expected)
     raise RuntimeError(f"No test mapping for {label}")
 
 
@@ -1578,12 +1779,30 @@ SERIES_MAP = {
     "製造業PMI": "aumanpmi", "服務業PMI": "auservpmi",
     "GDP YoY": "augdpyoy", "GDP私人消費YoY": "auconsumptionyoy",
     "GDP投資YoY": "auinvestmentyoy",
+    "就業新增-全職": "auempfull", "就業新增-兼職": "auemppart",
+    "勞參率": "auparticipation", "工時": "auhours", "Indeed職缺": "auindeed",
+    "私人企業時薪ex bonus": "auwageprivate", "政府時薪ex bonus": "auwagepublic",
+    "家戶消費 Goods": "auhsgoods", "家戶消費 Services": "auhsservices",
+    "資本支出_住房": "aucapbuilding", "資本支出 設備廠房": "aucapequipment",
+    "Building Approvals YoY": "aubuildapprovals", "房貸總還款": "auhouserepay",
+    "房貸利息還款": "auhouseinterest", "房租季增率": "aurentrate",
+    "Income": "auincome", "利息支出等": "aupropertypayable", "所得稅 保險": "ausecondarypayable",
+    "DPI": "audpi", "支出": "auhfce", "固定資本消耗": "aucofc", "Net Saving": "aunetsaving",
+    "房貸餘額(房屋持有)": "auownerhousing", "房貸餘額(投資人)": "auinvestorhousing",
+    "房貸餘額(房屋持有) YoY": "auownerhousingyoy", "房貸餘額(投資人) YoY": "auinvestorhousingyoy",
+    "Disposable Income": "audisposableincome",
 }
 AUTHORITATIVE = {
     "就業新增", "失業率", "就業不足率", "勞動力未充分利用率", "Employment Ratio",
     "職缺", "ANZ職缺廣告", "時薪YoY", "預計離職",
     "CPI YoY", "Trimmed Mean YoY", "零售", "GDP YoY", "GDP私人消費YoY", "GDP投資YoY",
     "製造業PMI", "服務業PMI",
+    "就業新增-全職", "就業新增-兼職", "勞參率", "工時", "Indeed職缺",
+    "私人企業時薪ex bonus", "政府時薪ex bonus", "家戶消費 Goods", "家戶消費 Services",
+    "資本支出_住房", "資本支出 設備廠房", "Building Approvals YoY", "房貸總還款",
+    "房貸利息還款", "房租季增率", "Income", "利息支出等", "所得稅 保險",
+    "DPI", "支出", "固定資本消耗", "Net Saving", "房貸餘額(房屋持有)",
+    "房貸餘額(投資人)", "房貸餘額(房屋持有) YoY", "房貸餘額(投資人) YoY", "Disposable Income",
 }
 
 def point_date(period: str) -> str:
@@ -1625,6 +1844,45 @@ NEW_SERIES_DEFINITIONS = {
 }
 
 
+EXCEL_ADDITIONAL_SERIES = {
+    "auempfull": ("就業新增-全職", "AULFEMFC Index", "monthly", "千人"),
+    "auemppart": ("就業新增-兼職", "AULFEMCP Index", "monthly", "千人"),
+    "auparticipation": ("勞參率", "AULFPART Index", "monthly", "%"),
+    "auhours": ("工時", "AUHRAMTL Index", "monthly", "千小時"),
+    "auindeed": ("Indeed職缺", "INDDAOIS Index", "monthly", "指數"),
+    "auwageprivate": ("私人企業時薪ex bonus(季度)", "AUWCPY Index", "quarterly", "%"),
+    "auwagepublic": ("政府時薪ex bonus(季度)", "AUWCGY Index", "quarterly", "%"),
+    "auhsgoods": ("Goods", "AUPDYSGD Index", "monthly", "%"),
+    "auhsservices": ("Services", "AUPDYSSV Index", "monthly", "%"),
+    "aucapbuilding": ("資本支出_住房", "AUCEBLDQ Index", "quarterly", "%"),
+    "aucapequipment": ("資本支出 設備廠房", "AUCEEQPQ Index", "quarterly", "%"),
+    "aubuildapprovals": ("Building Approvals YoY", "AUBABPNY Index", "monthly", "%"),
+    "auhouserepay": ("房貸總還款", "AUHLOOSR Index", "quarterly", "百萬澳元"),
+    "auhouseinterest": ("房貸利息還款", "AUHLOOCI Index", "quarterly", "百萬澳元"),
+    "aurentrate": ("房租季增率", "AUCPRENQ Index", "quarterly", "%"),
+    "auincome": ("Income", "AUNATGI Index", "quarterly", "百萬澳元"),
+    "aupropertypayable": ("利息支出等", "AUNATLPO Index", "quarterly", "百萬澳元"),
+    "ausecondarypayable": ("所得稅 保險", "AUNATSIP Index", "quarterly", "百萬澳元"),
+    "audpi": ("DPI", "AUNAGDI Index", "quarterly", "百萬澳元"),
+    "auhfce": ("支出", "AUNAFCX Index", "quarterly", "百萬澳元"),
+    "aucofc": ("固定資本消耗", "AUNACOFC Index", "quarterly", "百萬澳元"),
+    "aunetsaving": ("Net Saving", "AUNANSAV Index", "quarterly", "百萬澳元"),
+    "auownerhousing": ("房貸餘額(房屋持有)", "AULBHLOC Index", "monthly", "十億澳元"),
+    "auinvestorhousing": ("房貸餘額(投資人)", "AULBHLIN Index", "monthly", "十億澳元"),
+    "auownerhousingyoy": ("房貸餘額(房屋持有) YoY", "Derived", "monthly", "%"),
+    "auinvestorhousingyoy": ("房貸餘額(投資人) YoY", "Derived", "monthly", "%"),
+    "audisposableincome": ("Disposable Income", "AUNAGDI Index", "quarterly", "百萬澳元"),
+}
+
+def ensure_excel_additional_series(database: dict[str, Any]) -> None:
+    ensure_new_series(database)
+    existing = {str(item.get("id")) for item in database.setdefault("series", [])}
+    palette = ["#2563eb", "#0f766e", "#ea580c", "#7c3aed", "#a21caf"]
+    for index, (series_id, (name, ticker, frequency, unit)) in enumerate(EXCEL_ADDITIONAL_SERIES.items()):
+        if series_id not in existing:
+            database["series"].append({"id": series_id, "name": name, "ticker": ticker, "source": "Official structured source", "frequency": frequency, "unit": unit, "color": palette[index % len(palette)], "data": []})
+            existing.add(series_id)
+
 def ensure_new_series(database: dict[str, Any]) -> None:
     """Create newly introduced series and place them after unemployment."""
     series_list = database.setdefault("series", [])
@@ -1658,8 +1916,8 @@ def by_id(database: dict[str, Any], series_id: str) -> dict[str, Any]:
     for item in database.get("series", []):
         if item.get("id") == series_id:
             return item
-    if series_id in NEW_SERIES_DEFINITIONS:
-        ensure_new_series(database)
+    if series_id in NEW_SERIES_DEFINITIONS or series_id in EXCEL_ADDITIONAL_SERIES:
+        ensure_excel_additional_series(database)
         for item in database.get("series", []):
             if item.get("id") == series_id:
                 return item
@@ -1901,7 +2159,7 @@ def write_markdown(database: dict[str, Any], logs: list[dict[str, Any]]) -> None
 def main() -> int:
     OUT.mkdir(parents=True,exist_ok=True)
     database=json.loads(DATA_FILE.read_text(encoding="utf-8"))
-    ensure_new_series(database)
+    ensure_excel_additional_series(database)
     logs=[]
     for target in TARGETS:
         series_id=SERIES_MAP[target.label]
