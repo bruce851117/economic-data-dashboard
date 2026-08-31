@@ -1383,13 +1383,17 @@ def compare(expected: dict[str, float], points: list[Point], tolerance: float = 
 
 
 def fetch_indeed_monthly_index() -> tuple[list[Point], dict[str, Any]]:
-    """Indeed Hiring Lab public CSV; use the last total-SA observation in each month."""
-    url = "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/AU/aggregate_job_postings_AU.csv"
-    response = get(url)
-    rows = list(csv.DictReader(io.StringIO(response.text)))
+    """Indeed Hiring Lab public CSV retrieved through the GitHub Contents JSON API."""
+    import base64
+    api_url = "https://api.github.com/repos/hiring-lab/job_postings_tracker/contents/AU/aggregate_job_postings_AU.csv?ref=master"
+    response = get(api_url, headers={"Accept": "application/vnd.github+json"})
+    payload = response.json()
+    content = base64.b64decode(payload["content"]).decode("utf-8-sig")
+    rows = list(csv.DictReader(io.StringIO(content)))
     monthly: dict[str, tuple[str, float]] = {}
     for row in rows:
-        if clean(row.get("variable")).lower() != "total":
+        variable = clean(row.get("variable")).lower()
+        if variable not in {"total", "total postings"}:
             continue
         day = clean(row.get("date"))
         value = number(row.get("indeed_job_postings_index_SA"))
@@ -1398,8 +1402,10 @@ def fetch_indeed_monthly_index() -> tuple[list[Point], dict[str, Any]]:
         month = day[:7]
         if month not in monthly or day > monthly[month][0]:
             monthly[month] = (day, value)
-    points = [Point(month, item[1], response.url, status="final", note=f"Indeed last daily observation in month; observation_date={item[0]}") for month, item in sorted(monthly.items())]
-    return points, {"request_url": response.url, "rows": len(rows), "months": len(points), "method": "last total seasonally-adjusted daily observation in each month"}
+    points = [Point(month, item[1], payload.get("html_url", api_url), status="final", note=f"Indeed last daily total-postings observation in month; observation_date={item[0]}") for month, item in sorted(monthly.items())]
+    if not points:
+        raise RuntimeError("Indeed CSV contained no total-postings observations")
+    return points, {"request_url": api_url, "download_url": payload.get("download_url", ""), "rows": len(rows), "months": len(points)}
 
 
 def fetch_rba_csv_series(table: str, series_id: str) -> tuple[list[Point], dict[str, Any]]:
@@ -1427,10 +1433,28 @@ def fetch_rba_csv_series(table: str, series_id: str) -> tuple[list[Point], dict[
 def fetch_ana_household_candidate(expected: dict[str, float], label: str) -> tuple[list[Point], dict[str, Any]]:
     response, discovery = discover_abs_workbook([
         "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/latest-release#data-downloads"
-    ], "5206014", "Table 14", [])
-    points, diagnostics = fetch_abs_workbook_candidate([response.url], expected, f"abs_5206014_{norm(label).replace(' ', '_')}.xlsx", f"ABS Table 14 household income account; {label}")
+    ], "5206020", "Household Income", [])
+    points, diagnostics = fetch_abs_workbook_candidate([response.url], expected, f"abs_5206020_{norm(label).replace(' ', '_')}.xlsx", f"ABS quarterly Household Income workbook; {label}")
     diagnostics.update(discovery)
     return points, diagnostics
+
+
+def fetch_official_workbook_verified(landing: str, stem: str, title: str, expected: dict[str, float], raw_name: str, note: str) -> tuple[list[Point], dict[str, Any]]:
+    response, discovery = discover_abs_workbook([landing], stem, title, [])
+    points, diagnostics = fetch_abs_workbook_candidate([response.url], expected, raw_name, note)
+    diagnostics.update(discovery)
+    comparison = compare(expected, points)
+    if comparison["status"] not in {"MATCH_ALL", "MATCH_AVAILABLE"}:
+        raise RuntimeError(f"Official workbook candidate failed reference validation: {comparison['status']}")
+    return points, diagnostics
+
+
+def fetch_wpi_ex_bonus_sector(sector: str, expected: dict[str, float]) -> tuple[list[Point], dict[str, Any]]:
+    return fetch_official_workbook_verified(
+        "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia/latest-release#data-downloads",
+        "634501", "Table 1", expected, f"abs_wpi_ex_bonus_{sector}.xlsx",
+        f"ABS WPI Table 1 total hourly rates excluding bonuses; {sector} sector annual percentage change",
+    )
 
 TARGETS = [
     Target("就業新增", "M", {"2026-06": 76.3, "2026-05": 44.0, "2026-04": -38.6}, "API/CSV", "ABS LF"),
@@ -1453,6 +1477,8 @@ TARGETS = [
     Target("GDP YoY", "Q", {"2026-Q1": 2.51974}, "API/CSV", "ABS ANA_AGG"),
     Target("GDP私人消費YoY", "Q", {"2026-Q1": 2.4728}, "API/CSV", "ABS ANA_AGG"),
     Target("GDP投資YoY", "Q", {"2026-Q1": 6.47494}, "API/CSV", "ABS ANA_AGG"),
+    Target("私人企業時薪ex bonus(季度)", "Q", {"2026-Q2": 3.2, "2026-Q1": 3.3, "2025-Q4": 3.3}, "XLSX", "ABS WPI Table 1"),
+    Target("政府時薪ex bonus(季度)", "Q", {"2026-Q2": 3.3, "2026-Q1": 3.4, "2025-Q4": 3.9}, "XLSX", "ABS WPI Table 1"),
     Target("就業新增-全職", "M", {"2026-07": 16.3, "2026-06": 48.9}, "API/CSV", "ABS LF"),
     Target("就業新增-兼職", "M", {"2026-07": -32.2, "2026-06": 31.4}, "API/CSV", "ABS LF"),
     Target("勞參率", "M", {"2026-07": 66.8533236, "2026-06": 67.0108859}, "API/CSV", "ABS LF"),
@@ -1632,28 +1658,32 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
         )
         diagnostics.update(discovery)
         return points, diagnostics
+    if label == "私人企業時薪ex bonus(季度)":
+        return fetch_wpi_ex_bonus_sector("private", target.expected)
+    if label == "政府時薪ex bonus(季度)":
+        return fetch_wpi_ex_bonus_sector("public", target.expected)
     if label == "就業新增-全職":
-        return fetch_abs_target("LF", "2025-01", ["employed full time", "persons", "australia", "seasonally adjusted"], ["rate", "state", "part time"], target.expected, "mom_diff")
+        return fetch_abs_target("LF", "2015-01", ["employed full time", "persons", "australia", "seasonally adjusted"], ["rate", "state", "part time"], target.expected, "mom_diff")
     if label == "就業新增-兼職":
-        return fetch_abs_target("LF", "2025-01", ["employed part time", "persons", "australia", "seasonally adjusted"], ["rate", "state", "full time"], target.expected, "mom_diff")
+        return fetch_abs_target("LF", "2015-01", ["employed part time", "persons", "australia", "seasonally adjusted"], ["rate", "state", "full time"], target.expected, "mom_diff")
     if label == "勞參率":
         return fetch_abs_verified_target("LF", "2015-01", ["participation rate", "persons", "australia", "seasonally adjusted"], ["state", "trend", "original", "male", "female"], target.expected)
     if label == "工時":
-        return fetch_abs_verified_target("LF", "2015-01", ["monthly hours worked", "all industries", "persons", "australia", "seasonally adjusted"], ["state", "trend", "original", "average"], target.expected, tolerance=0.5)
+        return fetch_corrected_lf_table("X01", target.expected, ["monthly hours worked", "all jobs", "australia", "seasonally adjusted"], ["trend", "original", "state", "average"])
     if label == "Indeed職缺":
         return fetch_indeed_monthly_index()
     if label == "家戶消費-Goods":
-        return fetch_abs_verified_target("HSI_M", "2025-01", ["goods", "australia", "seasonally adjusted", "through the year"], ["services", "trend", "monthly percentage change"], target.expected)
+        return fetch_abs_verified_target("HSI_M", "2015-01", ["goods", "australia", "seasonally adjusted", "through the year"], ["services", "trend", "monthly percentage change"], target.expected)
     if label == "家戶消費-Services":
-        return fetch_abs_verified_target("HSI_M", "2025-01", ["services", "australia", "seasonally adjusted", "through the year"], ["goods", "trend", "monthly percentage change"], target.expected)
+        return fetch_abs_verified_target("HSI_M", "2015-01", ["services", "australia", "seasonally adjusted", "through the year"], ["goods", "trend", "monthly percentage change"], target.expected)
     if label == "資本支出_住房":
-        return fetch_abs_verified_target("CAPEX", "2025-Q1", ["building and structures", "chain volume", "seasonally adjusted", "percentage change"], ["equipment", "expected", "trend"], target.expected)
+        return fetch_official_workbook_verified("https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/latest-release#data-downloads", "02_", "chain volume", target.expected, "abs_capex_chain_volume.xlsx", "Buildings and structures, seasonally adjusted, chain volume, quarterly percentage change")
     if label == "資本支出 設備廠房":
-        return fetch_abs_verified_target("CAPEX", "2025-Q1", ["equipment plant and machinery", "chain volume", "seasonally adjusted", "percentage change"], ["building", "expected", "trend"], target.expected)
+        return fetch_official_workbook_verified("https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/latest-release#data-downloads", "02_", "chain volume", target.expected, "abs_capex_chain_volume.xlsx", "Equipment plant and machinery, seasonally adjusted, chain volume, quarterly percentage change")
     if label == "Building Approvals YoY":
-        return fetch_abs_verified_target("BA", "2025-01", ["total dwelling units", "australia", "original", "through the year"], ["seasonally adjusted", "trend", "value"], target.expected)
+        return fetch_official_workbook_verified("https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/latest-release#data-downloads", "8731001", "Table 1", target.expected, "abs_building_approvals_table1.xlsx", "Total dwelling units approved, Australia, original, through-the-year percentage change")
     if label == "房租季增率":
-        return fetch_abs_verified_target("CPI", "2025-Q1", ["rents", "weighted average of eight capital cities", "percentage change from previous quarter"], ["annual", "index numbers", "tradable"], target.expected)
+        return fetch_abs_verified_target("CPI", "2015-Q1", ["rents", "weighted average of eight capital cities", "percentage change from previous quarter"], ["annual", "index numbers", "tradable"], target.expected)
     if label in {"Income", "利息支出等", "所得稅 保險", "DPI", "支出", "購買固定資本", "Net Saving"}:
         return fetch_ana_household_candidate(target.expected, label)
 
@@ -1695,7 +1725,7 @@ def clean_database(database: dict[str, Any]) -> None:
 
 
 AU_BLOCKS = [
-    {"title": "就業", "color": "#0f766e", "series": ["auunempexp", "auempchg", "auempfull", "auemppart", "auempratio", "auunemp", "auunderemp", "auunderutil", "auparticipation", "auhours", "auvacancy", "auanzjobads", "auindeedjobs", "auwageyoy", "auexitleave"]},
+    {"title": "就業", "color": "#0f766e", "series": ["auunempexp", "auempchg", "auempfull", "auemppart", "auempratio", "auunemp", "auunderemp", "auunderutil", "auparticipation", "auhours", "auvacancy", "auanzjobads", "auindeedjobs", "auwageyoy", "auexitleave", "auwageprivate", "auwagepublic"]},
     {"title": "家戶消費", "color": "#2563eb", "series": ["auhousegoods", "auhouseservices", "auretail"]},
     {"title": "消費者信心", "color": "#7c3aed", "series": ["auconsconf"]},
     {"title": "企業調查", "color": "#9333ea", "series": ["aunabprices", "aumanpmi", "auservpmi"]},
@@ -1720,6 +1750,7 @@ SERIES_MAP = {
     "製造業PMI": "aumanpmi", "服務業PMI": "auservpmi",
     "GDP YoY": "augdpyoy", "GDP私人消費YoY": "auconsumptionyoy",
     "GDP投資YoY": "auinvestmentyoy",
+    "私人企業時薪ex bonus(季度)": "auwageprivate", "政府時薪ex bonus(季度)": "auwagepublic",
     "就業新增-全職": "auempfull", "就業新增-兼職": "auemppart", "勞參率": "auparticipation", "工時": "auhours",
     "Indeed職缺": "auindeedjobs", "家戶消費-Goods": "auhousegoods", "家戶消費-Services": "auhouseservices",
     "資本支出_住房": "aucapexbuilding", "資本支出 設備廠房": "aucapexequipment", "Building Approvals YoY": "aubuildingapprovals",
@@ -1732,7 +1763,7 @@ AUTHORITATIVE = {
     "職缺", "ANZ職缺廣告", "時薪YoY", "預計離職",
     "CPI YoY", "Trimmed Mean YoY", "零售", "GDP YoY", "GDP私人消費YoY", "GDP投資YoY",
     "製造業PMI", "服務業PMI",
-    "就業新增-全職", "就業新增-兼職", "勞參率", "工時", "Indeed職缺",
+    "私人企業時薪ex bonus(季度)", "政府時薪ex bonus(季度)", "就業新增-全職", "就業新增-兼職", "勞參率", "工時", "Indeed職缺",
     "家戶消費-Goods", "家戶消費-Services", "資本支出_住房", "資本支出 設備廠房",
     "Building Approvals YoY", "房租季增率",
     "Income", "利息支出等", "所得稅 保險", "DPI", "支出", "購買固定資本", "Net Saving",
@@ -1768,6 +1799,8 @@ NEW_SERIES_DEFINITIONS = {
     "auempratio": {
         "name": "就業比率", "ticker": "ABS Employment-to-Population Ratio", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "%", "color": "#22c55e", "data": [],
     },
+    "auwageprivate": {"name": "私人企業時薪ex bonus(季度)", "ticker": "AUWCPY Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "YoY %", "color": "#16a34a", "data": []},
+    "auwagepublic": {"name": "政府時薪ex bonus(季度)", "ticker": "AUWCGY Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "YoY %", "color": "#15803d", "data": []},
     "auempfull": {"name": "就業新增-全職", "ticker": "AULFEMFC Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "thousand persons", "color": "#059669", "data": []},
     "auemppart": {"name": "就業新增-兼職", "ticker": "AULFEMCP Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "thousand persons", "color": "#10b981", "data": []},
     "auparticipation": {"name": "勞參率", "ticker": "AULFPART Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "%", "color": "#14b8a6", "data": []},
@@ -1797,7 +1830,7 @@ def ensure_new_series(database: dict[str, Any]) -> None:
         insert_at = next(i for i, item in enumerate(series_list) if item.get("id") == "auunemp") + 1
     except StopIteration:
         insert_at = len(series_list)
-    preferred = ["auempfull", "auemppart", "auunderemp", "auunderutil", "auempratio", "auparticipation", "auhours", "auindeedjobs", "auhousegoods", "auhouseservices", "aucapexbuilding", "aucapexequipment", "aubuildingapprovals", "aurentsqoq", "auhhinc", "auhhinterest", "auhhsecondary", "auhhdi", "auhhconsumption", "auhhcfc", "auhhnetSaving"]
+    preferred = ["auwageprivate", "auwagepublic", "auempfull", "auemppart", "auunderemp", "auunderutil", "auempratio", "auparticipation", "auhours", "auindeedjobs", "auhousegoods", "auhouseservices", "aucapexbuilding", "aucapexequipment", "aubuildingapprovals", "aurentsqoq", "auhhinc", "auhhinterest", "auhhsecondary", "auhhdi", "auhhconsumption", "auhhcfc", "auhhnetSaving"]
     for series_id in preferred:
         if series_id not in existing:
             series_list.insert(insert_at, {"id": series_id, **NEW_SERIES_DEFINITIONS[series_id]})
