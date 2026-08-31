@@ -166,6 +166,8 @@ ABS_FLOW_ALIASES = {
     "CPI_MONTHLY": ["CPI", "CPI_M"],
     "HSI_M": ["HSI_M", "MHSI", "HSI"],
     "ANA_AGG": ["ANA_AGG"],
+    "CAPEX": ["CAPEX", "PCE"],
+    "BA": ["BA"],
 }
 
 
@@ -1378,7 +1380,61 @@ def compare(expected: dict[str, float], points: list[Point], tolerance: float = 
     return {"status": status, "rows": rows}
 
 
+
+
+def fetch_indeed_monthly_index() -> tuple[list[Point], dict[str, Any]]:
+    """Indeed Hiring Lab public CSV; use the last total-SA observation in each month."""
+    url = "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/AU/aggregate_job_postings_AU.csv"
+    response = get(url)
+    rows = list(csv.DictReader(io.StringIO(response.text)))
+    monthly: dict[str, tuple[str, float]] = {}
+    for row in rows:
+        if clean(row.get("variable")).lower() != "total":
+            continue
+        day = clean(row.get("date"))
+        value = number(row.get("indeed_job_postings_index_SA"))
+        if not re.fullmatch(r"20\d{2}-\d{2}-\d{2}", day) or value is None:
+            continue
+        month = day[:7]
+        if month not in monthly or day > monthly[month][0]:
+            monthly[month] = (day, value)
+    points = [Point(month, item[1], response.url, status="final", note=f"Indeed last daily observation in month; observation_date={item[0]}") for month, item in sorted(monthly.items())]
+    return points, {"request_url": response.url, "rows": len(rows), "months": len(points), "method": "last total seasonally-adjusted daily observation in each month"}
+
+
+def fetch_rba_csv_series(table: str, series_id: str) -> tuple[list[Point], dict[str, Any]]:
+    """Read one official RBA statistical-table series from its public CSV."""
+    url = f"https://www.rba.gov.au/statistics/tables/csv/{table.lower()}-data.csv"
+    response = get(url)
+    rows = list(csv.reader(io.StringIO(response.text.lstrip("\ufeff"))))
+    id_row = next((row for row in rows if row and clean(row[0]).lower() == "series id"), None)
+    if not id_row or series_id not in id_row:
+        raise RuntimeError(f"RBA series {series_id} not found in {table}")
+    col = id_row.index(series_id)
+    points: list[Point] = []
+    for row in rows:
+        if not row or col >= len(row):
+            continue
+        period = period_key(row[0])
+        value = number(row[col])
+        if period and value is not None:
+            points.append(Point(period, value, response.url, status="final", note=f"RBA table {table}; series={series_id}"))
+    if not points:
+        raise RuntimeError(f"RBA series {series_id} had no observations")
+    return dedupe(points), {"request_url": response.url, "table": table, "series_id": series_id, "observations": len(points)}
+
+
+def fetch_ana_household_candidate(expected: dict[str, float], label: str) -> tuple[list[Point], dict[str, Any]]:
+    response, discovery = discover_abs_workbook([
+        "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/latest-release#data-downloads"
+    ], "5206014", "Table 14", [])
+    points, diagnostics = fetch_abs_workbook_candidate([response.url], expected, f"abs_5206014_{norm(label).replace(' ', '_')}.xlsx", f"ABS Table 14 household income account; {label}")
+    diagnostics.update(discovery)
+    return points, diagnostics
+
 TARGETS = [
+    Target("NAB月度招聘狀況", "M", {"2026-07": 3.343051241, "2026-06": 0.928126463}, "UNAVAILABLE", "No public structured file"),
+    Target("AIG月度招聘狀況", "M", {"2026-07": -23.035582047, "2026-06": -17.717683014}, "UNAVAILABLE", "No public structured file"),
     Target("就業新增", "M", {"2026-06": 76.3, "2026-05": 44.0, "2026-04": -38.6}, "API/CSV", "ABS LF"),
     Target("失業率", "M", {"2026-06": 4.428344, "2026-05": 4.3713481, "2026-04": 4.4904846}, "API/CSV", "ABS LF"),
     Target("就業不足率", "M", {"2026-07": 6.4, "2026-06": 6.4, "2026-05": 6.3, "2026-04": 5.9}, "API/CSV", "ABS LF"),
@@ -1399,6 +1455,26 @@ TARGETS = [
     Target("GDP YoY", "Q", {"2026-Q1": 2.51974}, "API/CSV", "ABS ANA_AGG"),
     Target("GDP私人消費YoY", "Q", {"2026-Q1": 2.4728}, "API/CSV", "ABS ANA_AGG"),
     Target("GDP投資YoY", "Q", {"2026-Q1": 6.47494}, "API/CSV", "ABS ANA_AGG"),
+    Target("就業新增-全職", "M", {"2026-07": 16.3, "2026-06": 48.9}, "API/CSV", "ABS LF"),
+    Target("就業新增-兼職", "M", {"2026-07": -32.2, "2026-06": 31.4}, "API/CSV", "ABS LF"),
+    Target("勞參率", "M", {"2026-07": 66.8533236, "2026-06": 67.0108859}, "API/CSV", "ABS LF"),
+    Target("工時", "M", {"2026-07": 1997868.82584, "2026-06": 2010341.69766}, "API/CSV", "ABS LF"),
+    Target("Indeed職缺", "M", {"2026-08": 149.45, "2026-07": 146.04, "2026-06": 145.75}, "CSV", "Indeed Hiring Lab GitHub"),
+    Target("家戶消費-Goods", "M", {"2026-07": 7.2, "2026-06": 5.8, "2026-05": 5.7}, "API/CSV", "ABS HSI_M"),
+    Target("家戶消費-Services", "M", {"2026-07": 6.8, "2026-06": 6.4, "2026-05": 5.0}, "API/CSV", "ABS HSI_M"),
+    Target("資本支出_住房", "Q", {"2026-Q2": 2.1031, "2026-Q1": -3.26577, "2025-Q4": 2.79896}, "API/CSV", "ABS CAPEX"),
+    Target("資本支出 設備廠房", "Q", {"2026-Q2": -8.91491, "2026-Q1": 18.38705, "2025-Q4": -1.22101}, "API/CSV", "ABS CAPEX"),
+    Target("Building Approvals YoY", "M", {"2026-07": 14.58006, "2026-06": 1.35569}, "API/CSV", "ABS Building Approvals"),
+    Target("房貸總還款", "Q", {"2026-Q2": 33442.475, "2026-Q1": 31956.004, "2025-Q4": 31636.717}, "CSV", "RBA E13 LPHOSP"),
+    Target("房貸利息還款", "Q", {"2026-Q2": 21334.45, "2026-Q1": 19439.391, "2025-Q4": 19127.986}, "CSV", "RBA E13 LPHOIC"),
+    Target("房租季增率", "Q", {"2026-Q2": 0.8, "2026-Q1": 0.9, "2025-Q4": 0.8}, "API/CSV", "ABS CPI"),
+    Target("Income", "Q", {"2026-Q1": 622128, "2025-Q4": 618019, "2025-Q3": 604919}, "XLSX", "ABS National Accounts Table 14"),
+    Target("利息支出等", "Q", {"2026-Q1": 38720, "2025-Q4": 37041, "2025-Q3": 37051}, "XLSX", "ABS National Accounts Table 14"),
+    Target("所得稅 保險", "Q", {"2026-Q1": 127153, "2025-Q4": 126478, "2025-Q3": 122566}, "XLSX", "ABS National Accounts Table 14"),
+    Target("DPI", "Q", {"2026-Q1": 456254, "2025-Q4": 454500, "2025-Q3": 445302}, "XLSX", "ABS National Accounts Table 14"),
+    Target("支出", "Q", {"2026-Q1": 382863, "2025-Q4": 378740, "2025-Q3": 374133}, "XLSX", "ABS National Accounts Table 14"),
+    Target("購買固定資本", "Q", {"2026-Q1": 47895, "2025-Q4": 47332, "2025-Q3": 46752}, "XLSX", "ABS National Accounts Table 14"),
+    Target("Net Saving", "Q", {"2026-Q1": 25496, "2025-Q4": 28428, "2025-Q3": 24417}, "XLSX", "ABS National Accounts Table 14"),
 ]
 
 
@@ -1560,9 +1636,54 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
         )
         diagnostics.update(discovery)
         return points, diagnostics
+
+    if label in {"NAB月度招聘狀況", "AIG月度招聘狀況"}:
+        raise RuntimeError("No public CSV/JSON/XLSX/API source; deliberately not using HTML/PDF parsing")
+    if label == "就業新增-全職":
+        return fetch_abs_target("LF", "2025-01", ["employed full time", "persons", "australia", "seasonally adjusted"], ["rate", "state", "part time"], target.expected, "mom_diff")
+    if label == "就業新增-兼職":
+        return fetch_abs_target("LF", "2025-01", ["employed part time", "persons", "australia", "seasonally adjusted"], ["rate", "state", "full time"], target.expected, "mom_diff")
+    if label == "勞參率":
+        return fetch_abs_verified_target("LF", "2015-01", ["participation rate", "persons", "australia", "seasonally adjusted"], ["state", "trend", "original", "male", "female"], target.expected)
+    if label == "工時":
+        return fetch_abs_verified_target("LF", "2015-01", ["monthly hours worked", "all industries", "persons", "australia", "seasonally adjusted"], ["state", "trend", "original", "average"], target.expected, tolerance=0.5)
+    if label == "Indeed職缺":
+        return fetch_indeed_monthly_index()
+    if label == "家戶消費-Goods":
+        return fetch_abs_verified_target("HSI_M", "2025-01", ["goods", "australia", "seasonally adjusted", "through the year"], ["services", "trend", "monthly percentage change"], target.expected)
+    if label == "家戶消費-Services":
+        return fetch_abs_verified_target("HSI_M", "2025-01", ["services", "australia", "seasonally adjusted", "through the year"], ["goods", "trend", "monthly percentage change"], target.expected)
+    if label == "資本支出_住房":
+        return fetch_abs_verified_target("CAPEX", "2025-Q1", ["building and structures", "chain volume", "seasonally adjusted", "percentage change"], ["equipment", "expected", "trend"], target.expected)
+    if label == "資本支出 設備廠房":
+        return fetch_abs_verified_target("CAPEX", "2025-Q1", ["equipment plant and machinery", "chain volume", "seasonally adjusted", "percentage change"], ["building", "expected", "trend"], target.expected)
+    if label == "Building Approvals YoY":
+        return fetch_abs_verified_target("BA", "2025-01", ["total dwelling units", "australia", "original", "through the year"], ["seasonally adjusted", "trend", "value"], target.expected)
+    if label == "房貸總還款":
+        return fetch_rba_csv_series("e13", "LPHOSP")
+    if label == "房貸利息還款":
+        return fetch_rba_csv_series("e13", "LPHOIC")
+    if label == "房租季增率":
+        return fetch_abs_verified_target("CPI", "2025-Q1", ["rents", "weighted average of eight capital cities", "percentage change from previous quarter"], ["annual", "index numbers", "tradable"], target.expected)
+    if label in {"Income", "利息支出等", "所得稅 保險", "DPI", "支出", "購買固定資本", "Net Saving"}:
+        return fetch_ana_household_candidate(target.expected, label)
+
     raise RuntimeError(f"No test mapping for {label}")
 
 
+
+
+AU_BLOCKS = [
+    {"title": "就業", "color": "#0f766e", "series": ["aunabemployment", "auaigemployment", "auunempexp", "auempchg", "auempfull", "auemppart", "auempratio", "auunemp", "auunderemp", "auunderutil", "auparticipation", "auhours", "auvacancy", "auanzjobads", "auindeedjobs", "auwageyoy", "auexitleave"]},
+    {"title": "家戶消費", "color": "#2563eb", "series": ["auhousegoods", "auhouseservices", "auretail"]},
+    {"title": "消費者信心", "color": "#7c3aed", "series": ["auconsconf"]},
+    {"title": "企業調查", "color": "#9333ea", "series": ["aunabprices", "aumanpmi", "auservpmi"]},
+    {"title": "投資 QoQ", "color": "#6d28d9", "series": ["aucapexbuilding", "aucapexequipment"]},
+    {"title": "房市", "color": "#ea580c", "series": ["aubuildingapprovals", "auhousingrepay", "auhousinginterest", "aurentsqoq"]},
+    {"title": "家庭", "color": "#0369a1", "series": ["auhhinc", "auhhinterest", "auhhsecondary", "auhhdi", "auhhconsumption", "auhhcfc", "auhhnetSaving"]},
+    {"title": "通膨", "color": "#b91c1c", "series": ["aucpi", "autrimmed"]},
+    {"title": "GDP", "color": "#1d4ed8", "series": ["augdpyoy", "auconsumptionyoy", "auinvestmentyoy"]},
+]
 
 DATA_FILE = Path("data/au_macro.json")
 MD_FILE = Path("au_macro_all_data.md")
@@ -1578,12 +1699,23 @@ SERIES_MAP = {
     "製造業PMI": "aumanpmi", "服務業PMI": "auservpmi",
     "GDP YoY": "augdpyoy", "GDP私人消費YoY": "auconsumptionyoy",
     "GDP投資YoY": "auinvestmentyoy",
+    "NAB月度招聘狀況": "aunabemployment", "AIG月度招聘狀況": "auaigemployment",
+    "就業新增-全職": "auempfull", "就業新增-兼職": "auemppart", "勞參率": "auparticipation", "工時": "auhours",
+    "Indeed職缺": "auindeedjobs", "家戶消費-Goods": "auhousegoods", "家戶消費-Services": "auhouseservices",
+    "資本支出_住房": "aucapexbuilding", "資本支出 設備廠房": "aucapexequipment", "Building Approvals YoY": "aubuildingapprovals",
+    "房貸總還款": "auhousingrepay", "房貸利息還款": "auhousinginterest", "房租季增率": "aurentsqoq",
+    "Income": "auhhinc", "利息支出等": "auhhinterest", "所得稅 保險": "auhhsecondary", "DPI": "auhhdi",
+    "支出": "auhhconsumption", "購買固定資本": "auhhcfc", "Net Saving": "auhhnetSaving",
 }
 AUTHORITATIVE = {
     "就業新增", "失業率", "就業不足率", "勞動力未充分利用率", "Employment Ratio",
     "職缺", "ANZ職缺廣告", "時薪YoY", "預計離職",
     "CPI YoY", "Trimmed Mean YoY", "零售", "GDP YoY", "GDP私人消費YoY", "GDP投資YoY",
     "製造業PMI", "服務業PMI",
+    "就業新增-全職", "就業新增-兼職", "勞參率", "工時", "Indeed職缺",
+    "家戶消費-Goods", "家戶消費-Services", "資本支出_住房", "資本支出 設備廠房",
+    "Building Approvals YoY", "房貸總還款", "房貸利息還款", "房租季增率",
+    "Income", "利息支出等", "所得稅 保險", "DPI", "支出", "購買固定資本", "Net Saving",
 }
 
 def point_date(period: str) -> str:
@@ -1614,14 +1746,30 @@ NEW_SERIES_DEFINITIONS = {
         "data": [],
     },
     "auempratio": {
-        "name": "Employment Ratio",
-        "ticker": "ABS Employment-to-Population Ratio",
-        "source": "Australian Bureau of Statistics",
-        "frequency": "monthly",
-        "unit": "%",
-        "color": "#22c55e",
-        "data": [],
+        "name": "就業比率", "ticker": "ABS Employment-to-Population Ratio", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "%", "color": "#22c55e", "data": [],
     },
+    "aunabemployment": {"name": "NAB月度招聘狀況", "ticker": "NABSEMPL Index", "source": "National Australia Bank", "frequency": "monthly", "unit": "index", "color": "#0f766e", "data": []},
+    "auaigemployment": {"name": "AIG月度招聘狀況", "ticker": "AGIIEMPL Index", "source": "Australian Industry Group", "frequency": "monthly", "unit": "index", "color": "#0f766e", "data": []},
+    "auempfull": {"name": "就業新增-全職", "ticker": "AULFEMFC Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "thousand persons", "color": "#059669", "data": []},
+    "auemppart": {"name": "就業新增-兼職", "ticker": "AULFEMCP Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "thousand persons", "color": "#10b981", "data": []},
+    "auparticipation": {"name": "勞參率", "ticker": "AULFPART Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "%", "color": "#14b8a6", "data": []},
+    "auhours": {"name": "工時", "ticker": "AUHRAMTL Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "thousand hours", "color": "#0d9488", "data": []},
+    "auindeedjobs": {"name": "Indeed職缺", "ticker": "INDDAOIS Index", "source": "Indeed Hiring Lab", "frequency": "monthly", "unit": "index", "color": "#22c55e", "data": []},
+    "auhousegoods": {"name": "Goods", "ticker": "AUPDYSGD Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "YoY %", "color": "#2563eb", "data": []},
+    "auhouseservices": {"name": "Services", "ticker": "AUPDYSSV Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "YoY %", "color": "#3b82f6", "data": []},
+    "aucapexbuilding": {"name": "資本支出_住房", "ticker": "AUCEBLDQ Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "QoQ %", "color": "#7c3aed", "data": []},
+    "aucapexequipment": {"name": "資本支出 設備廠房", "ticker": "AUCEEQPQ Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "QoQ %", "color": "#8b5cf6", "data": []},
+    "aubuildingapprovals": {"name": "Building Approvals YoY", "ticker": "AUBABPNY Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "YoY %", "color": "#d97706", "data": []},
+    "auhousingrepay": {"name": "房貸總還款", "ticker": "AUHLOOSR Index", "source": "Reserve Bank of Australia", "frequency": "quarterly", "unit": "$ million", "color": "#ea580c", "data": []},
+    "auhousinginterest": {"name": "房貸利息還款", "ticker": "AUHLOOCI Index", "source": "Reserve Bank of Australia", "frequency": "quarterly", "unit": "$ million", "color": "#f97316", "data": []},
+    "aurentsqoq": {"name": "房租季增率", "ticker": "AUCPRENQ Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "QoQ %", "color": "#ca8a04", "data": []},
+    "auhhinc": {"name": "Income", "ticker": "AUNATGI Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "$ million", "color": "#1d4ed8", "data": []},
+    "auhhinterest": {"name": "利息支出等", "ticker": "AUNATLPO Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "$ million", "color": "#2563eb", "data": []},
+    "auhhsecondary": {"name": "所得稅 保險", "ticker": "AUNATSIP Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "$ million", "color": "#3b82f6", "data": []},
+    "auhhdi": {"name": "DPI", "ticker": "AUNAGDI Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "$ million", "color": "#0284c7", "data": []},
+    "auhhconsumption": {"name": "支出", "ticker": "AUNAFCX Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "$ million", "color": "#0891b2", "data": []},
+    "auhhcfc": {"name": "購買固定資本", "ticker": "AUNACOFC Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "$ million", "color": "#0e7490", "data": []},
+    "auhhnetSaving": {"name": "Net Saving", "ticker": "AUNANSAV Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "$ million", "color": "#0369a1", "data": []},
 }
 
 
@@ -1633,7 +1781,8 @@ def ensure_new_series(database: dict[str, Any]) -> None:
         insert_at = next(i for i, item in enumerate(series_list) if item.get("id") == "auunemp") + 1
     except StopIteration:
         insert_at = len(series_list)
-    for series_id in ("auunderemp", "auunderutil", "auempratio"):
+    preferred = ["aunabemployment", "auaigemployment", "auempfull", "auemppart", "auunderemp", "auunderutil", "auempratio", "auparticipation", "auhours", "auindeedjobs", "auhousegoods", "auhouseservices", "aucapexbuilding", "aucapexequipment", "aubuildingapprovals", "auhousingrepay", "auhousinginterest", "aurentsqoq", "auhhinc", "auhhinterest", "auhhsecondary", "auhhdi", "auhhconsumption", "auhhcfc", "auhhnetSaving"]
+    for series_id in preferred:
         if series_id not in existing:
             series_list.insert(insert_at, {"id": series_id, **NEW_SERIES_DEFINITIONS[series_id]})
             insert_at += 1
