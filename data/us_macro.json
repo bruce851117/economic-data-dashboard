@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-27T01:42:51.921656+00:00",
+  "generated_at": "2026-08-31T01:51:19.727300+00:00",
   "source": {
     "type": "excel_import",
     "file": "US_ECON.xlsx",
@@ -51241,6 +51241,10 @@
         {
           "date": "2026-07-01",
           "value": 4.2
+        },
+        {
+          "date": "2026-08-01",
+          "value": 4
         }
       ],
       "source": "University of Michigan"
@@ -51823,6 +51827,10 @@
         },
         {
           "date": "2026-07-01",
+          "value": 3.3
+        },
+        {
+          "date": "2026-08-01",
           "value": 3.3
         }
       ],
@@ -62557,6 +62565,10 @@
         {
           "date": "2026-07-01",
           "value": 55.2
+        },
+        {
+          "date": "2026-08-01",
+          "value": 51.7
         }
       ],
       "source": "University of Michigan"
@@ -63140,6 +63152,10 @@
         {
           "date": "2026-07-01",
           "value": 54.8
+        },
+        {
+          "date": "2026-08-01",
+          "value": 51.9
         }
       ],
       "source": "University of Michigan"
@@ -63723,6 +63739,10 @@
         {
           "date": "2026-07-01",
           "value": 55.4
+        },
+        {
+          "date": "2026-08-01",
+          "value": 51.5
         }
       ],
       "source": "University of Michigan"
@@ -64302,6 +64322,10 @@
         {
           "date": "2026-06-01",
           "value": 63
+        },
+        {
+          "date": "2026-07-01",
+          "value": 70
         }
       ],
       "source": "University of Michigan"
@@ -64881,6 +64905,10 @@
         {
           "date": "2026-06-01",
           "value": 84
+        },
+        {
+          "date": "2026-07-01",
+          "value": 88
         }
       ],
       "source": "University of Michigan"
