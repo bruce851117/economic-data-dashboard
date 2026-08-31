@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-08-31T07:36:33.763287+00:00
+更新時間：2026-08-31T07:49:44.867682+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -149,8 +149,8 @@
 |---|---|---:|---:|---|---:|---|
 | 就業新增 | OK | 0 | 0 | 2026-07 | -15.826502660000187 |  |
 | 失業率 | OK | 0 | 0 | 2026-07 | 4.46182469 |  |
-| 就業不足率 | OK | 0 | 139 | 2026-07 | 6.3612462 |  |
-| 勞動力未充分利用率 | OK | 0 | 139 | 2026-07 | 10.8230708 |  |
+| 就業不足率 | OK | 0 | 0 | 2026-07 | 6.3612462 |  |
+| 勞動力未充分利用率 | OK | 0 | 0 | 2026-07 | 10.8230708 |  |
 | Employment Ratio | OK | 0 | 0 | 2026-07 | 63.87044554 |  |
 | 職缺 | OK | 0 | 0 | 2026-05 | 329.5 |  |
 | ANZ職缺廣告 | ERROR | 0 | 0 |  |  | KeyError: 'auanzjobads' |
@@ -167,3 +167,30 @@
 | GDP YoY | ERROR | 0 | 0 |  |  | KeyError: 'augdpyoy' |
 | GDP私人消費YoY | ERROR | 0 | 0 |  |  | KeyError: 'auconsumptionyoy' |
 | GDP投資YoY | ERROR | 0 | 0 |  |  | KeyError: 'auinvestmentyoy' |
+| 就業新增-全職 | OK | 138 | 0 | 2026-07 | 16.333391529999062 |  |
+| 就業新增-兼職 | OK | 138 | 0 | 2026-07 | -32.15989419000016 |  |
+| 勞參率 | OK | 139 | 0 | 2026-07 | 66.85332364 |  |
+| 工時 | OK | 139 | 0 | 2026-07 | 23183.24700005 |  |
+| Indeed職缺 | OK | 0 | 0 | 2026-08 | 149.45 |  |
+| 私人企業時薪ex bonus | OK | 46 | 0 | 2026-Q2 | 3.2 |  |
+| 政府時薪ex bonus | OK | 46 | 0 | 2026-Q2 | 3.3 |  |
+| 家戶消費 Goods | OK | 91 | 0 | 2026-07 | 7.2 |  |
+| 家戶消費 Services | OK | 91 | 0 | 2026-07 | 6.8 |  |
+| 資本支出_住房 | OK | 29 | 0 | 2026-Q2 | 0.0 |  |
+| 資本支出 設備廠房 | OK | 29 | 0 | 2026-Q2 | 0.0 |  |
+| Building Approvals YoY | ERROR | 0 | 0 |  |  | RuntimeError: ABS dataflow attempts failed: BA: HTTP 404: Could not find Dataflow and/or DSD related with this data request |
+| 房貸總還款 | OK | 70 | 0 | 2026-Q2 | 33442.0 |  |
+| 房貸利息還款 | OK | 70 | 0 | 2026-Q2 | 21334.0 |  |
+| 房租季增率 | OK | 46 | 0 | 2026-Q2 | 0.8 |  |
+| Income | OK | 45 | 0 | 2026-Q1 | 570611.0 |  |
+| 利息支出等 | OK | 45 | 0 | 2026-Q1 | 26372.0 |  |
+| 所得稅 保險 | OK | 45 | 0 | 2026-Q1 | 26372.0 |  |
+| DPI | OK | 45 | 0 | 2026-Q1 | 466688.0 |  |
+| 支出 | OK | 45 | 0 | 2026-Q1 | 466688.0 |  |
+| 固定資本消耗 | OK | 45 | 0 | 2026-Q1 | 26372.0 |  |
+| Net Saving | OK | 45 | 0 | 2026-Q1 | 25490.0 |  |
+| 房貸餘額(房屋持有) | ERROR | 0 | 0 |  |  | RuntimeError: No exact RBA series matched reference values; b18: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b18-data.csv; b19: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b19-data.csv; b29: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b29-data.csv; b30: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b30-data.csv |
+| 房貸餘額(投資人) | ERROR | 0 | 0 |  |  | RuntimeError: No exact RBA series matched reference values; b18: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b18-data.csv; b19: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b19-data.csv; b29: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b29-data.csv; b30: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b30-data.csv |
+| 房貸餘額(房屋持有) YoY | ERROR | 0 | 0 |  |  | RuntimeError: No exact RBA series matched reference values; b18: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b18-data.csv; b19: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b19-data.csv; b29: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b29-data.csv; b30: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b30-data.csv |
+| 房貸餘額(投資人) YoY | ERROR | 0 | 0 |  |  | RuntimeError: No exact RBA series matched reference values; b18: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b18-data.csv; b19: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b19-data.csv; b29: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b29-data.csv; b30: HTTPError: 404 Client Error: Not Found for url: https://www.rba.gov.au/statistics/tables/csv/b30-data.csv |
+| Disposable Income | OK | 45 | 0 | 2026-Q1 | 466688.0 |  |
