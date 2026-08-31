@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-08-31T08:40:14.017655+00:00
+更新時間：2026-08-31T08:48:29.064411+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -163,8 +163,6 @@
 
 | 指標 | 狀態 | 新增 | 修訂 | 官方最新期 | 官方最新值 | 錯誤 |
 |---|---|---:|---:|---|---:|---|
-| NAB月度招聘狀況 | ERROR | 0 | 0 |  |  | RuntimeError: No public CSV/JSON/XLSX/API source; deliberately not using HTML/PDF parsing |
-| AIG月度招聘狀況 | ERROR | 0 | 0 |  |  | RuntimeError: No public CSV/JSON/XLSX/API source; deliberately not using HTML/PDF parsing |
 | 就業新增 | OK | 0 | 0 | 2026-07 | -15.826502660000187 |  |
 | 失業率 | OK | 0 | 0 | 2026-07 | 4.46182469 |  |
 | 就業不足率 | OK | 0 | 0 | 2026-07 | 6.3612462 |  |
@@ -177,7 +175,7 @@
 | 失業預期 | OK | 0 | 0 | 2026-08 | 135.7 |  |
 | CPI YoY | OK | 0 | 0 | 2026-07 | 3.5 |  |
 | Trimmed Mean YoY | OK | 0 | 0 | 2026-07 | 3.6 |  |
-| 零售 | OK | 1 | 17 | 2026-07 | 7.2 |  |
+| 零售 | OK | 0 | 0 | 2026-07 | 7.2 |  |
 | NAB企業售價 | OK | 0 | 0 | 2026-07 | 1.1 |  |
 | 消費信心 | OK | 0 | 0 | 2026-08 | 88.9 |  |
 | 製造業PMI | OK | 0 | 0 | 2026-08 | 52.0 |  |
@@ -185,23 +183,21 @@
 | GDP YoY | OK | 0 | 0 | 2026-Q1 | 2.5197395557126967 |  |
 | GDP私人消費YoY | OK | 0 | 0 | 2026-Q1 | 2.4727989254179406 |  |
 | GDP投資YoY | OK | 0 | 0 | 2026-Q1 | 6.474938173333422 |  |
-| 就業新增-全職 | OK | 18 | 0 | 2026-07 | 16.333391529999062 |  |
-| 就業新增-兼職 | OK | 18 | 0 | 2026-07 | -32.15989419000016 |  |
-| 勞參率 | OK | 139 | 0 | 2026-07 | 66.85332364 |  |
+| 就業新增-全職 | OK | 0 | 0 | 2026-07 | 16.333391529999062 |  |
+| 就業新增-兼職 | OK | 0 | 0 | 2026-07 | -32.15989419000016 |  |
+| 勞參率 | OK | 0 | 0 | 2026-07 | 66.85332364 |  |
 | 工時 | ERROR | 0 | 0 |  |  | RuntimeError: ABS series selection failed published-value verification: [{"period": "2026-06", "published": 2010341.69766, "downloaded": 23146.12200005, "difference": -1987195.57565995, "match": false}, {"period": "2026-07", "published": 1997868.82584, "downloaded": 23183.24700005, "difference": -1974685.57883995, "match": false}] |
 | Indeed職缺 | OK | 0 | 0 |  |  |  |
-| 家戶消費-Goods | OK | 19 | 0 | 2026-07 | 7.2 |  |
-| 家戶消費-Services | OK | 19 | 0 | 2026-07 | 6.8 |  |
+| 家戶消費-Goods | OK | 0 | 0 | 2026-07 | 7.2 |  |
+| 家戶消費-Services | OK | 0 | 0 | 2026-07 | 6.8 |  |
 | 資本支出_住房 | ERROR | 0 | 0 |  |  | RuntimeError: ABS series selection failed published-value verification: [{"period": "2025-Q4", "published": 2.79896, "downloaded": 0.0, "difference": -2.79896, "match": false}, {"period": "2026-Q1", "published": -3.26577, "downloaded": 0.0, "difference": 3.26577, "match": false}, {"period": "2026-Q2", "published": 2.1031, "downloaded": 0.0, "difference": -2.1031, "match": false}] |
 | 資本支出 設備廠房 | ERROR | 0 | 0 |  |  | RuntimeError: ABS series selection failed published-value verification: [{"period": "2025-Q4", "published": -1.22101, "downloaded": 0.0, "difference": 1.22101, "match": false}, {"period": "2026-Q1", "published": 18.38705, "downloaded": 0.0, "difference": -18.38705, "match": false}, {"period": "2026-Q2", "published": -8.91491, "downloaded": 0.0, "difference": 8.91491, "match": false}] |
 | Building Approvals YoY | ERROR | 0 | 0 |  |  | RuntimeError: ABS dataflow attempts failed: BA: HTTP 404: Could not find Dataflow and/or DSD related with this data request |
-| 房貸總還款 | ERROR | 0 | 0 |  |  | RuntimeError: RBA series LPHOSP had no observations |
-| 房貸利息還款 | ERROR | 0 | 0 |  |  | RuntimeError: RBA series LPHOIC had no observations |
-| 房租季增率 | OK | 6 | 0 | 2026-Q2 | 0.8 |  |
-| Income | OK | 151 | 0 | 2026-Q1 | 153996.0 |  |
-| 利息支出等 | OK | 151 | 0 | 2026-Q1 | 31783.0 |  |
-| 所得稅 保險 | OK | 151 | 0 | 2026-Q1 | 139058.0 |  |
-| DPI | OK | 151 | 0 | 2026-Q1 | 153996.0 |  |
-| 支出 | OK | 151 | 0 | 2026-Q1 | 153996.0 |  |
-| 購買固定資本 | OK | 151 | 0 | 2026-Q1 | 62071.0 |  |
-| Net Saving | OK | 151 | 0 | 2026-Q1 | 25556.0 |  |
+| 房租季增率 | OK | 0 | 0 | 2026-Q2 | 0.8 |  |
+| Income | OK | 0 | 0 | 2026-Q1 | 153996.0 |  |
+| 利息支出等 | OK | 0 | 0 | 2026-Q1 | 31783.0 |  |
+| 所得稅 保險 | OK | 0 | 0 | 2026-Q1 | 139058.0 |  |
+| DPI | OK | 0 | 0 | 2026-Q1 | 153996.0 |  |
+| 支出 | OK | 0 | 0 | 2026-Q1 | 153996.0 |  |
+| 購買固定資本 | OK | 0 | 0 | 2026-Q1 | 62071.0 |  |
+| Net Saving | OK | 0 | 0 | 2026-Q1 | 25556.0 |  |
