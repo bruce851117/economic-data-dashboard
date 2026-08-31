@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-08-31T09:25:42.418613+00:00
+更新時間：2026-08-31T09:36:17.660502+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -192,12 +192,12 @@
 | Indeed職缺 | OK | 0 | 0 | 2026-08 | 149.45 |  |
 | 家戶消費-Goods | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | 家戶消費-Services | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| 資本支出_住房 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| 資本支出 設備廠房 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| Building Approvals YoY | ERROR | 0 | 0 |  |  | RuntimeError: No monthly workbook candidate matched reference periods |
-| Housing Credit月增率 房屋持有人 | ERROR | 0 | 0 |  |  | RuntimeError: RBA series DGFACOHM had no observations |
-| Housing Credit月增率 投資人 | ERROR | 0 | 0 |  |  | RuntimeError: RBA series DGFACIHM had no observations |
-| 房租季增率 | OK | 0 | 0 | 2026-Q2 | 0.8 |  |
+| 資本支出_住房 | ERROR | 0 | 0 |  |  | RuntimeError: No quarterly CAPEX candidate matched reference periods;  |
+| 資本支出 設備廠房 | ERROR | 0 | 0 |  |  | RuntimeError: No quarterly CAPEX candidate matched reference periods;  |
+| Building Approvals YoY | ERROR | 0 | 0 |  |  | RuntimeError: Best monthly workbook candidate failed validation; MAE=0.355690 |
+| Housing Credit月增率 房屋持有人 | ERROR | 0 | 0 |  |  | ConnectionError: HTTPSConnectionPool(host='ho.website.rba.gov.au', port=443): Max retries exceeded with url: /statistics/tables/csv/d1-data.csv (Caused by NameResolutionError("HTTPSConnection(host='ho.website.rba.gov.au', port=443): Failed to resolve 'ho.website.rba.gov.au' ([Errno -2] Name or service not known)")) |
+| Housing Credit月增率 投資人 | ERROR | 0 | 0 |  |  | ConnectionError: HTTPSConnectionPool(host='ho.website.rba.gov.au', port=443): Max retries exceeded with url: /statistics/tables/csv/d1-data.csv (Caused by NameResolutionError("HTTPSConnection(host='ho.website.rba.gov.au', port=443): Failed to resolve 'ho.website.rba.gov.au' ([Errno -2] Name or service not known)")) |
+| 房租季增率 | OK | 40 | 0 | 2026-Q2 | 0.8 |  |
 | Income | OK | 0 | 0 | 2026-Q1 | 622128.0 |  |
 | 利息支出等 | OK | 0 | 0 | 2026-Q1 | 38720.0 |  |
 | 所得稅 保險 | OK | 0 | 0 | 2026-Q1 | 127153.0 |  |
