@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-31T07:12:40.747081+00:00",
-  "script_version": "2026-08-31-au-structured-v1",
+  "generated_at": "2026-08-31T07:36:33.763287+00:00",
+  "script_version": "2026-08-25-update-au-macro-v16-labour-history-2015",
   "blocks": [
     {
       "title": "就業",
@@ -9,10 +9,10 @@
         "auempchg",
         "auempfull",
         "auemppart",
-        "auempratio",
         "auunemp",
         "auunderemp",
         "auunderutil",
+        "auempratio",
         "auparticipation",
         "auhours",
         "auindeed",
@@ -2634,835 +2634,974 @@
           "date": "2015-01-01",
           "value": 8.5272232,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2015-02-01",
           "value": 8.5261943,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2015-03-01",
           "value": 8.1517766,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2015-04-01",
           "value": 8.3248186,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2015-05-01",
           "value": 8.38765,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2015-06-01",
           "value": 8.3856359,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2015-07-01",
           "value": 8.6470874,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2015-08-01",
           "value": 8.4211644,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2015-09-01",
           "value": 8.7754193,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2015-10-01",
           "value": 8.707233,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2015-11-01",
           "value": 8.5757925,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2015-12-01",
           "value": 8.455158,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2016-01-01",
           "value": 8.5227521,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2016-02-01",
           "value": 8.3741817,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2016-03-01",
           "value": 8.3869021,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2016-04-01",
           "value": 8.6195674,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2016-05-01",
           "value": 8.3382655,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2016-06-01",
           "value": 8.7867895,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2016-07-01",
           "value": 9.026256,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2016-08-01",
           "value": 8.7746816,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2016-09-01",
           "value": 8.7015924,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2016-10-01",
           "value": 8.5094464,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2016-11-01",
           "value": 8.4831731,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2016-12-01",
           "value": 8.5709412,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2017-01-01",
           "value": 8.7440737,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2017-02-01",
           "value": 8.9852327,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2017-03-01",
           "value": 8.5930105,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2017-04-01",
           "value": 8.7300533,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2017-05-01",
           "value": 8.7339425,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2017-06-01",
           "value": 8.4224889,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2017-07-01",
           "value": 8.5037315,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2017-08-01",
           "value": 8.5784841,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2017-09-01",
           "value": 8.5079435,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2017-10-01",
           "value": 8.4494623,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2017-11-01",
           "value": 8.5177186,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2017-12-01",
           "value": 8.4675193,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2018-01-01",
           "value": 8.6919581,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2018-02-01",
           "value": 8.4847191,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2018-03-01",
           "value": 8.5755987,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2018-04-01",
           "value": 8.4337734,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2018-05-01",
           "value": 8.5273163,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2018-06-01",
           "value": 8.5868851,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2018-07-01",
           "value": 8.4787399,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2018-08-01",
           "value": 8.1489993,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2018-09-01",
           "value": 8.2664995,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2018-10-01",
           "value": 8.2147523,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2018-11-01",
           "value": 8.5166291,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2018-12-01",
           "value": 8.3036531,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2019-01-01",
           "value": 8.0863878,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2019-02-01",
           "value": 7.9757904,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2019-03-01",
           "value": 8.1987853,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2019-04-01",
           "value": 8.4496635,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2019-05-01",
           "value": 8.7170283,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2019-06-01",
           "value": 8.2119077,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2019-07-01",
           "value": 8.3880129,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2019-08-01",
           "value": 8.4635433,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2019-09-01",
           "value": 8.2813334,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2019-10-01",
           "value": 8.442979,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2019-11-01",
           "value": 8.3160757,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2019-12-01",
           "value": 8.2713529,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2020-01-01",
           "value": 8.5436107,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2020-02-01",
           "value": 8.5557672,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2020-03-01",
           "value": 8.7267794,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2020-04-01",
           "value": 13.5822659,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2020-05-01",
           "value": 13.2885048,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2020-06-01",
           "value": 11.6062065,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2020-07-01",
           "value": 11.1676876,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2020-08-01",
           "value": 11.080749,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2020-09-01",
           "value": 11.1791852,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2020-10-01",
           "value": 10.2298376,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2020-11-01",
           "value": 9.3199091,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2020-12-01",
           "value": 8.5436705,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2021-01-01",
           "value": 8.0900043,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2021-02-01",
           "value": 8.3825609,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2021-03-01",
           "value": 7.871329,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2021-04-01",
           "value": 7.8111124,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2021-05-01",
           "value": 7.7129497,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2021-06-01",
           "value": 7.8854892,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2021-07-01",
           "value": 8.2627744,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2021-08-01",
           "value": 9.1460967,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2021-09-01",
           "value": 9.0513618,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2021-10-01",
           "value": 9.3526786,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2021-11-01",
           "value": 7.5224201,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2021-12-01",
           "value": 6.6776227,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2022-01-01",
           "value": 6.5689721,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2022-02-01",
           "value": 6.6348717,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2022-03-01",
           "value": 6.3378108,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2022-04-01",
           "value": 6.1820433,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2022-05-01",
           "value": 5.9822675,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2022-06-01",
           "value": 6.0992998,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2022-07-01",
           "value": 6.1005667,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2022-08-01",
           "value": 5.9885483,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2022-09-01",
           "value": 5.9903899,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2022-10-01",
           "value": 6.0149157,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2022-11-01",
           "value": 5.9067407,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2022-12-01",
           "value": 6.2009134,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2023-01-01",
           "value": 6.1789492,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2023-02-01",
           "value": 5.93768,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2023-03-01",
           "value": 6.2589845,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2023-04-01",
           "value": 6.1462105,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2023-05-01",
           "value": 6.439176,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2023-06-01",
           "value": 6.418583,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2023-07-01",
           "value": 6.4414534,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2023-08-01",
           "value": 6.6064813,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2023-09-01",
           "value": 6.3655901,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2023-10-01",
           "value": 6.4349529,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2023-11-01",
           "value": 6.595437,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2023-12-01",
           "value": 6.5948337,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2024-01-01",
           "value": 6.7025159,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2024-02-01",
           "value": 6.6474091,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2024-03-01",
           "value": 6.4743101,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2024-04-01",
           "value": 6.5715274,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2024-05-01",
           "value": 6.6825271,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2024-06-01",
           "value": 6.2808649,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2024-07-01",
           "value": 6.2808672,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2024-08-01",
           "value": 6.5125089,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2024-09-01",
           "value": 6.2565288,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2024-10-01",
           "value": 6.228062,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2024-11-01",
           "value": 6.0328308,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2024-12-01",
           "value": 5.9924322,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-01-01",
           "value": 5.9851673,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-02-01",
           "value": 5.9519472,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-03-01",
           "value": 5.8983002,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-04-01",
           "value": 6.0491542,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-05-01",
           "value": 5.8277901,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-06-01",
           "value": 5.8647034,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-07-01",
           "value": 5.8295032,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-08-01",
           "value": 5.7076093,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-09-01",
           "value": 5.9243758,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-10-01",
           "value": 5.7136324,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-11-01",
           "value": 6.1835449,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2025-12-01",
           "value": 5.7384296,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-01-01",
           "value": 5.9282263,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-02-01",
           "value": 5.9078279,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-03-01",
           "value": 5.9870328,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-04-01",
           "value": 5.9278271,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-05-01",
           "value": 6.3101573,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-06-01",
           "value": 6.449338,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         },
         {
           "date": "2026-07-01",
           "value": 6.3612462,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X28.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data2; col=161"
+          "note": "Official corrected ABS workbook; sheet=Data2; col=161",
+          "release_type": "final"
         }
       ]
     },
@@ -3479,835 +3618,974 @@
           "date": "2015-01-01",
           "value": 14.8788335,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2015-02-01",
           "value": 14.6795573,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2015-03-01",
           "value": 14.2552419,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2015-04-01",
           "value": 14.4374774,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2015-05-01",
           "value": 14.3187665,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2015-06-01",
           "value": 14.3932468,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2015-07-01",
           "value": 14.9208474,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2015-08-01",
           "value": 14.5085552,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2015-09-01",
           "value": 14.9496929,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2015-10-01",
           "value": 14.6193043,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2015-11-01",
           "value": 14.426189,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2015-12-01",
           "value": 14.1962883,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2016-01-01",
           "value": 14.5639211,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2016-02-01",
           "value": 14.0686193,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2016-03-01",
           "value": 14.0404805,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2016-04-01",
           "value": 14.2650011,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2016-05-01",
           "value": 14.0599751,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2016-06-01",
           "value": 14.4821273,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2016-07-01",
           "value": 14.7192556,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2016-08-01",
           "value": 14.3896408,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2016-09-01",
           "value": 14.366453,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2016-10-01",
           "value": 14.1059581,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2016-11-01",
           "value": 14.2502911,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2016-12-01",
           "value": 14.4075283,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2017-01-01",
           "value": 14.4278289,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2017-02-01",
           "value": 14.8785146,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2017-03-01",
           "value": 14.4389925,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2017-04-01",
           "value": 14.3392518,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2017-05-01",
           "value": 14.2814765,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2017-06-01",
           "value": 14.0453573,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2017-07-01",
           "value": 14.1089066,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2017-08-01",
           "value": 14.1082059,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2017-09-01",
           "value": 13.9709162,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2017-10-01",
           "value": 13.8527064,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2017-11-01",
           "value": 13.9718549,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2017-12-01",
           "value": 14.0844045,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2018-01-01",
           "value": 14.2160619,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2018-02-01",
           "value": 14.0663708,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2018-03-01",
           "value": 14.106006,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2018-04-01",
           "value": 13.978935,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2018-05-01",
           "value": 13.9639309,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2018-06-01",
           "value": 13.9288696,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2018-07-01",
           "value": 13.7729795,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2018-08-01",
           "value": 13.3926103,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2018-09-01",
           "value": 13.2845301,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2018-10-01",
           "value": 13.2160434,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2018-11-01",
           "value": 13.6255118,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2018-12-01",
           "value": 13.3217349,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2019-01-01",
           "value": 13.1357557,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2019-02-01",
           "value": 12.9686227,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2019-03-01",
           "value": 13.287741,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2019-04-01",
           "value": 13.669273,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2019-05-01",
           "value": 13.9144373,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2019-06-01",
           "value": 13.4714112,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2019-07-01",
           "value": 13.6628302,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2019-08-01",
           "value": 13.7209874,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2019-09-01",
           "value": 13.5073407,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2019-10-01",
           "value": 13.7449034,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2019-11-01",
           "value": 13.4885263,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2019-12-01",
           "value": 13.3109914,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2020-01-01",
           "value": 13.7925067,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2020-02-01",
           "value": 13.6689639,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2020-03-01",
           "value": 13.9254148,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2020-04-01",
           "value": 19.883889,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2020-05-01",
           "value": 20.2804586,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2020-06-01",
           "value": 19.0296693,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2020-07-01",
           "value": 18.6019518,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2020-08-01",
           "value": 17.8736003,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2020-09-01",
           "value": 18.1027176,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2020-10-01",
           "value": 17.1778766,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2020-11-01",
           "value": 16.1309601,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2020-12-01",
           "value": 15.1035676,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2021-01-01",
           "value": 14.3667082,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2021-02-01",
           "value": 14.230376,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2021-03-01",
           "value": 13.5457175,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2021-04-01",
           "value": 13.2760897,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2021-05-01",
           "value": 12.8267666,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2021-06-01",
           "value": 12.9088988,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2021-07-01",
           "value": 12.9839604,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2021-08-01",
           "value": 13.7188106,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2021-09-01",
           "value": 13.7515445,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2021-10-01",
           "value": 14.5881119,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2021-11-01",
           "value": 12.1560513,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2021-12-01",
           "value": 10.8878159,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2022-01-01",
           "value": 10.7356739,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2022-02-01",
           "value": 10.6668802,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2022-03-01",
           "value": 10.3221437,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2022-04-01",
           "value": 10.0335728,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2022-05-01",
           "value": 9.9244323,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2022-06-01",
           "value": 9.7039031,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2022-07-01",
           "value": 9.5465682,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2022-08-01",
           "value": 9.5148718,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2022-09-01",
           "value": 9.5863303,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2022-10-01",
           "value": 9.450588400000001,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2022-11-01",
           "value": 9.4233249,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2022-12-01",
           "value": 9.7274124,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2023-01-01",
           "value": 9.8408063,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2023-02-01",
           "value": 9.5487296,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2023-03-01",
           "value": 9.8555148,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2023-04-01",
           "value": 9.8499171,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2023-05-01",
           "value": 10.029279,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2023-06-01",
           "value": 9.9367071,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2023-07-01",
           "value": 10.1530528,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2023-08-01",
           "value": 10.2850924,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2023-09-01",
           "value": 9.9219343,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2023-10-01",
           "value": 10.2131752,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2023-11-01",
           "value": 10.5277512,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2023-12-01",
           "value": 10.5818904,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2024-01-01",
           "value": 10.7950391,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2024-02-01",
           "value": 10.38875,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2024-03-01",
           "value": 10.3743604,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2024-04-01",
           "value": 10.6529949,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2024-05-01",
           "value": 10.687639,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2024-06-01",
           "value": 10.3142522,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2024-07-01",
           "value": 10.4727991,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2024-08-01",
           "value": 10.6378322,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2024-09-01",
           "value": 10.2690001,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2024-10-01",
           "value": 10.3188744,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2024-11-01",
           "value": 9.969291,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2024-12-01",
           "value": 9.9910179,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-01-01",
           "value": 10.1121329,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-02-01",
           "value": 10.0260726,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-03-01",
           "value": 9.9809371,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-04-01",
           "value": 10.103857,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-05-01",
           "value": 9.9291482,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-06-01",
           "value": 10.1825674,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-07-01",
           "value": 10.0652466,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-08-01",
           "value": 9.9523126,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-09-01",
           "value": 10.3620743,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-10-01",
           "value": 10.0451803,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-11-01",
           "value": 10.5058571,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2025-12-01",
           "value": 9.8565499,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-01-01",
           "value": 10.0105607,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-02-01",
           "value": 10.2128448,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-03-01",
           "value": 10.2711087,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-04-01",
           "value": 10.4189072,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-05-01",
           "value": 10.6897635,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-06-01",
           "value": 10.880885899999999,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         },
         {
           "date": "2026-07-01",
           "value": 10.8230708,
           "source_url": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/jul-2026/62020X29.xlsx",
-          "note": "Official corrected ABS workbook; sheet=Data4; col=36"
+          "note": "Official corrected ABS workbook; sheet=Data4; col=36",
+          "release_type": "final"
         }
       ]
     },
