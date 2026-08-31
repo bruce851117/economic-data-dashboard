@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-31-update-au-macro-v18-2015-cutoff"
+VERSION = "2026-08-31-update-au-macro-v19-root-cause-fixes"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -1410,7 +1410,7 @@ def fetch_indeed_monthly_index() -> tuple[list[Point], dict[str, Any]]:
 
 def fetch_rba_csv_series(table: str, series_id: str) -> tuple[list[Point], dict[str, Any]]:
     """Read one official RBA statistical-table series from its public CSV."""
-    url = f"https://www.rba.gov.au/statistics/tables/csv/{table.lower()}-data.csv"
+    url = f"https://ho.website.rba.gov.au/statistics/tables/csv/{table.lower()}-data.csv"
     response = get(url)
     rows = list(csv.reader(io.StringIO(response.text.lstrip("\ufeff"))))
     id_row = next((row for row in rows if row and clean(row[0]).lower() == "series id"), None)
@@ -1469,7 +1469,7 @@ def fetch_monthly_workbook_candidate(response: requests.Response, expected: dict
             for ri, row in enumerate(rows):
                 if date_col < len(row):
                     period = excel_period(row[date_col], "M")
-                    if period and re.fullmatch(r"20\\d{2}-\\d{2}", period): dates[ri] = period
+                    if period and re.fullmatch(r"20\d{2}-\d{2}", period): dates[ri] = period
             if len(dates) < 12: continue
             for value_col in range(width):
                 levels = {}
@@ -1508,6 +1508,59 @@ def fetch_hsi_monthly_workbook(expected: dict[str,float], note: str) -> tuple[li
     response, discovery=discover_abs_workbook(["https://www.abs.gov.au/statistics/economy/finance/monthly-household-spending-indicator/latest-release#data-downloads"],"monthly_household_spending","current prices",[])
     points,diag=fetch_monthly_workbook_candidate(response,expected,"abs_mhsi_current_prices.xlsx",note,"level")
     diag.update(discovery); return points,diag
+
+
+def fetch_quarterly_workbook_qoq(landing: str, expected: dict[str, float], label_terms: list[str], exclude_terms: list[str], raw_name: str) -> tuple[list[Point], dict[str, Any]]:
+    page = get(landing)
+    soup = BeautifulSoup(page.text, "html.parser")
+    urls=[]
+    for anchor in soup.find_all("a", href=True):
+        href=urljoin(page.url,anchor.get("href",""))
+        context=norm(" ".join([anchor.get_text(" ",strip=True), anchor.parent.get_text(" ",strip=True) if anchor.parent else ""]))
+        if re.search(r"\\.xlsx?$",href,re.I) and ("chain volume" in context or "capital expenditure" in context or "data download" in context):
+            if href not in urls: urls.append(href)
+    errors=[]; candidates=[]
+    for url in urls:
+        try:
+            response=get(url)
+            if not response.content.startswith((b"PK",bytes.fromhex("D0CF11E0"))): continue
+            for book in workbook_rows(response.content):
+                rows=book["rows"]; width=max((len(r) for r in rows),default=0)
+                metadata=[norm(" ".join(clean(x) for x in row if x is not None)) for row in rows[:20]]
+                for dc in range(min(5,width)):
+                    dates={}
+                    for ri,row in enumerate(rows):
+                        if dc<len(row):
+                            q=excel_period(row[dc],"Q")
+                            if q and re.fullmatch(r"20\\d{2}-Q[1-4]",q): dates[ri]=q
+                    if len(dates)<8: continue
+                    for vc in range(width):
+                        levels={}
+                        for ri,q in dates.items():
+                            if vc<len(rows[ri]):
+                                v=number(rows[ri][vc])
+                                if v is not None: levels[q]=v
+                        ordered=sorted(levels)
+                        qoq={ordered[i]:(levels[ordered[i]]/levels[ordered[i-1]]-1)*100 for i in range(1,len(ordered)) if levels[ordered[i-1]] and quarter_gap(ordered[i-1],ordered[i])==1}
+                        common=sorted(set(qoq)&set(expected))
+                        if not common: continue
+                        colmeta=norm(" ".join((metadata[r].split()[vc] if vc<len(metadata[r].split()) else "") for r in range(len(metadata))))
+                        allmeta=norm(" ".join(clean(rows[r][vc]) for r in range(min(20,len(rows))) if vc<len(rows[r])))
+                        text=colmeta+" "+allmeta
+                        include_score=sum(term in text for term in map(norm,label_terms)); exclude_score=sum(term in text for term in map(norm,exclude_terms))
+                        mae=sum(abs(qoq[x]-expected[x]) for x in common)/len(common)
+                        candidates.append(( -len(common),mae,-include_score,exclude_score,response,book["sheet"],vc,qoq,text))
+        except Exception as e: errors.append(f"{url}: {type(e).__name__}: {e}")
+    if not candidates: raise RuntimeError("No quarterly CAPEX candidate matched reference periods; "+" | ".join(errors[:5]))
+    candidates.sort(key=lambda x:x[:4]); best=candidates[0]
+    if best[1]>0.051: raise RuntimeError(f"CAPEX reference validation failed; MAE={best[1]:.6f}")
+    (OUT/raw_name).write_bytes(best[4].content)
+    points=[Point(q,v,best[4].url,status="final",note=f"sheet={best[5]}; col={best[6]+1}; calculated QoQ from SA chain-volume levels") for q,v in sorted(best[7].items())]
+    return points,{"request_url":best[4].url,"sheet":best[5],"column":best[6]+1,"mae":best[1],"observations":len(points),"metadata":best[8]}
+
+
+def quarter_gap(a: str,b: str)->int:
+    return (int(b[:4])-int(a[:4]))*4+int(b[-1])-int(a[-1])
 
 TARGETS = [
     Target("就業新增", "M", {"2026-06": 76.3, "2026-05": 44.0, "2026-04": -38.6}, "API/CSV", "ABS LF"),
@@ -1732,9 +1785,9 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "家戶消費-Services":
         return fetch_hsi_monthly_workbook(target.expected, "Services spending, seasonally adjusted, through the year percentage change")
     if label == "資本支出_住房":
-        return fetch_official_workbook_verified("https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/latest-release#data-downloads", "02_chain_volume", "chain volume", target.expected, "abs_capex_chain_volume.xlsx", "Buildings and structures, seasonally adjusted, chain volume, quarterly percentage change")
+        return fetch_quarterly_workbook_qoq("https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/latest-release#data-downloads", target.expected, ["buildings", "structures", "seasonally adjusted", "chain volume"], ["equipment", "trend", "original"], "abs_capex_buildings_chain_volume.xlsx")
     if label == "資本支出 設備廠房":
-        return fetch_official_workbook_verified("https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/latest-release#data-downloads", "02_chain_volume", "chain volume", target.expected, "abs_capex_chain_volume.xlsx", "Equipment plant and machinery, seasonally adjusted, chain volume, quarterly percentage change")
+        return fetch_quarterly_workbook_qoq("https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/latest-release#data-downloads", target.expected, ["equipment", "plant", "machinery", "seasonally adjusted", "chain volume"], ["buildings", "trend", "original"], "abs_capex_equipment_chain_volume.xlsx")
     if label == "Building Approvals YoY":
         response, discovery = discover_abs_workbook(["https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/latest-release#data-downloads"], "8731001", "Table 1", [])
         points, diagnostics = fetch_monthly_workbook_candidate(response, target.expected, "abs_building_approvals_table1.xlsx", "Total dwelling units approved, Australia, original, through-the-year percentage change", "level")
@@ -1951,15 +2004,10 @@ def merge_points(database: dict[str, Any], series_id: str, points: list[Point], 
             log(f"[PMI CLEANUP] {series_id} remove stale publication-month row {key}")
             old.pop(key, None)
 
-    history_backfill_ids = {"auunderemp", "auunderutil", "auempratio"}
     if authoritative:
-        if series_id in history_backfill_ids:
-            # These three series intentionally backfill official monthly history
-            # to 2015-01, even when the current JSON begins later.
-            keys = [key for key in incoming if key >= "2015-01"]
-        else:
-            earliest=min(old) if old else min(incoming)
-            keys=[k for k in incoming if k>=earliest]
+        # Authoritative downloads replace/backfill the complete official history
+        # from 2015 onward. Do not preserve an artificial old JSON start date.
+        keys = [key for key in incoming if key >= "2015-01"]
     else:
         latest=max(old) if old else ""
         keys=[k for k in incoming if not latest or k>=latest]
