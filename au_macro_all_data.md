@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-08-31T09:36:17.660502+00:00
+更新時間：2026-08-31T09:59:53.482263+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -185,10 +185,10 @@
 | GDP投資YoY | OK | 0 | 0 | 2026-Q1 | 6.474938173333422 |  |
 | 私人企業時薪ex bonus(季度) | OK | 0 | 0 | 2026-Q2 | 3.2 |  |
 | 政府時薪ex bonus(季度) | OK | 0 | 0 | 2026-Q2 | 3.3 |  |
-| 就業新增-全職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| 就業新增-兼職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
+| 就業新增-全職 | OK | 121 | 18 | 2026-07 | 16.33339149999847 |  |
+| 就業新增-兼職 | OK | 121 | 18 | 2026-07 | -32.15989420000005 |  |
 | 勞參率 | OK | 0 | 0 | 2026-07 | 66.85332364 |  |
-| 工時 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
+| 工時 | ERROR | 0 | 0 |  |  | RuntimeError: Best monthly workbook candidate failed validation; MAE=1980940.577250 |
 | Indeed職缺 | OK | 0 | 0 | 2026-08 | 149.45 |  |
 | 家戶消費-Goods | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | 家戶消費-Services | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
@@ -197,7 +197,7 @@
 | Building Approvals YoY | ERROR | 0 | 0 |  |  | RuntimeError: Best monthly workbook candidate failed validation; MAE=0.355690 |
 | Housing Credit月增率 房屋持有人 | ERROR | 0 | 0 |  |  | ConnectionError: HTTPSConnectionPool(host='ho.website.rba.gov.au', port=443): Max retries exceeded with url: /statistics/tables/csv/d1-data.csv (Caused by NameResolutionError("HTTPSConnection(host='ho.website.rba.gov.au', port=443): Failed to resolve 'ho.website.rba.gov.au' ([Errno -2] Name or service not known)")) |
 | Housing Credit月增率 投資人 | ERROR | 0 | 0 |  |  | ConnectionError: HTTPSConnectionPool(host='ho.website.rba.gov.au', port=443): Max retries exceeded with url: /statistics/tables/csv/d1-data.csv (Caused by NameResolutionError("HTTPSConnection(host='ho.website.rba.gov.au', port=443): Failed to resolve 'ho.website.rba.gov.au' ([Errno -2] Name or service not known)")) |
-| 房租季增率 | OK | 40 | 0 | 2026-Q2 | 0.8 |  |
+| 房租季增率 | OK | 0 | 0 | 2026-Q2 | 0.8 |  |
 | Income | OK | 0 | 0 | 2026-Q1 | 622128.0 |  |
 | 利息支出等 | OK | 0 | 0 | 2026-Q1 | 38720.0 |  |
 | 所得稅 保險 | OK | 0 | 0 | 2026-Q1 | 127153.0 |  |
