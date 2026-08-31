@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-25-update-au-macro-v16-labour-history-2015"
+VERSION = "2026-08-31-update-au-macro-v18-2015-cutoff"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -1433,8 +1433,6 @@ def fetch_ana_household_candidate(expected: dict[str, float], label: str) -> tup
     return points, diagnostics
 
 TARGETS = [
-    Target("NAB月度招聘狀況", "M", {"2026-07": 3.343051241, "2026-06": 0.928126463}, "UNAVAILABLE", "No public structured file"),
-    Target("AIG月度招聘狀況", "M", {"2026-07": -23.035582047, "2026-06": -17.717683014}, "UNAVAILABLE", "No public structured file"),
     Target("就業新增", "M", {"2026-06": 76.3, "2026-05": 44.0, "2026-04": -38.6}, "API/CSV", "ABS LF"),
     Target("失業率", "M", {"2026-06": 4.428344, "2026-05": 4.3713481, "2026-04": 4.4904846}, "API/CSV", "ABS LF"),
     Target("就業不足率", "M", {"2026-07": 6.4, "2026-06": 6.4, "2026-05": 6.3, "2026-04": 5.9}, "API/CSV", "ABS LF"),
@@ -1465,8 +1463,6 @@ TARGETS = [
     Target("資本支出_住房", "Q", {"2026-Q2": 2.1031, "2026-Q1": -3.26577, "2025-Q4": 2.79896}, "API/CSV", "ABS CAPEX"),
     Target("資本支出 設備廠房", "Q", {"2026-Q2": -8.91491, "2026-Q1": 18.38705, "2025-Q4": -1.22101}, "API/CSV", "ABS CAPEX"),
     Target("Building Approvals YoY", "M", {"2026-07": 14.58006, "2026-06": 1.35569}, "API/CSV", "ABS Building Approvals"),
-    Target("房貸總還款", "Q", {"2026-Q2": 33442.475, "2026-Q1": 31956.004, "2025-Q4": 31636.717}, "CSV", "RBA E13 LPHOSP"),
-    Target("房貸利息還款", "Q", {"2026-Q2": 21334.45, "2026-Q1": 19439.391, "2025-Q4": 19127.986}, "CSV", "RBA E13 LPHOIC"),
     Target("房租季增率", "Q", {"2026-Q2": 0.8, "2026-Q1": 0.9, "2025-Q4": 0.8}, "API/CSV", "ABS CPI"),
     Target("Income", "Q", {"2026-Q1": 622128, "2025-Q4": 618019, "2025-Q3": 604919}, "XLSX", "ABS National Accounts Table 14"),
     Target("利息支出等", "Q", {"2026-Q1": 38720, "2025-Q4": 37041, "2025-Q3": 37051}, "XLSX", "ABS National Accounts Table 14"),
@@ -1636,9 +1632,6 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
         )
         diagnostics.update(discovery)
         return points, diagnostics
-
-    if label in {"NAB月度招聘狀況", "AIG月度招聘狀況"}:
-        raise RuntimeError("No public CSV/JSON/XLSX/API source; deliberately not using HTML/PDF parsing")
     if label == "就業新增-全職":
         return fetch_abs_target("LF", "2025-01", ["employed full time", "persons", "australia", "seasonally adjusted"], ["rate", "state", "part time"], target.expected, "mom_diff")
     if label == "就業新增-兼職":
@@ -1659,10 +1652,6 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
         return fetch_abs_verified_target("CAPEX", "2025-Q1", ["equipment plant and machinery", "chain volume", "seasonally adjusted", "percentage change"], ["building", "expected", "trend"], target.expected)
     if label == "Building Approvals YoY":
         return fetch_abs_verified_target("BA", "2025-01", ["total dwelling units", "australia", "original", "through the year"], ["seasonally adjusted", "trend", "value"], target.expected)
-    if label == "房貸總還款":
-        return fetch_rba_csv_series("e13", "LPHOSP")
-    if label == "房貸利息還款":
-        return fetch_rba_csv_series("e13", "LPHOIC")
     if label == "房租季增率":
         return fetch_abs_verified_target("CPI", "2025-Q1", ["rents", "weighted average of eight capital cities", "percentage change from previous quarter"], ["annual", "index numbers", "tradable"], target.expected)
     if label in {"Income", "利息支出等", "所得稅 保險", "DPI", "支出", "購買固定資本", "Net Saving"}:
@@ -1673,13 +1662,45 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
 
 
 
+MIN_DATA_DATE = "2015-01-01"
+REMOVED_SERIES_IDS = {
+    "aunabemployment", "auaigemployment",
+    "auhousingowner", "auhousinginvestor", "auhousingowneryoy", "auhousinginvestoryoy",
+    "auhousingrepay", "auhousinginterest",
+}
+REMOVED_SERIES_NAMES = {
+    "NAB月度招聘狀況", "AIG月度招聘狀況", "NAB季度招聘預期", "招聘預期(季度)",
+    "NAB企業信心", "Forward Order(RBA認為具代表性)", "NAB Forward Orders", "NAB資本支出",
+    "Westpac購買預期", "Westpac買房預期", "Melbourne Institute截尾平均通膨預期",
+    "通膨預期（MECCTRIM）", "通膨預期", "Melbourne Institute Experimental Inflation Gauge",
+    "墨爾本 房價", "雪梨 房價", "房貸餘額(房屋持有)", "房貸餘額(投資人)",
+    "房貸餘額(房屋持有) YoY", "房貸餘額(投資人) YoY", "房貸總還款", "房貸利息還款",
+}
+
+
+def clean_database(database: dict[str, Any]) -> None:
+    """Remove excluded indicators and keep every series at 2015-01-01 or later."""
+    kept = []
+    for series in database.get("series", []):
+        if str(series.get("id", "")) in REMOVED_SERIES_IDS:
+            continue
+        if clean(series.get("name")) in REMOVED_SERIES_NAMES:
+            continue
+        series["data"] = sorted(
+            [row for row in series.get("data", []) if str(row.get("date", ""))[:10] >= MIN_DATA_DATE],
+            key=lambda row: str(row.get("date", "")),
+        )
+        kept.append(series)
+    database["series"] = kept
+
+
 AU_BLOCKS = [
-    {"title": "就業", "color": "#0f766e", "series": ["aunabemployment", "auaigemployment", "auunempexp", "auempchg", "auempfull", "auemppart", "auempratio", "auunemp", "auunderemp", "auunderutil", "auparticipation", "auhours", "auvacancy", "auanzjobads", "auindeedjobs", "auwageyoy", "auexitleave"]},
+    {"title": "就業", "color": "#0f766e", "series": ["auunempexp", "auempchg", "auempfull", "auemppart", "auempratio", "auunemp", "auunderemp", "auunderutil", "auparticipation", "auhours", "auvacancy", "auanzjobads", "auindeedjobs", "auwageyoy", "auexitleave"]},
     {"title": "家戶消費", "color": "#2563eb", "series": ["auhousegoods", "auhouseservices", "auretail"]},
     {"title": "消費者信心", "color": "#7c3aed", "series": ["auconsconf"]},
     {"title": "企業調查", "color": "#9333ea", "series": ["aunabprices", "aumanpmi", "auservpmi"]},
     {"title": "投資 QoQ", "color": "#6d28d9", "series": ["aucapexbuilding", "aucapexequipment"]},
-    {"title": "房市", "color": "#ea580c", "series": ["aubuildingapprovals", "auhousingrepay", "auhousinginterest", "aurentsqoq"]},
+    {"title": "房市", "color": "#ea580c", "series": ["aubuildingapprovals", "aurentsqoq"]},
     {"title": "家庭", "color": "#0369a1", "series": ["auhhinc", "auhhinterest", "auhhsecondary", "auhhdi", "auhhconsumption", "auhhcfc", "auhhnetSaving"]},
     {"title": "通膨", "color": "#b91c1c", "series": ["aucpi", "autrimmed"]},
     {"title": "GDP", "color": "#1d4ed8", "series": ["augdpyoy", "auconsumptionyoy", "auinvestmentyoy"]},
@@ -1699,11 +1720,10 @@ SERIES_MAP = {
     "製造業PMI": "aumanpmi", "服務業PMI": "auservpmi",
     "GDP YoY": "augdpyoy", "GDP私人消費YoY": "auconsumptionyoy",
     "GDP投資YoY": "auinvestmentyoy",
-    "NAB月度招聘狀況": "aunabemployment", "AIG月度招聘狀況": "auaigemployment",
     "就業新增-全職": "auempfull", "就業新增-兼職": "auemppart", "勞參率": "auparticipation", "工時": "auhours",
     "Indeed職缺": "auindeedjobs", "家戶消費-Goods": "auhousegoods", "家戶消費-Services": "auhouseservices",
     "資本支出_住房": "aucapexbuilding", "資本支出 設備廠房": "aucapexequipment", "Building Approvals YoY": "aubuildingapprovals",
-    "房貸總還款": "auhousingrepay", "房貸利息還款": "auhousinginterest", "房租季增率": "aurentsqoq",
+    "房租季增率": "aurentsqoq",
     "Income": "auhhinc", "利息支出等": "auhhinterest", "所得稅 保險": "auhhsecondary", "DPI": "auhhdi",
     "支出": "auhhconsumption", "購買固定資本": "auhhcfc", "Net Saving": "auhhnetSaving",
 }
@@ -1714,7 +1734,7 @@ AUTHORITATIVE = {
     "製造業PMI", "服務業PMI",
     "就業新增-全職", "就業新增-兼職", "勞參率", "工時", "Indeed職缺",
     "家戶消費-Goods", "家戶消費-Services", "資本支出_住房", "資本支出 設備廠房",
-    "Building Approvals YoY", "房貸總還款", "房貸利息還款", "房租季增率",
+    "Building Approvals YoY", "房租季增率",
     "Income", "利息支出等", "所得稅 保險", "DPI", "支出", "購買固定資本", "Net Saving",
 }
 
@@ -1748,8 +1768,6 @@ NEW_SERIES_DEFINITIONS = {
     "auempratio": {
         "name": "就業比率", "ticker": "ABS Employment-to-Population Ratio", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "%", "color": "#22c55e", "data": [],
     },
-    "aunabemployment": {"name": "NAB月度招聘狀況", "ticker": "NABSEMPL Index", "source": "National Australia Bank", "frequency": "monthly", "unit": "index", "color": "#0f766e", "data": []},
-    "auaigemployment": {"name": "AIG月度招聘狀況", "ticker": "AGIIEMPL Index", "source": "Australian Industry Group", "frequency": "monthly", "unit": "index", "color": "#0f766e", "data": []},
     "auempfull": {"name": "就業新增-全職", "ticker": "AULFEMFC Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "thousand persons", "color": "#059669", "data": []},
     "auemppart": {"name": "就業新增-兼職", "ticker": "AULFEMCP Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "thousand persons", "color": "#10b981", "data": []},
     "auparticipation": {"name": "勞參率", "ticker": "AULFPART Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "%", "color": "#14b8a6", "data": []},
@@ -1760,8 +1778,6 @@ NEW_SERIES_DEFINITIONS = {
     "aucapexbuilding": {"name": "資本支出_住房", "ticker": "AUCEBLDQ Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "QoQ %", "color": "#7c3aed", "data": []},
     "aucapexequipment": {"name": "資本支出 設備廠房", "ticker": "AUCEEQPQ Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "QoQ %", "color": "#8b5cf6", "data": []},
     "aubuildingapprovals": {"name": "Building Approvals YoY", "ticker": "AUBABPNY Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "YoY %", "color": "#d97706", "data": []},
-    "auhousingrepay": {"name": "房貸總還款", "ticker": "AUHLOOSR Index", "source": "Reserve Bank of Australia", "frequency": "quarterly", "unit": "$ million", "color": "#ea580c", "data": []},
-    "auhousinginterest": {"name": "房貸利息還款", "ticker": "AUHLOOCI Index", "source": "Reserve Bank of Australia", "frequency": "quarterly", "unit": "$ million", "color": "#f97316", "data": []},
     "aurentsqoq": {"name": "房租季增率", "ticker": "AUCPRENQ Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "QoQ %", "color": "#ca8a04", "data": []},
     "auhhinc": {"name": "Income", "ticker": "AUNATGI Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "$ million", "color": "#1d4ed8", "data": []},
     "auhhinterest": {"name": "利息支出等", "ticker": "AUNATLPO Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "$ million", "color": "#2563eb", "data": []},
@@ -1781,7 +1797,7 @@ def ensure_new_series(database: dict[str, Any]) -> None:
         insert_at = next(i for i, item in enumerate(series_list) if item.get("id") == "auunemp") + 1
     except StopIteration:
         insert_at = len(series_list)
-    preferred = ["aunabemployment", "auaigemployment", "auempfull", "auemppart", "auunderemp", "auunderutil", "auempratio", "auparticipation", "auhours", "auindeedjobs", "auhousegoods", "auhouseservices", "aucapexbuilding", "aucapexequipment", "aubuildingapprovals", "auhousingrepay", "auhousinginterest", "aurentsqoq", "auhhinc", "auhhinterest", "auhhsecondary", "auhhdi", "auhhconsumption", "auhhcfc", "auhhnetSaving"]
+    preferred = ["auempfull", "auemppart", "auunderemp", "auunderutil", "auempratio", "auparticipation", "auhours", "auindeedjobs", "auhousegoods", "auhouseservices", "aucapexbuilding", "aucapexequipment", "aubuildingapprovals", "aurentsqoq", "auhhinc", "auhhinterest", "auhhsecondary", "auhhdi", "auhhconsumption", "auhhcfc", "auhhnetSaving"]
     for series_id in preferred:
         if series_id not in existing:
             series_list.insert(insert_at, {"id": series_id, **NEW_SERIES_DEFINITIONS[series_id]})
@@ -1816,7 +1832,7 @@ def by_id(database: dict[str, Any], series_id: str) -> dict[str, Any]:
 
 def merge_points(database: dict[str, Any], series_id: str, points: list[Point], authoritative: bool) -> tuple[int,int]:
     series=by_id(database,series_id)
-    old={str(row["date"])[:7]:dict(row) for row in series.get("data",[]) if row.get("date")}
+    old={str(row["date"])[:7]:dict(row) for row in series.get("data",[]) if row.get("date") and str(row["date"])[:10] >= MIN_DATA_DATE}
     incoming={point_date(p.period)[:7]:{
         "date":point_date(p.period), "value":float(p.value), "source_url":p.source_url,
         **({"release_type":p.status} if p.status else {}), **({"note":p.note} if p.note else {})
@@ -2050,6 +2066,7 @@ def write_markdown(database: dict[str, Any], logs: list[dict[str, Any]]) -> None
 def main() -> int:
     OUT.mkdir(parents=True,exist_ok=True)
     database=json.loads(DATA_FILE.read_text(encoding="utf-8"))
+    clean_database(database)
     ensure_new_series(database)
     logs=[]
     for target in TARGETS:
@@ -2060,7 +2077,7 @@ def main() -> int:
         log(f"[TIMER START] {target.label} started_at={started_at}")
         try:
             points,diagnostics=run_target(target)
-            points=dedupe(points)
+            points=dedupe([point for point in points if point_date(point.period) >= MIN_DATA_DATE])
             added,revised=merge_points(database,series_id,points,target.label in AUTHORITATIVE)
             latest=points[-1] if points else None
             entry={"label":target.label,"series_id":series_id,"status":"OK","added":added,"revised":revised,
