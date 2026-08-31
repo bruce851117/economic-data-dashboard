@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-31-update-au-macro-v19-root-cause-fixes"
+VERSION = "2026-08-31-update-au-macro-v20-exact-lf-series-ids"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -1498,10 +1498,74 @@ def macro_month_gap(a: str, b: str) -> int:
     return (int(b[:4])-int(a[:4]))*12 + int(b[5:])-int(a[5:])
 
 
+LF_TABLE_001_LANDING = "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/latest-release#data-downloads"
+
+
+def fetch_lf_table001_response() -> tuple[requests.Response, dict[str, Any]]:
+    """Download the current ABS Labour Force Table 001 workbook.
+
+    The stable entry point is the latest-release data-download page. The actual
+    release URL changes over time, so it is discovered from the page. Both
+    common ABS filename forms are accepted, with the full table title as a
+    second independent selector.
+    """
+    errors: list[str] = []
+    for stem in ("6202001", "62020001"):
+        try:
+            return discover_abs_workbook(
+                [LF_TABLE_001_LANDING],
+                stem,
+                "Table 001. Labour force status by Sex, Australia",
+                [],
+            )
+        except Exception as error:
+            errors.append(f"{stem}: {type(error).__name__}: {error}")
+    raise RuntimeError("ABS Labour Force Table 001 discovery failed: " + " | ".join(errors))
+
+
+def fetch_lf_series_change(series_id: str, expected: dict[str, float], label: str) -> tuple[list[Point], dict[str, Any]]:
+    """Read an exact ABS series from Table 001 and calculate monthly change."""
+    response, discovery = fetch_lf_table001_response()
+    (OUT / "abs_labour_force_table001.xlsx").write_bytes(response.content)
+    levels, selected = exact_series_from_workbook(response.content, series_id, response.url, "M")
+    level_map = {point.period: point.value for point in levels}
+    ordered = sorted(level_map)
+    changes: list[Point] = []
+    for index in range(1, len(ordered)):
+        previous_period = ordered[index - 1]
+        period = ordered[index]
+        if macro_month_gap(previous_period, period) != 1:
+            continue
+        changes.append(Point(
+            period,
+            level_map[period] - level_map[previous_period],
+            response.url,
+            status="final",
+            note=(f"ABS Table 001 Data1; series={series_id}; {label}; "
+                  f"monthly change calculated from unrounded seasonally adjusted levels"),
+        ))
+    if not changes:
+        raise RuntimeError(f"ABS Labour Force series {series_id} had no consecutive monthly observations")
+    validation = compare(expected, changes)
+    if expected and validation["status"] not in {"MATCH_ALL", "MATCH_AVAILABLE"}:
+        raise RuntimeError(f"ABS Labour Force {series_id} reference validation failed: {validation['status']}")
+    selected.update(discovery)
+    selected.update({
+        "request_url": response.url,
+        "landing_url": LF_TABLE_001_LANDING,
+        "calculation": "current unrounded SA level minus previous unrounded SA level",
+        "output_observations": len(changes),
+        "validation": validation,
+    })
+    return changes, selected
+
+
 def fetch_lf_monthly_workbook(expected: dict[str,float], transform: str, note: str) -> tuple[list[Point],dict[str,Any]]:
-    response, discovery=discover_abs_workbook(["https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/latest-release#data-downloads"],"620201","Table 1",[])
-    points,diag=fetch_monthly_workbook_candidate(response,expected,"abs_labour_force_table1.xlsx",note,transform)
-    diag.update(discovery); return points,diag
+    # Retained for total hours and other Labour Force workbook indicators.
+    response, discovery = fetch_lf_table001_response()
+    points, diag = fetch_monthly_workbook_candidate(response, expected, "abs_labour_force_table001.xlsx", note, transform)
+    diag.update(discovery)
+    return points, diag
 
 
 def fetch_hsi_monthly_workbook(expected: dict[str,float], note: str) -> tuple[list[Point],dict[str,Any]]:
@@ -1771,9 +1835,9 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "政府時薪ex bonus(季度)":
         return fetch_wpi_ex_bonus_sector("public", target.expected)
     if label == "就業新增-全職":
-        return fetch_lf_monthly_workbook(target.expected, "mom_diff", "Employed full-time persons, Australia, seasonally adjusted, monthly change")
+        return fetch_lf_series_change("A84423041X", target.expected, "Employed full-time persons, seasonally adjusted")
     if label == "就業新增-兼職":
-        return fetch_lf_monthly_workbook(target.expected, "mom_diff", "Employed part-time persons, Australia, seasonally adjusted, monthly change")
+        return fetch_lf_series_change("A84423042A", target.expected, "Employed part-time persons, seasonally adjusted")
     if label == "勞參率":
         return fetch_abs_verified_target("LF", "2015-01", ["participation rate", "persons", "australia", "seasonally adjusted"], ["state", "trend", "original", "male", "female"], target.expected)
     if label == "工時":
