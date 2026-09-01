@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-08-31-update-au-macro-v20-exact-lf-series-ids"
+VERSION = "2026-09-01-update-au-macro-v21-hours-per-worker"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -1498,42 +1498,55 @@ def macro_month_gap(a: str, b: str) -> int:
     return (int(b[:4])-int(a[:4]))*12 + int(b[5:])-int(a[5:])
 
 
-LF_TABLE_001_LANDING = "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/latest-release#data-downloads"
+LF_DATA_DOWNLOADS = "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/latest-release#data-downloads"
 
 
-def fetch_lf_table001_response() -> tuple[requests.Response, dict[str, Any]]:
-    """Download the current ABS Labour Force Table 001 workbook.
-
-    The stable entry point is the latest-release data-download page. The actual
-    release URL changes over time, so it is discovered from the page. Both
-    common ABS filename forms are accepted, with the full table title as a
-    second independent selector.
-    """
+def fetch_lf_table_response(table_number: str, filename_stems: tuple[str, ...], title: str) -> tuple[requests.Response, dict[str, Any]]:
+    """Download one current ABS Labour Force workbook from the latest-release page."""
     errors: list[str] = []
-    for stem in ("6202001", "62020001"):
+    for stem in filename_stems:
         try:
             return discover_abs_workbook(
-                [LF_TABLE_001_LANDING],
+                [LF_DATA_DOWNLOADS],
                 stem,
-                "Table 001. Labour force status by Sex, Australia",
+                title,
                 [],
             )
         except Exception as error:
             errors.append(f"{stem}: {type(error).__name__}: {error}")
-    raise RuntimeError("ABS Labour Force Table 001 discovery failed: " + " | ".join(errors))
+    raise RuntimeError(
+        f"ABS Labour Force Table {table_number} discovery failed: "
+        + " | ".join(errors)
+    )
+
+
+def fetch_lf_table001_response() -> tuple[requests.Response, dict[str, Any]]:
+    return fetch_lf_table_response(
+        "001",
+        ("6202001", "62020001"),
+        "Table 001. Labour force status by Sex, Australia",
+    )
+
+
+def fetch_lf_table017_response() -> tuple[requests.Response, dict[str, Any]]:
+    return fetch_lf_table_response(
+        "017",
+        ("62020017", "6202017"),
+        "Table 017. Hours worked in all jobs by Employed full-time, part-time and Sex and by State and Territory",
+    )
 
 
 def fetch_lf_series_change(series_id: str, expected: dict[str, float], label: str) -> tuple[list[Point], dict[str, Any]]:
-    """Read an exact ABS series from Table 001 and calculate monthly change."""
+    """Read an exact Table 001 employment level series and calculate monthly change."""
     response, discovery = fetch_lf_table001_response()
     (OUT / "abs_labour_force_table001.xlsx").write_bytes(response.content)
-    levels, selected = exact_series_from_workbook(response.content, series_id, response.url, "M")
+    levels, selected = exact_series_from_workbook(
+        response.content, series_id, response.url, "M"
+    )
     level_map = {point.period: point.value for point in levels}
     ordered = sorted(level_map)
     changes: list[Point] = []
-    for index in range(1, len(ordered)):
-        previous_period = ordered[index - 1]
-        period = ordered[index]
+    for previous_period, period in zip(ordered, ordered[1:]):
         if macro_month_gap(previous_period, period) != 1:
             continue
         changes.append(Point(
@@ -1541,18 +1554,23 @@ def fetch_lf_series_change(series_id: str, expected: dict[str, float], label: st
             level_map[period] - level_map[previous_period],
             response.url,
             status="final",
-            note=(f"ABS Table 001 Data1; series={series_id}; {label}; "
-                  f"monthly change calculated from unrounded seasonally adjusted levels"),
+            note=(
+                f"ABS Table 001; series={series_id}; {label}; "
+                "monthly change from unrounded seasonally adjusted levels"
+            ),
         ))
     if not changes:
         raise RuntimeError(f"ABS Labour Force series {series_id} had no consecutive monthly observations")
     validation = compare(expected, changes)
     if expected and validation["status"] not in {"MATCH_ALL", "MATCH_AVAILABLE"}:
-        raise RuntimeError(f"ABS Labour Force {series_id} reference validation failed: {validation['status']}")
+        raise RuntimeError(
+            f"ABS Labour Force {series_id} reference validation failed: "
+            f"{validation['status']}"
+        )
     selected.update(discovery)
     selected.update({
         "request_url": response.url,
-        "landing_url": LF_TABLE_001_LANDING,
+        "landing_url": LF_DATA_DOWNLOADS,
         "calculation": "current unrounded SA level minus previous unrounded SA level",
         "output_observations": len(changes),
         "validation": validation,
@@ -1560,12 +1578,54 @@ def fetch_lf_series_change(series_id: str, expected: dict[str, float], label: st
     return changes, selected
 
 
-def fetch_lf_monthly_workbook(expected: dict[str,float], transform: str, note: str) -> tuple[list[Point],dict[str,Any]]:
-    # Retained for total hours and other Labour Force workbook indicators.
-    response, discovery = fetch_lf_table001_response()
-    points, diag = fetch_monthly_workbook_candidate(response, expected, "abs_labour_force_table001.xlsx", note, transform)
-    diag.update(discovery)
-    return points, diag
+def fetch_hours_per_worker() -> tuple[list[Point], dict[str, Any]]:
+    """Calculate monthly hours worked per employed person.
+
+    A84426277X is seasonally adjusted monthly hours worked in all jobs,
+    thousand hours, from Table 017. A84423043C is seasonally adjusted total
+    employment, thousand persons, from Table 001. The thousand units cancel.
+    """
+    hours_response, hours_discovery = fetch_lf_table017_response()
+    employment_response, employment_discovery = fetch_lf_table001_response()
+    (OUT / "abs_labour_force_table017.xlsx").write_bytes(hours_response.content)
+    (OUT / "abs_labour_force_table001.xlsx").write_bytes(employment_response.content)
+
+    hours_points, hours_selected = exact_series_from_workbook(
+        hours_response.content, "A84426277X", hours_response.url, "M"
+    )
+    employment_points, employment_selected = exact_series_from_workbook(
+        employment_response.content, "A84423043C", employment_response.url, "M"
+    )
+    hours = {point.period: point.value for point in hours_points}
+    employment = {point.period: point.value for point in employment_points}
+    common = sorted(set(hours) & set(employment))
+    points = [
+        Point(
+            period,
+            hours[period] / employment[period],
+            hours_response.url,
+            status="final",
+            note=(
+                "ABS Table 017 A84426277X divided by ABS Table 001 "
+                "A84423043C; hours per employed person per month"
+            ),
+        )
+        for period in common
+        if employment[period] != 0
+    ]
+    if not points:
+        raise RuntimeError("No common monthly observations for A84426277X and A84423043C")
+    diagnostics = {
+        "calculation": "A84426277X / A84423043C",
+        "unit": "hours per employed person per month",
+        "hours": {**hours_selected, **hours_discovery, "request_url": hours_response.url},
+        "employment": {**employment_selected, **employment_discovery, "request_url": employment_response.url},
+        "common_observations": len(points),
+        "first_period": points[0].period,
+        "last_period": points[-1].period,
+        "latest_value": points[-1].value,
+    }
+    return points, diagnostics
 
 
 def fetch_hsi_monthly_workbook(expected: dict[str,float], note: str) -> tuple[list[Point],dict[str,Any]]:
@@ -1652,7 +1712,7 @@ TARGETS = [
     Target("就業新增-全職", "M", {"2026-07": 16.3, "2026-06": 48.9}, "API/CSV", "ABS LF"),
     Target("就業新增-兼職", "M", {"2026-07": -32.2, "2026-06": 31.4}, "API/CSV", "ABS LF"),
     Target("勞參率", "M", {"2026-07": 66.8533236, "2026-06": 67.0108859}, "API/CSV", "ABS LF"),
-    Target("工時", "M", {"2026-07": 1997868.82584, "2026-06": 2010341.69766}, "API/CSV", "ABS LF"),
+    Target("工時 Per Worker", "M", {}, "XLSX", "ABS Tables 017 and 001"),
     Target("Indeed職缺", "M", {"2026-08": 149.45, "2026-07": 146.04, "2026-06": 145.75}, "CSV", "Indeed Hiring Lab GitHub"),
     Target("家戶消費-Goods", "M", {"2026-07": 7.2, "2026-06": 5.8, "2026-05": 5.7}, "API/CSV", "ABS HSI_M"),
     Target("家戶消費-Services", "M", {"2026-07": 6.8, "2026-06": 6.4, "2026-05": 5.0}, "API/CSV", "ABS HSI_M"),
@@ -1840,8 +1900,8 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
         return fetch_lf_series_change("A84423042A", target.expected, "Employed part-time persons, seasonally adjusted")
     if label == "勞參率":
         return fetch_abs_verified_target("LF", "2015-01", ["participation rate", "persons", "australia", "seasonally adjusted"], ["state", "trend", "original", "male", "female"], target.expected)
-    if label == "工時":
-        return fetch_lf_monthly_workbook(target.expected, "level", "Monthly hours worked in all jobs, Australia, seasonally adjusted")
+    if label == "工時 Per Worker":
+        return fetch_hours_per_worker()
     if label == "Indeed職缺":
         return fetch_indeed_monthly_index()
     if label == "家戶消費-Goods":
@@ -1929,7 +1989,7 @@ SERIES_MAP = {
     "GDP YoY": "augdpyoy", "GDP私人消費YoY": "auconsumptionyoy",
     "GDP投資YoY": "auinvestmentyoy",
     "私人企業時薪ex bonus(季度)": "auwageprivate", "政府時薪ex bonus(季度)": "auwagepublic",
-    "就業新增-全職": "auempfull", "就業新增-兼職": "auemppart", "勞參率": "auparticipation", "工時": "auhours",
+    "就業新增-全職": "auempfull", "就業新增-兼職": "auemppart", "勞參率": "auparticipation", "工時 Per Worker": "auhours",
     "Indeed職缺": "auindeedjobs", "家戶消費-Goods": "auhousegoods", "家戶消費-Services": "auhouseservices",
     "資本支出_住房": "aucapexbuilding", "資本支出 設備廠房": "aucapexequipment", "Building Approvals YoY": "aubuildingapprovals",
     "Housing Credit月增率 房屋持有人": "aucreditownermom", "Housing Credit月增率 投資人": "aucreditinvestormom",
@@ -1942,7 +2002,7 @@ AUTHORITATIVE = {
     "職缺", "ANZ職缺廣告", "時薪YoY", "預計離職",
     "CPI YoY", "Trimmed Mean YoY", "零售", "GDP YoY", "GDP私人消費YoY", "GDP投資YoY",
     "製造業PMI", "服務業PMI",
-    "私人企業時薪ex bonus(季度)", "政府時薪ex bonus(季度)", "就業新增-全職", "就業新增-兼職", "勞參率", "工時", "Indeed職缺",
+    "私人企業時薪ex bonus(季度)", "政府時薪ex bonus(季度)", "就業新增-全職", "就業新增-兼職", "勞參率", "工時 Per Worker", "Indeed職缺",
     "家戶消費-Goods", "家戶消費-Services", "資本支出_住房", "資本支出 設備廠房",
     "Building Approvals YoY", "Housing Credit月增率 房屋持有人", "Housing Credit月增率 投資人", "房租季增率",
     "Income", "利息支出等", "所得稅 保險", "DPI", "支出", "購買固定資本", "Net Saving",
@@ -1983,7 +2043,7 @@ NEW_SERIES_DEFINITIONS = {
     "auempfull": {"name": "就業新增-全職", "ticker": "AULFEMFC Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "thousand persons", "color": "#059669", "data": []},
     "auemppart": {"name": "就業新增-兼職", "ticker": "AULFEMCP Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "thousand persons", "color": "#10b981", "data": []},
     "auparticipation": {"name": "勞參率", "ticker": "AULFPART Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "%", "color": "#14b8a6", "data": []},
-    "auhours": {"name": "工時", "ticker": "AUHRAMTL Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "thousand hours", "color": "#0d9488", "data": []},
+    "auhours": {"name": "工時 Per Worker", "ticker": "A84426277X / A84423043C", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "hours per employed person per month", "color": "#0d9488", "data": []},
     "auindeedjobs": {"name": "Indeed職缺", "ticker": "INDDAOIS Index", "source": "Indeed Hiring Lab", "frequency": "monthly", "unit": "index", "color": "#22c55e", "data": []},
     "auhousegoods": {"name": "Goods", "ticker": "AUPDYSGD Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "YoY %", "color": "#2563eb", "data": []},
     "auhouseservices": {"name": "Services", "ticker": "AUPDYSSV Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "YoY %", "color": "#3b82f6", "data": []},
@@ -2006,6 +2066,15 @@ NEW_SERIES_DEFINITIONS = {
 def ensure_new_series(database: dict[str, Any]) -> None:
     """Create newly introduced series and place them after unemployment."""
     series_list = database.setdefault("series", [])
+    for item in series_list:
+        if item.get("id") == "auhours":
+            item.update({
+                "name": "工時 Per Worker",
+                "ticker": "A84426277X / A84423043C",
+                "source": "Australian Bureau of Statistics",
+                "frequency": "monthly",
+                "unit": "hours per employed person per month",
+            })
     existing = {str(item.get("id")) for item in series_list}
     try:
         insert_at = next(i for i, item in enumerate(series_list) if item.get("id") == "auunemp") + 1
