@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup, NavigableString
 from openpyxl import load_workbook
 from pypdf import PdfReader
 
-VERSION = "2026-09-01-update-au-macro-v22-rba-d1-exact-series"
+VERSION = "2026-09-01-update-au-macro-v23-exact-series-and-rba-dates"
 OUT = Path("debug/au_macro_sources")
 ABS_API = "https://data.api.abs.gov.au/rest/data"
 SESSION = requests.Session()
@@ -93,6 +93,10 @@ def period_key(value: Any) -> str | None:
             return f"{value.year:04d}-Q{quarter}"
         return f"{value.year:04d}-{month:02d}"
     text = clean(value)
+    # RBA statistical CSV files use day/month/year dates.
+    rba_date = re.fullmatch(r"(0?[1-9]|[12]\d|3[01])/(0?[1-9]|1[0-2])/((?:19|20)\d{2})", text)
+    if rba_date:
+        return f"{int(rba_date.group(3)):04d}-{int(rba_date.group(2)):02d}"
     # Also accept displayed Excel timestamps and historical dates.
     timestamp = re.fullmatch(r"((?:19|20)\d{2})[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12]\d|3[01])(?:[ T].*)?", text)
     if timestamp:
@@ -1805,15 +1809,15 @@ def run_target(target: Target) -> tuple[list[Point], dict[str, Any]]:
     if label == "Indeed職缺":
         return fetch_indeed_monthly_index()
     if label == "家戶消費-Goods":
-        return fetch_abs_exact_series("https://www.abs.gov.au/statistics/economy/finance/monthly-household-spending-indicator/latest-release#data-downloads", "monthly_household_spending", "Table 1", "A130200750L", "M", "abs_mhsi_table1.xlsx", "level")
+        return fetch_abs_exact_series("https://www.abs.gov.au/statistics/economy/finance/monthly-household-spending-indicator/latest-release#data-downloads", "5682001", "Table 1", "A130200750L", "M", "abs_mhsi_table1.xlsx", "level")
     if label == "家戶消費-Services":
-        return fetch_abs_exact_series("https://www.abs.gov.au/statistics/economy/finance/monthly-household-spending-indicator/latest-release#data-downloads", "monthly_household_spending", "Table 1", "A130200612R", "M", "abs_mhsi_table1.xlsx", "level")
+        return fetch_abs_exact_series("https://www.abs.gov.au/statistics/economy/finance/monthly-household-spending-indicator/latest-release#data-downloads", "5682001", "Table 1", "A130200612R", "M", "abs_mhsi_table1.xlsx", "level")
     if label == "資本支出_住房":
-        return fetch_abs_exact_series("https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/latest-release#data-downloads", "07", "Table 7", "A124797535F", "Q", "abs_capex_table7.xlsx", "qoq_pct")
+        return fetch_abs_exact_series("https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/latest-release#data-downloads", "07_volume_measures", "Table 7", "A124797535F", "Q", "abs_capex_table7.xlsx", "qoq_pct")
     if label == "資本支出 設備廠房":
-        return fetch_abs_exact_series("https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/latest-release#data-downloads", "07", "Table 7", "A124797536J", "Q", "abs_capex_table7.xlsx", "qoq_pct")
+        return fetch_abs_exact_series("https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/latest-release#data-downloads", "07_volume_measures", "Table 7", "A124797536J", "Q", "abs_capex_table7.xlsx", "qoq_pct")
     if label == "Building Approvals YoY":
-        return fetch_abs_exact_series("https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/latest-release#data-downloads", "8731006", "Table 06", "A418427K", "M", "abs_building_approvals_table06.xlsx", "yoy_pct")
+        return fetch_abs_exact_series("https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/latest-release#data-downloads", "8731006", "Table 06", "A422064L", "M", "abs_building_approvals_table06.xlsx", "yoy_pct")
     if label == "Housing Credit月增率 房屋持有人":
         return fetch_rba_csv_series("d1", "DGFACOHM")
     if label == "Housing Credit月增率 投資人":
@@ -1947,7 +1951,7 @@ NEW_SERIES_DEFINITIONS = {
     "auhouseservices": {"name": "Services", "ticker": "AUPDYSSV Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "YoY %", "color": "#3b82f6", "data": []},
     "aucapexbuilding": {"name": "資本支出_住房", "ticker": "AUCEBLDQ Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "QoQ %", "color": "#7c3aed", "data": []},
     "aucapexequipment": {"name": "資本支出 設備廠房", "ticker": "AUCEEQPQ Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "QoQ %", "color": "#8b5cf6", "data": []},
-    "aubuildingapprovals": {"name": "Building Approvals YoY", "ticker": "AUBABPNY Index", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "YoY %", "color": "#d97706", "data": []},
+    "aubuildingapprovals": {"name": "Building Approvals YoY", "ticker": "A422064L", "source": "Australian Bureau of Statistics", "frequency": "monthly", "unit": "YoY %", "color": "#d97706", "data": []},
     "aucreditownermom": {"name": "Housing Credit月增率 房屋持有人", "ticker": "DGFACOHM", "source": "Reserve Bank of Australia", "frequency": "monthly", "unit": "%", "color": "#ea580c", "data": []},
     "aucreditinvestormom": {"name": "Housing Credit月增率 投資人", "ticker": "DGFACIHM", "source": "Reserve Bank of Australia", "frequency": "monthly", "unit": "%", "color": "#f97316", "data": []},
     "aurentsqoq": {"name": "房租季增率", "ticker": "AUCPRENQ Index", "source": "Australian Bureau of Statistics", "frequency": "quarterly", "unit": "QoQ %", "color": "#ca8a04", "data": []},
