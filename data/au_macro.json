@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-09-01T06:19:26.000603+00:00",
+  "generated_at": "2026-09-01T06:23:16.274931+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -6696,7 +6696,330 @@
       "frequency": "quarterly",
       "unit": "QoQ %",
       "color": "#7c3aed",
-      "data": []
+      "data": [
+        {
+          "date": "2015-03-01",
+          "value": -7.7768808973752375,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2015-06-01",
+          "value": -3.090574351854647,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2015-09-01",
+          "value": -9.841477467376746,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 2.3731389685308635,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2016-03-01",
+          "value": -9.559319746254557,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2016-06-01",
+          "value": -10.342125881431185,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2016-09-01",
+          "value": -4.764678956348045,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 0.5549244079349869,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 1.581714683005253,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 0.534713607391879,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 1.94026040336992,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2017-12-01",
+          "value": -0.5217463895149876,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2018-03-01",
+          "value": -1.7119120547140487,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2018-06-01",
+          "value": -1.1270010672358555,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2018-09-01",
+          "value": -2.556020897197875,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 2.853471576055644,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2019-03-01",
+          "value": -2.5976823331753773,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2019-06-01",
+          "value": -3.45864661654135,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 0.9712296133406628,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2019-12-01",
+          "value": -4.55989110707804,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -1.0839077727596846,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2020-06-01",
+          "value": -5.334743115297735,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2020-09-01",
+          "value": -3.3355333299487255,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 0.3676470588235281,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 4.039769754055467,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 4.818428729504065,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 0.7869481765834907,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 2.4376309274424024,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 0.26956683398400294,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2022-06-01",
+          "value": -1.6362287939186038,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 2.092267093916411,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 4.075698130625427,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 3.685470995210216,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 4.923221694683266,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2023-09-01",
+          "value": -0.35874439461883734,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 0.4091318222731344,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 0.7864069757965941,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2024-06-01",
+          "value": -3.2908833636547397,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 1.9898833660800141,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 0.27052506455711445,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 1.9171810489310381,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2025-06-01",
+          "value": -0.24065458045884336,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 2.275651334834361,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 2.7989621825615263,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2026-03-01",
+          "value": -3.2657743785850846,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 2.103099304237821,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        }
+      ]
     },
     {
       "id": "aucapexequipment",
@@ -6706,7 +7029,330 @@
       "frequency": "quarterly",
       "unit": "QoQ %",
       "color": "#8b5cf6",
-      "data": []
+      "data": [
+        {
+          "date": "2015-03-01",
+          "value": -1.5787425649007703,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2015-06-01",
+          "value": -4.975995481502404,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2015-09-01",
+          "value": -5.4921540656205465,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 2.251572327044027,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 0.44285890023372243,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 1.8003674219228438,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2016-09-01",
+          "value": -1.3895572666025036,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2016-12-01",
+          "value": -0.9272250350759514,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2017-03-01",
+          "value": -0.6034111200049264,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 1.3008734435978386,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 1.6266128539105917,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 2.605451591551833,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 3.7884119164907304,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2018-06-01",
+          "value": -1.2826308057407587,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 6.427794631102968,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2018-12-01",
+          "value": -1.484349790254924,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 0.818866688503106,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 0.1895170023824999,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2019-09-01",
+          "value": -2.5779603307571786,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 0.1331410185287929,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -2.1052631578947323,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2020-06-01",
+          "value": -9.224674589700054,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 0.7294264339152035,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 7.501392585257172,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 8.36547872646669,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 0.7544362979492014,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2021-09-01",
+          "value": -0.1265555789917716,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 0.3115100316789965,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 0.6052950155271297,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 2.0299257089044787,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2022-09-01",
+          "value": -0.7435134857963321,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 1.1107093041277105,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 3.147353361945626,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 2.6847632256786103,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2023-09-01",
+          "value": -0.14471780028944004,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 0.3526570048309141,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 3.4371539979781485,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2024-06-01",
+          "value": -0.8889095732303232,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 0.7466190833959496,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2024-12-01",
+          "value": -1.0859939408063402,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2025-03-01",
+          "value": -0.6691169541042319,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 0.42694497153699107,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 11.417099669343411,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2025-12-01",
+          "value": -1.221011574172215,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 18.387055238422256,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2026-06-01",
+          "value": -8.914911358445421,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        }
+      ]
     },
     {
       "id": "aubuildingapprovals",
@@ -6716,7 +7362,981 @@
       "frequency": "monthly",
       "unit": "YoY %",
       "color": "#d97706",
-      "data": []
+      "data": [
+        {
+          "date": "2015-01-01",
+          "value": -7.084039719060309,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2015-02-01",
+          "value": 1.0096715910298704,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2015-03-01",
+          "value": 6.4780265339966725,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2015-04-01",
+          "value": 10.938380083361498,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2015-05-01",
+          "value": -6.114708603145235,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 7.624961824289933,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2015-07-01",
+          "value": -0.9385894341646606,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 2.22957842469087,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 3.3460150229245977,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2015-10-01",
+          "value": -5.445274084866147,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 0.49241282283187804,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 4.375359815774327,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2016-01-01",
+          "value": -5.982014857291807,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 5.018939393939403,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 0.17521658717025712,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2016-04-01",
+          "value": -0.8631194151096699,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 8.276677505172913,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2016-06-01",
+          "value": -1.362088535754824,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2016-07-01",
+          "value": -9.213138422667388,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 4.342857142857137,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2016-09-01",
+          "value": -1.9822541060977916,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2016-10-01",
+          "value": -5.729969183359018,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 6.279999999999997,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2016-12-01",
+          "value": -11.660231660231657,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2017-01-01",
+          "value": -2.9803160521208794,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2017-02-01",
+          "value": -6.141669171425712,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 1.4770187542512803,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2017-04-01",
+          "value": -17.760934139096584,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 1.5743015743015842,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 3.011123897199841,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2017-07-01",
+          "value": 4.890169963224333,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2017-08-01",
+          "value": 4.308141657539255,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 0.23112480739599928,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2017-10-01",
+          "value": 10.184901419961179,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 3.283778697779449,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 4.982517482517479,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2018-01-01",
+          "value": 12.101728818402634,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2018-02-01",
+          "value": 8.966695132365498,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 2.5950397395384517,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 22.2692738821771,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2018-05-01",
+          "value": 1.0929940870811672,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2018-06-01",
+          "value": -1.2381307019177057,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2018-07-01",
+          "value": 1.5540604567421568,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2018-08-01",
+          "value": -4.313965698284916,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2018-09-01",
+          "value": -8.16679477325134,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 2.2807342851844936,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2018-11-01",
+          "value": -7.1877562175457825,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2018-12-01",
+          "value": -10.76483882478887,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2019-01-01",
+          "value": -5.263828702523576,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2019-02-01",
+          "value": -12.901645768025084,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2019-03-01",
+          "value": -15.755086802314732,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2019-04-01",
+          "value": -20.8413975756341,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2019-05-01",
+          "value": -13.053881602268703,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2019-06-01",
+          "value": -16.372890941653317,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2019-07-01",
+          "value": -11.30913501912849,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2019-08-01",
+          "value": -17.97896662094193,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2019-09-01",
+          "value": -7.993304038501781,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2019-10-01",
+          "value": -17.431109499637422,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2019-11-01",
+          "value": -10.728307813113469,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2019-12-01",
+          "value": -0.2932551319648091,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2020-01-01",
+          "value": -6.686398493205969,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2020-02-01",
+          "value": -0.6298504105274993,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2020-03-01",
+          "value": 3.633946377132724,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2020-04-01",
+          "value": 17.887015828078745,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2020-05-01",
+          "value": -5.483640811334212,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 1.217312894499556,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2020-07-01",
+          "value": 5.660178853235132,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 7.648567287322994,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 28.08733227200364,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 31.199912174772205,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 34.216602528862005,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 59.63903743315508,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2021-01-01",
+          "value": 33.29008073817763,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 58.35880022637239,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 72.59995723754544,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 51.533675362951634,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 51.008303677342816,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 49.28730512249444,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 27.61127153241063,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 30.19161056447437,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2021-09-01",
+          "value": -0.6392045454545414,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2021-10-01",
+          "value": -9.195883189691234,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2021-11-01",
+          "value": -5.701646596215282,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2021-12-01",
+          "value": -22.502302989699352,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2022-01-01",
+          "value": -29.31314223904813,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2022-02-01",
+          "value": -29.040097205346292,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2022-03-01",
+          "value": -31.15515639516878,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2022-04-01",
+          "value": -37.732315228353265,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2022-05-01",
+          "value": -27.15132471613225,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2022-06-01",
+          "value": -24.048933313441744,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2022-07-01",
+          "value": -22.12078651685393,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2022-08-01",
+          "value": -11.797931583134446,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2022-09-01",
+          "value": -12.660829163688348,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2022-10-01",
+          "value": -12.172871360117954,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2022-11-01",
+          "value": -11.267483276865608,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2022-12-01",
+          "value": -16.371298897773933,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2023-01-01",
+          "value": -8.416220351951031,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2023-02-01",
+          "value": -11.865431103948431,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2023-03-01",
+          "value": -13.774179037336932,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2023-04-01",
+          "value": -18.776029615918553,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2023-05-01",
+          "value": -11.56749338300167,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2023-06-01",
+          "value": -15.998821449616973,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2023-07-01",
+          "value": -17.212704137861934,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2023-08-01",
+          "value": -12.185442410029768,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2023-09-01",
+          "value": -11.416879795396417,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2023-10-01",
+          "value": -0.6610009442870601,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2023-11-01",
+          "value": -5.149794399843355,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2023-12-01",
+          "value": -1.356764439850111,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 3.5923141186299024,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 3.8628571428571457,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2024-03-01",
+          "value": -5.091819699499167,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 25.238570004272898,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 12.238111074160285,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 5.296387232549993,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 27.532373230061722,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 4.889071487263763,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 12.761288832428686,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 10.688635403464296,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 4.324938067712636,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 2.6067592350013102,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 8.806451612903231,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 3.3890845070422504,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 4.27660510114336,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2025-04-01",
+          "value": -0.2843170703969111,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2025-05-01",
+          "value": -0.8296296296296246,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 1.7321785476348994,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 2.078193205541856,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2025-08-01",
+          "value": -4.700352526439477,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 4.3219991806636715,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 2.4618320610686917,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2025-11-01",
+          "value": -1.2961313940833108,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 13.162262223924426,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 4.9659057219092695,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 10.791826309067698,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 18.102266736953077,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 19.38868613138687,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 11.960960063738678,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 23.564723859419345,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 6.433020358836106,
+          "source_url": "https://www.abs.gov.au/statistics/industry/building-and-construction/building-approvals-australia/jul-2026/8731006.xlsx",
+          "release_type": "final",
+          "note": "series=A418427K; YoY from official original level"
+        }
+      ]
     },
     {
       "id": "aurentsqoq",
@@ -18091,5 +19711,5 @@
       "source_url": "https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product/mar-2026/5206002_expenditure_volume_measures.xlsx"
     }
   ],
-  "script_version": "2026-09-01-update-au-macro-v21-hours-per-worker"
+  "script_version": "2026-09-01-update-au-macro-v22-rba-d1-exact-series"
 }
