@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-09-01T06:23:16.274931+00:00
+更新時間：2026-09-01T06:36:17.112737+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -190,13 +190,13 @@
 | 勞參率 | OK | 0 | 0 | 2026-07 | 66.85332364 |  |
 | 工時 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | Indeed職缺 | OK | 0 | 0 | 2026-08 | 149.45 |  |
-| 家戶消費-Goods | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| 家戶消費-Services | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| 資本支出_住房 | OK | 46 | 0 | 2026-Q2 | 2.103099304237821 |  |
-| 資本支出 設備廠房 | OK | 46 | 0 | 2026-Q2 | -8.914911358445421 |  |
-| Building Approvals YoY | OK | 139 | 0 | 2026-07 | 6.433020358836106 |  |
-| Housing Credit月增率 房屋持有人 | ERROR | 0 | 0 |  |  | RuntimeError: RBA series DGFACOHM had no observations |
-| Housing Credit月增率 投資人 | ERROR | 0 | 0 |  |  | RuntimeError: RBA series DGFACIHM had no observations |
+| 家戶消費-Goods | OK | 120 | 19 | 2026-07 | 7.2 |  |
+| 家戶消費-Services | OK | 120 | 19 | 2026-07 | 6.8 |  |
+| 資本支出_住房 | OK | 0 | 0 | 2026-Q2 | 2.103099304237821 |  |
+| 資本支出 設備廠房 | OK | 0 | 0 | 2026-Q2 | -8.914911358445421 |  |
+| Building Approvals YoY | OK | 0 | 139 | 2026-07 | 3.9932077125328647 |  |
+| Housing Credit月增率 房屋持有人 | OK | 139 | 0 | 2026-07 | 0.5 |  |
+| Housing Credit月增率 投資人 | OK | 139 | 0 | 2026-07 | 0.5 |  |
 | 房租季增率 | OK | 0 | 0 | 2026-Q2 | 0.8 |  |
 | Income | OK | 0 | 0 | 2026-Q1 | 622128.0 |  |
 | 利息支出等 | OK | 0 | 0 | 2026-Q1 | 38720.0 |  |
