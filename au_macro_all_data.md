@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-08-31T09:59:53.482263+00:00
+更新時間：2026-09-01T03:18:52.189427+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -178,23 +178,23 @@
 | 零售 | OK | 0 | 0 | 2026-07 | 7.2 |  |
 | NAB企業售價 | OK | 0 | 0 | 2026-07 | 1.1 |  |
 | 消費信心 | OK | 0 | 0 | 2026-08 | 88.9 |  |
-| 製造業PMI | OK | 0 | 0 | 2026-08 | 52.0 |  |
-| 服務業PMI | OK | 0 | 0 | 2026-08 | 52.9 |  |
+| 製造業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia manufacturing flash PMI from the newest three releases |
+| 服務業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia services flash PMI from the newest three releases |
 | GDP YoY | OK | 0 | 0 | 2026-Q1 | 2.5197395557126967 |  |
 | GDP私人消費YoY | OK | 0 | 0 | 2026-Q1 | 2.4727989254179406 |  |
 | GDP投資YoY | OK | 0 | 0 | 2026-Q1 | 6.474938173333422 |  |
 | 私人企業時薪ex bonus(季度) | OK | 0 | 0 | 2026-Q2 | 3.2 |  |
 | 政府時薪ex bonus(季度) | OK | 0 | 0 | 2026-Q2 | 3.3 |  |
-| 就業新增-全職 | OK | 121 | 18 | 2026-07 | 16.33339149999847 |  |
-| 就業新增-兼職 | OK | 121 | 18 | 2026-07 | -32.15989420000005 |  |
+| 就業新增-全職 | OK | 0 | 0 | 2026-07 | 16.33339149999847 |  |
+| 就業新增-兼職 | OK | 0 | 0 | 2026-07 | -32.15989420000005 |  |
 | 勞參率 | OK | 0 | 0 | 2026-07 | 66.85332364 |  |
-| 工時 | ERROR | 0 | 0 |  |  | RuntimeError: Best monthly workbook candidate failed validation; MAE=1980940.577250 |
+| 工時 Per Worker | OK | 139 | 0 | 2026-07 | 134.9251042661147 |  |
 | Indeed職缺 | OK | 0 | 0 | 2026-08 | 149.45 |  |
 | 家戶消費-Goods | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | 家戶消費-Services | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | 資本支出_住房 | ERROR | 0 | 0 |  |  | RuntimeError: No quarterly CAPEX candidate matched reference periods;  |
 | 資本支出 設備廠房 | ERROR | 0 | 0 |  |  | RuntimeError: No quarterly CAPEX candidate matched reference periods;  |
-| Building Approvals YoY | ERROR | 0 | 0 |  |  | RuntimeError: Best monthly workbook candidate failed validation; MAE=0.355690 |
+| Building Approvals YoY | ERROR | 0 | 0 |  |  | RuntimeError: Best monthly workbook candidate failed validation; MAE=2018.032125 |
 | Housing Credit月增率 房屋持有人 | ERROR | 0 | 0 |  |  | ConnectionError: HTTPSConnectionPool(host='ho.website.rba.gov.au', port=443): Max retries exceeded with url: /statistics/tables/csv/d1-data.csv (Caused by NameResolutionError("HTTPSConnection(host='ho.website.rba.gov.au', port=443): Failed to resolve 'ho.website.rba.gov.au' ([Errno -2] Name or service not known)")) |
 | Housing Credit月增率 投資人 | ERROR | 0 | 0 |  |  | ConnectionError: HTTPSConnectionPool(host='ho.website.rba.gov.au', port=443): Max retries exceeded with url: /statistics/tables/csv/d1-data.csv (Caused by NameResolutionError("HTTPSConnection(host='ho.website.rba.gov.au', port=443): Failed to resolve 'ho.website.rba.gov.au' ([Errno -2] Name or service not known)")) |
 | 房租季增率 | OK | 0 | 0 | 2026-Q2 | 0.8 |  |
