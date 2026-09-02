@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T08:28:45.857816+00:00",
+  "generated_at": "2026-09-02T00:19:07.473792+00:00",
   "source": {
     "type": "excel_import",
     "file": "US_ECON.xlsx",
@@ -40807,7 +40807,11 @@
         },
         {
           "date": "2026-06-01",
-          "value": 7359
+          "value": 7182
+        },
+        {
+          "date": "2026-07-01",
+          "value": 7271
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -41387,6 +41391,10 @@
         {
           "date": "2026-06-01",
           "value": 2
+        },
+        {
+          "date": "2026-07-01",
+          "value": 1.9
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -41966,6 +41974,10 @@
         {
           "date": "2026-06-01",
           "value": 1.1
+        },
+        {
+          "date": "2026-07-01",
+          "value": 1
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -42540,7 +42552,11 @@
         },
         {
           "date": "2026-06-01",
-          "value": 1.0373555
+          "value": 1.0124048
+        },
+        {
+          "date": "2026-07-01",
+          "value": 1.0513302
         }
       ],
       "source": "Derived"
