@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T03:08:47.254087+00:00",
+  "generated_at": "2026-09-03T03:31:08.990388+00:00",
   "source": {
     "type": "excel_import",
     "file": "US_ECON.xlsx",
@@ -53613,6 +53613,10 @@
         {
           "date": "2026-07-01",
           "value": 71.1
+        },
+        {
+          "date": "2026-08-01",
+          "value": 71.1
         }
       ],
       "source": "Institute for Supply Management"
@@ -54779,6 +54783,10 @@
         {
           "date": "2026-07-01",
           "value": 55.6
+        },
+        {
+          "date": "2026-08-01",
+          "value": 54.6
         }
       ],
       "source": "Institute for Supply Management"
@@ -56528,6 +56536,10 @@
         {
           "date": "2026-07-01",
           "value": 52.8
+        },
+        {
+          "date": "2026-08-01",
+          "value": 51.2
         }
       ],
       "source": "Institute for Supply Management"
