@@ -478,6 +478,7 @@ def fetch_umichigan_csv():
 
 
 ISM_REPORT_BASE = "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports"
+ISM_DEBUG_DIR = ROOT / "data" / "us_macro_debug" / "ism"
 
 
 def _month_candidates(count=8):
@@ -505,66 +506,96 @@ def _ism_number(text, patterns, label):
     for pattern in patterns:
         match = re.search(pattern, text, flags=re.I | re.S)
         if match:
-            return float(match.group(1))
+            value = float(match.group(1))
+            if 0 <= value <= 100:
+                return value
     raise RuntimeError(f"ISM {label} value not found")
 
 
-def _ism_number_optional(text, patterns):
-    """Like _ism_number but returns None instead of raising when absent."""
-    for pattern in patterns:
-        match = re.search(pattern, text, flags=re.I | re.S)
-        if match:
-            return float(match.group(1))
+def _ism_table_rows(source_html):
+    """Return normalized cell text for every HTML table row."""
+    rows = []
+    for row_html in re.findall(r"<tr\b[^>]*>(.*?)</tr>", source_html, flags=re.I | re.S):
+        cells = []
+        for cell_html in re.findall(r"<t[dh]\b[^>]*>(.*?)</t[dh]>", row_html, flags=re.I | re.S):
+            cell = _plain_html(cell_html)
+            if cell:
+                cells.append(cell)
+        if cells:
+            rows.append(cells)
+    return rows
+
+
+def _ism_value_from_table(rows, labels):
+    """Read the current-month value from an ISM summary-table row.
+
+    ISM tables place the index label in the first cell and the current month in
+    the next numeric cell. Values in later cells are prior month/year data and
+    must not be selected.
+    """
+    normalized_labels = [re.sub(r"[^a-z0-9]+", " ", x.casefold()).strip() for x in labels]
+    for cells in rows:
+        row_label = re.sub(r"[^a-z0-9]+", " ", cells[0].casefold()).strip()
+        if not any(row_label == label or row_label.startswith(label + " ") for label in normalized_labels):
+            continue
+        for cell in cells[1:]:
+            match = re.search(r"(?<!\d)(\d{1,2}(?:\.\d+)?)(?:\s*%|\s*percent)?(?!\d)", cell)
+            if match:
+                value = float(match.group(1))
+                if 0 <= value <= 100:
+                    return value
     return None
 
 
-# ISM Prices Index wording, shared by manufacturing and services reports.
-_ISM_PRICE_PATTERNS = [
-    r"Prices Index[^.]{0,90}?(?:registered|reading of|at|was)\s+(\d+(?:\.\d+)?)\s*percent",
-    r"Prices Index[^.]{0,90}?(\d+(?:\.\d+)?)\s*percent",
-]
+def _ism_value_from_text(text, labels, label):
+    """Fallback for report layouts without a usable HTML summary table."""
+    names = "(?:" + "|".join(re.escape(name) for name in labels) + ")"
+    patterns = [
+        rf"{names}(?:®|™)?[^.;:]{{0,220}}?\b(?:registered|recorded|reported|was|is|at|reading of|index reading of)\s*(?:a\s+reading\s+of\s*)?(\d{{1,2}}(?:\.\d+)?)\s*(?:percent|%)",
+        rf"{names}(?:®|™)?[^.;:]{{0,140}}?\b(?:registered|recorded|reported|was|is|at|reading of|index reading of)\s*(?:a\s+reading\s+of\s*)?(\d{{1,2}}(?:\.\d+)?)\b",
+        rf"{names}(?:®|™)?\s*[:\-–—]\s*(\d{{1,2}}(?:\.\d+)?)\s*(?:percent|%)?",
+    ]
+    return _ism_number(text, patterns, label)
 
 
-def _parse_ism_report(html, sector, expected_year, expected_month):
-    text = _plain_html(html)
+def _parse_ism_report(source_html, sector, expected_year, expected_month):
+    text = _plain_html(source_html)
     month_name = calendar.month_name[expected_month]
-    if not re.search(rf"\b{month_name}\s+{expected_year}\b|\b{month_name}\b", text, flags=re.I):
+
+    # Reject error pages and stale pages. Requiring month plus year prevents a
+    # month name in navigation or comparison text from validating the report.
+    if not re.search(rf"\b{month_name}\s+{expected_year}\b", text, flags=re.I):
         raise RuntimeError(f"ISM report does not identify {month_name} {expected_year}")
 
+    rows = _ism_table_rows(source_html)
     if sector == "manufacturing":
-        pmi = _ism_number(text, [
-            r"Manufacturing PMI(?:®)?\s+(?:registered|at)\s+(\d+(?:\.\d+)?)\s*percent",
-            r"Manufacturing PMI(?:®)?\s+at\s+(\d+(?:\.\d+)?)%",
-        ], "Manufacturing PMI")
-        employment = _ism_number(text, [
-            r"Employment Index(?: reading)?(?: of)?\s+(\d+(?:\.\d+)?)\s*percent",
-            r"Employment Index\s+(?:registered|at)\s+(\d+(?:\.\d+)?)\s*percent",
-        ], "Manufacturing Employment")
-        prices = _ism_number_optional(text, _ISM_PRICE_PATTERNS)
-        parsed = {"manufacturing_pmi": pmi, "manufacturing_employment": employment}
-        if prices is not None:
-            parsed["manufacturing_prices"] = prices
-        return parsed
+        definitions = {
+            "manufacturing_pmi": (["Manufacturing PMI", "PMI"], "Manufacturing PMI"),
+            "manufacturing_employment": (["Employment Index", "Employment"], "Manufacturing Employment"),
+            "manufacturing_prices": (["Prices Index", "Prices"], "Manufacturing Prices"),
+        }
+    elif sector == "services":
+        definitions = {
+            "services_pmi": (["Services PMI"], "Services PMI"),
+            "services_employment": (["Employment Index", "Employment"], "Services Employment"),
+            "services_prices": (["Prices Index", "Prices"], "Services Prices"),
+        }
+    else:
+        raise RuntimeError(f"Unknown ISM sector: {sector}")
 
-    pmi = _ism_number(text, [
-        r"Services PMI(?:®)?\s+(?:registered|at)\s+(\d+(?:\.\d+)?)\s*percent",
-        r"Services PMI(?:®)?\s+at\s+(\d+(?:\.\d+)?)%",
-    ], "Services PMI")
-    employment = _ism_number(text, [
-        r"Employment Index(?: returned[^.]{0,120}?with a reading of| registered| at)\s+(\d+(?:\.\d+)?)\s*percent",
-        r"Employment Index[^.]{0,160}?reading of\s+(\d+(?:\.\d+)?)\s*percent",
-    ], "Services Employment")
-    prices = _ism_number_optional(text, _ISM_PRICE_PATTERNS)
-    parsed = {"services_pmi": pmi, "services_employment": employment}
-    if prices is not None:
-        parsed["services_prices"] = prices
+    parsed = {}
+    for key, (labels, display_label) in definitions.items():
+        value = _ism_value_from_table(rows, labels)
+        if value is None:
+            value = _ism_value_from_text(text, labels, display_label)
+        parsed[key] = value
     return parsed
 
 
 def fetch_ism_official():
-    """Fetch ISM reports; retain a verified 2026 bootstrap when ISM blocks cloud runners."""
-    # Verified against ISM monthly releases. This prevents an empty series when ismworld.org
-    # returns HTTP 403 to GitHub-hosted runners. Official HTML remains the first choice.
+    """Fetch official ISM manufacturing/services PMI, employment and prices."""
+    # Existing verified observations remain a safety net when ISM blocks a
+    # cloud runner. Successfully parsed official pages always overwrite them.
     bootstrap = {
         "manufacturing_pmi": {
             "2026-01": 52.6, "2026-02": 52.4, "2026-03": 52.7,
@@ -596,20 +627,43 @@ def fetch_ism_official():
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "no-cache",
     }
+    ISM_DEBUG_DIR.mkdir(parents=True, exist_ok=True)
+    diagnostics = []
+
     for year, month, slug in _month_candidates(8):
         period = month_key(year, month)
         for sector, path in (("manufacturing", "pmi"), ("services", "services")):
             url = f"{ISM_REPORT_BASE}/{path}/{slug}/"
+            item = {"period": period, "sector": sector, "requested_url": url}
             try:
-                response = SESSION.get(url, headers=headers, timeout=60)
+                response = SESSION.get(url, headers=headers, timeout=60, allow_redirects=True)
+                item.update({
+                    "status_code": response.status_code,
+                    "final_url": response.url,
+                    "content_type": response.headers.get("Content-Type", ""),
+                    "response_bytes": len(response.content),
+                })
                 response.raise_for_status()
+                raw_path = ISM_DEBUG_DIR / f"{period}_{sector}.html"
+                raw_path.write_bytes(response.content)
                 parsed = _parse_ism_report(response.text, sector, year, month)
                 for key, value in parsed.items():
                     result[key][period] = value
-            except Exception:
-                # Existing cache plus verified bootstrap are preferable to deleting valid history.
-                continue
+                item.update({"status": "parsed", "values": parsed, "raw_html": str(raw_path)})
+            except Exception as error:
+                item.update({
+                    "status": "failed",
+                    "error_type": type(error).__name__,
+                    "error": str(error),
+                })
+                print(f"[ISM warning] {period} {sector}: {error}", file=sys.stderr)
+            diagnostics.append(item)
+
+    (ISM_DEBUG_DIR / "fetch_log.json").write_text(
+        json.dumps(diagnostics, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     return result
 
 UMICH_CHARTS_URL = "https://data.sca.isr.umich.edu/charts.php"
