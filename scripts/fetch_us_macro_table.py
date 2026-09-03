@@ -8,7 +8,6 @@ Prior successful observations are retained in data/us_macro_cache.json when a so
 from __future__ import annotations
 
 import calendar, html, importlib, io, json, os, re, subprocess, sys, time, zipfile
-from html.parser import HTMLParser
 from urllib.parse import urljoin
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -261,88 +260,96 @@ def fetch_zillow()->dict[str,float]:
     return transform(vals,"mom_pct")
 
 def _parse_adp_pay_history(content):
-    frame = pd.read_csv(io.BytesIO(content))
-    required = {"timestep", "agg", "category", "date", "median pay change"}
-    missing = required.difference(frame.columns)
-    if missing:
-        raise RuntimeError("ADP history missing columns: " + ", ".join(sorted(missing)))
+    """Parse ADP Pay Insights history and return BASE PAY for job movers.
 
-    selected = frame[
-        frame["timestep"].astype(str).str.upper().eq("M")
-        & frame["agg"].astype(str).str.strip().str.casefold().eq("worker type")
-    ].copy()
-    selected["date"] = pd.to_datetime(selected["date"], errors="coerce")
-    selected["median pay change"] = pd.to_numeric(selected["median pay change"], errors="coerce")
+    ADP changed the CSV schema in August 2026. This parser supports both the
+    current public schema and the earlier schema, but always requires and
+    selects Pay Type == base so gross-pay observations can never overwrite the
+    requested base-pay series.
+    """
+    frame = pd.read_csv(io.BytesIO(content))
+
+    # Normalize both current and legacy column names to one internal schema.
+    normalized = {
+        str(column).strip().casefold().replace("_", " "): column
+        for column in frame.columns
+    }
+
+    def source_column(*aliases):
+        for alias in aliases:
+            key = alias.strip().casefold().replace("_", " ")
+            if key in normalized:
+                return normalized[key]
+        return None
+
+    date_col = source_column("Date")
+    value_col = source_column("Median Change %", "Median Pay Change")
+    agg_col = source_column("Aggregation Group", "Agg")
+    category_col = source_column("Category")
+    pay_type_col = source_column("Pay Type")
+    timestep_col = source_column("Timestep")
+
+    required = {
+        "Date": date_col,
+        "Median Change %": value_col,
+        "Aggregation Group": agg_col,
+        "Category": category_col,
+        "Pay Type": pay_type_col,
+    }
+    missing = [name for name, column in required.items() if column is None]
+    if missing:
+        raise RuntimeError("ADP history missing columns: " + ", ".join(missing))
+
+    aggregation = (
+        frame[agg_col].astype(str).str.strip().str.casefold().str.replace("_", " ", regex=False)
+    )
+    pay_type = frame[pay_type_col].astype(str).str.strip().str.casefold()
+    mask = aggregation.eq("worker type") & pay_type.eq("base")
+    if timestep_col is not None:
+        mask &= frame[timestep_col].astype(str).str.strip().str.upper().eq("M")
+
+    selected = frame.loc[mask, [date_col, value_col, category_col]].copy()
+    selected[date_col] = pd.to_datetime(selected[date_col], errors="coerce")
+    selected[value_col] = pd.to_numeric(selected[value_col], errors="coerce")
+    selected = selected.dropna(subset=[date_col, value_col])
+
     result = {"changer": {}, "stayer": {}}
+    categories = selected[category_col].astype(str).str.strip().str.casefold()
     for category, key in (("job changer", "changer"), ("job stayer", "stayer")):
-        rows = selected[selected["category"].astype(str).str.strip().str.casefold().eq(category)]
-        for date, value in zip(rows["date"], rows["median pay change"]):
-            if pd.notna(date) and pd.notna(value):
-                result[key][date.strftime("%Y-%m")] = float(value)
+        rows = selected.loc[categories.eq(category), [date_col, value_col]].sort_values(date_col)
+        if rows[date_col].duplicated().any():
+            duplicate_dates = rows.loc[rows[date_col].duplicated(False), date_col]
+            dates = ", ".join(sorted(set(duplicate_dates.dt.strftime("%Y-%m"))))
+            raise RuntimeError(f"ADP base-pay history has duplicate {category} months: {dates}")
+        for date, value in zip(rows[date_col], rows[value_col]):
+            result[key][date.strftime("%Y-%m")] = float(value)
+
     empty = [key for key, values in result.items() if not values]
     if empty:
-        raise RuntimeError("ADP Pay Insights returned no usable data for: " + ", ".join(empty))
+        raise RuntimeError("ADP base-pay history returned no usable data for: " + ", ".join(empty))
     return result
 
-
-class _ADPHistoricalDataLinkParser(HTMLParser):
-    """Collect anchor URLs whose visible label is Download historical data."""
-
-    def __init__(self):
-        super().__init__(convert_charrefs=True)
-        self._href = None
-        self._text = []
-        self.links = []
-
-    def handle_starttag(self, tag, attrs):
-        if tag.casefold() != "a":
-            return
-        self._href = dict(attrs).get("href")
-        self._text = []
-
-    def handle_data(self, data):
-        if self._href is not None:
-            self._text.append(data)
-
-    def handle_endtag(self, tag):
-        if tag.casefold() != "a" or self._href is None:
-            return
-        label = re.sub(r"\s+", " ", " ".join(self._text)).strip().casefold()
-        if "download historical data" in label:
-            self.links.append(self._href)
-        self._href = None
-        self._text = []
-
-
-def _adp_history_links(source_html, page_url):
-    """Discover the URL from ADP actual historical-data download button.
-
-    The button href is authoritative. Its directory and filename may change
-    without requiring a code change. Generic ZIP discovery is secondary.
-    """
-    decoded = source_html.replace("\\/", "/").replace("&amp;", "&")
-    links = []
-    parser = _ADPHistoricalDataLinkParser()
-    try:
-        parser.feed(decoded)
-    except Exception:
-        pass
-    for href in parser.links:
-        absolute = urljoin(page_url, href.strip())
-        if absolute not in links:
-            links.append(absolute)
-
+def _adp_history_links(html, page_url):
+    """Discover ADP_PAY_history.zip without assuming the dated directory name."""
+    decoded = html.replace("\\/", "/").replace("&amp;", "&")
     patterns = [
-        r"href\s*=\s*[\"']([^\"']+\.zip(?:\?[^\"']*)?)[\"']",
-        r"((?:https?:)?//[^\s\"']+/artifacts/us_wage/\d{8}/[^\s\"']+\.zip(?:\?[^\s\"']*)?)",
-        r"(/artifacts/us_wage/\d{8}/[^\s\"']+\.zip(?:\?[^\s\"']*)?)",
+        r'''href\s*=\s*["']([^"']*ADP_PAY_history\.zip(?:\?[^"']*)?)["']''',
+        r'''((?:https?:)?//[^\s"']+/artifacts/us_wage/\d{8}/(?:documents/)?ADP_PAY_history\.zip)''',
+        r'''(/artifacts/us_wage/\d{8}/(?:documents/)?ADP_PAY_history\.zip)''',
     ]
+    links = []
     for pattern in patterns:
         for href in re.findall(pattern, decoded, flags=re.IGNORECASE):
             absolute = urljoin(page_url, href)
             if absolute not in links:
                 links.append(absolute)
-    return links
+
+    # Prefer the newest official dated directory when more than one link is embedded.
+    def release_date(url):
+        match = re.search(r"/us_wage/(\d{8})/(?:documents/)?ADP_PAY_history\.zip", url, flags=re.I)
+        return match.group(1) if match else "00000000"
+    return sorted(links, key=release_date, reverse=True)
+
 
 def _adp_fallback_links(page_url):
     """Last-resort dated candidates. The date is discovered by probing recent calendar dates, not hard-coded."""
