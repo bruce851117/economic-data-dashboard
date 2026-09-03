@@ -8,6 +8,7 @@ Prior successful observations are retained in data/us_macro_cache.json when a so
 from __future__ import annotations
 
 import calendar, html, importlib, io, json, os, re, subprocess, sys, time, zipfile
+from html.parser import HTMLParser
 from urllib.parse import urljoin
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -284,33 +285,70 @@ def _parse_adp_pay_history(content):
     return result
 
 
-def _adp_history_links(html, page_url):
-    """Discover ADP_PAY_history.zip without assuming the dated directory name."""
-    decoded = html.replace("\\/", "/").replace("&amp;", "&")
-    patterns = [
-        r'''href\s*=\s*["']([^"']*ADP_PAY_history\.zip(?:\?[^"']*)?)["']''',
-        r'''((?:https?:)?//[^\s"']+/artifacts/us_wage/\d{8}/ADP_PAY_history\.zip)''',
-        r'''(/artifacts/us_wage/\d{8}/ADP_PAY_history\.zip)''',
-    ]
+class _ADPHistoricalDataLinkParser(HTMLParser):
+    """Collect anchor URLs whose visible label is Download historical data."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self._href = None
+        self._text = []
+        self.links = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag.casefold() != "a":
+            return
+        self._href = dict(attrs).get("href")
+        self._text = []
+
+    def handle_data(self, data):
+        if self._href is not None:
+            self._text.append(data)
+
+    def handle_endtag(self, tag):
+        if tag.casefold() != "a" or self._href is None:
+            return
+        label = re.sub(r"\s+", " ", " ".join(self._text)).strip().casefold()
+        if "download historical data" in label:
+            self.links.append(self._href)
+        self._href = None
+        self._text = []
+
+
+def _adp_history_links(source_html, page_url):
+    """Discover the URL from ADP actual historical-data download button.
+
+    The button href is authoritative. Its directory and filename may change
+    without requiring a code change. Generic ZIP discovery is secondary.
+    """
+    decoded = source_html.replace("\\/", "/").replace("&amp;", "&")
     links = []
+    parser = _ADPHistoricalDataLinkParser()
+    try:
+        parser.feed(decoded)
+    except Exception:
+        pass
+    for href in parser.links:
+        absolute = urljoin(page_url, href.strip())
+        if absolute not in links:
+            links.append(absolute)
+
+    patterns = [
+        r"href\s*=\s*[\"']([^\"']+\.zip(?:\?[^\"']*)?)[\"']",
+        r"((?:https?:)?//[^\s\"']+/artifacts/us_wage/\d{8}/[^\s\"']+\.zip(?:\?[^\s\"']*)?)",
+        r"(/artifacts/us_wage/\d{8}/[^\s\"']+\.zip(?:\?[^\s\"']*)?)",
+    ]
     for pattern in patterns:
         for href in re.findall(pattern, decoded, flags=re.IGNORECASE):
             absolute = urljoin(page_url, href)
             if absolute not in links:
                 links.append(absolute)
-
-    # Prefer the newest official dated directory when more than one link is embedded.
-    def release_date(url):
-        match = re.search(r"/us_wage/(\d{8})/ADP_PAY_history\.zip", url, flags=re.I)
-        return match.group(1) if match else "00000000"
-    return sorted(links, key=release_date, reverse=True)
-
+    return links
 
 def _adp_fallback_links(page_url):
     """Last-resort dated candidates. The date is discovered by probing recent calendar dates, not hard-coded."""
     today = datetime.now(timezone.utc).date()
     return [
-        urljoin(page_url, f"/artifacts/us_wage/{(today - timedelta(days=offset)):%Y%m%d}/ADP_PAY_history.zip")
+        urljoin(page_url, f"/artifacts/us_wage/{(today - timedelta(days=offset)):%Y%m%d}/documents/ADP_PAY_history.zip")
         for offset in range(0, 15)
     ]
 
