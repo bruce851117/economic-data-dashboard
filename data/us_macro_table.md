@@ -1,6 +1,6 @@
 # 美國總體經濟數據：待確認項目
 
-> 更新時間：2026-09-03 17:53 UTC  
+> 更新時間：2026-09-04 17:38 UTC  
 > 其他已成功指標仍會在背景抓取、接受來源修訂並更新Cache，只是不顯示於本表。
 > Conference Board原始回應會保存至 `data/us_macro_debug/`，供後續判斷GitHub Actions實際收到的HTML。
 
@@ -41,7 +41,3 @@
 | 453 | Miscellaneous Store Retailers | 16760 | 16673 | 16324 | 15671 | 15833 |
 | 454 | Nonstore Retailers | 136899 | 140047 | 138760 | 138035 | 136030 |
 | 722 | Food Services and Drinking Places | 103555 | 103018 | 102588 | 101267 | 100241 |
-
-## 更新警告
-
-- BLS: ['Your request has failed. Please check your input parameters, and try your request again.']
