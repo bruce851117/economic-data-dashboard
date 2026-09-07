@@ -4,7 +4,7 @@
     "sector": "manufacturing",
     "requested_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/september/",
     "status_code": 200,
-    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=285007d9a5cc01d724ba2f7545128a8b71f15373fcaad68f7cbc45353b291ce5a7d1705dc7ca74f034ec83b71e5c806ae69f4b68af43abada0676d8d15a14a2c9db52f0f823bfb82683c12098510f317340edc483b6a501fbfa2dd34e63378b1503025011d5f5fb988e33bdc45fc25e655549ac713da09935bf89aab720993dd",
+    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=4aa3185fd087f624ba723f3e449a304e5c0ab78452440d173e9c46dec33ce938f883d53962a5f138c50cbbe87939b05e61b6321cdafcf04a58a920f0528eb7c94f94c8eee4996fd7910cd0b7eda086a23c3680552067a6763a3de5146bea38ae1c6c4015fe1ef1bc1f262779bf28cf0a681032d8b81a21df353307e2a6875c13",
     "content_type": "text/html",
     "response_bytes": 922,
     "status": "failed",
@@ -18,7 +18,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/september/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 86558,
+    "response_bytes": 86560,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM report does not identify September 2026"
@@ -30,7 +30,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/august/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 156203,
+    "response_bytes": 156205,
     "status": "parsed",
     "values": {
       "manufacturing_pmi": 54.6,
@@ -46,7 +46,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/august/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 146355,
+    "response_bytes": 146359,
     "status": "parsed",
     "values": {
       "services_pmi": 55.4,
@@ -62,7 +62,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/july/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 158289,
+    "response_bytes": 158291,
     "status": "parsed",
     "values": {
       "manufacturing_pmi": 55.6,
@@ -78,7 +78,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/july/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 147765,
+    "response_bytes": 147767,
     "status": "parsed",
     "values": {
       "services_pmi": 54.1,
@@ -94,7 +94,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/june/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 88026,
+    "response_bytes": 88028,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM Manufacturing PMI value not found"
@@ -106,7 +106,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/june/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 89387,
+    "response_bytes": 89389,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM Services PMI value not found"
@@ -118,7 +118,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/may/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 87835,
+    "response_bytes": 87837,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM report does not identify May 2026"
@@ -130,7 +130,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/may/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 86801,
+    "response_bytes": 86803,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM Services PMI value not found"
@@ -142,7 +142,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/april/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 87849,
+    "response_bytes": 87851,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM report does not identify April 2026"
@@ -154,7 +154,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/april/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 147357,
+    "response_bytes": 147361,
     "status": "parsed",
     "values": {
       "services_pmi": 53.6,
@@ -170,7 +170,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/march/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 87849,
+    "response_bytes": 87851,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM report does not identify March 2026"
@@ -182,7 +182,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/march/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 146504,
+    "response_bytes": 146506,
     "status": "parsed",
     "values": {
       "services_pmi": 54.0,
@@ -210,7 +210,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/february/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 89486,
+    "response_bytes": 89484,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM Services PMI value not found"
