@@ -1009,12 +1009,13 @@ def _parse_conference_board_release(html):
         raise RuntimeError("Conference Board Updated date not found")
     current_period = _month_name_period(updated.group(2), updated.group(1))
 
+    # Flexible: don't hard-code the verb or the "(1985 = 100)" aside, so small
+    # wording changes in the release don't break extraction.
     cci = re.search(
         r"Consumer Confidence Index\s*(?:®\s*)?"
-        r"(?:increased|decreased|rose|fell|edged up|edged down|inched up|inched down)"
-        r".*?\bto\s+(\d+(?:\.\d+)?)\s*\(1985\s*=\s*100\)\s+in\s+([A-Za-z]+)"
+        r".*?\bto\s+(\d+(?:\.\d+)?)\s*(?:\(1985\s*=\s*100\)\s*)?in\s+([A-Za-z]+)"
         r".*?\bfrom\s+(?:an?\s+)?(?:upwardly\s+|downwardly\s+)?(?:revised\s+)?"
-        r"(\d+(?:\.\d+)?)\s+in\s+([A-Za-z]+)",
+        r"(\d+(?:\.\d+)?)\s*(?:\(1985\s*=\s*100\)\s*)?in\s+([A-Za-z]+)",
         text,
         flags=re.I | re.S,
     )
@@ -1035,13 +1036,19 @@ def _parse_conference_board_release(html):
     prior_year = current_year - 1 if prior_month_number > current_month_number else current_year
     prior_period = month_key(prior_year, prior_month_number)
 
+    # Flexible phrasing: "% of consumers said/reported/felt/viewed jobs were/are/as
+    # ‘plentiful’ / ‘hard to get’".
     plentiful = re.search(
-        r"(\d+(?:\.\d+)?)%\s+of consumers said jobs were\s+[\"'“”‘’]?plentiful[\"'“”‘’]?",
+        r"(\d+(?:\.\d+)?)%\s+of\s+(?:consumers|respondents|those\s+surveyed)\s+"
+        r"(?:said|reported|stated|felt|viewed|indicated|described)[^.]{0,40}?jobs?[^.]{0,20}?"
+        r"[\"'“”‘’]?plentiful[\"'“”‘’]?",
         text,
         flags=re.I,
     )
     hard = re.search(
-        r"(\d+(?:\.\d+)?)%\s+of consumers said jobs were\s+[\"'“”‘’]?hard to get[\"'“”‘’]?",
+        r"(\d+(?:\.\d+)?)%\s+of\s+(?:consumers|respondents|those\s+surveyed)\s+"
+        r"(?:said|reported|stated|felt|viewed|indicated|described)[^.]{0,40}?jobs?[^.]{0,20}?"
+        r"[\"'“”‘’]?hard[\s\-]to[\s\-]get[\"'“”‘’]?",
         text,
         flags=re.I,
     )
