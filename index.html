@@ -68,7 +68,7 @@
     #us-table-view thead th.item-head{z-index:7;left:0}
     .us-section-cell{background:#0f2038!important;color:#fff!important;font-weight:800;letter-spacing:.5px}
     .us-section-fill{background:#0f2038}
-    .us-toggle{cursor:pointer;display:inline-block;width:20px;color:#2563eb;font-size:16px;font-weight:900;line-height:1;user-select:none;text-align:center}
+    .us-toggle{cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;color:#fff;background:#2563eb;border-radius:6px;font-size:15px;font-weight:900;line-height:1;user-select:none}.us-toggle:hover{background:#1d4ed8}.us-bold{font-weight:900}.us-static{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:999px;background:#e2e8f0;color:#64748b;font-size:9px;font-weight:800;vertical-align:middle}
     .us-toggle:hover{color:#1d4ed8}
     .us-toggle-sp{display:inline-block;width:20px}
     .us-mom{font-size:10px;font-weight:600;opacity:.72;margin-top:1px}
@@ -432,35 +432,57 @@
     const US_CES=[['非農',0],['Private',1],['Goods-producing Sector',2],['Mining and Logging',3],['Construction',3],['Manufacturing',3],['Durable goods',4],['Nondurable goods',4],['Private Service-Providing',2],['Trade, Transportation, and Utilities',3],['Wholesale Trade',4],['Retail Trade',4],['Transportation and warehousing',4],['Utilities',4],['Information',3],['Financial Activities',3],['Professional and Business Services',3],['Temporary Help Services',5],['Education and Health Services',3],['Health care and social assistance',4],['Health Care',5],['Ambulatory health care services',6],['Hospitals',6],['Nursing and residential care facilities',6],['Social assistance',5],['Leisure and Hospitality',3],['Other Services',3]];
     function usBuildSections(){
       const S=[];
-      // 1) 就業-就業（非農月增減，階層）
+      const CNT={digits:0,grouping:true}, RATE={digits:1,pct:true};
+      const mrow=(B,nm,rule,opts={})=>{const v=usMap(B,nm);const r={key:B+'|'+nm,name:nm,level:0,parent:null,vals:v,rule,...opts};if(opts.mom)r.momVals=usMomMap(v);return r};
+      // 1) 就業-就業（非農月增減，階層）+ Multiple Jobholder 移到最下方
       {const B='就業-就業（月增減，千人）',rows=[],stack=[];
         US_CES.forEach(([nm,lv])=>{while(stack.length&&stack[stack.length-1].lv>=lv)stack.pop();const parent=stack.length?stack[stack.length-1].key:null,key=B+'|'+nm;rows.push({key,name:nm,level:lv,parent,vals:usMap(B,nm),rule:{digits:0,grouping:true,sign:true}});stack.push({key,lv})});
         rows.forEach(r=>r.expandable=rows.some(c=>c.parent===r.key));
+        if(usFind('就業-失業','Multiple Jobholder'))rows.push({key:'就業-失業|Multiple Jobholder',name:'Multiple Jobholder',level:0,parent:null,vals:usMap('就業-失業','Multiple Jobholder'),rule:CNT});
         S.push({title:'就業 - 就業（非農月增減，千人）',rows});}
-      // 2) 就業-失業（指定項目加月增減括號）
-      {const B='就業-失業',rows=[],mom=new Set(['Labor Force','Employed','Unemployed','Employed to Unemployed','Unemployed to Unemployed','Not in Labor Force to Unemployed','On temporary layoff','Permanent Job Losers','Completed Temp Job','Job leavers','Reentrants','New entrants']);
-        const pct=new Set(['失業率']);
-        const gFlow=new Set(['Employed to Unemployed','Unemployed to Unemployed','Not in Labor Force to Unemployed']),gLose=new Set(['On temporary layoff','Permanent Job Losers','Completed Temp Job','Job leavers','Reentrants','New entrants']);
-        (usData.series||[]).filter(s=>s.block===B&&!s.new).forEach(s=>{const nm=s.name,vals=usMap(B,nm);let rule;if(nm==='失業率'||pct.has(nm))rule={digits:1,pct:true};else if(nm==='平均失業Duration')rule={digits:1};else rule={digits:0,grouping:true};const row={key:B+'|'+nm,name:nm,level:0,parent:null,vals,rule};if(mom.has(nm)){row.mom=true;row.momVals=usMomMap(vals)}if(gFlow.has(nm))row.group='u-flow';else if(gLose.has(nm))row.group='u-lose';rows.push(row)});
+      // 2) 就業-失業：失業率(展開by年齡/學歷)、勞參率(展開by年齡)、流量/原因(橘框+月增減)、Duration(展開by區間+月增減)
+      {const B='就業-失業',rows=[];
+        const urK=B+'|失業率';
+        rows.push({key:urK,name:'失業率',level:0,parent:null,expandable:true,vals:usMap(B,'失業率'),rule:RATE});
+        ['失業率16~24','失業率25~54','失業率55+','失業率高中以下','失業率高中','失業率大學肄業 / 副學士','失業率大學學位以上'].forEach(nm=>{if(usFind(B,nm))rows.push({key:B+'|'+nm,name:nm,level:1,parent:urK,vals:usMap(B,nm),rule:RATE})});
+        const lpK=B+'|勞參率';
+        if(usFind(B,'勞參率')){rows.push({key:lpK,name:'勞參率',level:0,parent:null,expandable:true,vals:usMap(B,'勞參率'),rule:RATE});
+          ['勞參率16~24','勞參率25~54','勞參率55+'].forEach(nm=>{if(usFind(B,nm))rows.push({key:B+'|'+nm,name:nm,level:1,parent:lpK,vals:usMap(B,nm),rule:RATE})});}
+        ['Labor Force','Employed','Unemployed'].forEach(nm=>rows.push(mrow(B,nm,CNT,{mom:true})));
+        ['Employed to Unemployed','Unemployed to Unemployed','Not in Labor Force to Unemployed'].forEach(nm=>rows.push(mrow(B,nm,CNT,{mom:true,group:'u-flow'})));
+        ['On temporary layoff','Permanent Job Losers','Completed Temp Job','Job leavers','Reentrants','New entrants'].forEach(nm=>rows.push(mrow(B,nm,CNT,{mom:true,group:'u-lose'})));
+        const durK=B+'|平均失業Duration';
+        rows.push({key:durK,name:'平均失業Duration',level:0,parent:null,expandable:true,vals:usMap(B,'平均失業Duration'),rule:{digits:1}});
+        ['5週以下','5~14','15~26','27+'].forEach(nm=>{if(usFind(B,nm)){const v=usMap(B,nm);rows.push({key:B+'|'+nm,name:nm,level:1,parent:durK,vals:v,rule:CNT,mom:true,momVals:usMomMap(v)})}});
         S.push({title:'就業 - 失業',rows});}
-      // 3) 就業-調查（新增 Plentiful - Hard to get，細項隱藏）
+      // 3) 就業-失業金人數（新）
+      {const B='就業-失業金人數',rows=[];
+        ['初領失業','續領失業'].forEach(nm=>{if(usFind(B,nm))rows.push(mrow(B,nm,CNT))});
+        if(rows.length)S.push({title:'就業 - 失業金人數',rows});}
+      // 4) 就業-職缺：Indeed、JOLTS、Goods(加總)+各產業(橘框+月增減)、Quit/Layoff、失業人口、職缺/失業人口
+      {const B='就業-職缺',rows=[];
+        if(usFind(B,'Indeed職缺'))rows.push(mrow(B,'Indeed職缺',{digits:2}));
+        if(usFind(B,'JOLTS'))rows.push(mrow(B,'JOLTS',CNT));
+        [['職缺Goods','Goods'],['Trade, Transportation, and Utilities',null],['Information',null],['Financial Activities',null],['Professional and Business Services',null],['Education and Health Services',null],['Leisure and Hospitality',null]].forEach(([nm,label])=>{if(usFind(B,nm))rows.push(mrow(B,nm,CNT,{mom:true,group:'jolts-ind',...(label?{name:label}:{})}))});
+        ['Quit Rate','Layoff Rate'].forEach(nm=>{if(usFind(B,nm))rows.push(mrow(B,nm,RATE))});
+        if(usFind(B,'失業人口'))rows.push(mrow(B,'失業人口',CNT));
+        if(usFind(B,'職缺/失業人口'))rows.push(mrow(B,'職缺/失業人口',{digits:2}));
+        S.push({title:'就業 - 職缺',rows});}
+      // 5) 就業-薪水（時薪YoY 新增；switcher/stayer/quartile 保留）
+      {const B='就業-薪水',order=['時薪 MoM%','時薪YoY','Atlanta Fed Job Switcher薪資','Atlanta Fed Job Stayer薪資','ADP Pay Job Changers薪資','ADP Pay Job Stayers薪資','Atlanta Fed最低25%薪資','Atlanta Fed 50%薪資','Atlanta Fed 75%薪資','Atlanta Fed最高25%薪資'],rows=[];
+        order.forEach(nm=>{if(usFind(B,nm)){const row=mrow(B,nm,{digits:1,pct:true});if(/25%|50%|75%/.test(nm))row.group='wage-q';rows.push(row)}});
+        S.push({title:'就業 - 薪水',rows});}
+      // 6) 就業-調查（新增 Income Higher-Lower；hiring plan 標不更新；Plentiful-Hard 展開）
       {const B='就業-調查',rows=[];
-        (usData.series||[]).filter(s=>s.block===B&&!s.new&&s.name!=='Job Plentiful'&&s.name!=='Job Hard to get').forEach(s=>{const row={key:B+'|'+s.name,name:s.name,level:0,parent:null,vals:usMap(B,s.name),rule:{digits:1}};if(s.name==='失去工作機率調查'||s.name==='自願離職調查')row.group='sv-ny';rows.push(row)});
+        (usData.series||[]).filter(s=>s.block===B&&!s.new&&s.name!=='Job Plentiful'&&s.name!=='Job Hard to get').forEach(s=>{const row={key:B+'|'+s.name,name:s.name,level:0,parent:null,vals:usMap(B,s.name),rule:{digits:1}};if(s.name==='失去工作機率調查'||s.name==='自願離職調查')row.group='sv-ny';if(s.name==='中小企hiring plan')row.static=true;rows.push(row)});
+        if(usFind(B,'Income Higher - Lower'))rows.push(mrow(B,'Income Higher - Lower',{digits:1},{static:true}));
         const P=usMap(B,'Job Plentiful'),H=usMap(B,'Job Hard to get'),pk=B+'|plentiful_minus_hard';
         rows.push({key:pk,name:'Plentiful - Hard to get',level:0,parent:null,expandable:true,vals:usDiffMap(P,H),rule:{digits:1}});
         rows.push({key:B+'|Job Plentiful',name:'Job Plentiful',level:1,parent:pk,vals:P,rule:{digits:1}});
         rows.push({key:B+'|Job Hard to get',name:'Job Hard to get',level:1,parent:pk,vals:H,rule:{digits:1}});
         S.push({title:'就業 - 調查',rows});}
-      // 4) 就業-職缺
-      {const B='就業-職缺',rows=[];(usData.series||[]).filter(s=>s.block===B&&!s.new).forEach(s=>{const nm=s.name;let rule=nm==='JOLTS'?{digits:0,grouping:true}:nm==='職缺/失業人口'?{digits:2}:{digits:1,pct:true};rows.push({key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule})});S.push({title:'就業 - 職缺',rows});}
-      // 5) 就業-薪水（switcher/stayer 分組）
-      {const B='就業-薪水',order=['時薪 MoM%','Atlanta Fed Job Switcher薪資','Atlanta Fed Job Stayer薪資','ADP Pay Job Changers薪資','ADP Pay Job Stayers薪資','Atlanta Fed最低25%薪資','Atlanta Fed 50%薪資','Atlanta Fed 75%薪資','Atlanta Fed最高25%薪資'],rows=[];
-        order.forEach(nm=>{if(usFind(B,nm)){const row={key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule:{digits:1,pct:true}};if(/25%|50%|75%/.test(nm))row.group='wage-q';rows.push(row)}});
-        S.push({title:'就業 - 薪水',rows});}
-      // 6) 物價
-      {const B='物價',rows=[];(usData.series||[]).filter(s=>s.block===B&&!s.new).forEach(s=>{const nm=s.name,pct=!/ISM/.test(nm);const row={key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule:{digits:nm.includes('Zillow')?2:1,pct}};if(nm.includes('密大'))row.group='px-mi';else if(nm.includes('NY FED'))row.group='px-ny';else if(nm.includes('ISM'))row.group='px-ism';rows.push(row)});S.push({title:'物價',rows});}
-      // 7) 企業調查
-      {const B='企業調查',rows=[];(usData.series||[]).filter(s=>s.block===B&&!s.new).forEach(s=>rows.push({key:B+'|'+s.name,name:s.name,level:0,parent:null,vals:usMap(B,s.name),rule:{digits:1}}));S.push({title:'企業調查',rows});}
+      // 7) 物價
+      {const B='物價',rows=[];(usData.series||[]).filter(s=>s.block===B&&!s.new).forEach(s=>{const nm=s.name,pct=!/ISM/.test(nm);const row={key:B+'|'+nm,name:nm,level:0,parent:null,vals:usMap(B,nm),rule:{digits:nm.includes('Zillow')?2:1,pct}};if(nm==='SuperCore')row.static=true;if(nm.includes('密大'))row.group='px-mi';else if(nm.includes('NY FED'))row.group='px-ny';else if(nm.includes('ISM'))row.group='px-ism';rows.push(row)});S.push({title:'物價',rows});}
       // 8) 消費（4項改YoY、CB移到密大前、密大細項隱藏）
       {const B='消費',rows=[],yoy=new Set(['disposable personal income','Personal Outlays','Personal Saving','Interest Paid']);
         rows.push({key:B+'|Real Personal Spending',name:'Real Personal Spending',level:0,parent:null,vals:usMap(B,'Real Personal Spending'),rule:{digits:1,pct:true}});
@@ -473,6 +495,22 @@
         rows.push({key:B+'|預計未來一年金融狀況',name:'預計未來一年金融狀況',level:0,parent:null,vals:usMap(B,'預計未來一年金融狀況'),rule:{digits:1},group:'cs-mi'});
         rows.push({key:B+'|零售控制 MoM%',name:'零售控制 MoM%',level:0,parent:null,vals:usMap(B,'零售控制 MoM%'),rule:{digits:1,pct:true}});
         S.push({title:'消費',rows});}
+      // 9) 企業調查（服務/製造各自橘框；ISM、S&P 粗體；靜態標不更新）
+      {const B='企業調查',rows=[];
+        const R=(nm,opts={})=>{if(usFind(B,nm))rows.push(mrow(B,nm,{digits:1},opts))};
+        R('ISM服務',{group:'biz-svc',bold:true});
+        R('S&P服務業',{group:'biz-svc',bold:true,static:true});
+        R('PHILI 服務業',{group:'biz-svc',static:true});
+        R('DALLAS 服務業',{group:'biz-svc'});
+        R('NY FED 服務業',{group:'biz-svc'});
+        R('ISM製造',{group:'biz-mfg',bold:true});
+        R('S&P製造業',{group:'biz-mfg',bold:true,static:true});
+        R('達拉斯製造業',{group:'biz-mfg'});
+        R('Kansas 製造業',{group:'biz-mfg',static:true});
+        R('帝國製造業',{group:'biz-mfg'});
+        R('Richmond製造業',{group:'biz-mfg',static:true});
+        R('費城製造業',{group:'biz-mfg'});
+        S.push({title:'企業調查',rows});}
       return S;
     }
     function usRowVisible(row,byKey){let p=row.parent;while(p){if(!usExpand[p])return false;p=byKey[p]?.parent}return true}
@@ -491,7 +529,7 @@
           const tds=periods.map(p=>{const v=row.vals[p];let sub='';if(row.mom&&row.momVals&&valid(row.momVals[p]))sub=`<div class="us-mom">(${usFmtNum(row.momVals[p],{...row.rule,sign:true})})</div>`;return `<td class="value ${valid(v)?'':'missing'}" style="background:${color(v,s)}">${usFmtNum(v,row.rule)}${sub}</td>`}).join('');
           const g=row.group,pg=idx>0?visRows[idx-1].group:null,ng=idx<visRows.length-1?visRows[idx+1].group:null;
           const cls=g?('us-grp'+(g!==pg?' us-grp-top':'')+(g!==ng?' us-grp-bot':'')):'';
-          h+=`<tr class="${cls}"><td class="item-cell" style="padding-left:${8+row.level*20}px"><div class="item-wrap">${tog}<span class="info-link" ${usRowInfo(row)}>${esc(row.name)}</span></div></td>${tds}</tr>`;
+          h+=`<tr class="${cls}"><td class="item-cell" style="padding-left:${8+row.level*20}px"><div class="item-wrap">${tog}<span class="info-link${row.bold?' us-bold':''}" ${usRowInfo(row)}>${esc(row.name)}</span>${row.static?'<span class="us-static" title="靜態值，暫不自動更新">不更新</span>':''}</div></td>${tds}</tr>`;
         });
       });
       const c=$('us-content');c.className='';c.innerHTML=h+'</tbody></table></div>';
