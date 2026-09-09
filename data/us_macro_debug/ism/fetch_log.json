@@ -4,7 +4,7 @@
     "sector": "manufacturing",
     "requested_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/september/",
     "status_code": 200,
-    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=083ef2db418b1d2540e36ada03fcee39d1b361a2bb47076ae42bed8062872107899165741cd0da728e1f66f01ae3ba95879e6d775c21bf17854ec66f47971dfbeaacc7d428610a5119bdfcc143381bb437a696b8dc277045c7cedf531b4aac0932399f118332ec6144db499c78627f7f66c9577c927d5eff6e29482fc2f1d1bd",
+    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=7491430af18cbc8b1c3abcc83b9eecb15308f71fcd0f9ad0d66d8ce3c723abb136fd6df9623bf4300441350f68a6b535c785a8ea580a82e5fbc089b611710ef1090482b83d90695de96716124b9dda7b667cbb5d39a823e86c79d9156af01545f134ca7d25d2ff9ffa78936dafb8915b8903ed215fc023545c81c003dbc98162",
     "content_type": "text/html",
     "response_bytes": 922,
     "status": "failed",
@@ -30,7 +30,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/august/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 156203,
+    "response_bytes": 156205,
     "status": "parsed",
     "values": {
       "manufacturing_pmi": 54.6,
@@ -106,7 +106,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/june/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 89389,
+    "response_bytes": 89387,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM Services PMI value not found"
@@ -130,7 +130,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/may/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 86801,
+    "response_bytes": 86803,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM Services PMI value not found"
