@@ -33,6 +33,66 @@ SKIP_PROVIDERS = {"nfib"}
 SKIP_KEYS = {"物價|Core Services less Shelter"}
 
 
+# ---------------------------------------------------------------------------
+# New series added from the 2026-09 design sheet. Sourced from stable public
+# endpoints only: BLS public API and FRED's public CSV endpoint (no key). Each
+# entry: (block, name) -> dict(method, id, kind, ticker, source).
+#   method: bls | fredcsv     kind: level | yoy
+# Derived JOLTS Goods/Services sums are computed after fetching, below.
+NEW_SERIES = {
+ ("就業-失業","失業率16~24"):("bls","LNS14024887","level","USURT162 Index","Bureau of Labor Statistics"),
+ ("就業-失業","失業率25~54"):("bls","LNS14000060","level","USURT254 Index","Bureau of Labor Statistics"),
+ ("就業-失業","失業率55+"):("bls","LNS14024230","level","USURT55+ Index","Bureau of Labor Statistics"),
+ ("就業-失業","失業率高中以下"):("bls","LNS14027659","level","USAELURT Index","Bureau of Labor Statistics"),
+ ("就業-失業","失業率高中"):("bls","LNS14027660","level","USAEHURT Index","Bureau of Labor Statistics"),
+ ("就業-失業","失業率大學肄業 / 副學士"):("bls","LNS14027689","level","USAESURT Index","Bureau of Labor Statistics"),
+ ("就業-失業","失業率大學學位以上"):("bls","LNS14027662","level","USAECURT Index","Bureau of Labor Statistics"),
+ ("就業-失業","勞參率"):("bls","LNS11300000","level","PRUSTOT Index","Bureau of Labor Statistics"),
+ ("就業-失業","勞參率16~24"):("bls","LNS11324887","level","PRUSQNMS Index","Bureau of Labor Statistics"),
+ ("就業-失業","勞參率25~54"):("bls","LNS11300060","level","PRUSQNTS Index","Bureau of Labor Statistics"),
+ ("就業-失業","勞參率55+"):("bls","LNS11324230","level","PRUSQNGS Index","Bureau of Labor Statistics"),
+ ("就業-失業","5週以下"):("bls","LNS13008396","level","USDULSFV Index","Bureau of Labor Statistics"),
+ ("就業-失業","5~14"):("bls","LNS13008756","level","USDUFVFR Index","Bureau of Labor Statistics"),
+ ("就業-失業","15~26"):("bls","LNS13008876","level","USDUFITS Index","Bureau of Labor Statistics"),
+ ("就業-失業","27+"):("bls","LNS13008636","level","USDUTWSV Index","Bureau of Labor Statistics"),
+ ("就業-失業金人數","初領失業"):("fredcsv","ICSA","claims_k","INJCJC Index","Department of Labor"),
+ ("就業-失業金人數","續領失業"):("fredcsv","CCNSA","claims_k","INJCSPNS Index","Department of Labor"),
+ ("就業-職缺","Indeed職缺"):("fredcsv","IHLIDXUS","level","INDDUOIS Index","Indeed"),
+ ("就業-職缺","Mining and Logging"):("bls","JTS110099000000000JOL","level","JOLTMILS Index","Bureau of Labor Statistics"),
+ ("就業-職缺","Construction"):("bls","JTS230000000000000JOL","level","JOLTCONS Index","Bureau of Labor Statistics"),
+ ("就業-職缺","Manufacturing"):("bls","JTS300000000000000JOL","level","JOLTMANU Index","Bureau of Labor Statistics"),
+ ("就業-職缺","Trade, Transportation, and Utilities"):("bls","JTS400000000000000JOL","level","JOLTTRAD Index","Bureau of Labor Statistics"),
+ ("就業-職缺","Information"):("bls","JTS510000000000000JOL","level","JOLTINLS Index","Bureau of Labor Statistics"),
+ ("就業-職缺","Financial Activities"):("bls","JTS510099000000000JOL","level","JOLTFALS Index","Bureau of Labor Statistics"),
+ ("就業-職缺","Professional and Business Services"):("bls","JTS540099000000000JOL","level","JOLTPROF Index","Bureau of Labor Statistics"),
+ ("就業-職缺","Education and Health Services"):("bls","JTS600000000000000JOL","level","JOLTEDUC Index","Bureau of Labor Statistics"),
+ ("就業-職缺","Leisure and Hospitality"):("bls","JTS700000000000000JOL","level","JOLTLEIS Index","Bureau of Labor Statistics"),
+ ("就業-薪水","時薪YoY"):("bls","CES0500000003","yoy","AHE YOY% Index","Bureau of Labor Statistics"),
+ ("就業-薪水","時薪YoY-Goods-producing Sector"):("bls","CES0600000003","yoy","","Bureau of Labor Statistics"),
+ ("就業-薪水","時薪YoY-Trade, Transportation, and Utilities"):("bls","CES4000000003","yoy","","Bureau of Labor Statistics"),
+ ("就業-薪水","時薪YoY-Information"):("bls","CES5000000003","yoy","","Bureau of Labor Statistics"),
+ ("就業-薪水","時薪YoY-Financial Activities"):("bls","CES5500000003","yoy","","Bureau of Labor Statistics"),
+ ("就業-薪水","時薪YoY-Professional and Business Services"):("bls","CES6000000003","yoy","","Bureau of Labor Statistics"),
+ ("就業-薪水","時薪YoY-Education and Health Services"):("bls","CES6500000003","yoy","","Bureau of Labor Statistics"),
+ ("就業-薪水","時薪YoY-Leisure and Hospitality"):("bls","CES7000000003","yoy","","Bureau of Labor Statistics"),
+ ("就業-調查","Income Higher - Lower"):("seed","CONCIDDF","level","CONCIDDF Index","Conference Board"),
+ ("企業調查","達拉斯製造業"):("fredcsv","BACTSAMFRBDAL","level","DFEDGBA Index","Federal Reserve Bank of Dallas"),
+ ("企業調查","帝國製造業"):("fredcsv","GACDISA066MSFRBNY","level","EMPRGBCI Index","Federal Reserve Bank of New York"),
+ ("企業調查","費城製造業"):("fredcsv","GACDFSA066MSFRBPHI","level","OUTFGAF Index","Philadelphia Federal Reserve"),
+ ("企業調查","DALLAS 服務業"):("fredcsv","TSSOSBACTSAMFRBDAL","level","DSERGBCC Index","Federal Reserve Bank of Dallas"),
+ ("企業調查","NY FED 服務業"):("fredcsv","BACDINA066MNFRBNY","level","NYBLCNBA Index","Federal Reserve Bank of New York"),
+ ("企業調查","S&P製造業"):("seed","MPMIUSMA","level","MPMIUSMA Index","S&P Global"),
+ ("企業調查","S&P服務業"):("seed","MPMIUSSA","level","MPMIUSSA Index","S&P Global"),
+ ("企業調查","Kansas 製造業"):("seed","KCLSSACI","level","KCLSSACI Index","Federal Reserve Bank of Kansas City"),
+ ("企業調查","Richmond製造業"):("seed","RCHSINDX","level","RCHSINDX Index","Richmond Fed"),
+ ("企業調查","PHILI 服務業"):("seed","PNMARADI","level","PNMARADI Index","Philadelphia Federal Reserve"),
+}
+# JOLTS industries whose openings sum to the "Goods" table row / chart line.
+JOLTS_GOODS = ["Mining and Logging","Construction","Manufacturing"]
+JOLTS_SERVICES = ["Trade, Transportation, and Utilities","Information","Financial Activities",
+                  "Professional and Business Services","Education and Health Services","Leisure and Hospitality"]
+
+
 def month_key(date: str) -> str | None:
     """Return 'YYYY-MM' from a 'YYYY-MM' or 'YYYY-MM-DD' string."""
     if not date:
@@ -175,13 +235,96 @@ def merge_series(series: dict, fetched: dict[str, float]) -> tuple[int, int]:
     return added, revised
 
 
+def fetch_new_series() -> tuple[dict[str, dict[str, float]], list[str]]:
+    """Fetch the 2026-09 additions from BLS API + FRED public CSV.
+
+    Returns {'block|name' -> {YYYY-MM: value}} plus derived JOLTS Goods/Services
+    opening sums. 'seed' method entries are not fetched (kept as seeded, marked
+    non-updating on the dashboard)."""
+    out: dict[str, dict[str, float]] = {}
+    errors: list[str] = []
+    bls_ids = sorted({v[1] for v in NEW_SERIES.values() if v[0] == "bls"})
+    try:
+        bls = fus.fetch_bls(bls_ids)
+    except Exception as e:
+        bls = {}; errors.append(f"BLS(new): {e}")
+    for (block, name), (method, fid, kind, _tk, _src) in NEW_SERIES.items():
+        try:
+            if method == "bls":
+                raw = bls.get(fid, {})
+                vals = fus.transform(raw, "yoy_pct") if kind == "yoy" else raw
+            elif method == "fredcsv":
+                raw = fus.fetch_fred_csv(fid)
+                vals = {k: round(v / 1000, 3) for k, v in raw.items()} if kind == "claims_k" else raw
+            else:
+                vals = {}  # seed-only: keep existing seeded values
+            if vals:
+                out[f"{block}|{name}"] = dict(vals)
+        except Exception as e:
+            errors.append(f"{name}(new): {e}")
+    # Derived JOLTS openings sums (Goods = mining+construction+manufacturing).
+    def grp(names):
+        maps = [out.get(f"就業-職缺|{n}", {}) for n in names]
+        keys = set.intersection(*[set(m) for m in maps]) if all(maps) else set()
+        return {k: round(sum(m[k] for m in maps), 3) for k in keys}
+    g = grp(JOLTS_GOODS); sv = grp(JOLTS_SERVICES)
+    if g: out["就業-職缺|職缺Goods"] = g
+    if sv: out["就業-職缺|職缺Services"] = sv
+    return out, errors
+
+
+def _slug(text: str) -> str:
+    t = re.sub(r"\s+index$", "", str(text).strip(), flags=re.I)
+    t = re.sub(r"[^A-Za-z0-9]+", "_", t).strip("_").lower()
+    return t or "series"
+
+
+def ensure_new_shells(database: dict, index: dict) -> None:
+    """Create empty series shells (with ticker/source) for every new series so
+    the full-history fetch can populate them; existing ones are left as-is."""
+    used = {s["id"] for s in database["series"]}
+    def add(block, name, ticker, source):
+        key = f"{block}|{name}"
+        if key in index:
+            s = index[key]
+            if ticker and not s.get("ticker"): s["ticker"] = ticker
+            if source: s["source"] = source
+            return
+        base = _slug(ticker or name); sid = base; n = 2
+        while sid in used: sid = f"{base}_{n}"; n += 1
+        used.add(sid)
+        s = {"id": sid, "block": block, "name": name, "ticker": ticker,
+             "source": source, "frequency": "monthly", "new": True, "data": []}
+        database["series"].append(s); index[key] = s
+    for (block, name), (_m, _id, _k, tk, src) in NEW_SERIES.items():
+        add(block, name, tk, src)
+    add("就業-職缺", "職缺Goods", "", "Bureau of Labor Statistics")
+    add("就業-職缺", "職缺Services", "", "Bureau of Labor Statistics")
+
+
 def main() -> None:
     if not DATA_FILE.exists():
         raise SystemExit(f"{DATA_FILE} not found; build it from US_ECON.xlsx first.")
     database = json.loads(DATA_FILE.read_text(encoding="utf-8"))
     index = {f"{s['block']}|{s['name']}": s for s in database.get("series", [])}
+    ensure_new_shells(database, index)
 
     current, errors = fetch_current()
+
+    # New series: authoritative full-history replace (they are freshly sourced).
+    new_current, new_errors = fetch_new_series()
+    errors += new_errors
+    for key, vals in new_current.items():
+        s = index.get(key)
+        if not s:
+            continue
+        pts = []
+        for k, v in vals.items():
+            mk = month_key(k)
+            if mk:
+                pts.append((mk, normalize_value(v)))
+        pts.sort()
+        s["data"] = [{"date": mk + "-01", "value": v} for mk, v in pts]
 
     total_added = total_revised = 0
     unmatched = []

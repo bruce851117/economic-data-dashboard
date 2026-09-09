@@ -177,6 +177,37 @@ def transform(vals:dict[str,float], mode:str)->dict[str,float]:
         if mode=="yoy_pct" and yoy in vals and vals[yoy]: result[k]=round((vals[k]/vals[yoy]-1)*100,3)
     return result
 
+FRED_CSV_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv"
+
+def fetch_fred_csv(series_id:str, freq:str="monthly")->dict[str,float]:
+    """Fetch a FRED series via the public CSV endpoint (no API key required).
+
+    Returns {YYYY-MM: value}. Weekly/daily series are resampled to the last
+    observation of each calendar month so they align with the monthly board.
+    """
+    last=None
+    for attempt in range(4):
+        try:
+            r=SESSION.get(FRED_CSV_URL,params={"id":series_id},timeout=60); r.raise_for_status()
+            text=r.text; last=None; break
+        except Exception as e:
+            last=e
+            if attempt==3: raise
+            time.sleep(3*(attempt+1))
+    if last: raise last
+    daily={}
+    for row in text.splitlines():
+        parts=row.split(",")
+        if len(parts)!=2: continue
+        d,val=parts[0].strip(),parts[1].strip()
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}",d): continue
+        v=num(val)
+        if v is not None: daily[d]=v
+    out={}
+    for d in sorted(daily):
+        out[d[:7]]=daily[d]  # later dates overwrite -> last observation of month
+    return out
+
 def fetch_fred(series_id:str)->dict[str,float]:
     key=os.getenv("FRED_API_KEY","").strip()
     if not key: raise RuntimeError("Missing FRED_API_KEY")
