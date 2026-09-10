@@ -398,6 +398,11 @@ def fetch_sp_us_pmi() -> dict[str, dict[str, float]]:
             val = parsed[0] if parsed else None
             mk = _sp_month_key(text, parsed[1] if parsed else None)
             print(f"[S&P] {sector}: month={mk} value={val} <- {rel['url']}", flush=True)
+            if val is None:
+                _t = re.sub(r"\s+", " ", text)
+                _i = _t.lower().find("business activity")
+                print(f"[S&P DEBUG] {sector} len={len(_t)} head={_t[:400]!r}", flush=True)
+                print(f"[S&P DEBUG] {sector} bai={_t[max(0,_i-60):_i+120]!r}", flush=True)
             if mk and val is not None:
                 out[sector][mk] = val
         except Exception as e:
