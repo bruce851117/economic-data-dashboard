@@ -32,6 +32,9 @@ SKIP_PROVIDERS = {"nfib"}
 # so it is skipped until a correct series is chosen.
 SKIP_KEYS = {"物價|Core Services less Shelter"}
 
+# Dashboard only shows 2015 onward; drop everything older on every write.
+HISTORY_START = "2015-01"
+
 
 # ---------------------------------------------------------------------------
 # New series added from the 2026-09 design sheet. Sourced from stable public
@@ -338,6 +341,10 @@ def main() -> None:
         total_revised += r
         if a or r:
             print(f"[MERGE] {key}: +{a} added, {r} revised", flush=True)
+
+    # Keep only 2015 onward across every series (dashboard history floor).
+    for s in database.get("series", []):
+        s["data"] = [p for p in s.get("data", []) if str(p.get("date", ""))[:7] >= HISTORY_START]
 
     database["generated_at"] = datetime.now(timezone.utc).isoformat()
     DATA_FILE.write_text(
