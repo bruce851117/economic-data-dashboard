@@ -424,6 +424,9 @@
     function loadUs(){return getJson('./data/us_macro.json').then(d=>{usData=d;renderUs()}).catch(e=>setError('us-content',e.message))}
     const usFind=(block,name)=>(usData?.series||[]).find(s=>s.block===block&&s.name===name);
     function usMap(block,name){const s=usFind(block,name),m={};(s?.data||[]).forEach(p=>{const v=Number(p.value);if(Number.isFinite(v))m[p.date.slice(0,7)]=v});return m}
+    function usMapDaily(block,name){const s=usFind(block,name),m={};(s?.data||[]).forEach(p=>{const v=Number(p.value);if(Number.isFinite(v))m[p.date]=v});return m}
+    function usWeeklyClaims(){const ini=usMapDaily('就業-失業金人數','初領失業'),con=usMapDaily('就業-失業金人數','續領失業');const set=new Set([...Object.keys(ini),...Object.keys(con)]);let dates=[...set].sort();if(usMonths>0){const keep=Math.max(4,Math.round(usMonths*4.345));dates=dates.slice(-keep)}return{ini,con,dates}}
+    function usWeeklyClaimsTableHtml(){const wc=usWeeklyClaims();if(!wc.dates.length)return '';const cols=wc.dates.slice().reverse(),rows=[['初領失業',wc.ini],['續領失業',wc.con]];let h='<div class="us-week-head" style="margin:18px 0 6px;font-weight:800;color:#142946;font-size:13px">失業金申請（週頻率，千人）</div><div class="scroll"><table class="data-table us-table"><colgroup><col class="item">'+cols.map(()=>'<col class="month">').join('')+'</colgroup>';h+='<thead><tr><th class="item-head">項目（週）</th>'+cols.map((p,i)=>`<th class="${i===0?'latest':''}">${p.slice(5).replace('-','/')}</th>`).join('')+'</tr></thead><tbody>';rows.forEach(([nm,map])=>{const vv=cols.map(p=>map[p]),s=scale(vv);h+=`<tr><td class="item-cell"><div class="item-wrap"><span class="us-toggle-sp"></span><span>${esc(nm)}</span></div></td>`+cols.map(p=>{const v=map[p];return `<td class="value ${valid(v)?'':'missing'}" style="background:${color(v,s)}">${usFmtNum(v,{digits:0})}</td>`}).join('')+'</tr>'});return h+'</tbody></table></div>'}
     const usPrevM=mk=>{const[y,m]=mk.split('-').map(Number);return m===1?`${y-1}-12`:`${y}-${String(m-1).padStart(2,'0')}`};
     function usMomMap(map){const o={};Object.keys(map).forEach(k=>{const p=usPrevM(k);if(p in map)o[k]=Math.round((map[k]-map[p])*1000)/1000});return o}
     function usYoyMap(map){const o={};Object.keys(map).forEach(k=>{const[y,m]=k.split('-');const p=`${+y-1}-${m}`;if(p in map&&map[p])o[k]=Math.round((map[k]/map[p]-1)*1000)/10});return o}
@@ -457,10 +460,7 @@
         rows.push({key:durK,name:'平均失業Duration',level:0,parent:null,expandable:true,vals:usMap(B,'平均失業Duration'),rule:{digits:1}});
         ['5週以下','5~14','15~26','27+'].forEach(nm=>{if(usFind(B,nm)){const v=usMap(B,nm);rows.push({key:B+'|'+nm,name:nm,level:1,parent:durK,vals:v,rule:CNT,mom:true,momVals:usMomMap(v)})}});
         S.push({title:'就業 - 失業',rows});}
-      // 3) 就業-失業金人數（新）
-      {const B='就業-失業金人數',rows=[];
-        ['初領失業','續領失業'].forEach(nm=>{if(usFind(B,nm))rows.push(mrow(B,nm,CNT))});
-        if(rows.length)S.push({title:'就業 - 失業金人數',rows});}
+      // 3) 就業-失業金人數：初領/續領改為週頻率，獨立顯示於頁面最下方（見 usWeeklyClaimsTableHtml / 週頻圖）
       // 4) 就業-職缺：Indeed、JOLTS、Goods(加總)+各產業(橘框+月增減)、Quit/Layoff、失業人口、職缺/失業人口
       {const B='就業-職缺',rows=[];
         if(usFind(B,'Indeed職缺'))rows.push(mrow(B,'Indeed職缺',{digits:2}));
@@ -534,7 +534,7 @@
           h+=`<tr class="${cls}"><td class="item-cell" style="padding-left:${8+row.level*20}px"><div class="item-wrap">${tog}<span class="info-link${row.bold?' us-bold':''}" ${usRowInfo(row)}>${esc(row.name)}</span>${row.static?'<span class="us-static" title="靜態值，暫不自動更新">不更新</span>':''}</div></td>${tds}</tr>`;
         });
       });
-      const c=$('us-content');c.className='';c.innerHTML=h+'</tbody></table></div>';
+      const c=$('us-content');c.className='';c.innerHTML=h+'</tbody></table></div>'+usWeeklyClaimsTableHtml();
     }
     function renderUs(){if(!usData)return;const upd=usData.generated_at?new Intl.DateTimeFormat('zh-TW',{dateStyle:'short',timeStyle:'short',timeZone:'Asia/Taipei'}).format(new Date(usData.generated_at)):'';$('us-summary').textContent='美國經濟數據'+(upd?'（更新：'+upd+'）':'');if(usSub==='table')renderUsTable();else renderUsChart()}
     const US_COLORS=['#2563eb','#dc2626','#16a34a','#d97706','#7c3aed','#0891b2','#db2777','#65a30d'];
@@ -545,6 +545,7 @@
     function usNiceRange(arr){if(!arr.length)return[0,1];let mn=Math.min(...arr),mx=Math.max(...arr);if(mn===mx){mn-=1;mx+=1}const pad=(mx-mn)*0.1;return[mn-pad,mx+pad]}
     function usRatioMap(numerator,denominator,multiplier=100){const o={};Object.keys(numerator||{}).forEach(k=>{const n=Number(numerator[k]),d=Number(denominator?.[k]);if(Number.isFinite(n)&&Number.isFinite(d)&&d!==0)o[k]=Math.round(n/d*multiplier*1000)/1000});return o}
     function usResolveDef(d){
+      if(d.premap)return d.premap;
       if(d.compute==='plentiful-hard')return usDiffMap(usMap('就業-調查','Job Plentiful'),usMap('就業-調查','Job Hard to get'));
       if(d.compute==='ratio')return usRatioMap(usMap(d.numBlock,d.numName),usMap(d.denBlock,d.denName),d.multiplier??100);
       let m=usMap(d.block,d.name);return d.mode==='yoy'?usYoyMap(m):m
@@ -573,7 +574,7 @@
       let grid='';for(let i=0;i<5;i++){if(norm){const t=nMax-(nMax-nMin)*i/4;const yy=normY(t);grid+=`<line x1="${plotL}" y1="${yy}" x2="${plotR}" y2="${yy}" stroke="#eef2f7"/>`}else{const val=leftMax-(leftMax-leftMin)*i/4,yy=YL(val);grid+=`<line x1="${plotL}" y1="${yy}" x2="${plotR}" y2="${yy}" stroke="#eef2f7"/><text x="${mL-6}" y="${yy+4}" text-anchor="end" fill="#94a3b8" font-size="10">${usAxisFmt(val)}</text>`}}
       if(hasR){const rc=(lines.find(x=>x.axis==='R')||{}).color||'#94a3b8';for(let i=0;i<5;i++){const val=rightMax-(rightMax-rightMin)*i/4,yy=YR(val);grid+=`<text x="${plotR+8}" y="${yy+4}" text-anchor="start" fill="${rc}" font-size="10">${usAxisFmt(val)}</text>`}}
       if(hasR2){const rc=(lines.find(x=>x.axis==='R2')||{}).color||'#94a3b8';for(let i=0;i<5;i++){const val=right2Max-(right2Max-right2Min)*i/4,yy=YR2(val);grid+=`<text x="${plotR+55}" y="${yy+4}" text-anchor="start" fill="${rc}" font-size="10">${usAxisFmt(val)}</text>`}}
-      let xl='';const step=Math.max(1,Math.ceil(pers.length/6));pers.forEach((p,i)=>{if(i%step===0||i===pers.length-1)xl+=`<text x="${X(i)}" y="${h-12}" text-anchor="middle" fill="#94a3b8" font-size="10">${p.slice(2).replace('-','/')}</text>`});
+      let xl='';const step=Math.max(1,Math.ceil(pers.length/6));pers.forEach((p,i)=>{if(i%step===0||i===pers.length-1)xl+=`<text x="${X(i)}" y="${h-12}" text-anchor="middle" fill="#94a3b8" font-size="10">${(p.length>7?p.slice(5):p.slice(2)).replace('-','/')}</text>`});
       let areas='',base=pers.map(()=>0);stack.forEach(x=>{const top=pers.map((p,i)=>base[i]+(Number.isFinite(x.map[p])?x.map[p]:0));const tp=pers.map((p,i)=>`${X(i).toFixed(1)},${YL(top[i]).toFixed(1)}`),bp=pers.map((p,i)=>`${X(i).toFixed(1)},${YL(base[i]).toFixed(1)}`).reverse();areas+=`<path d="M${tp.join(' L')} L${bp.join(' L')} Z" fill="${x.color}" fill-opacity="0.45" stroke="none"/>`;base=top});
       let paths='';lines.forEach(x=>{let Y;if(norm){const vs=pers.map(p=>x.map[p]).filter(Number.isFinite);let mn=vs.length?Math.min(...vs):0,mx=vs.length?Math.max(...vs):1;if(mn===mx){mn-=1;mx+=1}Y=v=>normY((v-mn)/((mx-mn)||1))}else{Y=x.axis==='R2'?YR2:x.axis==='R'?YR:YL}paths+=`<path d="${usLinePathFrom(pers,x.map,X,Y)}" fill="none" stroke="${x.color}" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>`});
       const clipId='us-clip-'+Array.from(spec.title||'chart').reduce((a,c)=>((a*31+c.charCodeAt(0))>>>0),7).toString(36);
@@ -584,21 +585,20 @@
     function usChartLegend(spec){const hasMultiAxis=spec.type==='dual'||(spec.lines||[]).some(d=>d.axis==='R'||d.axis==='R2'),items=[];(spec.lines||[]).forEach((d,i)=>{const axis=d.axis||((spec.type==='dual'&&i===1)?'R':'L'),ax=hasMultiAxis?(axis==='R2'?'（右二）':axis==='R'?'（右一）':'（左）'):'';items.push(`<span class="info-link" ${usDefInfo(d)}><span class="sw" style="background:${US_COLORS[i%US_COLORS.length]}"></span>${esc(d.label||d.name)}${ax}</span>`)});(spec.stack||[]).forEach((d,i)=>items.push(`<span class="info-link" ${usDefInfo(d)}><span class="sw" style="background:${US_COLORS[((spec.lines||[]).length+i)%US_COLORS.length]};opacity:.55"></span>${esc(d.label||d.name)}</span>`));return items.join('')}
     function usChartSpecs(){const E='就業-就業（人數，千人）',U='就業-失業',J='就業-職缺',SV='就業-調查',W='就業-薪水',P='物價',BZ='企業調查',C='消費',L=(b,n,mode)=>({block:b,name:n,mode}),R=(b,n,db,dn,label,axis='L')=>({compute:'ratio',numBlock:b,numName:n,denBlock:db,denName:dn,label,axis});return [
       {section:'就業',charts:[
-        {title:'非農就業與產業占比',type:'multi',size:'normal',lines:[{...L(E,'非農'),label:'非農',axis:'L'},R(E,'Goods-producing Sector',E,'非農','Goods / 非農 (%)','R'),R(E,'Private Service-Providing',E,'非農','Services / 非農 (%)','R2')]},
+        {title:'非農就業與產業占比',type:'multi',size:'normal',lines:[{...L(E,'非農'),label:'非農',axis:'L'},R(E,'Goods-producing Sector',E,'非農','Goods / 非農 (%)','R'),R(E,'Private Service-Providing',E,'非農','Services / 非農 (%)','R')]},
         {title:'Temporary Help Services',type:'line',lines:[L(E,'Temporary Help Services')]},
         {title:'Multiple Jobholder',type:'line',lines:[L(U,'Multiple Jobholder')]},
         {title:'失業率（U6 / U3）',type:'multi',lines:[L(U,'U6失業率'),L(U,'失業率')]},
-        {title:'失業率 by 年齡（各自比例）',type:'multi',norm:true,size:'normal',lines:[L(U,'失業率16~24'),L(U,'失業率25~54'),L(U,'失業率55+')]},
-        {title:'失業率 by 學歷（各自比例）',type:'multi',norm:true,size:'normal',lines:[L(U,'失業率高中以下'),L(U,'失業率高中'),L(U,'失業率大學肄業 / 副學士'),L(U,'失業率大學學位以上')]},
+        {title:'失業率 by 年齡',type:'multi',size:'normal',lines:[L(U,'失業率16~24'),L(U,'失業率25~54'),L(U,'失業率55+')]},
+        {title:'失業率 by 學歷',type:'multi',size:'normal',lines:[L(U,'失業率高中以下'),L(U,'失業率高中'),L(U,'失業率大學肄業 / 副學士'),L(U,'失業率大學學位以上')]},
         {title:'勞參率',type:'line',lines:[L(U,'勞參率')]},
-        {title:'勞參率 by 年齡（各自比例）',type:'multi',norm:true,size:'normal',lines:[L(U,'勞參率16~24'),L(U,'勞參率25~54'),L(U,'勞參率55+')]},
+        {title:'勞參率 by 年齡',type:'multi',size:'normal',lines:[L(U,'勞參率16~24'),L(U,'勞參率25~54'),L(U,'勞參率55+')]},
         {title:'Labor Force',type:'line',lines:[L(U,'Labor Force')]},
         {title:'就業人口 / 失業人口（雙軸）',type:'dual',size:'normal',lines:[{...L(U,'Employed'),label:'就業人口',axis:'L'},{...L(U,'Unemployed'),label:'失業人口',axis:'R'}]},
-        {title:'失業流入（各自比例）',type:'multi',norm:true,size:'normal',lines:[L(U,'Employed to Unemployed'),L(U,'Unemployed to Unemployed'),L(U,'Not in Labor Force to Unemployed')]},
+        {title:'失業流入',type:'multi',size:'normal',lines:[L(U,'Employed to Unemployed'),L(U,'Unemployed to Unemployed'),L(U,'Not in Labor Force to Unemployed')]},
         {title:'失業原因：暫時裁員 / 永久失業（雙軸）',type:'dual',size:'normal',lines:[{...L(U,'On temporary layoff'),label:'On temporary layoff',axis:'L'},{...L(U,'Permanent Job Losers'),label:'Permanent Job Losers',axis:'R'}]},
-        {title:'初領 / 續領失業（雙軸）',type:'dual',size:'normal',lines:[{...L('就業-失業金人數','初領失業'),label:'初領失業',axis:'L'},{...L('就業-失業金人數','續領失業'),label:'續領失業',axis:'R'}]},
         {title:'平均失業Duration',type:'line',lines:[L(U,'平均失業Duration')]},
-        {title:'失業期間 by 區間（各自比例）',type:'multi',norm:true,size:'normal',lines:[L(U,'5週以下'),L(U,'5~14'),L(U,'15~26'),L(U,'27+')]},
+        {title:'失業期間 by 區間',type:'multi',size:'normal',lines:[L(U,'5週以下'),L(U,'5~14'),L(U,'15~26'),L(U,'27+')]},
         {title:'JOLTS 職缺：Goods / Services',type:'multi',size:'normal',lines:[{...L(J,'職缺Goods'),label:'Goods'},{...L(J,'職缺Services'),label:'Services'}]},
         {title:'JOLTS / Indeed 職缺（雙軸）',type:'dual',size:'normal',lines:[{...L(J,'JOLTS'),label:'JOLTS',axis:'L'},{...L(J,'Indeed職缺'),label:'Indeed',axis:'R'}]},
         {title:'Quit Rate',type:'line',lines:[L(J,'Quit Rate')]},{title:'Layoff Rate',type:'line',lines:[L(J,'Layoff Rate')]},{title:'職缺/失業人口',type:'line',lines:[L(J,'職缺/失業人口')]},
@@ -608,7 +608,7 @@
         {title:'時薪 MoM%',type:'line',size:'normal',lines:[L(W,'時薪 MoM%')]},
         {title:'Atlanta 薪資：Switcher / Stayer',type:'multi',size:'normal',lines:[L(W,'Atlanta Fed Job Switcher薪資'),L(W,'Atlanta Fed Job Stayer薪資')]},
         {title:'ADP 薪資：Changers / Stayers',type:'multi',size:'normal',lines:[L(W,'ADP Pay Job Changers薪資'),L(W,'ADP Pay Job Stayers薪資')]},
-        {title:'時薪YoY 各產業（各自比例）',type:'multi',norm:true,size:'normal',lines:[{...L(W,'時薪YoY-Goods-producing Sector'),label:'Goods'},{...L(W,'時薪YoY-Professional and Business Services'),label:'Professional'},{...L(W,'時薪YoY-Education and Health Services'),label:'Education & Health'},{...L(W,'時薪YoY-Leisure and Hospitality'),label:'Leisure'}]},
+        {title:'時薪YoY 各產業',type:'multi',size:'normal',lines:[{...L(W,'時薪YoY-Goods-producing Sector'),label:'Goods'},{...L(W,'時薪YoY-Professional and Business Services'),label:'Professional'},{...L(W,'時薪YoY-Education and Health Services'),label:'Education & Health'},{...L(W,'時薪YoY-Leisure and Hospitality'),label:'Leisure'}]},
         {title:'Atlanta 薪資四分位',type:'multi',lines:[L(W,'Atlanta Fed最低25%薪資'),L(W,'Atlanta Fed 50%薪資'),L(W,'Atlanta Fed 75%薪資'),L(W,'Atlanta Fed最高25%薪資')]}
       ]},
       {section:'物價',charts:[
@@ -620,8 +620,8 @@
       ]},
       {section:'企業調查',charts:[
         {title:'ISM PMI：製造 / 服務',type:'multi',size:'normal',lines:[L(BZ,'ISM製造'),L(BZ,'ISM服務')]},
-        {title:'服務業調查（各自比例）',type:'multi',norm:true,size:'wide',lines:[L(BZ,'ISM服務'),L(BZ,'S&P服務業'),L(BZ,'PHILI 服務業'),L(BZ,'DALLAS 服務業'),L(BZ,'NY FED 服務業')]},
-        {title:'製造業調查（各自比例）',type:'multi',norm:true,size:'wide',lines:[L(BZ,'ISM製造'),L(BZ,'S&P製造業'),L(BZ,'達拉斯製造業'),L(BZ,'Kansas 製造業'),L(BZ,'帝國製造業'),L(BZ,'Richmond製造業'),L(BZ,'費城製造業')]}
+        {title:'服務業調查',type:'multi',size:'wide',lines:[L(BZ,'ISM服務'),L(BZ,'S&P服務業'),L(BZ,'PHILI 服務業'),L(BZ,'DALLAS 服務業'),L(BZ,'NY FED 服務業')]},
+        {title:'製造業調查',type:'multi',size:'wide',lines:[L(BZ,'ISM製造'),L(BZ,'S&P製造業'),L(BZ,'達拉斯製造業'),L(BZ,'Kansas 製造業'),L(BZ,'帝國製造業'),L(BZ,'Richmond製造業'),L(BZ,'費城製造業')]}
       ]},
       {section:'消費',charts:[
         {title:'Real Personal Spending',type:'line',lines:[L(C,'Real Personal Spending')]},
@@ -652,7 +652,7 @@
         if(cross&&cx&&cy){cross.style.display='';cx.setAttribute('x1',xx);cx.setAttribute('x2',xx);const yy=anchor?anchor.yy:(meta.plotT+meta.plotB)/2;cy.setAttribute('y1',yy);cy.setAttribute('y2',yy);if(dots)dots.innerHTML=pointData.map(p=>`<circle cx="${xx}" cy="${p.yy}" r="5" fill="${p.color}" stroke="#fff" stroke-width="2" vector-effect="non-scaling-stroke"/>`).join('')}
         const rows=pointData.map(s=>{const ax=s.axis==='R2'?'（右二）':s.axis==='R'?'（右一）':(meta.dom.rMin!=null||meta.dom.r2Min!=null)?'（左）':'';return`<div><span style="color:${s.color}">●</span> ${esc(s.label)}${ax}: ${usAxisFmt(s.v)}</div>`}).join('');
         tip.style.display='block';tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY+14)+'px';
-        tip.innerHTML=`<strong>${period.replace('-','/')}</strong>${rows}`;
+        tip.innerHTML=`<strong>${period.replace(/-/g,'/')}</strong>${rows}`;
       });
       host.addEventListener('pointerleave',()=>{tip.style.display='none';host.querySelectorAll('.us-crosshair').forEach(c=>c.style.display='none')});
       host.addEventListener('wheel',e=>{const card=e.target.closest('.us-chart-card');if(!card)return;const idx=+card.dataset.idx,meta=usChartMeta[idx];if(!meta)return;e.preventDefault();const cur=usChartView[idx]||meta.dom,f=e.deltaY<0?0.82:1.22,nv={};['l','r','r2'].forEach(k=>{const mn=cur[k+'Min'],mx=cur[k+'Max'];if(mn==null)return;const c=(mn+mx)/2,half=(mx-mn)*f/2;nv[k+'Min']=c-half;nv[k+'Max']=c+half});usChartView[idx]=nv;usRerenderChart(idx)},{passive:false});
@@ -673,6 +673,8 @@
         });
         h+='</div></section>';
       });
+      // Weekly claims chart (initial/continuing) shown at the very bottom.
+      {const wc=usWeeklyClaims();if(wc.dates.length){const spec={title:'初領 / 續領失業（週）',type:'dual',size:'normal',lines:[{label:'初領失業',axis:'L',premap:wc.ini},{label:'續領失業',axis:'R',premap:wc.con}]};const meta={},svg=usChartSVG(spec,wc.dates,meta);usChartMeta[idx]=meta;const latest=wc.dates.at(-1),lval=Number.isFinite(wc.ini[latest])?usAxisFmt(wc.ini[latest]):'';const legend=`<span class="info-link"><span class="sw" style="background:${US_COLORS[0]}"></span>初領失業（左）</span><span class="info-link"><span class="sw" style="background:${US_COLORS[1]}"></span>續領失業（右）</span>`;h+=`<section class="us-chart-block"><div class="us-chart-section">失業金申請（週頻率）</div><div class="us-chart-grid"><div class="us-chart-card" data-idx="${idx}"><div class="us-chart-title"><span>初領 / 續領失業（週）</span><span class="us-chart-latest">資料至 ${latest?latest.replace(/-/g,'/'):''}　${lval}</span></div>${svg}<div class="us-chart-legend">${legend}</div></div></div></section>`;idx++}}
       $('us-chart-view').innerHTML=h;
       if(!usChartBound){bindUsCharts();usChartBound=true}
     }

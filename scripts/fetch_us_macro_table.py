@@ -204,6 +204,8 @@ def fetch_fred_csv(series_id:str, freq:str="monthly")->dict[str,float]:
         if not re.fullmatch(r"\d{4}-\d{2}-\d{2}",d): continue
         v=num(val)
         if v is not None: daily[d]=v
+    if freq=="weekly":
+        return {d:daily[d] for d in sorted(daily)}  # keep every observation date
     out={}
     for d in sorted(daily):
         out[d[:7]]=daily[d]  # later dates overwrite -> last observation of month

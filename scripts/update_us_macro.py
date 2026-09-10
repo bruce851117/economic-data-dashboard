@@ -59,8 +59,8 @@ NEW_SERIES = {
  ("就業-失業","5~14"):("bls","LNS13008756","level","USDUFVFR Index","Bureau of Labor Statistics"),
  ("就業-失業","15~26"):("bls","LNS13008876","level","USDUFITS Index","Bureau of Labor Statistics"),
  ("就業-失業","27+"):("bls","LNS13008636","level","USDUTWSV Index","Bureau of Labor Statistics"),
- ("就業-失業金人數","初領失業"):("fredcsv","ICSA","claims_k","INJCJC Index","Department of Labor"),
- ("就業-失業金人數","續領失業"):("fredcsv","CCNSA","claims_k","INJCSPNS Index","Department of Labor"),
+ ("就業-失業金人數","初領失業"):("fredweekly","ICSA","claims_k","INJCJC Index","Department of Labor"),
+ ("就業-失業金人數","續領失業"):("fredweekly","CCSA","claims_k","INJCSPNS Index","Department of Labor"),
  ("就業-職缺","Indeed職缺"):("fredcsv","IHLIDXUS","level","INDDUOIS Index","Indeed"),
  ("就業-職缺","Mining and Logging"):("bls","JTS110099000000000JOL","level","JOLTMILS Index","Bureau of Labor Statistics"),
  ("就業-職缺","Construction"):("bls","JTS230000000000000JOL","level","JOLTCONS Index","Bureau of Labor Statistics"),
@@ -265,6 +265,9 @@ def fetch_new_series() -> tuple[dict[str, dict[str, float]], list[str]]:
             elif method == "fredcsv":
                 raw = fus.fetch_fred_csv(fid)
                 vals = {k: round(v / 1000, 3) for k, v in raw.items()} if kind == "claims_k" else raw
+            elif method == "fredweekly":
+                raw = fus.fetch_fred_csv(fid, freq="weekly")
+                vals = {k: round(v / 1000, 3) for k, v in raw.items()} if kind == "claims_k" else raw
             elif method == "richmond":
                 vals = fus.fetch_richmond_mfg()
             elif method == "kc":
@@ -332,12 +335,20 @@ def main() -> None:
     # Scraped sources return only the latest month, so merge (keep history);
     # full-history sources (BLS/FRED/Richmond) authoritatively replace.
     merge_only = {f"{b}|{n}" for (b, n), v in NEW_SERIES.items() if v[0] == "sp"}
+    weekly_only = {f"{b}|{n}" for (b, n), v in NEW_SERIES.items() if v[0] == "fredweekly"}
     for key, vals in new_current.items():
         s = index.get(key)
         if not s:
             continue
         if key in merge_only:
             merge_series(s, vals)
+            continue
+        if key in weekly_only:
+            # Weekly series keep their actual observation date (YYYY-MM-DD).
+            pts = sorted((str(k), normalize_value(v)) for k, v in vals.items()
+                         if re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(k)))
+            s["data"] = [{"date": k, "value": v} for k, v in pts]
+            s["frequency"] = "weekly"
             continue
         pts = []
         for k, v in vals.items():
