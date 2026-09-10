@@ -208,6 +208,25 @@ def fetch_fred_csv(series_id:str, freq:str="monthly")->dict[str,float]:
         out[d[:7]]=daily[d]  # later dates overwrite -> last observation of month
     return out
 
+RICHMOND_MFG_URL = ("https://www.richmondfed.org/-/media/RichmondFedOrg/region_communities/"
+                    "regional_data_analysis/regional_economy/surveys_of_business_conditions/"
+                    "manufacturing/data/mfg_historicaldata.xlsx")
+
+def fetch_richmond_mfg()->dict[str,float]:
+    """Fifth District seasonally-adjusted composite manufacturing index from the
+    Richmond Fed's official historical data workbook (stable fixed URL)."""
+    r=SESSION.get(RICHMOND_MFG_URL,timeout=90); r.raise_for_status()
+    frame=pd.read_excel(io.BytesIO(r.content),sheet_name="Mfg Historical Series")
+    date_col=frame.columns[0]
+    comp=[c for c in frame.columns if str(c).strip().lower()=="sa_mfg_composite"]
+    if not comp: raise RuntimeError("Richmond workbook missing sa_mfg_composite column")
+    out={}
+    dates=pd.to_datetime(frame[date_col],errors="coerce")
+    vals=pd.to_numeric(frame[comp[0]],errors="coerce")
+    for d,v in zip(dates,vals):
+        if pd.notna(d) and pd.notna(v): out[d.strftime("%Y-%m")]=float(v)
+    return out
+
 def fetch_fred(series_id:str)->dict[str,float]:
     key=os.getenv("FRED_API_KEY","").strip()
     if not key: raise RuntimeError("Missing FRED_API_KEY")

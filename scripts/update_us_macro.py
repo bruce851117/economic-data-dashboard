@@ -87,7 +87,7 @@ NEW_SERIES = {
  ("企業調查","S&P製造業"):("seed","MPMIUSMA","level","MPMIUSMA Index","S&P Global"),
  ("企業調查","S&P服務業"):("seed","MPMIUSSA","level","MPMIUSSA Index","S&P Global"),
  ("企業調查","Kansas 製造業"):("seed","KCLSSACI","level","KCLSSACI Index","Federal Reserve Bank of Kansas City"),
- ("企業調查","Richmond製造業"):("seed","RCHSINDX","level","RCHSINDX Index","Richmond Fed"),
+ ("企業調查","Richmond製造業"):("richmond","RCHSINDX","level","RCHSINDX Index","Richmond Fed"),
  ("企業調查","PHILI 服務業"):("seed","PNMARADI","level","PNMARADI Index","Philadelphia Federal Reserve"),
 }
 # JOLTS industries whose openings sum to the "Goods" table row / chart line.
@@ -259,6 +259,8 @@ def fetch_new_series() -> tuple[dict[str, dict[str, float]], list[str]]:
             elif method == "fredcsv":
                 raw = fus.fetch_fred_csv(fid)
                 vals = {k: round(v / 1000, 3) for k, v in raw.items()} if kind == "claims_k" else raw
+            elif method == "richmond":
+                vals = fus.fetch_richmond_mfg()
             else:
                 vals = {}  # seed-only: keep existing seeded values
             if vals:
