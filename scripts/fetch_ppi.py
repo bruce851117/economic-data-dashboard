@@ -20,7 +20,7 @@ OUTPUT_PATH = (
     / "ppi.json"
 )
 
-EXPECTED_WEIGHT_TOTAL = 21.195
+EXPECTED_WEIGHT_TOTAL = 21.995
 
 
 PPI_SERIES = [
@@ -187,6 +187,31 @@ PPI_SERIES = [
         "bls_series_id": "WPS5831",
         "seasonality": "SA",
         "pce_weight": 0.002,
+    },
+    {
+        "name": (
+            "PPI for Software Publishers - "
+            "Game Software Publishing"
+        ),
+        "short_name": (
+            "Game Software Publishing"
+        ),
+        "bls_series_id": "PCU5132105132107",
+        "seasonality": "NSA",
+        "pce_weight": 0.4,
+    },
+    {
+        "name": (
+            "PPI for Hosting, ASP, and Other IT "
+            "Infrastructure Provisioning Services"
+        ),
+        "short_name": (
+            "Hosting, ASP, and Other IT "
+            "Infrastructure Provisioning Services"
+        ),
+        "bls_series_id": "PCU5182105182105",
+        "seasonality": "NSA",
+        "pce_weight": 0.4,
     },
 ]
 
@@ -1013,7 +1038,7 @@ def save_json(
             ),
             "coverage": (
                 "Selected components represent "
-                "21.195 percent of the supplied "
+                "21.995 percent of the supplied "
                 "PCE weights."
             ),
             "official_bea_forecast": False,
@@ -1165,9 +1190,9 @@ def main():
         )
     )
 
-    if len(rows) != 17:
+    if len(rows) != 19:
         raise RuntimeError(
-            "Expected 17 PPI rows, "
+            "Expected 19 PPI rows, "
             f"but generated {len(rows)} rows."
         )
 
