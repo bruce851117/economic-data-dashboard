@@ -86,7 +86,7 @@ NEW_SERIES = {
  ("企業調查","NY FED 服務業"):("fredcsv","BACDINA066MNFRBNY","level","NYBLCNBA Index","Federal Reserve Bank of New York"),
  ("企業調查","S&P製造業"):("sp","manufacturing","level","MPMIUSMA Index","S&P Global"),
  ("企業調查","S&P服務業"):("sp","services","level","MPMIUSSA Index","S&P Global"),
- ("企業調查","Kansas 製造業"):("seed","KCLSSACI","level","KCLSSACI Index","Federal Reserve Bank of Kansas City"),
+ ("企業調查","Kansas 製造業"):("kc","KCLSSACI","level","KCLSSACI Index","Federal Reserve Bank of Kansas City"),
  ("企業調查","Richmond製造業"):("richmond","RCHSINDX","level","RCHSINDX Index","Richmond Fed"),
  ("企業調查","PHILI 服務業"):("fredcsv","GARBNDIF066MSFRBPHI","level","PNMARADI Index","Philadelphia Federal Reserve"),
 }
@@ -267,6 +267,8 @@ def fetch_new_series() -> tuple[dict[str, dict[str, float]], list[str]]:
                 vals = {k: round(v / 1000, 3) for k, v in raw.items()} if kind == "claims_k" else raw
             elif method == "richmond":
                 vals = fus.fetch_richmond_mfg()
+            elif method == "kc":
+                vals = fus.fetch_kc_mfg()
             elif method == "sp":
                 vals = sp_data.get(fid, {})  # fid is 'manufacturing' | 'services'
             else:

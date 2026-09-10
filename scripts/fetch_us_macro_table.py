@@ -227,6 +227,59 @@ def fetch_richmond_mfg()->dict[str,float]:
         if pd.notna(d) and pd.notna(v): out[d.strftime("%Y-%m")]=float(v)
     return out
 
+KC_SURVEY_URL = "https://www.kansascityfed.org/surveys/manufacturing-survey/"
+
+def _excel_serial_to_date(v):
+    """Convert an Excel 1900-system serial (or a real datetime) to Timestamp."""
+    if hasattr(v, "year"):
+        return pd.Timestamp(v)
+    if isinstance(v, (int, float)) and 20000 <= v <= 80000:
+        return pd.Timestamp("1899-12-30") + pd.Timedelta(days=int(v))
+    return pd.NaT
+
+def fetch_kc_mfg() -> dict[str, float]:
+    """KC Fed Tenth-District Manufacturing seasonally-adjusted month-over-month
+    Composite Index.
+
+    The 'Historical Monthly Data' spreadsheet URL embeds the release date and
+    changes every month, so discover the current link from the survey page. The
+    page is server-rendered (the link lives in the raw HTML even though it is
+    marked up as a custom <mnt-link> element), so a plain GET + regex finds it.
+    The workbook is a transposed matrix: one row holds the month dates and the
+    'Composite Index' row holds the values across the same columns.
+    """
+    r = SESSION.get(KC_SURVEY_URL, headers=_SP_HEADERS, timeout=90); r.raise_for_status()
+    m = re.search(r"/documents/\d+/[^\"'\s]*historicalmfg\.xlsx", r.text, re.I)
+    if not m:
+        raise RuntimeError("KC manufacturing historical xlsx link not found on survey page")
+    url = urljoin(KC_SURVEY_URL, m.group(0))
+    x = SESSION.get(url, headers=_SP_HEADERS, timeout=90); x.raise_for_status()
+    frame = pd.read_excel(io.BytesIO(x.content), sheet_name=0, header=None)
+    grid = frame.values.tolist()
+    # Composite row: first cell equals "Composite Index".
+    comp_row = next((row for row in grid
+                     if row and isinstance(row[0], str)
+                     and row[0].strip().lower() == "composite index"), None)
+    if comp_row is None:
+        raise RuntimeError("KC workbook missing 'Composite Index' row")
+    # Date row: the row with the most Excel-serial/real dates.
+    date_row, best = None, 0
+    for row in grid:
+        cnt = sum(1 for c in row if pd.notna(_excel_serial_to_date(c)))
+        if cnt > best:
+            best, date_row = cnt, row
+    if date_row is None:
+        raise RuntimeError("KC workbook date row not found")
+    out = {}
+    for c in range(min(len(date_row), len(comp_row))):
+        d = _excel_serial_to_date(date_row[c])
+        v = comp_row[c]
+        if pd.notna(d) and isinstance(v, (int, float)) and pd.notna(v):
+            out[d.strftime("%Y-%m")] = float(v)
+    tail = sorted(out.items())[-3:]
+    print(f"[KC] {url} -> {len(out)} months, last3={tail}", flush=True)
+    return out
+
 SP_RELEASES_URL = "https://www.pmi.spglobal.com/Public/Release/PressReleases"
 _SP_HEADERS = {
     "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
