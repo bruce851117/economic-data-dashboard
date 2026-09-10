@@ -84,8 +84,8 @@ NEW_SERIES = {
  ("企業調查","費城製造業"):("fredcsv","GACDFSA066MSFRBPHI","level","OUTFGAF Index","Philadelphia Federal Reserve"),
  ("企業調查","DALLAS 服務業"):("fredcsv","TSSOSBACTSAMFRBDAL","level","DSERGBCC Index","Federal Reserve Bank of Dallas"),
  ("企業調查","NY FED 服務業"):("fredcsv","BACDINA066MNFRBNY","level","NYBLCNBA Index","Federal Reserve Bank of New York"),
- ("企業調查","S&P製造業"):("seed","MPMIUSMA","level","MPMIUSMA Index","S&P Global"),
- ("企業調查","S&P服務業"):("seed","MPMIUSSA","level","MPMIUSSA Index","S&P Global"),
+ ("企業調查","S&P製造業"):("sp","manufacturing","level","MPMIUSMA Index","S&P Global"),
+ ("企業調查","S&P服務業"):("sp","services","level","MPMIUSSA Index","S&P Global"),
  ("企業調查","Kansas 製造業"):("seed","KCLSSACI","level","KCLSSACI Index","Federal Reserve Bank of Kansas City"),
  ("企業調查","Richmond製造業"):("richmond","RCHSINDX","level","RCHSINDX Index","Richmond Fed"),
  ("企業調查","PHILI 服務業"):("seed","PNMARADI","level","PNMARADI Index","Philadelphia Federal Reserve"),
@@ -251,6 +251,12 @@ def fetch_new_series() -> tuple[dict[str, dict[str, float]], list[str]]:
         bls = fus.fetch_bls(bls_ids)
     except Exception as e:
         bls = {}; errors.append(f"BLS(new): {e}")
+    sp_data = {}
+    if any(v[0] == "sp" for v in NEW_SERIES.values()):
+        try:
+            sp_data = fus.fetch_sp_us_pmi()
+        except Exception as e:
+            errors.append(f"S&P US PMI: {e}")
     for (block, name), (method, fid, kind, _tk, _src) in NEW_SERIES.items():
         try:
             if method == "bls":
@@ -261,6 +267,8 @@ def fetch_new_series() -> tuple[dict[str, dict[str, float]], list[str]]:
                 vals = {k: round(v / 1000, 3) for k, v in raw.items()} if kind == "claims_k" else raw
             elif method == "richmond":
                 vals = fus.fetch_richmond_mfg()
+            elif method == "sp":
+                vals = sp_data.get(fid, {})  # fid is 'manufacturing' | 'services'
             else:
                 vals = {}  # seed-only: keep existing seeded values
             if vals:
@@ -319,9 +327,15 @@ def main() -> None:
     # New series: authoritative full-history replace (they are freshly sourced).
     new_current, new_errors = fetch_new_series()
     errors += new_errors
+    # Scraped sources return only the latest month, so merge (keep history);
+    # full-history sources (BLS/FRED/Richmond) authoritatively replace.
+    merge_only = {f"{b}|{n}" for (b, n), v in NEW_SERIES.items() if v[0] == "sp"}
     for key, vals in new_current.items():
         s = index.get(key)
         if not s:
+            continue
+        if key in merge_only:
+            merge_series(s, vals)
             continue
         pts = []
         for k, v in vals.items():

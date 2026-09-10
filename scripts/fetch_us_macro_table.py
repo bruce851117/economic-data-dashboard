@@ -227,6 +227,96 @@ def fetch_richmond_mfg()->dict[str,float]:
         if pd.notna(d) and pd.notna(v): out[d.strftime("%Y-%m")]=float(v)
     return out
 
+SP_RELEASES_URL = "https://www.pmi.spglobal.com/Public/Release/PressReleases"
+_SP_HEADERS = {
+    "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                   "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"),
+    "Accept-Language": "en-US,en;q=0.9",
+}
+_SP_MONTHS = {name.lower(): i for i, name in enumerate(calendar.month_name) if name}
+
+def _sp_release_text(content: bytes, content_type: str) -> str:
+    """Release documents are usually PDFs; fall back to HTML text."""
+    if content[:4] == b"%PDF" or "pdf" in (content_type or "").lower():
+        from pypdf import PdfReader
+        return "\n".join((pg.extract_text() or "") for pg in PdfReader(io.BytesIO(content)).pages)
+    decoded = content.decode("utf-8", "replace")
+    try:
+        from bs4 import BeautifulSoup
+        return BeautifulSoup(decoded, "html.parser").get_text("\n", strip=True)
+    except Exception:
+        return _plain_html(decoded)
+
+def _sp_discover_us() -> list[dict]:
+    """Newest-first S&P Global US Manufacturing/Services PMI release links."""
+    from bs4 import BeautifulSoup
+    r = SESSION.get(SP_RELEASES_URL, headers=_SP_HEADERS, timeout=45); r.raise_for_status()
+    soup = BeautifulSoup(r.text, "html.parser")
+    seen = set(); rel = []
+    for a in soup.find_all("a", href=True):
+        if "PressRelease" not in a["href"]:
+            continue
+        url = urljoin(SP_RELEASES_URL, a["href"])
+        if url in seen:
+            continue
+        block = a.find_parent(["div", "li", "article", "tr"]) or a.parent
+        ctx = re.sub(r"\s+", " ", block.get_text(" ", strip=True) if block else a.get_text(" ", strip=True))
+        m = re.search(r"S&P Global US (Manufacturing|Services) PMI\b", ctx, re.I)
+        if not m:
+            continue
+        seen.add(url)
+        rel.append({"url": url, "sector": m.group(1).lower()})
+    return rel
+
+def _sp_ref_month(text: str) -> str | None:
+    m = re.search(r"\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})\b",
+                  text[:6000], re.I)
+    return f"{int(m.group(2)):04d}-{_SP_MONTHS[m.group(1).lower()]:02d}" if m else None
+
+def _sp_pmi_value(text: str, sector: str) -> float | None:
+    t = re.sub(r"\s+", " ", text).replace("™", "").replace("®", "")
+    n = r"([0-9]{1,2}(?:\.[0-9]+)?)"
+    if sector == "manufacturing":
+        patterns = [
+            rf"Flash US Manufacturing PMI\s*:?\s*{n}\b",
+            rf"US Manufacturing PMI\s+(?:at|posted|registered|stood at|rose to|fell to|was)\s+{n}\b",
+            rf"S&P Global US Manufacturing PMI\s+(?:posted|registered|stood at)\s+{n}\b",
+        ]
+    else:
+        patterns = [
+            rf"Flash US Services PMI Business Activity Index\s*:?\s*{n}\b",
+            rf"US Services PMI Business Activity Index\s+(?:at|posted|registered|stood at|rose to|fell to|was)\s+{n}\b",
+            rf"At\s+{n}\s+in\s+\w+[^.]{{0,300}}?US Services PMI Business Activity Index\b",
+            rf"S&P Global US Services PMI Business Activity Index\s+(?:posted|registered|stood at)\s+{n}\b",
+        ]
+    for pattern in patterns:
+        for m in re.finditer(pattern, t, re.I):
+            v = float(m.group(1))
+            if not 20.0 <= v <= 80.0:
+                continue
+            ctx = t[max(0, m.start() - 90):m.end() + 110]
+            if v == 50.0 and re.search(r">\s*50|above\s+50|below\s+50|50\s*=\s*(?:no change|growth)", ctx, re.I):
+                continue
+            return v
+    return None
+
+def fetch_sp_us_pmi() -> dict[str, dict[str, float]]:
+    """Latest S&P Global US Manufacturing/Services PMI headline from the releases."""
+    out = {"manufacturing": {}, "services": {}}
+    for rel in _sp_discover_us():
+        sector = rel["sector"]
+        if out[sector]:  # list is newest-first; keep only the latest release
+            continue
+        try:
+            r = SESSION.get(rel["url"], headers=_SP_HEADERS, timeout=60); r.raise_for_status()
+            text = _sp_release_text(r.content, r.headers.get("content-type", ""))
+            mk = _sp_ref_month(text); val = _sp_pmi_value(text, sector)
+            if mk and val is not None:
+                out[sector][mk] = val
+        except Exception:
+            continue
+    return out
+
 def fetch_fred(series_id:str)->dict[str,float]:
     key=os.getenv("FRED_API_KEY","").strip()
     if not key: raise RuntimeError("Missing FRED_API_KEY")
