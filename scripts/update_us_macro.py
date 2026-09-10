@@ -78,7 +78,6 @@ NEW_SERIES = {
  ("就業-薪水","時薪YoY-Professional and Business Services"):("bls","CES6000000003","yoy","","Bureau of Labor Statistics"),
  ("就業-薪水","時薪YoY-Education and Health Services"):("bls","CES6500000003","yoy","","Bureau of Labor Statistics"),
  ("就業-薪水","時薪YoY-Leisure and Hospitality"):("bls","CES7000000003","yoy","","Bureau of Labor Statistics"),
- ("就業-調查","Income Higher - Lower"):("seed","CONCIDDF","level","CONCIDDF Index","Conference Board"),
  ("企業調查","達拉斯製造業"):("fredcsv","BACTSAMFRBDAL","level","DFEDGBA Index","Federal Reserve Bank of Dallas"),
  ("企業調查","帝國製造業"):("fredcsv","GACDISA066MSFRBNY","level","EMPRGBCI Index","Federal Reserve Bank of New York"),
  ("企業調查","費城製造業"):("fredcsv","GACDFSA066MSFRBPHI","level","OUTFGAF Index","Philadelphia Federal Reserve"),

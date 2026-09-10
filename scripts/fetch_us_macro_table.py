@@ -127,6 +127,7 @@ Spec("就業-調查","失去工作機率調查","NYCNJSLJ Index","Federal Reserv
 Spec("就業-調查","自願離職調查","NYCNJSJV Index","Federal Reserve Bank of New York","Mean probability of leaving a job voluntarily","nyfed_xlsx","job_separation"),
 Spec("就業-調查","Job Plentiful","CONCJOBP Index","The Conference Board","Jobs plentiful","conference","plentiful"),
 Spec("就業-調查","Job Hard to get","CONCJOBH Index","The Conference Board","Jobs hard to get","conference","hard"),
+Spec("就業-調查","Income Higher - Lower","CONCIDDF Index","The Conference Board","Income expectations diffusion (higher - lower)","conference","income"),
 Spec("消費","家戶金融狀況vs一年前","CONSPAGI Index","University of Michigan","PAGO_R_M (monthly data)","umich","pago"),
 Spec("消費","預計未來一年金融狀況","CONSEXFI Index","University of Michigan","PEXP_R_M (monthly data)","umich","pexp"),
 Spec("消費","CB","CONCCONF Index","The Conference Board","Consumer Confidence Index","conference","confidence"),
@@ -248,12 +249,24 @@ def fetch_kc_mfg() -> dict[str, float]:
     The workbook is a transposed matrix: one row holds the month dates and the
     'Composite Index' row holds the values across the same columns.
     """
-    r = SESSION.get(KC_SURVEY_URL, headers=_SP_HEADERS, timeout=90); r.raise_for_status()
+    def _kc_get(u):
+        last = None
+        for attempt in range(4):
+            try:
+                resp = SESSION.get(u, headers=_SP_HEADERS, timeout=45)
+                resp.raise_for_status()
+                return resp
+            except requests.RequestException as e:
+                last = e
+                print(f"[KC] GET retry {attempt+1}/4 {u}: {type(e).__name__}", flush=True)
+                time.sleep(3 * (attempt + 1))
+        raise RuntimeError(f"KC GET failed after retries: {u}: {last}")
+    r = _kc_get(KC_SURVEY_URL)
     m = re.search(r"/documents/\d+/[^\"'\s]*historicalmfg\.xlsx", r.text, re.I)
     if not m:
         raise RuntimeError("KC manufacturing historical xlsx link not found on survey page")
     url = urljoin(KC_SURVEY_URL, m.group(0))
-    x = SESSION.get(url, headers=_SP_HEADERS, timeout=90); x.raise_for_status()
+    x = _kc_get(url)
     frame = pd.read_excel(io.BytesIO(x.content), sheet_name=0, header=None)
     grid = frame.values.tolist()
     # Composite row: first cell equals "Composite Index".
@@ -1307,12 +1320,32 @@ def _parse_conference_board_release(html):
         flags=re.I,
     )
 
+    # Income expectations diffusion (CONCIDDF = % expecting higher - % expecting
+    # lower). The release states both shares, e.g. "17.6% of consumers expected
+    # their income to increase, ... 13.8% expected their income to decline".
+    inc_up = re.search(
+        r"(\d+(?:\.\d+)?)%\s+(?:of\s+(?:consumers|respondents|those\s+surveyed)\s+)?"
+        r"(?:expect(?:ed)?|anticipat(?:ed|e))[^.]{0,30}?incomes?\b[^.]{0,15}?"
+        r"(?:increase|rise|improve|go\s+up)",
+        text, flags=re.I,
+    )
+    inc_down = re.search(
+        r"(\d+(?:\.\d+)?)%\s+(?:of\s+(?:consumers|respondents|those\s+surveyed)\s+)?"
+        r"(?:expect(?:ed)?|anticipat(?:ed|e))[^.]{0,30}?incomes?\b[^.]{0,15}?"
+        r"(?:decline|decrease|fall|drop|go\s+down)",
+        text, flags=re.I,
+    )
+    income = {}
+    if inc_up and inc_down:
+        income = {current_period: round(float(inc_up.group(1)) - float(inc_down.group(1)), 1)}
+
     return {
         "current_period": current_period,
         "prior_period": prior_period,
         "confidence": {current_period: current_value, prior_period: prior_value},
         "plentiful": {current_period: float(plentiful.group(1))} if plentiful else {},
         "hard": {current_period: float(hard.group(1))} if hard else {},
+        "income": income,
     }
 
 def _nfib_api_period(record):
@@ -1526,6 +1559,8 @@ def fetch_page_latest()->dict[tuple[str,str],dict[str,float]]:
             out[("conference", "plentiful")] = parsed_cb["plentiful"]
         if parsed_cb["hard"]:
             out[("conference", "hard")] = parsed_cb["hard"]
+        if parsed_cb.get("income"):
+            out[("conference", "income")] = parsed_cb["income"]
         diagnostic.update({
             "parsed_reference_period": parsed_cb["current_period"],
             "parsed_prior_period": parsed_cb["prior_period"],

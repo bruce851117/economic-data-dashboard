@@ -476,7 +476,7 @@
       // 6) 就業-調查（新增 Income Higher-Lower；hiring plan 標不更新；Plentiful-Hard 展開）
       {const B='就業-調查',rows=[];
         (usData.series||[]).filter(s=>s.block===B&&!s.new&&s.name!=='Job Plentiful'&&s.name!=='Job Hard to get').forEach(s=>{const row={key:B+'|'+s.name,name:s.name,level:0,parent:null,vals:usMap(B,s.name),rule:{digits:1}};if(s.name==='失去工作機率調查'||s.name==='自願離職調查')row.group='sv-ny';if(s.name==='中小企hiring plan')row.static=true;rows.push(row)});
-        if(usFind(B,'Income Higher - Lower'))rows.push(mrow(B,'Income Higher - Lower',{digits:1},{static:true}));
+        if(usFind(B,'Income Higher - Lower'))rows.push(mrow(B,'Income Higher - Lower',{digits:1}));
         const P=usMap(B,'Job Plentiful'),H=usMap(B,'Job Hard to get'),pk=B+'|plentiful_minus_hard';
         rows.push({key:pk,name:'Plentiful - Hard to get',level:0,parent:null,expandable:true,vals:usDiffMap(P,H),rule:{digits:1}});
         rows.push({key:B+'|Job Plentiful',name:'Job Plentiful',level:1,parent:pk,vals:P,rule:{digits:1}});
