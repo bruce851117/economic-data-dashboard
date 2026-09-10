@@ -247,47 +247,104 @@ def _sp_release_text(content: bytes, content_type: str) -> str:
     except Exception:
         return _plain_html(decoded)
 
+_MON = ("January|February|March|April|May|June|July|August|"
+        "September|October|November|December")
+
+def _sp_get(url: str, tries: int = 6, timeout: int = 60) -> requests.Response:
+    """GET an S&P page, retrying the warm-up challenge.
+
+    The releases index (and occasionally a release) answers the first
+    request(s) with HTTP 202 and an empty body while it renders server-side,
+    then serves 200 with real content on a retry. raise_for_status() treats
+    202 as success, so we must retry explicitly. The shared SESSION carries
+    any challenge cookie across attempts.
+    """
+    last = None
+    for attempt in range(tries):
+        try:
+            r = SESSION.get(url, headers=_SP_HEADERS, timeout=timeout)
+        except requests.RequestException as e:
+            print(f"[S&P] GET error {attempt+1}/{tries} {url}: {type(e).__name__}", flush=True)
+            time.sleep(2 * (attempt + 1))
+            continue
+        last = r
+        body = r.content or b""
+        # 202 = still warming up; a 200 with an empty body is the same signal.
+        if r.status_code == 200 and len(body) > 512:
+            return r
+        print(f"[S&P] warm-up {attempt+1}/{tries} status={r.status_code} bytes={len(body)} {url}", flush=True)
+        time.sleep(2 * (attempt + 1))
+    if last is not None:
+        return last
+    raise RuntimeError(f"S&P GET failed: {url}")
+
 def _sp_discover_us() -> list[dict]:
-    """Newest-first S&P Global US Manufacturing/Services PMI release links."""
+    """Newest-first S&P Global US Manufacturing/Services PMI release links.
+
+    Reads the anchor text, its parent card, and preceding siblings, because the
+    server-rendered list places the release title inconsistently relative to the
+    link. Falls back to a US-without-brand match if S&P retitles the release.
+    """
     from bs4 import BeautifulSoup
-    r = SESSION.get(SP_RELEASES_URL, headers=_SP_HEADERS, timeout=45); r.raise_for_status()
+    r = _sp_get(SP_RELEASES_URL)
     soup = BeautifulSoup(r.text, "html.parser")
     seen = set(); rel = []
     for a in soup.find_all("a", href=True):
-        if "PressRelease" not in a["href"]:
+        if "/Public/Home/PressRelease/" not in a["href"]:
             continue
         url = urljoin(SP_RELEASES_URL, a["href"])
         if url in seen:
             continue
-        block = a.find_parent(["div", "li", "article", "tr"]) or a.parent
-        ctx = re.sub(r"\s+", " ", block.get_text(" ", strip=True) if block else a.get_text(" ", strip=True))
-        m = re.search(r"S&P Global US (Manufacturing|Services) PMI\b", ctx, re.I)
+        parts = [a.get_text(" ", strip=True)]
+        block = a.find_parent(["div", "li", "article", "tr"])
+        if block:
+            parts.append(block.get_text(" ", strip=True))
+        prev = a.find_previous(string=True)
+        for _ in range(6):  # walk back over a few text nodes for the title
+            if prev is None:
+                break
+            parts.append(str(prev))
+            prev = prev.find_previous(string=True) if hasattr(prev, "find_previous") else None
+        ctx = re.sub(r"\s+", " ", " ".join(p for p in parts if p))
+        m = re.search(r"S&P Global US (Manufacturing|Services) PMI\b", ctx, re.I) \
+            or re.search(r"\bUS (Manufacturing|Services) PMI\b", ctx, re.I)
         if not m:
             continue
         seen.add(url)
         rel.append({"url": url, "sector": m.group(1).lower()})
+    print(f"[S&P] discovered releases: {len(rel)} "
+          f"(mfg={sum(x['sector']=='manufacturing' for x in rel)}, "
+          f"svc={sum(x['sector']=='services' for x in rel)})", flush=True)
     return rel
 
 def _sp_ref_month(text: str) -> str | None:
-    m = re.search(r"\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})\b",
-                  text[:6000], re.I)
+    m = re.search(rf"\b({_MON})\s+(20\d{{2}})\b", text[:6000], re.I)
     return f"{int(m.group(2)):04d}-{_SP_MONTHS[m.group(1).lower()]:02d}" if m else None
 
 def _sp_pmi_value(text: str, sector: str) -> float | None:
     t = re.sub(r"\s+", " ", text).replace("™", "").replace("®", "")
     n = r"([0-9]{1,2}(?:\.[0-9]+)?)"
+    at = r"(?:at|to|posted|registered|recorded|stood at|rose to|fell to|climbed to|"
+    at += r"dropped to|was(?:\s+unchanged\s+at)?|remained\s+(?:at|unchanged\s+at)|of)"
     if sector == "manufacturing":
         patterns = [
+            # Flash headline table: "Flash US Manufacturing PMI: 53.0"
             rf"Flash US Manufacturing PMI\s*:?\s*{n}\b",
-            rf"US Manufacturing PMI\s+(?:at|posted|registered|stood at|rose to|fell to|was)\s+{n}\b",
-            rf"S&P Global US Manufacturing PMI\s+(?:posted|registered|stood at)\s+{n}\b",
+            # Narrative final release: "...(PMI) was unchanged at 53.9 in August"
+            rf"US Manufacturing (?:Purchasing Managers['’]?\s*Index\s*\(\s*PMI\s*\)|PMI)\s+{at}\s+{n}\s+in\s+(?:{_MON})\b",
+            # Bare "Manufacturing PMI at 53.9 in August" (some layouts drop "US")
+            rf"\bManufacturing PMI\s+{at}\s+{n}\s+in\s+(?:{_MON})\b",
+            rf"US Manufacturing PMI\s+{at}\s+{n}\b",
         ]
     else:
         patterns = [
             rf"Flash US Services PMI Business Activity Index\s*:?\s*{n}\b",
-            rf"US Services PMI Business Activity Index\s+(?:at|posted|registered|stood at|rose to|fell to|was)\s+{n}\b",
-            rf"At\s+{n}\s+in\s+\w+[^.]{{0,300}}?US Services PMI Business Activity Index\b",
-            rf"S&P Global US Services PMI Business Activity Index\s+(?:posted|registered|stood at)\s+{n}\b",
+            # "...Services PMI Business Activity Index posted 56.5 in August"
+            rf"US Services PMI Business Activity Index\s+{at}\s+{n}\s+in\s+(?:{_MON})\b",
+            rf"US Services PMI Business Activity Index\s+{at}\s+{n}\b",
+            # Value-first: "At 56.5 in August, ... Services PMI Business Activity Index"
+            rf"At\s+{n}\s+in\s+(?:{_MON}),.{{0,300}}?US Services PMI Business Activity Index\b",
+            rf"\bServices PMI Business Activity Index\s*:?\s*{n}\s+in\s+(?:{_MON})\b",
         ]
     for pattern in patterns:
         for m in re.finditer(pattern, t, re.I):
@@ -295,7 +352,8 @@ def _sp_pmi_value(text: str, sector: str) -> float | None:
             if not 20.0 <= v <= 80.0:
                 continue
             ctx = t[max(0, m.start() - 90):m.end() + 110]
-            if v == 50.0 and re.search(r">\s*50|above\s+50|below\s+50|50\s*=\s*(?:no change|growth)", ctx, re.I):
+            # Never accept the 50 no-change threshold from legend/explainer text.
+            if v == 50.0 and re.search(r">\s*50|above\s+50|below\s+50|50\s*=\s*(?:no change|growth|improvement)", ctx, re.I):
                 continue
             return v
     return None
@@ -308,12 +366,14 @@ def fetch_sp_us_pmi() -> dict[str, dict[str, float]]:
         if out[sector]:  # list is newest-first; keep only the latest release
             continue
         try:
-            r = SESSION.get(rel["url"], headers=_SP_HEADERS, timeout=60); r.raise_for_status()
+            r = _sp_get(rel["url"])
             text = _sp_release_text(r.content, r.headers.get("content-type", ""))
             mk = _sp_ref_month(text); val = _sp_pmi_value(text, sector)
+            print(f"[S&P] {sector}: month={mk} value={val} <- {rel['url']}", flush=True)
             if mk and val is not None:
                 out[sector][mk] = val
-        except Exception:
+        except Exception as e:
+            print(f"[S&P] {sector} fetch failed: {type(e).__name__}: {e}", flush=True)
             continue
     return out
 
