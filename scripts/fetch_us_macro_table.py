@@ -250,16 +250,18 @@ def fetch_kc_mfg() -> dict[str, float]:
     'Composite Index' row holds the values across the same columns.
     """
     def _kc_get(u):
+        # kansascityfed.org frequently hangs for CI/datacenter IPs; fail fast so
+        # a run isn't stalled. On failure the caller keeps existing history.
         last = None
-        for attempt in range(4):
+        for attempt in range(2):
             try:
-                resp = SESSION.get(u, headers=_SP_HEADERS, timeout=45)
+                resp = SESSION.get(u, headers=_SP_HEADERS, timeout=20)
                 resp.raise_for_status()
                 return resp
             except requests.RequestException as e:
                 last = e
-                print(f"[KC] GET retry {attempt+1}/4 {u}: {type(e).__name__}", flush=True)
-                time.sleep(3 * (attempt + 1))
+                print(f"[KC] GET retry {attempt+1}/2 {u}: {type(e).__name__}", flush=True)
+                time.sleep(3)
         raise RuntimeError(f"KC GET failed after retries: {u}: {last}")
     r = _kc_get(KC_SURVEY_URL)
     m = re.search(r"/documents/\d+/[^\"'\s]*historicalmfg\.xlsx", r.text, re.I)
