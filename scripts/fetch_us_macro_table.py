@@ -250,7 +250,7 @@ def _sp_release_text(content: bytes, content_type: str) -> str:
 _MON = ("January|February|March|April|May|June|July|August|"
         "September|October|November|December")
 
-def _sp_get(url: str, tries: int = 6, timeout: int = 60) -> requests.Response:
+def _sp_get(url: str, tries: int = 12, timeout: int = 60) -> requests.Response:
     """GET an S&P page, retrying the warm-up challenge.
 
     The releases index (and occasionally a release) answers the first
@@ -273,7 +273,7 @@ def _sp_get(url: str, tries: int = 6, timeout: int = 60) -> requests.Response:
         if r.status_code == 200 and len(body) > 512:
             return r
         print(f"[S&P] warm-up {attempt+1}/{tries} status={r.status_code} bytes={len(body)} {url}", flush=True)
-        time.sleep(2 * (attempt + 1))
+        time.sleep(min(2 * (attempt + 1), 8))
     if last is not None:
         return last
     raise RuntimeError(f"S&P GET failed: {url}")
@@ -317,11 +317,34 @@ def _sp_discover_us() -> list[dict]:
           f"svc={sum(x['sector']=='services' for x in rel)})", flush=True)
     return rel
 
-def _sp_ref_month(text: str) -> str | None:
-    m = re.search(rf"\b({_MON})\s+(20\d{{2}})\b", text[:6000], re.I)
-    return f"{int(m.group(2)):04d}-{_SP_MONTHS[m.group(1).lower()]:02d}" if m else None
+def _sp_month_key(text: str, month_name: str | None) -> str | None:
+    """Resolve the reference month key (YYYY-MM).
 
-def _sp_pmi_value(text: str, sector: str) -> float | None:
+    Prefer the month named alongside the headline value (e.g. "...53.9 in
+    August"), pairing it with the matching "<Month> <Year>" in the report so
+    the release-date month (the report is published the *following* month) is
+    never mistaken for the reference period. Falls back to the last month-year
+    seen in the header block if the value sentence had no month.
+    """
+    if month_name:
+        mn = month_name.lower()
+        m = re.search(rf"\b{month_name}\s+(20\d{{2}})\b", text[:6000], re.I)
+        if m:
+            return f"{int(m.group(1)):04d}-{_SP_MONTHS[mn]:02d}"
+        # Month named but no adjacent year: infer year from any year token.
+        y = re.search(r"\b(20\d{2})\b", text[:6000])
+        if y:
+            return f"{int(y.group(1)):04d}-{_SP_MONTHS[mn]:02d}"
+    # No month by the value: the reference month is the last "<Month> <Year>"
+    # in the header (after the embargo/release date), before the narrative.
+    matches = list(re.finditer(rf"\b({_MON})\s+(20\d{{2}})\b", text[:1600], re.I))
+    if matches:
+        g = matches[-1]
+        return f"{int(g.group(2)):04d}-{_SP_MONTHS[g.group(1).lower()]:02d}"
+    return None
+
+def _sp_pmi_value(text: str, sector: str) -> tuple[float, str | None] | None:
+    """Return (headline value, month name from the value sentence) or None."""
     t = re.sub(r"\s+", " ", text).replace("™", "").replace("®", "")
     n = r"([0-9]{1,2}(?:\.[0-9]+)?)"
     at = r"(?:at|to|posted|registered|recorded|stood at|rose to|fell to|climbed to|"
@@ -355,7 +378,10 @@ def _sp_pmi_value(text: str, sector: str) -> float | None:
             # Never accept the 50 no-change threshold from legend/explainer text.
             if v == 50.0 and re.search(r">\s*50|above\s+50|below\s+50|50\s*=\s*(?:no change|growth|improvement)", ctx, re.I):
                 continue
-            return v
+            # The reference month sits next to the value ("...53.9 in August"
+            # or "At 56.5 in August, ...").
+            mon = re.search(rf"\bin\s+({_MON})\b", ctx, re.I)
+            return v, (mon.group(1) if mon else None)
     return None
 
 def fetch_sp_us_pmi() -> dict[str, dict[str, float]]:
@@ -368,7 +394,9 @@ def fetch_sp_us_pmi() -> dict[str, dict[str, float]]:
         try:
             r = _sp_get(rel["url"])
             text = _sp_release_text(r.content, r.headers.get("content-type", ""))
-            mk = _sp_ref_month(text); val = _sp_pmi_value(text, sector)
+            parsed = _sp_pmi_value(text, sector)
+            val = parsed[0] if parsed else None
+            mk = _sp_month_key(text, parsed[1] if parsed else None)
             print(f"[S&P] {sector}: month={mk} value={val} <- {rel['url']}", flush=True)
             if mk and val is not None:
                 out[sector][mk] = val
