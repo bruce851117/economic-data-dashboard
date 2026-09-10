@@ -5,8 +5,8 @@
   "source_url": "https://www.bls.gov/ppi/",
   "title": "Selected Producer Price Indexes",
   "description": "Monthly percent changes calculated from selected BLS PPI index levels.",
-  "updated_at_utc": "2026-08-13T12:32:11.842780+00:00",
-  "data_changed": false,
+  "updated_at_utc": "2026-09-10T12:04:30.270920+00:00",
+  "data_changed": true,
   "default_months": 6,
   "available_filter_options": [
     3,
@@ -14,12 +14,12 @@
     12
   ],
   "period_count": 12,
-  "row_count": 17,
-  "pce_weight_total": 21.195,
+  "row_count": 19,
+  "pce_weight_total": 21.995,
   "pce_impact_method": {
     "formula": "sum(PPI monthly percent change x PCE weight / 100)",
     "unit": "percentage_point",
-    "coverage": "Selected components represent 21.195 percent of the supplied PCE weights.",
+    "coverage": "Selected components represent 21.995 percent of the supplied PCE weights.",
     "official_bea_forecast": false,
     "caveat": "This is a mechanical proxy based on selected PPI components, not an official BEA Core PCE estimate."
   },
@@ -761,42 +761,118 @@
         141.425,
         142.7
       ]
+    },
+    {
+      "order": 17,
+      "name": "PPI for Software Publishers - Game Software Publishing",
+      "short_name": "Game Software Publishing",
+      "bls_series_id": "PCU5132105132107",
+      "seasonality": "NSA",
+      "pce_weight": 0.4,
+      "available": true,
+      "series_title": "PPI industry data for Software publishers-Game software publishing, not seasonally adjusted",
+      "values": [
+        -1.757192,
+        0.0,
+        -0.096005,
+        0.081474,
+        5.916672,
+        1.855483,
+        -5.748505,
+        4.44449,
+        -0.736089,
+        1.396961,
+        -6.433565,
+        -1.655066
+      ],
+      "index_values": [
+        95.828,
+        95.828,
+        95.736,
+        95.814,
+        101.483,
+        103.366,
+        97.424,
+        101.754,
+        101.005,
+        102.416,
+        95.827,
+        94.241
+      ]
+    },
+    {
+      "order": 18,
+      "name": "PPI for Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+      "short_name": "Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+      "bls_series_id": "PCU5182105182105",
+      "seasonality": "NSA",
+      "pce_weight": 0.4,
+      "available": true,
+      "series_title": "PPI industry data for Data processing, hosting and related services-Hosting, ASP, and other IT infrastructure provisioning services, not seasonally adjusted",
+      "values": [
+        -2.920747,
+        -1.578424,
+        0.862111,
+        -2.075918,
+        0.735215,
+        0.278194,
+        -0.2456,
+        -1.04044,
+        -0.574456,
+        1.258635,
+        0.43595,
+        0.067847
+      ],
+      "index_values": [
+        124.808,
+        122.838,
+        123.897,
+        121.325,
+        122.217,
+        122.557,
+        122.256,
+        120.984,
+        120.289,
+        121.803,
+        122.334,
+        122.417
+      ]
     }
   ],
   "pce_impact_row": {
-    "order": 17,
+    "order": 19,
     "name": "Estimated Impact on Core PCE",
     "short_name": "Estimated Impact on Core PCE",
     "type": "derived",
     "badge": "PCE Impact",
     "bls_series_id": null,
     "seasonality": "Mixed",
-    "pce_weight": 21.195,
+    "pce_weight": 21.995,
     "available": true,
     "series_title": "Weighted impact estimated from selected PPI components",
     "values": [
-      0.055526,
-      0.018335,
-      0.274565,
-      0.044589,
-      0.006139,
-      0.243448,
-      0.044769,
-      0.088783,
-      0.011025,
-      0.107148,
-      0.085484,
-      0.071118
+      0.036815,
+      0.012022,
+      0.27763,
+      0.036611,
+      0.032747,
+      0.251983,
+      0.020793,
+      0.102399,
+      0.005783,
+      0.117771,
+      0.061493,
+      0.064769
     ],
     "unit": "percentage_point",
     "calculation_details": [
       {
         "period": "2025-08",
-        "result": 0.055526,
+        "result": 0.036815,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 21.195,
-        "total_weight": 21.195,
+        "available_weight": 21.995,
+        "total_weight": 21.995,
         "components": [
           {
             "name": "PPI for Hospitals",
@@ -933,16 +1009,32 @@
             "ppi_mom": 1.069878,
             "pce_weight": 0.002,
             "contribution": 2.14e-05
+          },
+          {
+            "name": "PPI for Software Publishers - Game Software Publishing",
+            "series_id": "PCU5132105132107",
+            "seasonality": "NSA",
+            "ppi_mom": -1.757192,
+            "pce_weight": 0.4,
+            "contribution": -0.00702877
+          },
+          {
+            "name": "PPI for Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+            "series_id": "PCU5182105182105",
+            "seasonality": "NSA",
+            "ppi_mom": -2.920747,
+            "pce_weight": 0.4,
+            "contribution": -0.01168299
           }
         ]
       },
       {
         "period": "2025-09",
-        "result": 0.018335,
+        "result": 0.012022,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 21.195,
-        "total_weight": 21.195,
+        "available_weight": 21.995,
+        "total_weight": 21.995,
         "components": [
           {
             "name": "PPI for Hospitals",
@@ -1079,16 +1171,32 @@
             "ppi_mom": -0.656421,
             "pce_weight": 0.002,
             "contribution": -1.313e-05
+          },
+          {
+            "name": "PPI for Software Publishers - Game Software Publishing",
+            "series_id": "PCU5132105132107",
+            "seasonality": "NSA",
+            "ppi_mom": 0.0,
+            "pce_weight": 0.4,
+            "contribution": 0.0
+          },
+          {
+            "name": "PPI for Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+            "series_id": "PCU5182105182105",
+            "seasonality": "NSA",
+            "ppi_mom": -1.578424,
+            "pce_weight": 0.4,
+            "contribution": -0.0063137
           }
         ]
       },
       {
         "period": "2025-10",
-        "result": 0.274565,
+        "result": 0.27763,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 21.195,
-        "total_weight": 21.195,
+        "available_weight": 21.995,
+        "total_weight": 21.995,
         "components": [
           {
             "name": "PPI for Hospitals",
@@ -1225,16 +1333,32 @@
             "ppi_mom": 1.593113,
             "pce_weight": 0.002,
             "contribution": 3.186e-05
+          },
+          {
+            "name": "PPI for Software Publishers - Game Software Publishing",
+            "series_id": "PCU5132105132107",
+            "seasonality": "NSA",
+            "ppi_mom": -0.096005,
+            "pce_weight": 0.4,
+            "contribution": -0.00038402
+          },
+          {
+            "name": "PPI for Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+            "series_id": "PCU5182105182105",
+            "seasonality": "NSA",
+            "ppi_mom": 0.862111,
+            "pce_weight": 0.4,
+            "contribution": 0.00344844
           }
         ]
       },
       {
         "period": "2025-11",
-        "result": 0.044589,
+        "result": 0.036611,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 21.195,
-        "total_weight": 21.195,
+        "available_weight": 21.995,
+        "total_weight": 21.995,
         "components": [
           {
             "name": "PPI for Hospitals",
@@ -1371,16 +1495,32 @@
             "ppi_mom": -0.506108,
             "pce_weight": 0.002,
             "contribution": -1.012e-05
+          },
+          {
+            "name": "PPI for Software Publishers - Game Software Publishing",
+            "series_id": "PCU5132105132107",
+            "seasonality": "NSA",
+            "ppi_mom": 0.081474,
+            "pce_weight": 0.4,
+            "contribution": 0.0003259
+          },
+          {
+            "name": "PPI for Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+            "series_id": "PCU5182105182105",
+            "seasonality": "NSA",
+            "ppi_mom": -2.075918,
+            "pce_weight": 0.4,
+            "contribution": -0.00830367
           }
         ]
       },
       {
         "period": "2025-12",
-        "result": 0.006139,
+        "result": 0.032747,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 21.195,
-        "total_weight": 21.195,
+        "available_weight": 21.995,
+        "total_weight": 21.995,
         "components": [
           {
             "name": "PPI for Hospitals",
@@ -1517,16 +1657,32 @@
             "ppi_mom": -0.180358,
             "pce_weight": 0.002,
             "contribution": -3.61e-06
+          },
+          {
+            "name": "PPI for Software Publishers - Game Software Publishing",
+            "series_id": "PCU5132105132107",
+            "seasonality": "NSA",
+            "ppi_mom": 5.916672,
+            "pce_weight": 0.4,
+            "contribution": 0.02366669
+          },
+          {
+            "name": "PPI for Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+            "series_id": "PCU5182105182105",
+            "seasonality": "NSA",
+            "ppi_mom": 0.735215,
+            "pce_weight": 0.4,
+            "contribution": 0.00294086
           }
         ]
       },
       {
         "period": "2026-01",
-        "result": 0.243448,
+        "result": 0.251983,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 21.195,
-        "total_weight": 21.195,
+        "available_weight": 21.995,
+        "total_weight": 21.995,
         "components": [
           {
             "name": "PPI for Hospitals",
@@ -1663,16 +1819,32 @@
             "ppi_mom": 4.301012,
             "pce_weight": 0.002,
             "contribution": 8.602e-05
+          },
+          {
+            "name": "PPI for Software Publishers - Game Software Publishing",
+            "series_id": "PCU5132105132107",
+            "seasonality": "NSA",
+            "ppi_mom": 1.855483,
+            "pce_weight": 0.4,
+            "contribution": 0.00742193
+          },
+          {
+            "name": "PPI for Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+            "series_id": "PCU5182105182105",
+            "seasonality": "NSA",
+            "ppi_mom": 0.278194,
+            "pce_weight": 0.4,
+            "contribution": 0.00111278
           }
         ]
       },
       {
         "period": "2026-02",
-        "result": 0.044769,
+        "result": 0.020793,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 21.195,
-        "total_weight": 21.195,
+        "available_weight": 21.995,
+        "total_weight": 21.995,
         "components": [
           {
             "name": "PPI for Hospitals",
@@ -1809,16 +1981,32 @@
             "ppi_mom": -2.565263,
             "pce_weight": 0.002,
             "contribution": -5.131e-05
+          },
+          {
+            "name": "PPI for Software Publishers - Game Software Publishing",
+            "series_id": "PCU5132105132107",
+            "seasonality": "NSA",
+            "ppi_mom": -5.748505,
+            "pce_weight": 0.4,
+            "contribution": -0.02299402
+          },
+          {
+            "name": "PPI for Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+            "series_id": "PCU5182105182105",
+            "seasonality": "NSA",
+            "ppi_mom": -0.2456,
+            "pce_weight": 0.4,
+            "contribution": -0.0009824
           }
         ]
       },
       {
         "period": "2026-03",
-        "result": 0.088783,
+        "result": 0.102399,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 21.195,
-        "total_weight": 21.195,
+        "available_weight": 21.995,
+        "total_weight": 21.995,
         "components": [
           {
             "name": "PPI for Hospitals",
@@ -1955,16 +2143,32 @@
             "ppi_mom": 3.395501,
             "pce_weight": 0.002,
             "contribution": 6.791e-05
+          },
+          {
+            "name": "PPI for Software Publishers - Game Software Publishing",
+            "series_id": "PCU5132105132107",
+            "seasonality": "NSA",
+            "ppi_mom": 4.44449,
+            "pce_weight": 0.4,
+            "contribution": 0.01777796
+          },
+          {
+            "name": "PPI for Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+            "series_id": "PCU5182105182105",
+            "seasonality": "NSA",
+            "ppi_mom": -1.04044,
+            "pce_weight": 0.4,
+            "contribution": -0.00416176
           }
         ]
       },
       {
         "period": "2026-04",
-        "result": 0.011025,
+        "result": 0.005783,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 21.195,
-        "total_weight": 21.195,
+        "available_weight": 21.995,
+        "total_weight": 21.995,
         "components": [
           {
             "name": "PPI for Hospitals",
@@ -2101,16 +2305,32 @@
             "ppi_mom": -1.532156,
             "pce_weight": 0.002,
             "contribution": -3.064e-05
+          },
+          {
+            "name": "PPI for Software Publishers - Game Software Publishing",
+            "series_id": "PCU5132105132107",
+            "seasonality": "NSA",
+            "ppi_mom": -0.736089,
+            "pce_weight": 0.4,
+            "contribution": -0.00294436
+          },
+          {
+            "name": "PPI for Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+            "series_id": "PCU5182105182105",
+            "seasonality": "NSA",
+            "ppi_mom": -0.574456,
+            "pce_weight": 0.4,
+            "contribution": -0.00229782
           }
         ]
       },
       {
         "period": "2026-05",
-        "result": 0.107148,
+        "result": 0.117771,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 21.195,
-        "total_weight": 21.195,
+        "available_weight": 21.995,
+        "total_weight": 21.995,
         "components": [
           {
             "name": "PPI for Hospitals",
@@ -2247,16 +2467,32 @@
             "ppi_mom": -2.219593,
             "pce_weight": 0.002,
             "contribution": -4.439e-05
+          },
+          {
+            "name": "PPI for Software Publishers - Game Software Publishing",
+            "series_id": "PCU5132105132107",
+            "seasonality": "NSA",
+            "ppi_mom": 1.396961,
+            "pce_weight": 0.4,
+            "contribution": 0.00558784
+          },
+          {
+            "name": "PPI for Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+            "series_id": "PCU5182105182105",
+            "seasonality": "NSA",
+            "ppi_mom": 1.258635,
+            "pce_weight": 0.4,
+            "contribution": 0.00503454
           }
         ]
       },
       {
         "period": "2026-06",
-        "result": 0.085484,
+        "result": 0.061493,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 21.195,
-        "total_weight": 21.195,
+        "available_weight": 21.995,
+        "total_weight": 21.995,
         "components": [
           {
             "name": "PPI for Hospitals",
@@ -2393,16 +2629,32 @@
             "ppi_mom": 3.092971,
             "pce_weight": 0.002,
             "contribution": 6.186e-05
+          },
+          {
+            "name": "PPI for Software Publishers - Game Software Publishing",
+            "series_id": "PCU5132105132107",
+            "seasonality": "NSA",
+            "ppi_mom": -6.433565,
+            "pce_weight": 0.4,
+            "contribution": -0.02573426
+          },
+          {
+            "name": "PPI for Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+            "series_id": "PCU5182105182105",
+            "seasonality": "NSA",
+            "ppi_mom": 0.43595,
+            "pce_weight": 0.4,
+            "contribution": 0.0017438
           }
         ]
       },
       {
         "period": "2026-07",
-        "result": 0.071118,
+        "result": 0.064769,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 21.195,
-        "total_weight": 21.195,
+        "available_weight": 21.995,
+        "total_weight": 21.995,
         "components": [
           {
             "name": "PPI for Hospitals",
@@ -2539,6 +2791,22 @@
             "ppi_mom": 0.901538,
             "pce_weight": 0.002,
             "contribution": 1.803e-05
+          },
+          {
+            "name": "PPI for Software Publishers - Game Software Publishing",
+            "series_id": "PCU5132105132107",
+            "seasonality": "NSA",
+            "ppi_mom": -1.655066,
+            "pce_weight": 0.4,
+            "contribution": -0.00662026
+          },
+          {
+            "name": "PPI for Hosting, ASP, and Other IT Infrastructure Provisioning Services",
+            "series_id": "PCU5182105182105",
+            "seasonality": "NSA",
+            "ppi_mom": 0.067847,
+            "pce_weight": 0.4,
+            "contribution": 0.00027139
           }
         ]
       }
