@@ -360,14 +360,18 @@ def _sp_pmi_value(text: str, sector: str) -> tuple[float, str | None] | None:
             rf"US Manufacturing PMI\s+{at}\s+{n}\b",
         ]
     else:
+        # pypdf may drop or glue the "PMI(R)" superscript before "Business"
+        # ("PMI Business" / "PMIBusiness" / "Business"), so treat PMI as an
+        # optional, space-flexible token inside the index name.
+        bai = r"Services\s*(?:PMI)?\s*Business Activity Index"
         patterns = [
-            rf"Flash US Services PMI Business Activity Index\s*:?\s*{n}\b",
+            rf"Flash US {bai}\s*:?\s*{n}\b",
             # "...Services PMI Business Activity Index posted 56.5 in August"
-            rf"US Services PMI Business Activity Index\s+{at}\s+{n}\s+in\s+(?:{_MON})\b",
-            rf"US Services PMI Business Activity Index\s+{at}\s+{n}\b",
-            # Value-first: "At 56.5 in August, ... Services PMI Business Activity Index"
-            rf"At\s+{n}\s+in\s+(?:{_MON}),.{{0,300}}?US Services PMI Business Activity Index\b",
-            rf"\bServices PMI Business Activity Index\s*:?\s*{n}\s+in\s+(?:{_MON})\b",
+            rf"US {bai}\s+{at}\s+{n}\s+in\s+(?:{_MON})\b",
+            rf"US {bai}\s+{at}\s+{n}\b",
+            # Value-first: "At 56.5 in August, ... Services Business Activity Index"
+            rf"At\s+{n}\s+in\s+(?:{_MON}),.{{0,300}}?US {bai}\b",
+            rf"\b{bai}\s*:?\s*{n}\s+in\s+(?:{_MON})\b",
         ]
     for pattern in patterns:
         for m in re.finditer(pattern, t, re.I):
@@ -399,10 +403,11 @@ def fetch_sp_us_pmi() -> dict[str, dict[str, float]]:
             mk = _sp_month_key(text, parsed[1] if parsed else None)
             print(f"[S&P] {sector}: month={mk} value={val} <- {rel['url']}", flush=True)
             if val is None:
-                _t = re.sub(r"\s+", " ", text)
-                _i = _t.lower().find("business activity")
-                print(f"[S&P DEBUG] {sector} len={len(_t)} head={_t[:400]!r}", flush=True)
-                print(f"[S&P DEBUG] {sector} bai={_t[max(0,_i-60):_i+120]!r}", flush=True)
+                _t = re.sub(r"\s+", " ", text).replace("™", "").replace("®", "")
+                for kw in ("posted", "in August", "in July", "headline"):
+                    _i = _t.lower().find(kw.lower())
+                    if _i >= 0:
+                        print(f"[S&P DEBUG] {sector} {kw!r}@{_i}: {_t[max(0,_i-80):_i+90]!r}", flush=True)
             if mk and val is not None:
                 out[sector][mk] = val
         except Exception as e:
