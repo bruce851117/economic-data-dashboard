@@ -358,9 +358,22 @@ def main() -> None:
         if a or r:
             print(f"[MERGE] {key}: +{a} added, {r} revised", flush=True)
 
+    # Series that now have a live auto-updating source must not carry a stale
+    # "static" flag from the original seed (Kansas/Income stay static).
+    live_keys = {f"{b}|{n}" for (b, n), v in NEW_SERIES.items() if v[0] != "seed"}
+    for s in database.get("series", []):
+        if f"{s['block']}|{s['name']}" in live_keys:
+            s.pop("static", None)
+
+    # Drop any point dated beyond the current month: real observations never
+    # lead the calendar, so a future date signals a mis-attributed month.
+    this_month = datetime.now(timezone.utc).strftime("%Y-%m")
     # Keep only 2015 onward across every series (dashboard history floor).
     for s in database.get("series", []):
-        s["data"] = [p for p in s.get("data", []) if str(p.get("date", ""))[:7] >= HISTORY_START]
+        s["data"] = [
+            p for p in s.get("data", [])
+            if HISTORY_START <= str(p.get("date", ""))[:7] <= this_month
+        ]
 
     database["generated_at"] = datetime.now(timezone.utc).isoformat()
     DATA_FILE.write_text(
