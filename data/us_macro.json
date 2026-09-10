@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T06:14:19.732117+00:00",
+  "generated_at": "2026-09-10T09:45:26.247024+00:00",
   "source": {
     "type": "excel_import",
     "file": "US_ECON.xlsx",
@@ -75026,7 +75026,6 @@
           "value": 10
         }
       ],
-      "static": true,
       "new": true
     },
     {
