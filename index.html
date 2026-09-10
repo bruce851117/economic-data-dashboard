@@ -443,6 +443,7 @@
         S.push({title:'就業 - 就業（非農月增減，千人）',rows});}
       // 2) 就業-失業：失業率(展開by年齡/學歷)、勞參率(展開by年齡)、流量/原因(橘框+月增減)、Duration(展開by區間+月增減)
       {const B='就業-失業',rows=[];
+        if(usFind(B,'U6失業率'))rows.push({key:B+'|U6失業率',name:'U6失業率',level:0,parent:null,vals:usMap(B,'U6失業率'),rule:RATE});
         const urK=B+'|失業率';
         rows.push({key:urK,name:'失業率',level:0,parent:null,expandable:true,vals:usMap(B,'失業率'),rule:RATE});
         ['失業率16~24','失業率25~54','失業率55+','失業率高中以下','失業率高中','失業率大學肄業 / 副學士','失業率大學學位以上'].forEach(nm=>{if(usFind(B,nm))rows.push({key:B+'|'+nm,name:nm,level:1,parent:urK,vals:usMap(B,nm),rule:RATE})});
@@ -565,14 +566,18 @@
       let [right2Min,right2Max]=hasR2?usNiceRange(valuesFor('R2')):[0,1];
       if(view){if(view.lMin!=null){leftMin=view.lMin;leftMax=view.lMax}if(view.rMin!=null){rightMin=view.rMin;rightMax=view.rMax}if(view.r2Min!=null){right2Min=view.r2Min;right2Max=view.r2Max}}
       const YL=v=>plotT+(leftMax-v)*(plotB-plotT)/((leftMax-leftMin)||1),YR=v=>plotT+(rightMax-v)*(plotB-plotT)/((rightMax-rightMin)||1),YR2=v=>plotT+(right2Max-v)*(plotB-plotT)/((right2Max-right2Min)||1);
-      let grid='';for(let i=0;i<5;i++){const val=leftMax-(leftMax-leftMin)*i/4,yy=YL(val);grid+=`<line x1="${plotL}" y1="${yy}" x2="${plotR}" y2="${yy}" stroke="#eef2f7"/>`+(norm?'':`<text x="${mL-6}" y="${yy+4}" text-anchor="end" fill="#94a3b8" font-size="10">${usAxisFmt(val)}</text>`)}
+      // Normalized shared window (0..1) for "各自比例" charts; the left-axis view
+      // keys double as this window so wheel/drag zoom works on norm charts too.
+      let nMin=0,nMax=1;if(norm&&view&&view.lMin!=null){nMin=view.lMin;nMax=view.lMax}
+      const normY=t=>plotT+(nMax-t)*(plotB-plotT)/((nMax-nMin)||1);
+      let grid='';for(let i=0;i<5;i++){if(norm){const t=nMax-(nMax-nMin)*i/4;const yy=normY(t);grid+=`<line x1="${plotL}" y1="${yy}" x2="${plotR}" y2="${yy}" stroke="#eef2f7"/>`}else{const val=leftMax-(leftMax-leftMin)*i/4,yy=YL(val);grid+=`<line x1="${plotL}" y1="${yy}" x2="${plotR}" y2="${yy}" stroke="#eef2f7"/><text x="${mL-6}" y="${yy+4}" text-anchor="end" fill="#94a3b8" font-size="10">${usAxisFmt(val)}</text>`}}
       if(hasR){const rc=(lines.find(x=>x.axis==='R')||{}).color||'#94a3b8';for(let i=0;i<5;i++){const val=rightMax-(rightMax-rightMin)*i/4,yy=YR(val);grid+=`<text x="${plotR+8}" y="${yy+4}" text-anchor="start" fill="${rc}" font-size="10">${usAxisFmt(val)}</text>`}}
       if(hasR2){const rc=(lines.find(x=>x.axis==='R2')||{}).color||'#94a3b8';for(let i=0;i<5;i++){const val=right2Max-(right2Max-right2Min)*i/4,yy=YR2(val);grid+=`<text x="${plotR+55}" y="${yy+4}" text-anchor="start" fill="${rc}" font-size="10">${usAxisFmt(val)}</text>`}}
       let xl='';const step=Math.max(1,Math.ceil(pers.length/6));pers.forEach((p,i)=>{if(i%step===0||i===pers.length-1)xl+=`<text x="${X(i)}" y="${h-12}" text-anchor="middle" fill="#94a3b8" font-size="10">${p.slice(2).replace('-','/')}</text>`});
       let areas='',base=pers.map(()=>0);stack.forEach(x=>{const top=pers.map((p,i)=>base[i]+(Number.isFinite(x.map[p])?x.map[p]:0));const tp=pers.map((p,i)=>`${X(i).toFixed(1)},${YL(top[i]).toFixed(1)}`),bp=pers.map((p,i)=>`${X(i).toFixed(1)},${YL(base[i]).toFixed(1)}`).reverse();areas+=`<path d="M${tp.join(' L')} L${bp.join(' L')} Z" fill="${x.color}" fill-opacity="0.45" stroke="none"/>`;base=top});
-      let paths='';lines.forEach(x=>{let Y;if(norm){const vs=pers.map(p=>x.map[p]).filter(Number.isFinite);let mn=vs.length?Math.min(...vs):0,mx=vs.length?Math.max(...vs):1;if(mn===mx){mn-=1;mx+=1}Y=v=>plotT+(mx-v)*(plotB-plotT)/((mx-mn)||1)}else{Y=x.axis==='R2'?YR2:x.axis==='R'?YR:YL}paths+=`<path d="${usLinePathFrom(pers,x.map,X,Y)}" fill="none" stroke="${x.color}" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>`});
+      let paths='';lines.forEach(x=>{let Y;if(norm){const vs=pers.map(p=>x.map[p]).filter(Number.isFinite);let mn=vs.length?Math.min(...vs):0,mx=vs.length?Math.max(...vs):1;if(mn===mx){mn-=1;mx+=1}Y=v=>normY((v-mn)/((mx-mn)||1))}else{Y=x.axis==='R2'?YR2:x.axis==='R'?YR:YL}paths+=`<path d="${usLinePathFrom(pers,x.map,X,Y)}" fill="none" stroke="${x.color}" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>`});
       const clipId='us-clip-'+Array.from(spec.title||'chart').reduce((a,c)=>((a*31+c.charCodeAt(0))>>>0),7).toString(36);
-      if(meta){meta.spec=spec;meta.pers=pers;meta.w=w;meta.h=h;meta.plotL=plotL;meta.plotR=plotR;meta.plotT=plotT;meta.plotB=plotB;meta.n=pers.length;meta.series=[...lines.map(x=>({label:x.label,color:x.color,map:x.map,axis:x.axis})),...stack.map(x=>({label:x.label,color:x.color,map:x.map,axis:'L'}))];meta.dom={lMin:leftMin,lMax:leftMax,rMin:hasR?rightMin:undefined,rMax:hasR?rightMax:undefined,r2Min:hasR2?right2Min:undefined,r2Max:hasR2?right2Max:undefined}}
+      if(meta){meta.spec=spec;meta.pers=pers;meta.w=w;meta.h=h;meta.plotL=plotL;meta.plotR=plotR;meta.plotT=plotT;meta.plotB=plotB;meta.n=pers.length;meta.series=[...lines.map(x=>({label:x.label,color:x.color,map:x.map,axis:x.axis})),...stack.map(x=>({label:x.label,color:x.color,map:x.map,axis:'L'}))];meta.dom=norm?{lMin:0,lMax:1}:{lMin:leftMin,lMax:leftMax,rMin:hasR?rightMin:undefined,rMax:hasR?rightMax:undefined,r2Min:hasR2?right2Min:undefined,r2Max:hasR2?right2Max:undefined}}
       const cross=`<g class="us-crosshair" style="display:none" pointer-events="none"><line class="us-cross us-cross-x" x1="0" y1="${plotT}" x2="0" y2="${plotB}" stroke="#475569" stroke-width="1" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/><line class="us-cross us-cross-y" x1="${plotL}" y1="0" x2="${plotR}" y2="0" stroke="#475569" stroke-width="1" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/><g class="us-cross-dots"></g></g>`;
       return `<svg viewBox="0 0 ${w} ${h}" role="img"><defs><clipPath id="${clipId}"><rect x="${plotL}" y="${plotT}" width="${plotR-plotL}" height="${plotB-plotT}"/></clipPath></defs>${grid}<line x1="${plotL}" y1="${plotB}" x2="${plotR}" y2="${plotB}" stroke="#cbd5e1"/>${xl}<g clip-path="url(#${clipId})">${areas}${paths}</g>${cross}</svg>`
     }
@@ -582,7 +587,7 @@
         {title:'非農就業與產業占比',type:'multi',size:'normal',lines:[{...L(E,'非農'),label:'非農',axis:'L'},R(E,'Goods-producing Sector',E,'非農','Goods / 非農 (%)','R'),R(E,'Private Service-Providing',E,'非農','Services / 非農 (%)','R2')]},
         {title:'Temporary Help Services',type:'line',lines:[L(E,'Temporary Help Services')]},
         {title:'Multiple Jobholder',type:'line',lines:[L(U,'Multiple Jobholder')]},
-        {title:'失業率',type:'line',lines:[L(U,'失業率')]},
+        {title:'失業率（U6 / U3）',type:'multi',lines:[L(U,'U6失業率'),L(U,'失業率')]},
         {title:'失業率 by 年齡（各自比例）',type:'multi',norm:true,size:'normal',lines:[L(U,'失業率16~24'),L(U,'失業率25~54'),L(U,'失業率55+')]},
         {title:'失業率 by 學歷（各自比例）',type:'multi',norm:true,size:'normal',lines:[L(U,'失業率高中以下'),L(U,'失業率高中'),L(U,'失業率大學肄業 / 副學士'),L(U,'失業率大學學位以上')]},
         {title:'勞參率',type:'line',lines:[L(U,'勞參率')]},

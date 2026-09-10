@@ -43,6 +43,7 @@ HISTORY_START = "2015-01"
 #   method: bls | fredcsv     kind: level | yoy
 # Derived JOLTS Goods/Services sums are computed after fetching, below.
 NEW_SERIES = {
+ ("就業-失業","U6失業率"):("bls","LNS13327709","level","LNS13327709","Bureau of Labor Statistics"),
  ("就業-失業","失業率16~24"):("bls","LNS14024887","level","USURT162 Index","Bureau of Labor Statistics"),
  ("就業-失業","失業率25~54"):("bls","LNS14000060","level","USURT254 Index","Bureau of Labor Statistics"),
  ("就業-失業","失業率55+"):("bls","LNS14024230","level","USURT55+ Index","Bureau of Labor Statistics"),
