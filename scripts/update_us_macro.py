@@ -88,7 +88,7 @@ NEW_SERIES = {
  ("企業調查","S&P服務業"):("sp","services","level","MPMIUSSA Index","S&P Global"),
  ("企業調查","Kansas 製造業"):("seed","KCLSSACI","level","KCLSSACI Index","Federal Reserve Bank of Kansas City"),
  ("企業調查","Richmond製造業"):("richmond","RCHSINDX","level","RCHSINDX Index","Richmond Fed"),
- ("企業調查","PHILI 服務業"):("seed","PNMARADI","level","PNMARADI Index","Philadelphia Federal Reserve"),
+ ("企業調查","PHILI 服務業"):("fredcsv","GARBNDIF066MSFRBPHI","level","PNMARADI Index","Philadelphia Federal Reserve"),
 }
 # JOLTS industries whose openings sum to the "Goods" table row / chart line.
 JOLTS_GOODS = ["Mining and Logging","Construction","Manufacturing"]
