@@ -20,202 +20,262 @@ OUTPUT_PATH = (
     / "ppi.json"
 )
 
-EXPECTED_WEIGHT_TOTAL = 21.995
-
-
+EXPECTED_WEIGHT_TOTAL = 22.946
 PPI_SERIES = [
     {
-        "name": "PPI for Hospitals",
-        "short_name": "Hospitals",
-        "bls_series_id": "PCU622---622---",
-        "seasonality": "NSA",
-        "pce_weight": 8.569,
+        'category': '醫療',
+        'name': 'PPI for hospitals.',
+        'short_name': 'Hospitals',
+        'display_name': 'US Producer Price Index Hospitals NSA',
+        'formal_name': 'PPI industry sub-sector data for Hospitals, not seasonally adjusted',
+        'suggested_category': '醫療服務｜醫院',
+        'bls_series_id': 'PCU622---622---',
+        'seasonality': 'NSA',
+        'pce_weight': 8.602,
     },
     {
-        "name": "PPI for Offices of Physicians",
-        "short_name": "Offices of Physicians",
-        "bls_series_id": "PCU6211--6211--",
-        "seasonality": "NSA",
-        "pce_weight": 4.473,
+        'category': '醫療',
+        'name': 'PPI for nursing care facilities.',
+        'short_name': 'Nursing Care Facilities',
+        'display_name': 'BLS PPI Nursing Care Facilities 623110 NSA',
+        'formal_name': 'PPI industry data for Nursing care facilities, not seasonally adjusted',
+        'suggested_category': '醫療服務｜護理照護機構',
+        'bls_series_id': 'PCU623110623110',
+        'seasonality': 'NSA',
+        'pce_weight': 1.445,
     },
     {
-        "name": (
-            "PPI for Portfolio Management "
-            "and Investment Advice"
-        ),
-        "short_name": (
-            "Portfolio Management "
-            "and Investment Advice"
-        ),
-        "bls_series_id": "PCU523940523940",
-        "seasonality": "NSA",
-        "pce_weight": 1.780,
+        'category': '醫療',
+        'name': 'PPI for offices of physicians.',
+        'short_name': 'Offices of Physicians',
+        'display_name': 'US Producer Price Index Offices Of Physicians NSA',
+        'formal_name': 'PPI industry group data for Offices of physicians, not seasonally adjusted',
+        'suggested_category': '醫療服務｜醫師診所',
+        'bls_series_id': 'PCU6211--6211--',
+        'seasonality': 'NSA',
+        'pce_weight': 4.493,
     },
     {
-        "name": "PPI for Nursing Care Facilities",
-        "short_name": "Nursing Care Facilities",
-        "bls_series_id": "PCU623110623110",
-        "seasonality": "NSA",
-        "pce_weight": 1.445,
+        'category': '醫療',
+        'name': 'PPI for home health care services.',
+        'short_name': 'Home Health Care Services',
+        'display_name': 'BLS PPI Home Health Care Services 62161- NSA',
+        'formal_name': 'PPI industry group data for Home health care services, not seasonally adjusted',
+        'suggested_category': '醫療服務｜居家醫療照護',
+        'bls_series_id': 'PCU62161-62161-',
+        'seasonality': 'NSA',
+        'pce_weight': 1.132,
     },
     {
-        "name": (
-            "PPI for Direct Health and Medical "
-            "Insurance Carriers"
-        ),
-        "short_name": (
-            "Direct Health and Medical "
-            "Insurance Carriers"
-        ),
-        "bls_series_id": "PCU524114524114",
-        "seasonality": "NSA",
-        "pce_weight": 1.299,
+        'category': '醫療',
+        'name': 'PPI for medical laboratories',
+        'short_name': 'Medical Laboratories',
+        'display_name': 'BLS PPI Medical Laboratory Services NSA',
+        'formal_name': 'PPI industry data for Medical laboratories-Primary services, not seasonally adjusted',
+        'suggested_category': '醫療服務｜醫學實驗室',
+        'bls_series_id': 'PCU6215116215112',
+        'seasonality': 'NSA',
+        'pce_weight': 0.1425,
     },
     {
-        "name": "PPI for Home Health Care Services",
-        "short_name": "Home Health Care Services",
-        "bls_series_id": "PCU6216--6216--",
-        "seasonality": "NSA",
-        "pce_weight": 1.109,
+        'category': '醫療',
+        'name': 'PPI for diagnostic imaging centers.',
+        'short_name': 'Diagnostic Imaging Centers',
+        'display_name': 'BLS PPI Diagnostic Imaging Services NSA',
+        'formal_name': 'PPI industry data for diagnostic imaging centers-Diagnostic imaging centers, not seasonally adjusted',
+        'suggested_category': '醫療服務｜診斷影像中心',
+        'bls_series_id': 'PCU6215126215124',
+        'seasonality': 'NSA',
+        'pce_weight': 0.1425,
     },
     {
-        "name": (
-            "PPI for Domestic Scheduled Passenger "
-            "Air Transportation"
-        ),
-        "short_name": (
-            "Domestic Scheduled Passenger "
-            "Air Transportation"
-        ),
-        "bls_series_id": "PCU4811114811111",
-        "seasonality": "NSA",
-        "pce_weight": 1.023,
+        'category': '金融',
+        'name': 'PPI for Portfolio management & investment advice.',
+        'short_name': 'Portfolio Management & Investment Advice',
+        'display_name': 'US Producer Price Index Portfolio Management and Investment Advice NSA',
+        'formal_name': 'PPI by Industry: Portfolio Management and Investment Advice: Portfolio Management',
+        'suggested_category': '金融服務｜投資組合管理',
+        'bls_series_id': 'PCU523940523940',
+        'seasonality': 'NSA',
+        'pce_weight': 1.794,
     },
     {
-        "name": (
-            "PPI for Private Passenger "
-            "Auto Insurance"
-        ),
-        "short_name": (
-            "Private Passenger Auto Insurance"
-        ),
-        "bls_series_id": "PCU5241265241261",
-        "seasonality": "NSA",
-        "pce_weight": 0.587,
+        'category': '金融',
+        'name': 'PPI for brokerage services, equities, and ETFs.',
+        'short_name': 'Brokerage Services, Equities & ETFs',
+        'display_name': 'BLS PPI Brokerage Services Equities & ETFs NSA',
+        'formal_name': 'PPI by Industry: Investment Banking and Securities Intermediation: Brokerage Services, Equities and ETFs',
+        'suggested_category': '金融服務｜證券經紀｜股票與ETF',
+        'bls_series_id': 'PCU5231505231501011',
+        'seasonality': 'NSA',
+        'pce_weight': 0.042,
     },
     {
-        "name": "PPI for Medical Laboratories",
-        "short_name": "Medical Laboratories",
-        "bls_series_id": "PCU621511621511P",
-        "seasonality": "NSA",
-        "pce_weight": 0.145,
+        'category': '金融',
+        'name': 'PPI for brokerage services, all other securities.',
+        'short_name': 'Brokerage Services, All Other Securities',
+        'display_name': 'BLS PPI Brokerage Services All Other Securities NSA',
+        'formal_name': 'PPI by Industry: Investment Banking and Securities Intermediation: Brokerage Services, All Other Securities',
+        'suggested_category': '金融服務｜證券經紀｜其他證券',
+        'bls_series_id': 'PCU5231505231501012',
+        'seasonality': 'NSA',
+        'pce_weight': 0.042,
     },
     {
-        "name": (
-            "PPI for Diagnostic Imaging Centers"
-        ),
-        "short_name": (
-            "Diagnostic Imaging Centers"
-        ),
-        "bls_series_id": "PCU6215126215124",
-        "seasonality": "NSA",
-        "pce_weight": 0.145,
+        'category': '金融',
+        'name': 'PPI for dealer transactions, debt securities and all other trading.',
+        'short_name': 'Dealer Transactions, Debt & Other Trading',
+        'display_name': 'BLS PPI Dealer Transactions Debt Securities & All Other Trading NSA',
+        'formal_name': 'PPI by Industry: Investment Banking and Securities Intermediation: Dealer Transactions, Debt Securities and All Other Trading',
+        'suggested_category': '金融服務｜自營交易｜債券及其他交易',
+        'bls_series_id': 'PCU5231505231502012',
+        'seasonality': 'NSA',
+        'pce_weight': 0.05,
     },
     {
-        "name": "PPI for Brokerage Services",
-        "short_name": "Brokerage Services",
-        "bls_series_id": "WPU40110201",
-        "seasonality": "NSA",
-        "pce_weight": 0.098,
+        'category': '金融',
+        'name': 'PPI for dealer transactions, equity securities.',
+        'short_name': 'Dealer Transactions, Equity Securities',
+        'display_name': 'BLS PPI Dealer Transactions Equity Securities NSA',
+        'formal_name': 'PPI by Industry: Investment Banking and Securities Intermediation: Dealer Transactions, Equity Securities',
+        'suggested_category': '金融服務｜自營交易｜股票',
+        'bls_series_id': 'PCU5231505231502011',
+        'seasonality': 'NSA',
+        'pce_weight': 0.024,
     },
     {
-        "name": "PPI for Dealer Transactions",
-        "short_name": "Dealer Transactions",
-        "bls_series_id": "WPU40110101",
-        "seasonality": "NSA",
-        "pce_weight": 0.098,
+        'category': '金融',
+        'name': 'PPI for other securities related services including margin lending and mutual fund sales.',
+        'short_name': 'Other Securities Related Services',
+        'display_name': 'BLS PPI Oth Securities Rltd Services Incl Margin Lending & Mutual Fund Sales NSA',
+        'formal_name': 'PPI by Industry: Investment Banking and Securities Intermediation: Other Securities Related Services Including Margin Lending and Mutual Fund Sales',
+        'suggested_category': '金融服務｜其他證券相關服務',
+        'bls_series_id': 'PCU523150523150102',
+        'seasonality': 'NSA',
+        'pce_weight': 0.052,
     },
     {
-        "name": (
-            "PPI for Workers' Compensation "
-            "Insurance"
-        ),
-        "short_name": (
-            "Workers' Compensation Insurance"
-        ),
-        "bls_series_id": "PCU5241265241266",
-        "seasonality": "NSA",
-        "pce_weight": 0.192,
+        'category': '金融',
+        'name': 'PPI for commercial bank trust services.',
+        'short_name': 'Commercial Bank Trust Services',
+        'display_name': 'BLS PPI Trust Services NSA',
+        'formal_name': 'PPI industry data for Commercial banking-Trust services, not seasonally adjusted',
+        'suggested_category': '金融服務｜商業銀行信託服務',
+        'bls_series_id': 'PCU5221105221103',
+        'seasonality': 'NSA',
+        'pce_weight': 0.116,
     },
     {
-        "name": (
-            "PPI for Commercial Bank "
-            "Trust Services"
-        ),
-        "short_name": (
-            "Commercial Bank Trust Services"
-        ),
-        "bls_series_id": "PCU5221105221103",
-        "seasonality": "NSA",
-        "pce_weight": 0.117,
+        'category': '保險',
+        'name': 'PPI for direct health and medical insurance carriers.',
+        'short_name': 'Direct Health & Medical Insurance Carriers',
+        'display_name': 'US Producer Price Index Direct Health & Medical Insurance Carriers NSA',
+        'formal_name': 'PPI industry data for Direct health and medical insurance carriers, not seasonally adjusted',
+        'suggested_category': '保險服務｜健康與醫療保險',
+        'bls_series_id': 'PCU524114524114',
+        'seasonality': 'NSA',
+        'pce_weight': 1.295,
     },
     {
-        "name": "PPI for Homeowners' Insurance",
-        "short_name": "Homeowners' Insurance",
-        "bls_series_id": "PCU9241269241262",
-        "seasonality": "NSA",
-        "pce_weight": 0.104,
+        'category': '保險',
+        'name': 'PPI for workers’ compensation insurance.',
+        'short_name': 'Workers Compensation Insurance',
+        'display_name': 'BLS PPI Workers Compensation Insurance NSA',
+        'formal_name': 'PPI industry data for Direct property and casualty insurers-Workers compensation insurance, not seasonally adjusted',
+        'suggested_category': '保險服務｜勞工補償保險',
+        'bls_series_id': 'PCU5241265241266',
+        'seasonality': 'NSA',
+        'pce_weight': 0.19,
     },
     {
-        "name": (
-            "PPI for Employment "
-            "Placement Agencies"
-        ),
-        "short_name": (
-            "Employment Placement Agencies"
-        ),
-        "bls_series_id": "PCU5613--5613--",
-        "seasonality": "NSA",
-        "pce_weight": 0.009,
+        'category': '保險',
+        'name': 'PPI for private passenger auto insurance.',
+        'short_name': 'Private Passenger Auto Insurance',
+        'display_name': 'BLS PPI Private Passenger Auto Insurance NSA',
+        'formal_name': 'PPI industry data for Direct property and casualty insurers-Private passenger auto insurance, not seasonally adjusted',
+        'suggested_category': '保險服務｜私人乘用車保險',
+        'bls_series_id': 'PCU5241265241261',
+        'seasonality': 'NSA',
+        'pce_weight': 0.581,
     },
     {
-        "name": "PPI for Apparel",
-        "short_name": (
-            "Apparel, Jewelry, Footwear, "
-            "and Accessories Retailing"
-        ),
-        "bls_series_id": "WPS5831",
-        "seasonality": "SA",
-        "pce_weight": 0.002,
+        'category': '保險',
+        'name': 'PPI for homeowners’ insurance.',
+        'short_name': 'Premiums for Homeowners Insurance',
+        'display_name': 'BLS PPI Premiums for Homeowners Insurance NSA',
+        'formal_name': 'PPI industry data for Direct property and casualty insurers-Homeowner’s insurance, not seasonally adjusted',
+        'suggested_category': '保險服務｜住宅所有人保險',
+        'bls_series_id': 'PCU5241265241262',
+        'seasonality': 'NSA',
+        'pce_weight': 0.104,
     },
     {
-        "name": (
-            "PPI for Software Publishers - "
-            "Game Software Publishing"
-        ),
-        "short_name": (
-            "Game Software Publishing"
-        ),
-        "bls_series_id": "PCU5132105132107",
-        "seasonality": "NSA",
-        "pce_weight": 0.4,
+        'category': '運輸',
+        'name': 'PPI for domestic scheduled passenger air transportation.',
+        'short_name': 'Domestic Scheduled Passenger Air Transportation',
+        'display_name': 'BLS PPI industry data for Scheduled passenger air transportation-Domestic NSA',
+        'formal_name': 'PPI industry data for Scheduled passenger air transportation-Domestic scheduled passenger air transportation, not seasonally adjusted',
+        'suggested_category': '運輸服務｜國內定期航空客運',
+        'bls_series_id': 'PCU4811114811111',
+        'seasonality': 'NSA',
+        'pce_weight': 1.04,
     },
     {
-        "name": (
-            "PPI for Hosting, ASP, and Other IT "
-            "Infrastructure Provisioning Services"
-        ),
-        "short_name": (
-            "Hosting, ASP, and Other IT "
-            "Infrastructure Provisioning Services"
-        ),
-        "bls_series_id": "PCU5182105182105",
-        "seasonality": "NSA",
-        "pce_weight": 0.4,
+        'category': '法律',
+        'name': 'PPI for legal services.',
+        'short_name': 'Legal Services',
+        'display_name': 'US PPI Legal Services Professional Services Partial NSA',
+        'formal_name': 'PPI by Industry: Legal Services',
+        'suggested_category': '專業服務｜法律服務',
+        'bls_series_id': 'WPU451101',
+        'seasonality': 'NSA',
+        'pce_weight': 0.848,
+    },
+    {
+        'category': '其他',
+        'name': 'PPI for employment placement agencies - primary services.',
+        'short_name': 'Employment Placement Services',
+        'display_name': 'BLS PPI Employment Placement Services NSA',
+        'formal_name': 'PPI industry data for Employment placement agencies-Primary services, not seasonally adjusted',
+        'suggested_category': '就業服務｜就業安置機構',
+        'bls_series_id': 'PCU5613805613802',
+        'seasonality': 'NSA',
+        'pce_weight': 0.009,
+    },
+    {
+        'category': '其他',
+        'name': 'PPI for apparel',
+        'short_name': 'Apparel',
+        'display_name': 'US PPI Apparel NSA',
+        'formal_name': 'PPI commodity data for Apparel, jewelry, footwear, and accessories retailing, not seasonally adjusted',
+        'suggested_category': '服裝與配件｜零售服務',
+        'bls_series_id': 'WPU0381',
+        'seasonality': 'NSA',
+        'pce_weight': 0.002,
+    },
+    {
+        'category': '軟體',
+        'name': 'PPI for game software publishing',
+        'short_name': 'Game Software Publishing',
+        'display_name': 'US PPI Application Software Publishing Game Software Software Publishing NSA',
+        'formal_name': 'PPI industry data for Software publishers-Game software publishing, not seasonally adjusted',
+        'suggested_category': '電子與數位產品｜遊戲軟體出版',
+        'bls_series_id': 'WPU342104',
+        'seasonality': 'NSA',
+        'pce_weight': 0.4,
+    },
+    {
+        'category': '軟體',
+        'name': 'PPI for hosting, ASP (active server pages); and other IT (information technology) infrastructure provisioning services',
+        'short_name': 'Hosting, ASP & Other IT Infrastructure',
+        'display_name': 'US PPI Hosting Asp And Other It Infrastructure Provisioning Services Data NSA',
+        'formal_name': 'PPI industry data for Computing infrastructure providers, data processing, web hosting, and related services-Hosting, ASP, and other IT infrastructure provisioning services, not seasonally adjusted',
+        'suggested_category': '資訊科技服務｜託管與IT基礎設施',
+        'bls_series_id': 'WPU381101',
+        'seasonality': 'NSA',
+        'pce_weight': 0.4,
     },
 ]
-
-
 def get_registration_key():
     registration_key = os.environ.get(
         "BLS_API_KEY",
@@ -609,7 +669,11 @@ def build_source_rows(
         rows.append(
             {
                 "order": order,
+                "category": config["category"],
                 "name": config["name"],
+                "display_name": config["display_name"],
+                "formal_name": config["formal_name"],
+                "suggested_category": config["suggested_category"],
                 "short_name": (
                     config["short_name"]
                 ),
@@ -911,6 +975,32 @@ def build_pce_impact_row(
     }
 
 
+def build_category_impact_rows(rows, periods):
+    category_order = []
+    for row in rows:
+        if row["category"] not in category_order:
+            category_order.append(row["category"])
+    result = []
+    for order, category in enumerate(category_order):
+        members = [row for row in rows if row["category"] == category]
+        values = []
+        for index, _period in enumerate(periods):
+            contributions = []
+            for row in members:
+                value = row["values"][index]
+                if value is not None:
+                    contributions.append(float(value) * float(row["pce_weight"]) / 100)
+            values.append(round(sum(contributions), 6) if len(contributions) == len(members) else None)
+        result.append({
+            "order": order,
+            "category": category,
+            "name": category,
+            "pce_weight": round(sum(float(row["pce_weight"]) for row in members), 4),
+            "values": values,
+            "unit": "percentage_point",
+        })
+    return result
+
 def load_existing_payload():
     if not OUTPUT_PATH.exists():
         return None
@@ -933,6 +1023,7 @@ def save_json(
     periods,
     rows,
     pce_impact_row,
+    category_impact_rows,
     missing_series,
 ):
     OUTPUT_PATH.parent.mkdir(
@@ -1038,7 +1129,7 @@ def save_json(
             ),
             "coverage": (
                 "Selected components represent "
-                "21.995 percent of the supplied "
+                f"{EXPECTED_WEIGHT_TOTAL:.3f} percent of the supplied "
                 "PCE weights."
             ),
             "official_bea_forecast": False,
@@ -1049,26 +1140,12 @@ def save_json(
                 "BEA Core PCE estimate."
             ),
         },
-        "portfolio_management_method": {
-            "series_id": (
-                "PCU523940523940"
-            ),
-            "series_name": (
-                "Portfolio Management and "
-                "Investment Advice"
-            ),
-            "combined_weight": 1.780,
-            "note": (
-                "Portfolio Management and "
-                "Investment Advice were combined "
-                "into one current industry series."
-            ),
-        },
         "periods": periods,
         "rows": rows,
         "pce_impact_row": (
             pce_impact_row
         ),
+        "category_impact_rows": category_impact_rows,
         "missing_series_count": len(
             missing_series
         ),
@@ -1190,9 +1267,9 @@ def main():
         )
     )
 
-    if len(rows) != 19:
+    if len(rows) != len(PPI_SERIES):
         raise RuntimeError(
-            "Expected 19 PPI rows, "
+            "Expected configured PPI rows, "
             f"but generated {len(rows)} rows."
         )
 
@@ -1223,6 +1300,7 @@ def main():
             periods,
         )
     )
+    category_impact_rows = build_category_impact_rows(aligned_rows, periods)
 
     save_json(
         periods=periods,
@@ -1230,6 +1308,7 @@ def main():
         pce_impact_row=(
             pce_impact_row
         ),
+        category_impact_rows=category_impact_rows,
         missing_series=(
             missing_series
         ),
