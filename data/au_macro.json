@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-09-06T07:05:30.509434+00:00",
+  "generated_at": "2026-09-11T07:14:56.108625+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -8379,10 +8379,17 @@
         },
         {
           "date": "2026-08-01",
-          "value": 149.27,
+          "value": 148.35,
           "source_url": "https://github.com/hiring-lab/job_postings_tracker/blob/master/AU/aggregate_job_postings_AU.csv",
           "release_type": "final",
-          "note": "Indeed last daily total-postings observation in month; observation_date=2026-08-28"
+          "note": "Indeed last daily total-postings observation in month; observation_date=2026-08-31"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 149.59,
+          "source_url": "https://github.com/hiring-lab/job_postings_tracker/blob/master/AU/aggregate_job_postings_AU.csv",
+          "release_type": "final",
+          "note": "Indeed last daily total-postings observation in month; observation_date=2026-09-04"
         }
       ]
     },
@@ -19711,6 +19718,13 @@
           "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/08/er20260818BullConsumerSentiment.pdf",
           "release_type": "final",
           "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin PDF"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 139.4,
+          "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/09/er20260908BullConsumerSentiment.pdf",
+          "release_type": "final",
+          "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin PDF"
         }
       ],
       "ticker": "",
@@ -22111,6 +22125,13 @@
           "date": "2026-08-01",
           "value": 88.9,
           "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/08/er20260818BullConsumerSentiment.pdf",
+          "release_type": "final",
+          "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 84.4,
+          "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/09/er20260908BullConsumerSentiment.pdf",
           "release_type": "final",
           "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin"
         }
