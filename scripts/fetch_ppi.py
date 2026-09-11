@@ -21,31 +21,32 @@ OUTPUT_PATH = (
 )
 
 EXPECTED_WEIGHT_TOTAL = 22.946
+EXPECTED_IMPACT_WEIGHT_TOTAL = 21.152
 
 PPI_SERIES = [
-    {"category": '醫療', "name": 'PPI for hospitals.', "short_name": 'Hospitals', "bls_series_id": 'PCU622---622---', "seasonality": "NSA", "pce_weight": 8.602},
-    {"category": '醫療', "name": 'PPI for nursing care facilities.', "short_name": 'Nursing Care Facilities', "bls_series_id": 'PCU623110623110', "seasonality": "NSA", "pce_weight": 1.445},
-    {"category": '醫療', "name": 'PPI for offices of physicians.', "short_name": 'Offices of Physicians', "bls_series_id": 'PCU6211--6211--', "seasonality": "NSA", "pce_weight": 4.493},
-    {"category": '醫療', "name": 'PPI for home health care services.', "short_name": 'Home Health Care Services', "bls_series_id": 'PCU62161-62161-', "seasonality": "NSA", "pce_weight": 1.132},
-    {"category": '醫療', "name": 'PPI for medical laboratories', "short_name": 'Medical Laboratories', "bls_series_id": 'PCU6215116215112', "seasonality": "NSA", "pce_weight": 0.1425},
-    {"category": '醫療', "name": 'PPI for diagnostic imaging centers.', "short_name": 'Diagnostic Imaging Centers', "bls_series_id": 'PCU6215126215124', "seasonality": "NSA", "pce_weight": 0.1425},
-    {"category": '投管', "name": 'PPI for Portfolio management & investment advice.', "short_name": 'Portfolio Management & Investment Advice', "bls_series_id": 'PCU523940523940', "seasonality": "NSA", "pce_weight": 1.794},
-    {"category": '金融', "name": 'PPI for brokerage services, equities, and ETFs.', "short_name": 'Brokerage Services, Equities & ETFs', "bls_series_id": 'PCU5231505231501011', "seasonality": "NSA", "pce_weight": 0.042},
-    {"category": '金融', "name": 'PPI for brokerage services, all other securities.', "short_name": 'Brokerage Services, All Other Securities', "bls_series_id": 'PCU5231505231501012', "seasonality": "NSA", "pce_weight": 0.042},
-    {"category": '金融', "name": 'PPI for dealer transactions, debt securities and all other trading.', "short_name": 'Dealer Transactions, Debt & Other Trading', "bls_series_id": 'PCU5231505231502012', "seasonality": "NSA", "pce_weight": 0.05},
-    {"category": '金融', "name": 'PPI for dealer transactions, equity securities.', "short_name": 'Dealer Transactions, Equity Securities', "bls_series_id": 'PCU5231505231502011', "seasonality": "NSA", "pce_weight": 0.024},
-    {"category": '金融', "name": 'PPI for other securities related services including margin lending and mutual fund sales.', "short_name": 'Other Securities Related Services', "bls_series_id": 'PCU523150523150102', "seasonality": "NSA", "pce_weight": 0.052},
-    {"category": '金融', "name": 'PPI for commercial bank trust services.', "short_name": 'Commercial Bank Trust Services', "bls_series_id": 'PCU5221105221103', "seasonality": "NSA", "pce_weight": 0.116},
-    {"category": '保險', "name": 'PPI for direct health and medical insurance carriers.', "short_name": 'Direct Health & Medical Insurance Carriers', "bls_series_id": 'PCU524114524114', "seasonality": "NSA", "pce_weight": 1.295},
-    {"category": '保險', "name": 'PPI for workers’ compensation insurance.', "short_name": 'Workers Compensation Insurance', "bls_series_id": 'PCU5241265241266', "seasonality": "NSA", "pce_weight": 0.19},
-    {"category": '保險', "name": 'PPI for private passenger auto insurance.', "short_name": 'Private Passenger Auto Insurance', "bls_series_id": 'PCU5241265241261', "seasonality": "NSA", "pce_weight": 0.581},
-    {"category": '保險', "name": 'PPI for homeowners’ insurance.', "short_name": 'Premiums for Homeowners Insurance', "bls_series_id": 'PCU9241269241262', "seasonality": "NSA", "pce_weight": 0.104},
-    {"category": '運輸', "name": 'PPI for domestic scheduled passenger air transportation.', "short_name": 'Domestic Scheduled Passenger Air Transportation', "bls_series_id": 'PCU4811114811111', "seasonality": "NSA", "pce_weight": 1.04},
-    {"category": '法律', "name": 'PPI for legal services.', "short_name": 'Legal Services', "bls_series_id": 'WPU45110101', "seasonality": "NSA", "pce_weight": 0.848},
-    {"category": '其他', "name": 'PPI for employment placement agencies - primary services.', "short_name": 'Employment Placement Services', "bls_series_id": 'PCU5613805613802', "seasonality": "NSA", "pce_weight": 0.009},
-    {"category": '其他', "name": 'PPI for apparel', "short_name": 'Apparel', "bls_series_id": 'WPU0381', "seasonality": "NSA", "pce_weight": 0.002},
-    {"category": '軟體', "name": 'PPI for game software publishing', "short_name": 'Game Software Publishing', "bls_series_id": 'WPU342104', "seasonality": "NSA", "pce_weight": 0.4},
-    {"category": '軟體', "name": 'PPI for hosting, ASP (active server pages); and other IT (information technology) infrastructure provisioning services', "short_name": 'Hosting, ASP & Other IT Infrastructure', "bls_series_id": 'WPU381101', "seasonality": "NSA", "pce_weight": 0.4},
+    {"category": '醫療', "exclude_from_total": False, "name": 'PPI for hospitals.', "short_name": 'Hospitals', "bls_series_id": 'PCU622---622---', "seasonality": "NSA", "pce_weight": 8.602},
+    {"category": '醫療', "exclude_from_total": False, "name": 'PPI for nursing care facilities.', "short_name": 'Nursing Care Facilities', "bls_series_id": 'PCU623110623110', "seasonality": "NSA", "pce_weight": 1.445},
+    {"category": '醫療', "exclude_from_total": False, "name": 'PPI for offices of physicians.', "short_name": 'Offices of Physicians', "bls_series_id": 'PCU6211--6211--', "seasonality": "NSA", "pce_weight": 4.493},
+    {"category": '醫療', "exclude_from_total": False, "name": 'PPI for home health care services.', "short_name": 'Home Health Care Services', "bls_series_id": 'PCU62161-62161-', "seasonality": "NSA", "pce_weight": 1.132},
+    {"category": '醫療', "exclude_from_total": False, "name": 'PPI for medical laboratories', "short_name": 'Medical Laboratories', "bls_series_id": 'PCU6215116215112', "seasonality": "NSA", "pce_weight": 0.1425},
+    {"category": '醫療', "exclude_from_total": False, "name": 'PPI for diagnostic imaging centers.', "short_name": 'Diagnostic Imaging Centers', "bls_series_id": 'PCU6215126215124', "seasonality": "NSA", "pce_weight": 0.1425},
+    {"category": '投管', "exclude_from_total": True, "name": 'PPI for Portfolio management & investment advice.', "short_name": 'Portfolio Management & Investment Advice', "bls_series_id": 'PCU523940523940', "seasonality": "NSA", "pce_weight": 1.794},
+    {"category": '金融', "exclude_from_total": False, "name": 'PPI for brokerage services, equities, and ETFs.', "short_name": 'Brokerage Services, Equities & ETFs', "bls_series_id": 'PCU5231505231501011', "seasonality": "NSA", "pce_weight": 0.042},
+    {"category": '金融', "exclude_from_total": False, "name": 'PPI for brokerage services, all other securities.', "short_name": 'Brokerage Services, All Other Securities', "bls_series_id": 'PCU5231505231501012', "seasonality": "NSA", "pce_weight": 0.042},
+    {"category": '金融', "exclude_from_total": False, "name": 'PPI for dealer transactions, debt securities and all other trading.', "short_name": 'Dealer Transactions, Debt & Other Trading', "bls_series_id": 'PCU5231505231502012', "seasonality": "NSA", "pce_weight": 0.05},
+    {"category": '金融', "exclude_from_total": False, "name": 'PPI for dealer transactions, equity securities.', "short_name": 'Dealer Transactions, Equity Securities', "bls_series_id": 'PCU5231505231502011', "seasonality": "NSA", "pce_weight": 0.024},
+    {"category": '金融', "exclude_from_total": False, "name": 'PPI for other securities related services including margin lending and mutual fund sales.', "short_name": 'Other Securities Related Services', "bls_series_id": 'PCU523150523150102', "seasonality": "NSA", "pce_weight": 0.052},
+    {"category": '金融', "exclude_from_total": False, "name": 'PPI for commercial bank trust services.', "short_name": 'Commercial Bank Trust Services', "bls_series_id": 'PCU5221105221103', "seasonality": "NSA", "pce_weight": 0.116},
+    {"category": '保險', "exclude_from_total": False, "name": 'PPI for direct health and medical insurance carriers.', "short_name": 'Direct Health & Medical Insurance Carriers', "bls_series_id": 'PCU524114524114', "seasonality": "NSA", "pce_weight": 1.295},
+    {"category": '保險', "exclude_from_total": False, "name": 'PPI for workers’ compensation insurance.', "short_name": 'Workers Compensation Insurance', "bls_series_id": 'PCU5241265241266', "seasonality": "NSA", "pce_weight": 0.19},
+    {"category": '保險', "exclude_from_total": False, "name": 'PPI for private passenger auto insurance.', "short_name": 'Private Passenger Auto Insurance', "bls_series_id": 'PCU5241265241261', "seasonality": "NSA", "pce_weight": 0.581},
+    {"category": '保險', "exclude_from_total": False, "name": 'PPI for homeowners’ insurance.', "short_name": 'Premiums for Homeowners Insurance', "bls_series_id": 'PCU9241269241262', "seasonality": "NSA", "pce_weight": 0.104},
+    {"category": '運輸', "exclude_from_total": False, "name": 'PPI for domestic scheduled passenger air transportation.', "short_name": 'Domestic Scheduled Passenger Air Transportation', "bls_series_id": 'PCU4811114811111', "seasonality": "NSA", "pce_weight": 1.04},
+    {"category": '法律', "exclude_from_total": False, "name": 'PPI for legal services.', "short_name": 'Legal Services', "bls_series_id": 'WPU45110101', "seasonality": "NSA", "pce_weight": 0.848},
+    {"category": '其他', "exclude_from_total": False, "name": 'PPI for employment placement agencies - primary services.', "short_name": 'Employment Placement Services', "bls_series_id": 'PCU5613805613802', "seasonality": "NSA", "pce_weight": 0.009},
+    {"category": '其他', "exclude_from_total": False, "name": 'PPI for apparel', "short_name": 'Apparel', "bls_series_id": 'WPU0381', "seasonality": "NSA", "pce_weight": 0.002},
+    {"category": '軟體', "exclude_from_total": False, "name": 'PPI for game software publishing', "short_name": 'Game Software Publishing', "bls_series_id": 'WPU342104', "seasonality": "NSA", "pce_weight": 0.4},
+    {"category": '軟體', "exclude_from_total": False, "name": 'PPI for hosting, ASP (active server pages); and other IT (information technology) infrastructure provisioning services', "short_name": 'Hosting, ASP & Other IT Infrastructure', "bls_series_id": 'WPU381101', "seasonality": "NSA", "pce_weight": 0.4},
 ]
 
 def get_registration_key():
@@ -442,6 +443,7 @@ def build_source_rows(
             {
                 "order": order,
                 "category": config["category"],
+                "exclude_from_total": config["exclude_from_total"],
                 "name": config["name"],
                 "short_name": (
                     config["short_name"]
@@ -620,6 +622,8 @@ def build_pce_impact_row(
         components = []
 
         for row in rows:
+            if row.get("exclude_from_total", False):
+                continue
             ppi_mom = row[
                 "values"
             ][index]
@@ -707,7 +711,7 @@ def build_pce_impact_row(
                     3,
                 ),
                 "total_weight": (
-                    EXPECTED_WEIGHT_TOTAL
+                    EXPECTED_IMPACT_WEIGHT_TOTAL
                 ),
                 "components": components,
             }
@@ -726,7 +730,7 @@ def build_pce_impact_row(
         "bls_series_id": None,
         "seasonality": "Mixed",
         "pce_weight": (
-            EXPECTED_WEIGHT_TOTAL
+            EXPECTED_IMPACT_WEIGHT_TOTAL
         ),
         "available": any(
             value is not None
@@ -883,8 +887,8 @@ def save_json(
                 "percentage_point"
             ),
             "coverage": (
-                "Selected components represent "
-                f"{EXPECTED_WEIGHT_TOTAL:.3f} percent of the supplied "
+                "Selected components excluding portfolio management represent "
+                f"{EXPECTED_IMPACT_WEIGHT_TOTAL:.3f} percent of the supplied "
                 "PCE weights."
             ),
             "official_bea_forecast": False,
@@ -901,6 +905,7 @@ def save_json(
             pce_impact_row
         ),
         "category_impact_rows": category_impact_rows,
+        "pce_impact_weight_total": EXPECTED_IMPACT_WEIGHT_TOTAL,
         "missing_series_count": len(
             missing_series
         ),
