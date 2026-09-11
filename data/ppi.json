@@ -5,7 +5,7 @@
   "source_url": "https://www.bls.gov/ppi/",
   "title": "Selected Producer Price Indexes",
   "description": "Monthly percent changes calculated from selected BLS PPI index levels.",
-  "updated_at_utc": "2026-09-11T06:42:47.704855+00:00",
+  "updated_at_utc": "2026-09-11T06:43:18.403411+00:00",
   "data_changed": true,
   "default_months": 6,
   "available_filter_options": [
@@ -739,38 +739,38 @@
       "category": "保險",
       "name": "PPI for homeowners’ insurance.",
       "short_name": "Premiums for Homeowners Insurance",
-      "bls_series_id": "PCU5241265241262",
+      "bls_series_id": "PCU9241269241262",
       "seasonality": "NSA",
       "pce_weight": 0.104,
       "available": true,
-      "series_title": "PPI industry data for Direct property and casualty insurers-Homeowner's insurance, not seasonally adjusted",
+      "series_title": "PPI industry data for Premiums for property and casualty insurance-Premiums for homeowner's insurance, not seasonally adjusted",
       "values": [
-        4.384655,
-        0.071183,
-        0.049272,
-        0.184506,
-        0.012116,
-        -0.010384,
-        0.171008,
-        0.137195,
-        0.133901,
-        0.069618,
-        0.096433,
-        -0.068815
+        4.456503,
+        0.06444,
+        0.043172,
+        0.120471,
+        0.001078,
+        -0.014008,
+        0.026224,
+        0.133957,
+        0.13055,
+        0.061966,
+        0.013245,
+        -0.082679
       ],
       "index_values": [
-        287.991,
-        288.196,
-        288.338,
-        288.87,
-        288.905,
-        288.875,
-        289.369,
-        289.766,
-        290.154,
-        290.356,
-        290.636,
-        290.436
+        277.777,
+        277.956,
+        278.076,
+        278.411,
+        278.414,
+        278.375,
+        278.448,
+        278.821,
+        279.185,
+        279.358,
+        279.395,
+        279.164
       ]
     },
     {
@@ -817,7 +817,7 @@
       "category": "法律",
       "name": "PPI for legal services.",
       "short_name": "Legal Services",
-      "bls_series_id": "WPU451101",
+      "bls_series_id": "WPU45110101",
       "seasonality": "NSA",
       "pce_weight": 0.848,
       "available": true,
@@ -1020,24 +1020,24 @@
     "available": true,
     "series_title": "Weighted impact estimated from selected PPI components",
     "values": [
-      0.012486,
-      0.291843,
-      0.034133,
-      0.028766,
-      0.293908,
-      0.037601,
-      0.102114,
-      0.021523,
-      0.136378,
-      0.085534,
-      0.072497,
-      0.051858
+      0.012561,
+      0.291836,
+      0.034127,
+      0.028699,
+      0.293897,
+      0.037597,
+      0.101964,
+      0.021519,
+      0.136374,
+      0.085526,
+      0.07241,
+      0.051844
     ],
     "unit": "percentage_point",
     "calculation_details": [
       {
         "period": "2025-09",
-        "result": 0.012486,
+        "result": 0.012561,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 22.946,
@@ -1173,11 +1173,11 @@
           },
           {
             "name": "PPI for homeowners’ insurance.",
-            "series_id": "PCU5241265241262",
+            "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": 4.384655,
+            "ppi_mom": 4.456503,
             "pce_weight": 0.104,
-            "contribution": 0.00456004
+            "contribution": 0.00463476
           },
           {
             "name": "PPI for domestic scheduled passenger air transportation.",
@@ -1189,7 +1189,7 @@
           },
           {
             "name": "PPI for legal services.",
-            "series_id": "WPU451101",
+            "series_id": "WPU45110101",
             "seasonality": "NSA",
             "ppi_mom": -0.005799,
             "pce_weight": 0.848,
@@ -1231,7 +1231,7 @@
       },
       {
         "period": "2025-10",
-        "result": 0.291843,
+        "result": 0.291836,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 22.946,
@@ -1367,11 +1367,11 @@
           },
           {
             "name": "PPI for homeowners’ insurance.",
-            "series_id": "PCU5241265241262",
+            "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": 0.071183,
+            "ppi_mom": 0.06444,
             "pce_weight": 0.104,
-            "contribution": 7.403e-05
+            "contribution": 6.702e-05
           },
           {
             "name": "PPI for domestic scheduled passenger air transportation.",
@@ -1383,7 +1383,7 @@
           },
           {
             "name": "PPI for legal services.",
-            "series_id": "WPU451101",
+            "series_id": "WPU45110101",
             "seasonality": "NSA",
             "ppi_mom": 1.261645,
             "pce_weight": 0.848,
@@ -1425,7 +1425,7 @@
       },
       {
         "period": "2025-11",
-        "result": 0.034133,
+        "result": 0.034127,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 22.946,
@@ -1561,11 +1561,11 @@
           },
           {
             "name": "PPI for homeowners’ insurance.",
-            "series_id": "PCU5241265241262",
+            "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": 0.049272,
+            "ppi_mom": 0.043172,
             "pce_weight": 0.104,
-            "contribution": 5.124e-05
+            "contribution": 4.49e-05
           },
           {
             "name": "PPI for domestic scheduled passenger air transportation.",
@@ -1577,7 +1577,7 @@
           },
           {
             "name": "PPI for legal services.",
-            "series_id": "WPU451101",
+            "series_id": "WPU45110101",
             "seasonality": "NSA",
             "ppi_mom": -0.247831,
             "pce_weight": 0.848,
@@ -1619,7 +1619,7 @@
       },
       {
         "period": "2025-12",
-        "result": 0.028766,
+        "result": 0.028699,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 22.946,
@@ -1755,11 +1755,11 @@
           },
           {
             "name": "PPI for homeowners’ insurance.",
-            "series_id": "PCU5241265241262",
+            "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": 0.184506,
+            "ppi_mom": 0.120471,
             "pce_weight": 0.104,
-            "contribution": 0.00019189
+            "contribution": 0.00012529
           },
           {
             "name": "PPI for domestic scheduled passenger air transportation.",
@@ -1771,7 +1771,7 @@
           },
           {
             "name": "PPI for legal services.",
-            "series_id": "WPU451101",
+            "series_id": "WPU45110101",
             "seasonality": "NSA",
             "ppi_mom": -0.612767,
             "pce_weight": 0.848,
@@ -1813,7 +1813,7 @@
       },
       {
         "period": "2026-01",
-        "result": 0.293908,
+        "result": 0.293897,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 22.946,
@@ -1949,11 +1949,11 @@
           },
           {
             "name": "PPI for homeowners’ insurance.",
-            "series_id": "PCU5241265241262",
+            "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": 0.012116,
+            "ppi_mom": 0.001078,
             "pce_weight": 0.104,
-            "contribution": 1.26e-05
+            "contribution": 1.12e-06
           },
           {
             "name": "PPI for domestic scheduled passenger air transportation.",
@@ -1965,7 +1965,7 @@
           },
           {
             "name": "PPI for legal services.",
-            "series_id": "WPU451101",
+            "series_id": "WPU45110101",
             "seasonality": "NSA",
             "ppi_mom": 4.693933,
             "pce_weight": 0.848,
@@ -2007,7 +2007,7 @@
       },
       {
         "period": "2026-02",
-        "result": 0.037601,
+        "result": 0.037597,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 22.946,
@@ -2143,11 +2143,11 @@
           },
           {
             "name": "PPI for homeowners’ insurance.",
-            "series_id": "PCU5241265241262",
+            "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": -0.010384,
+            "ppi_mom": -0.014008,
             "pce_weight": 0.104,
-            "contribution": -1.08e-05
+            "contribution": -1.457e-05
           },
           {
             "name": "PPI for domestic scheduled passenger air transportation.",
@@ -2159,7 +2159,7 @@
           },
           {
             "name": "PPI for legal services.",
-            "series_id": "WPU451101",
+            "series_id": "WPU45110101",
             "seasonality": "NSA",
             "ppi_mom": 1.697984,
             "pce_weight": 0.848,
@@ -2201,7 +2201,7 @@
       },
       {
         "period": "2026-03",
-        "result": 0.102114,
+        "result": 0.101964,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 22.946,
@@ -2337,11 +2337,11 @@
           },
           {
             "name": "PPI for homeowners’ insurance.",
-            "series_id": "PCU5241265241262",
+            "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": 0.171008,
+            "ppi_mom": 0.026224,
             "pce_weight": 0.104,
-            "contribution": 0.00017785
+            "contribution": 2.727e-05
           },
           {
             "name": "PPI for domestic scheduled passenger air transportation.",
@@ -2353,7 +2353,7 @@
           },
           {
             "name": "PPI for legal services.",
-            "series_id": "WPU451101",
+            "series_id": "WPU45110101",
             "seasonality": "NSA",
             "ppi_mom": -0.585975,
             "pce_weight": 0.848,
@@ -2395,7 +2395,7 @@
       },
       {
         "period": "2026-04",
-        "result": 0.021523,
+        "result": 0.021519,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 22.946,
@@ -2531,11 +2531,11 @@
           },
           {
             "name": "PPI for homeowners’ insurance.",
-            "series_id": "PCU5241265241262",
+            "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": 0.137195,
+            "ppi_mom": 0.133957,
             "pce_weight": 0.104,
-            "contribution": 0.00014268
+            "contribution": 0.00013932
           },
           {
             "name": "PPI for domestic scheduled passenger air transportation.",
@@ -2547,7 +2547,7 @@
           },
           {
             "name": "PPI for legal services.",
-            "series_id": "WPU451101",
+            "series_id": "WPU45110101",
             "seasonality": "NSA",
             "ppi_mom": 0.924332,
             "pce_weight": 0.848,
@@ -2589,7 +2589,7 @@
       },
       {
         "period": "2026-05",
-        "result": 0.136378,
+        "result": 0.136374,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 22.946,
@@ -2725,11 +2725,11 @@
           },
           {
             "name": "PPI for homeowners’ insurance.",
-            "series_id": "PCU5241265241262",
+            "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": 0.133901,
+            "ppi_mom": 0.13055,
             "pce_weight": 0.104,
-            "contribution": 0.00013926
+            "contribution": 0.00013577
           },
           {
             "name": "PPI for domestic scheduled passenger air transportation.",
@@ -2741,7 +2741,7 @@
           },
           {
             "name": "PPI for legal services.",
-            "series_id": "WPU451101",
+            "series_id": "WPU45110101",
             "seasonality": "NSA",
             "ppi_mom": 0.545194,
             "pce_weight": 0.848,
@@ -2783,7 +2783,7 @@
       },
       {
         "period": "2026-06",
-        "result": 0.085534,
+        "result": 0.085526,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 22.946,
@@ -2919,11 +2919,11 @@
           },
           {
             "name": "PPI for homeowners’ insurance.",
-            "series_id": "PCU5241265241262",
+            "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": 0.069618,
+            "ppi_mom": 0.061966,
             "pce_weight": 0.104,
-            "contribution": 7.24e-05
+            "contribution": 6.444e-05
           },
           {
             "name": "PPI for domestic scheduled passenger air transportation.",
@@ -2935,7 +2935,7 @@
           },
           {
             "name": "PPI for legal services.",
-            "series_id": "WPU451101",
+            "series_id": "WPU45110101",
             "seasonality": "NSA",
             "ppi_mom": -0.2034,
             "pce_weight": 0.848,
@@ -2977,7 +2977,7 @@
       },
       {
         "period": "2026-07",
-        "result": 0.072497,
+        "result": 0.07241,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 22.946,
@@ -3113,11 +3113,11 @@
           },
           {
             "name": "PPI for homeowners’ insurance.",
-            "series_id": "PCU5241265241262",
+            "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": 0.096433,
+            "ppi_mom": 0.013245,
             "pce_weight": 0.104,
-            "contribution": 0.00010029
+            "contribution": 1.377e-05
           },
           {
             "name": "PPI for domestic scheduled passenger air transportation.",
@@ -3129,7 +3129,7 @@
           },
           {
             "name": "PPI for legal services.",
-            "series_id": "WPU451101",
+            "series_id": "WPU45110101",
             "seasonality": "NSA",
             "ppi_mom": -0.772634,
             "pce_weight": 0.848,
@@ -3171,7 +3171,7 @@
       },
       {
         "period": "2026-08",
-        "result": 0.051858,
+        "result": 0.051844,
         "unit": "percentage_point",
         "complete": true,
         "available_weight": 22.946,
@@ -3307,11 +3307,11 @@
           },
           {
             "name": "PPI for homeowners’ insurance.",
-            "series_id": "PCU5241265241262",
+            "series_id": "PCU9241269241262",
             "seasonality": "NSA",
-            "ppi_mom": -0.068815,
+            "ppi_mom": -0.082679,
             "pce_weight": 0.104,
-            "contribution": -7.157e-05
+            "contribution": -8.599e-05
           },
           {
             "name": "PPI for domestic scheduled passenger air transportation.",
@@ -3323,7 +3323,7 @@
           },
           {
             "name": "PPI for legal services.",
-            "series_id": "WPU451101",
+            "series_id": "WPU45110101",
             "seasonality": "NSA",
             "ppi_mom": 0.996889,
             "pce_weight": 0.848,
@@ -3435,18 +3435,18 @@
       "name": "保險",
       "pce_weight": 2.17,
       "values": [
-        0.008128,
-        0.001042,
-        0.001538,
-        0.000405,
-        0.082809,
-        0.000803,
-        0.001154,
-        -0.000733,
-        0.000805,
-        -0.002301,
-        0.000804,
-        0.000201
+        0.008203,
+        0.001035,
+        0.001532,
+        0.000339,
+        0.082797,
+        0.000799,
+        0.001004,
+        -0.000736,
+        0.000802,
+        -0.002309,
+        0.000718,
+        0.000187
       ],
       "unit": "percentage_point"
     },
