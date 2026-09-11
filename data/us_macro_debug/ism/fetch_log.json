@@ -4,7 +4,7 @@
     "sector": "manufacturing",
     "requested_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/september/",
     "status_code": 200,
-    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=e84c77ff57a161f3ea73a15a8821c30e056e6cda7a3548254456cac700b9bf72ce18b3ec468b3345cb7335836d66134e00c95f2873e678285f2c42de35de174f41e99998ce6c2eec074883141c6744fa4f191aa9b580adf8630a62573a429c4ec30e491dc1577ec89d6a992060f131d6834cc5fbfed4321267455a072e6e87b7",
+    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=8dc120d4acc2f3833c04da0438cabe10fd308806c8cf6cb98361681b789a66cfdd0c8e324b767be08aa7e355fef391558f20edfe8d897842296222a30ee9959bcd2044673589f2ca4fcc21c7bbac578d34717d20459bfb6c21fdd5b509223146085eef1466e109901b635911f109aa04d71000447a08806f673c4fada895c2d4",
     "content_type": "text/html",
     "response_bytes": 922,
     "status": "failed",
@@ -30,7 +30,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/august/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 156205,
+    "response_bytes": 156203,
     "status": "parsed",
     "values": {
       "manufacturing_pmi": 54.6,
@@ -142,7 +142,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/april/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 87849,
+    "response_bytes": 87851,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM report does not identify April 2026"
@@ -210,7 +210,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/february/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 89488,
+    "response_bytes": 89486,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM Services PMI value not found"
