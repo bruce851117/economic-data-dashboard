@@ -5,7 +5,7 @@
   "source_url": "https://www.bls.gov/ppi/",
   "title": "Selected Producer Price Indexes",
   "description": "Monthly percent changes calculated from selected BLS PPI index levels.",
-  "updated_at_utc": "2026-09-11T06:43:18.403411+00:00",
+  "updated_at_utc": "2026-09-11T06:50:31.929587+00:00",
   "data_changed": true,
   "default_months": 6,
   "available_filter_options": [
@@ -19,7 +19,7 @@
   "pce_impact_method": {
     "formula": "sum(PPI monthly percent change x PCE weight / 100)",
     "unit": "percentage_point",
-    "coverage": "Selected components represent 22.946 percent of the supplied PCE weights.",
+    "coverage": "Selected components excluding portfolio management represent 21.152 percent of the supplied PCE weights.",
     "official_bea_forecast": false,
     "caveat": "This is a mechanical proxy based on selected PPI components, not an official BEA Core PCE estimate."
   },
@@ -113,6 +113,7 @@
     {
       "order": 0,
       "category": "醫療",
+      "exclude_from_total": false,
       "name": "PPI for hospitals.",
       "short_name": "Hospitals",
       "bls_series_id": "PCU622---622---",
@@ -152,6 +153,7 @@
     {
       "order": 1,
       "category": "醫療",
+      "exclude_from_total": false,
       "name": "PPI for nursing care facilities.",
       "short_name": "Nursing Care Facilities",
       "bls_series_id": "PCU623110623110",
@@ -191,6 +193,7 @@
     {
       "order": 2,
       "category": "醫療",
+      "exclude_from_total": false,
       "name": "PPI for offices of physicians.",
       "short_name": "Offices of Physicians",
       "bls_series_id": "PCU6211--6211--",
@@ -230,6 +233,7 @@
     {
       "order": 3,
       "category": "醫療",
+      "exclude_from_total": false,
       "name": "PPI for home health care services.",
       "short_name": "Home Health Care Services",
       "bls_series_id": "PCU62161-62161-",
@@ -269,6 +273,7 @@
     {
       "order": 4,
       "category": "醫療",
+      "exclude_from_total": false,
       "name": "PPI for medical laboratories",
       "short_name": "Medical Laboratories",
       "bls_series_id": "PCU6215116215112",
@@ -308,6 +313,7 @@
     {
       "order": 5,
       "category": "醫療",
+      "exclude_from_total": false,
       "name": "PPI for diagnostic imaging centers.",
       "short_name": "Diagnostic Imaging Centers",
       "bls_series_id": "PCU6215126215124",
@@ -347,6 +353,7 @@
     {
       "order": 6,
       "category": "投管",
+      "exclude_from_total": true,
       "name": "PPI for Portfolio management & investment advice.",
       "short_name": "Portfolio Management & Investment Advice",
       "bls_series_id": "PCU523940523940",
@@ -386,6 +393,7 @@
     {
       "order": 7,
       "category": "金融",
+      "exclude_from_total": false,
       "name": "PPI for brokerage services, equities, and ETFs.",
       "short_name": "Brokerage Services, Equities & ETFs",
       "bls_series_id": "PCU5231505231501011",
@@ -425,6 +433,7 @@
     {
       "order": 8,
       "category": "金融",
+      "exclude_from_total": false,
       "name": "PPI for brokerage services, all other securities.",
       "short_name": "Brokerage Services, All Other Securities",
       "bls_series_id": "PCU5231505231501012",
@@ -464,6 +473,7 @@
     {
       "order": 9,
       "category": "金融",
+      "exclude_from_total": false,
       "name": "PPI for dealer transactions, debt securities and all other trading.",
       "short_name": "Dealer Transactions, Debt & Other Trading",
       "bls_series_id": "PCU5231505231502012",
@@ -503,6 +513,7 @@
     {
       "order": 10,
       "category": "金融",
+      "exclude_from_total": false,
       "name": "PPI for dealer transactions, equity securities.",
       "short_name": "Dealer Transactions, Equity Securities",
       "bls_series_id": "PCU5231505231502011",
@@ -542,6 +553,7 @@
     {
       "order": 11,
       "category": "金融",
+      "exclude_from_total": false,
       "name": "PPI for other securities related services including margin lending and mutual fund sales.",
       "short_name": "Other Securities Related Services",
       "bls_series_id": "PCU523150523150102",
@@ -581,6 +593,7 @@
     {
       "order": 12,
       "category": "金融",
+      "exclude_from_total": false,
       "name": "PPI for commercial bank trust services.",
       "short_name": "Commercial Bank Trust Services",
       "bls_series_id": "PCU5221105221103",
@@ -620,6 +633,7 @@
     {
       "order": 13,
       "category": "保險",
+      "exclude_from_total": false,
       "name": "PPI for direct health and medical insurance carriers.",
       "short_name": "Direct Health & Medical Insurance Carriers",
       "bls_series_id": "PCU524114524114",
@@ -659,6 +673,7 @@
     {
       "order": 14,
       "category": "保險",
+      "exclude_from_total": false,
       "name": "PPI for workers’ compensation insurance.",
       "short_name": "Workers Compensation Insurance",
       "bls_series_id": "PCU5241265241266",
@@ -698,6 +713,7 @@
     {
       "order": 15,
       "category": "保險",
+      "exclude_from_total": false,
       "name": "PPI for private passenger auto insurance.",
       "short_name": "Private Passenger Auto Insurance",
       "bls_series_id": "PCU5241265241261",
@@ -737,6 +753,7 @@
     {
       "order": 16,
       "category": "保險",
+      "exclude_from_total": false,
       "name": "PPI for homeowners’ insurance.",
       "short_name": "Premiums for Homeowners Insurance",
       "bls_series_id": "PCU9241269241262",
@@ -776,6 +793,7 @@
     {
       "order": 17,
       "category": "運輸",
+      "exclude_from_total": false,
       "name": "PPI for domestic scheduled passenger air transportation.",
       "short_name": "Domestic Scheduled Passenger Air Transportation",
       "bls_series_id": "PCU4811114811111",
@@ -815,6 +833,7 @@
     {
       "order": 18,
       "category": "法律",
+      "exclude_from_total": false,
       "name": "PPI for legal services.",
       "short_name": "Legal Services",
       "bls_series_id": "WPU45110101",
@@ -854,6 +873,7 @@
     {
       "order": 19,
       "category": "其他",
+      "exclude_from_total": false,
       "name": "PPI for employment placement agencies - primary services.",
       "short_name": "Employment Placement Services",
       "bls_series_id": "PCU5613805613802",
@@ -893,6 +913,7 @@
     {
       "order": 20,
       "category": "其他",
+      "exclude_from_total": false,
       "name": "PPI for apparel",
       "short_name": "Apparel",
       "bls_series_id": "WPU0381",
@@ -932,6 +953,7 @@
     {
       "order": 21,
       "category": "軟體",
+      "exclude_from_total": false,
       "name": "PPI for game software publishing",
       "short_name": "Game Software Publishing",
       "bls_series_id": "WPU342104",
@@ -971,6 +993,7 @@
     {
       "order": 22,
       "category": "軟體",
+      "exclude_from_total": false,
       "name": "PPI for hosting, ASP (active server pages); and other IT (information technology) infrastructure provisioning services",
       "short_name": "Hosting, ASP & Other IT Infrastructure",
       "bls_series_id": "WPU381101",
@@ -1016,32 +1039,32 @@
     "badge": "PCE Impact",
     "bls_series_id": null,
     "seasonality": "Mixed",
-    "pce_weight": 22.946,
+    "pce_weight": 21.152,
     "available": true,
     "series_title": "Weighted impact estimated from selected PPI components",
     "values": [
-      0.012561,
-      0.291836,
-      0.034127,
-      0.028699,
-      0.293897,
-      0.037597,
-      0.101964,
-      0.021519,
-      0.136374,
-      0.085526,
-      0.07241,
-      0.051844
+      0.029373,
+      0.230839,
+      0.011408,
+      0.018492,
+      0.250304,
+      0.019816,
+      0.085346,
+      0.047454,
+      0.048413,
+      0.073521,
+      -0.024232,
+      0.077549
     ],
     "unit": "percentage_point",
     "calculation_details": [
       {
         "period": "2025-09",
-        "result": 0.012561,
+        "result": 0.029373,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 22.946,
-        "total_weight": 22.946,
+        "available_weight": 21.152,
+        "total_weight": 21.152,
         "components": [
           {
             "name": "PPI for hospitals.",
@@ -1090,14 +1113,6 @@
             "ppi_mom": 0.0,
             "pce_weight": 0.1425,
             "contribution": 0.0
-          },
-          {
-            "name": "PPI for Portfolio management & investment advice.",
-            "series_id": "PCU523940523940",
-            "seasonality": "NSA",
-            "ppi_mom": -0.937144,
-            "pce_weight": 1.794,
-            "contribution": -0.01681236
           },
           {
             "name": "PPI for brokerage services, equities, and ETFs.",
@@ -1231,11 +1246,11 @@
       },
       {
         "period": "2025-10",
-        "result": 0.291836,
+        "result": 0.230839,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 22.946,
-        "total_weight": 22.946,
+        "available_weight": 21.152,
+        "total_weight": 21.152,
         "components": [
           {
             "name": "PPI for hospitals.",
@@ -1284,14 +1299,6 @@
             "ppi_mom": 0.0,
             "pce_weight": 0.1425,
             "contribution": 0.0
-          },
-          {
-            "name": "PPI for Portfolio management & investment advice.",
-            "series_id": "PCU523940523940",
-            "seasonality": "NSA",
-            "ppi_mom": 3.400064,
-            "pce_weight": 1.794,
-            "contribution": 0.06099715
           },
           {
             "name": "PPI for brokerage services, equities, and ETFs.",
@@ -1425,11 +1432,11 @@
       },
       {
         "period": "2025-11",
-        "result": 0.034127,
+        "result": 0.011408,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 22.946,
-        "total_weight": 22.946,
+        "available_weight": 21.152,
+        "total_weight": 21.152,
         "components": [
           {
             "name": "PPI for hospitals.",
@@ -1478,14 +1485,6 @@
             "ppi_mom": 0.0,
             "pce_weight": 0.1425,
             "contribution": 0.0
-          },
-          {
-            "name": "PPI for Portfolio management & investment advice.",
-            "series_id": "PCU523940523940",
-            "seasonality": "NSA",
-            "ppi_mom": 1.266406,
-            "pce_weight": 1.794,
-            "contribution": 0.02271932
           },
           {
             "name": "PPI for brokerage services, equities, and ETFs.",
@@ -1619,11 +1618,11 @@
       },
       {
         "period": "2025-12",
-        "result": 0.028699,
+        "result": 0.018492,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 22.946,
-        "total_weight": 22.946,
+        "available_weight": 21.152,
+        "total_weight": 21.152,
         "components": [
           {
             "name": "PPI for hospitals.",
@@ -1672,14 +1671,6 @@
             "ppi_mom": 0.0,
             "pce_weight": 0.1425,
             "contribution": 0.0
-          },
-          {
-            "name": "PPI for Portfolio management & investment advice.",
-            "series_id": "PCU523940523940",
-            "seasonality": "NSA",
-            "ppi_mom": 0.568949,
-            "pce_weight": 1.794,
-            "contribution": 0.01020695
           },
           {
             "name": "PPI for brokerage services, equities, and ETFs.",
@@ -1813,11 +1804,11 @@
       },
       {
         "period": "2026-01",
-        "result": 0.293897,
+        "result": 0.250304,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 22.946,
-        "total_weight": 22.946,
+        "available_weight": 21.152,
+        "total_weight": 21.152,
         "components": [
           {
             "name": "PPI for hospitals.",
@@ -1866,14 +1857,6 @@
             "ppi_mom": 0.6171,
             "pce_weight": 0.1425,
             "contribution": 0.00087937
-          },
-          {
-            "name": "PPI for Portfolio management & investment advice.",
-            "series_id": "PCU523940523940",
-            "seasonality": "NSA",
-            "ppi_mom": 2.429927,
-            "pce_weight": 1.794,
-            "contribution": 0.04359289
           },
           {
             "name": "PPI for brokerage services, equities, and ETFs.",
@@ -2007,11 +1990,11 @@
       },
       {
         "period": "2026-02",
-        "result": 0.037597,
+        "result": 0.019816,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 22.946,
-        "total_weight": 22.946,
+        "available_weight": 21.152,
+        "total_weight": 21.152,
         "components": [
           {
             "name": "PPI for hospitals.",
@@ -2060,14 +2043,6 @@
             "ppi_mom": 0.0,
             "pce_weight": 0.1425,
             "contribution": 0.0
-          },
-          {
-            "name": "PPI for Portfolio management & investment advice.",
-            "series_id": "PCU523940523940",
-            "seasonality": "NSA",
-            "ppi_mom": 0.991168,
-            "pce_weight": 1.794,
-            "contribution": 0.01778155
           },
           {
             "name": "PPI for brokerage services, equities, and ETFs.",
@@ -2201,11 +2176,11 @@
       },
       {
         "period": "2026-03",
-        "result": 0.101964,
+        "result": 0.085346,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 22.946,
-        "total_weight": 22.946,
+        "available_weight": 21.152,
+        "total_weight": 21.152,
         "components": [
           {
             "name": "PPI for hospitals.",
@@ -2254,14 +2229,6 @@
             "ppi_mom": 0.365519,
             "pce_weight": 0.1425,
             "contribution": 0.00052086
-          },
-          {
-            "name": "PPI for Portfolio management & investment advice.",
-            "series_id": "PCU523940523940",
-            "seasonality": "NSA",
-            "ppi_mom": 0.926281,
-            "pce_weight": 1.794,
-            "contribution": 0.01661748
           },
           {
             "name": "PPI for brokerage services, equities, and ETFs.",
@@ -2395,11 +2362,11 @@
       },
       {
         "period": "2026-04",
-        "result": 0.021519,
+        "result": 0.047454,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 22.946,
-        "total_weight": 22.946,
+        "available_weight": 21.152,
+        "total_weight": 21.152,
         "components": [
           {
             "name": "PPI for hospitals.",
@@ -2448,14 +2415,6 @@
             "ppi_mom": -0.020506,
             "pce_weight": 0.1425,
             "contribution": -2.922e-05
-          },
-          {
-            "name": "PPI for Portfolio management & investment advice.",
-            "series_id": "PCU523940523940",
-            "seasonality": "NSA",
-            "ppi_mom": -1.445653,
-            "pce_weight": 1.794,
-            "contribution": -0.02593501
           },
           {
             "name": "PPI for brokerage services, equities, and ETFs.",
@@ -2589,11 +2548,11 @@
       },
       {
         "period": "2026-05",
-        "result": 0.136374,
+        "result": 0.048413,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 22.946,
-        "total_weight": 22.946,
+        "available_weight": 21.152,
+        "total_weight": 21.152,
         "components": [
           {
             "name": "PPI for hospitals.",
@@ -2642,14 +2601,6 @@
             "ppi_mom": 0.0,
             "pce_weight": 0.1425,
             "contribution": 0.0
-          },
-          {
-            "name": "PPI for Portfolio management & investment advice.",
-            "series_id": "PCU523940523940",
-            "seasonality": "NSA",
-            "ppi_mom": 4.903055,
-            "pce_weight": 1.794,
-            "contribution": 0.08796081
           },
           {
             "name": "PPI for brokerage services, equities, and ETFs.",
@@ -2783,11 +2734,11 @@
       },
       {
         "period": "2026-06",
-        "result": 0.085526,
+        "result": 0.073521,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 22.946,
-        "total_weight": 22.946,
+        "available_weight": 21.152,
+        "total_weight": 21.152,
         "components": [
           {
             "name": "PPI for hospitals.",
@@ -2836,14 +2787,6 @@
             "ppi_mom": 1.217491,
             "pce_weight": 0.1425,
             "contribution": 0.00173492
-          },
-          {
-            "name": "PPI for Portfolio management & investment advice.",
-            "series_id": "PCU523940523940",
-            "seasonality": "NSA",
-            "ppi_mom": 0.669172,
-            "pce_weight": 1.794,
-            "contribution": 0.01200495
           },
           {
             "name": "PPI for brokerage services, equities, and ETFs.",
@@ -2977,11 +2920,11 @@
       },
       {
         "period": "2026-07",
-        "result": 0.07241,
+        "result": -0.024232,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 22.946,
-        "total_weight": 22.946,
+        "available_weight": 21.152,
+        "total_weight": 21.152,
         "components": [
           {
             "name": "PPI for hospitals.",
@@ -3030,14 +2973,6 @@
             "ppi_mom": 0.0,
             "pce_weight": 0.1425,
             "contribution": 0.0
-          },
-          {
-            "name": "PPI for Portfolio management & investment advice.",
-            "series_id": "PCU523940523940",
-            "seasonality": "NSA",
-            "ppi_mom": 5.386955,
-            "pce_weight": 1.794,
-            "contribution": 0.09664197
           },
           {
             "name": "PPI for brokerage services, equities, and ETFs.",
@@ -3171,11 +3106,11 @@
       },
       {
         "period": "2026-08",
-        "result": 0.051844,
+        "result": 0.077549,
         "unit": "percentage_point",
         "complete": true,
-        "available_weight": 22.946,
-        "total_weight": 22.946,
+        "available_weight": 21.152,
+        "total_weight": 21.152,
         "components": [
           {
             "name": "PPI for hospitals.",
@@ -3224,14 +3159,6 @@
             "ppi_mom": 0.0,
             "pce_weight": 0.1425,
             "contribution": 0.0
-          },
-          {
-            "name": "PPI for Portfolio management & investment advice.",
-            "series_id": "PCU523940523940",
-            "seasonality": "NSA",
-            "ppi_mom": -1.432851,
-            "pce_weight": 1.794,
-            "contribution": -0.02570535
           },
           {
             "name": "PPI for brokerage services, equities, and ETFs.",
@@ -3535,6 +3462,7 @@
       "unit": "percentage_point"
     }
   ],
+  "pce_impact_weight_total": 21.152,
   "missing_series_count": 0,
   "missing_series": []
 }
