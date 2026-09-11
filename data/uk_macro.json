@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-08T09:30:29.208127+00:00",
+  "generated_at": "2026-09-11T06:56:32.513783+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -10962,6 +10962,11 @@
         {
           "date": "2026-06-01",
           "value": -0.20304568527919065,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/economicoutputandproductivity/output/timeseries/k222/diop"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 0.6128702757916216,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/economicoutputandproductivity/output/timeseries/k222/diop"
         }
       ]
