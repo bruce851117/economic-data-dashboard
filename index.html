@@ -75,6 +75,16 @@
     .cpi-exp{margin-left:auto;display:flex;gap:5px}
     .cpi-mini{padding:4px 9px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:11px;font-weight:700}
     .cpi-mini:hover{color:#1d4ed8;border-color:#93c5fd}
+    /* hierarchy guides: one vertical rail per indent step, so parent/child is traceable */
+    .cpi-indent{flex:none;align-self:stretch;min-height:26px;background-image:repeating-linear-gradient(to right,transparent 0,transparent 17px,#b6c6da 17px,#b6c6da 18px)}
+    .level-0 .cpi-indent{background-image:repeating-linear-gradient(to right,transparent 0,transparent 17px,rgba(255,255,255,.45) 17px,rgba(255,255,255,.45) 18px)}
+    .cpi-dot{flex:none;width:5px;height:17px;border-radius:3px;margin-right:7px}
+    .cpi-d0{background:#93b4e6}.cpi-d1{background:#2563eb}.cpi-d2{background:#0ea5e9}
+    .cpi-d3{background:#38bdf8}.cpi-d4{background:#a5b4fc}.cpi-d5{background:#cbd5e1}
+    .cpi-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .level-2 .cpi-name{font-size:12.5px}
+    .level-3 .cpi-name{font-size:12px;color:#334155}
+    .level-4 .cpi-name{font-size:11.5px;color:#475569}
     .cpi-toggle{cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;margin-right:5px;color:#fff;background:#2563eb;border-radius:5px;font-size:12px;font-weight:900;line-height:1;user-select:none;flex:none}
     .cpi-toggle-sp{display:inline-block;width:18px;margin-right:5px;flex:none}
     .us-toggle{cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;color:#fff;background:#2563eb;border-radius:6px;font-size:15px;font-weight:900;line-height:1;user-select:none}.us-toggle:hover{background:#1d4ed8}.us-bold{font-weight:900}.us-static{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:999px;background:#e2e8f0;color:#64748b;font-size:9px;font-weight:800;vertical-align:middle}
@@ -261,7 +271,16 @@
         for(let k=r.lv;k<=8;k++)if(k>r.lv)delete stack[k];});
       const kids={};rows.forEach(r=>{if(r.parent!=null)(kids[r.parent]=kids[r.parent]||[]).push(r.idx)});
       rows.forEach(r=>r.hasKids=!!kids[r.idx]);
-      if(!cpiExpandInit){cpiExpandInit=true;rows.forEach(r=>{if(r.hasKids&&(r.lv<=1||CPI_DEFAULT_OPEN.includes(r.name)))cpiExpand[r.idx]=true})}
+      if(!cpiExpandInit){
+        // Open ONLY the requested groups, plus the ancestors needed to reach them.
+        cpiExpandInit=true;
+        const byName={};rows.forEach(r=>{byName[r.name]=r});
+        CPI_DEFAULT_OPEN.forEach(nm=>{
+          const r=byName[nm];if(!r)return;
+          cpiExpand[r.idx]=true;
+          let p=r.parent;while(p!=null){cpiExpand[p]=true;p=rows[p].parent}
+        });
+      }
       const vis=r=>{let p=r.parent;while(p!=null){if(!cpiExpand[p])return false;p=rows[p].parent}return true};
       return{rows,visible:rows.filter(vis)};
     }
@@ -278,15 +297,18 @@
       t.visible.forEach(r=>{
         const lv=Math.min(6,r.lv);
         const series=contrib?cpiContribRow(r,x.periods):(r.values||[]);
+        const indent=lv?`<span class="cpi-indent" style="width:${lv*18}px"></span>`:'';
+        const tog=r.hasKids?`<span class="cpi-toggle" data-cpi-key="${r.idx}">${cpiExpand[r.idx]?'▾':'▸'}</span>`:'<span class="cpi-toggle-sp"></span>';
+        const dot=`<span class="cpi-dot cpi-d${Math.min(5,lv)}"></span>`;
         if(contrib&&series===null){
-          h+=`<tr class="level-${Math.min(4,lv)}"><td class="item-cell" style="padding-left:${13+lv*20}px"><div class="item-wrap">${r.hasKids?`<span class="cpi-toggle" data-cpi-key="${r.idx}">${cpiExpand[r.idx]?'▾':'▸'}</span>`:'<span class="cpi-toggle-sp"></span>'}<span>${esc(r.name)}</span></div></td>`+x.periods.map(()=>'<td class="value missing">—</td>').join('')+'</tr>';
+          h+=`<tr class="level-${Math.min(4,lv)}"><td class="item-cell"><div class="item-wrap">${indent}${tog}${dot}<span class="cpi-name">${esc(r.name)}</span></div></td>`+x.periods.map(()=>'<td class="value missing">—</td>').join('')+'</tr>';
           return;
         }
         const all=series||[],shown=all.slice(x.start).reverse();
         const w=cpiWeight(r);
         const badge=w===null?'':`<span class="badge b-weight">${w.toFixed(2)}%</span>`;
         const sa=r.seasonality==='NSA'?'<span class="badge b-nsa">NSA</span>':'';
-        h+=`<tr class="level-${Math.min(4,lv)}"><td class="item-cell" style="padding-left:${13+lv*20}px"><div class="item-wrap">${r.hasKids?`<span class="cpi-toggle" data-cpi-key="${r.idx}">${cpiExpand[r.idx]?'▾':'▸'}</span>`:'<span class="cpi-toggle-sp"></span>'}<span>${esc(r.name)}${sa}${badge}</span></div></td>${cells(shown,all,contrib?3:2)}</tr>`;
+        h+=`<tr class="level-${Math.min(4,lv)}"><td class="item-cell"><div class="item-wrap">${indent}${tog}${dot}<span class="cpi-name">${esc(r.name)}${sa}${badge}</span></div></td>${cells(shown,all,contrib?3:2)}</tr>`;
       });
       $('cpi-content').className='';$('cpi-content').innerHTML=h+'</tbody></table></div>';
     }
