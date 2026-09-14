@@ -136,6 +136,15 @@ jobs:
               "Car and Truck Rental",
               "Recreation Services",
               "Education and Communication Services",
+              "Food at Home",
+              "Food Away from Home",
+              "Energy Commodities",
+              "Energy Services",
+              "Health Insurance",
+              "Information Technology Commodities",
+              "Video and Audio Services",
+              "Telephone Services",
+              "Other Personal Services",
           }
 
           missing_names = (
@@ -148,11 +157,6 @@ jobs:
                   + ", ".join(sorted(missing_names))
               )
 
-          if "Health Insurance" in available_names:
-              raise SystemExit(
-                  "ERROR: Health Insurance should "
-                  "not be included in CPI JSON."
-              )
 
           expected_series = {
               "Household Furnishings and Supplies":
