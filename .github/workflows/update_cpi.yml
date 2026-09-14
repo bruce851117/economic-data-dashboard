@@ -99,10 +99,10 @@ jobs:
                   f"12 periods, but found {len(periods)}."
               )
 
-          if len(rows) != 32:
+          if len(rows) != 49:
               raise SystemExit(
                   "ERROR: CPI JSON must contain "
-                  f"32 rows, but found {len(rows)}."
+                  f"49 rows, but found {len(rows)}."
               )
 
           if period_count != len(periods):

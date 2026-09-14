@@ -68,6 +68,15 @@
     #us-table-view thead th.item-head{z-index:7;left:0}
     .us-section-cell{background:#0f2038!important;color:#fff!important;font-weight:800;letter-spacing:.5px}
     .us-section-fill{background:#0f2038}
+    .cpi-tabs{display:flex;align-items:center;gap:6px;margin:8px 0 6px;flex-wrap:wrap}
+    .cpi-tab{padding:5px 13px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#475569;cursor:pointer;font-size:12px;font-weight:800}
+    .cpi-tab:hover{border-color:#93c5fd;color:#1d4ed8}
+    .cpi-tab.active{background:#142946;border-color:#142946;color:#fff}
+    .cpi-exp{margin-left:auto;display:flex;gap:5px}
+    .cpi-mini{padding:4px 9px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:11px;font-weight:700}
+    .cpi-mini:hover{color:#1d4ed8;border-color:#93c5fd}
+    .cpi-toggle{cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;margin-right:5px;color:#fff;background:#2563eb;border-radius:5px;font-size:12px;font-weight:900;line-height:1;user-select:none;flex:none}
+    .cpi-toggle-sp{display:inline-block;width:18px;margin-right:5px;flex:none}
     .us-toggle{cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;color:#fff;background:#2563eb;border-radius:6px;font-size:15px;font-weight:900;line-height:1;user-select:none}.us-toggle:hover{background:#1d4ed8}.us-bold{font-weight:900}.us-static{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:999px;background:#e2e8f0;color:#64748b;font-size:9px;font-weight:800;vertical-align:middle}
     .us-toggle:hover{color:#1d4ed8}
     .us-toggle-sp{display:inline-block;width:20px}
@@ -109,7 +118,7 @@
     <section id="inflation-panel" class="panel active">
       <div class="toolbar"><div class="filters"><strong>顯示期間</strong><button class="filter" data-months="3">最近3個月</button><button class="filter active" data-months="6">最近6個月</button><button class="filter" data-months="12">最近12個月</button></div><div class="status"><span class="dot"></span><span id="range-text">正在載入</span><span id="update-text"></span></div><div class="tool-actions"><button class="update-button trigger-update-button" type="button">更新全部資料</button><span class="update-status trigger-status"></span></div></div>
 
-      <div class="card"><div class="heading"><div><h2>CPI 月增率</h2><p>季節調整後月增率，單位：%</p></div><div class="legend">低 ← 綠／白／紅 → 高</div></div><div id="cpi-content" class="loading">正在讀取 CPI 資料</div><div class="note">各列依完整12個月數值獨立計算色階，2025年10月缺值以「—」顯示。</div></div>
+      <div class="card"><div class="heading"><div><h2 id="cpi-title">CPI 月增率</h2><p id="cpi-sub">季節調整後月增率，單位：%</p></div><div class="legend">低 ← 綠／白／紅 → 高</div></div><div class="cpi-tabs"><button type="button" class="cpi-tab active" data-cpi-view="mom">月增率 MoM%</button><button type="button" class="cpi-tab" data-cpi-view="contrib">對核心貢獻 (百分點)</button><span class="cpi-exp"><button type="button" class="cpi-mini" data-cpi-all="1">全部展開</button><button type="button" class="cpi-mini" data-cpi-all="0">全部收合</button></span></div><div id="cpi-content" class="loading">正在讀取 CPI 資料</div><div class="note" id="cpi-note">各列依完整12個月數值獨立計算色階，缺值以「—」顯示。點項目左側 ▸ 可展開子項。</div></div>
 
       <div class="card"><div class="heading derived"><div><h2>衍生核心通膨指標</h2><p>使用最新 Relative Importance 計算</p></div></div><div id="derived-content" class="loading">正在讀取衍生指標</div><div class="note purple">衍生指標為 Dashboard 近似計算，不是 BLS 直接發布的獨立 Series。</div></div>
 
@@ -242,7 +251,44 @@
     function cells(displayed,all,digits=2,extra=''){const s=scale(all);return displayed.map(v=>`<td class="value ${extra} ${valid(v)?'':'missing'}" style="background:${color(v,s)}">${fmt(v,digits)}</td>`).join('')}
     function tableOpen(periods){return'<div class="scroll"><table class="data-table">'+cols(periods.length)+head(periods)+'<tbody>'}
     function setError(id,message){$(id).className='error';$(id).textContent=message}
-    function renderCpi(){if(!cpiData)return;const x=info(cpiData);let h=tableOpen(x.periods);(cpiData.rows||[]).forEach(r=>{const lv=Math.max(0,Math.min(4,Number(r.level)||0)),all=r.values||[],shown=all.slice(x.start).reverse();h+=`<tr class="level-${lv}"><td class="item-cell" style="padding-left:${13+lv*23}px"><div class="item-wrap">${lv?'<span class="marker"></span>':''}<span>${esc(r.name)}</span></div></td>${cells(shown,all)}</tr>`});$('cpi-content').className='';$('cpi-content').innerHTML=h+'</tbody></table></div>'}
+    // ---- CPI hierarchy (expand/collapse) + MoM% / contribution views ----
+    let cpiView='mom';const cpiExpand={};let cpiExpandInit=false;
+    const CPI_DEFAULT_OPEN=['Transportation Commodities Less Motor Fuel','Education and Communication Commodities','Shelter','Transportation Services','Education and Communication Services'];
+    function cpiTree(){
+      const rows=(cpiData?.rows||[]).map((r,i)=>({...r,idx:i,lv:Math.max(0,Number(r.level)||0)}));
+      const stack={};
+      rows.forEach(r=>{stack[r.lv]=r.idx;r.parent=r.lv>0?(stack[r.lv-1]!==undefined?stack[r.lv-1]:null):null;
+        for(let k=r.lv;k<=8;k++)if(k>r.lv)delete stack[k];});
+      const kids={};rows.forEach(r=>{if(r.parent!=null)(kids[r.parent]=kids[r.parent]||[]).push(r.idx)});
+      rows.forEach(r=>r.hasKids=!!kids[r.idx]);
+      if(!cpiExpandInit){cpiExpandInit=true;rows.forEach(r=>{if(r.hasKids&&(r.lv<=1||CPI_DEFAULT_OPEN.includes(r.name)))cpiExpand[r.idx]=true})}
+      const vis=r=>{let p=r.parent;while(p!=null){if(!cpiExpand[p])return false;p=rows[p].parent}return true};
+      return{rows,visible:rows.filter(vis)};
+    }
+    function cpiContribRow(r,periods){const w=Number(r.weight_to_core);
+      if(!Number.isFinite(w))return null;
+      return (r.values||[]).map(v=>valid(v)?Math.round(Number(v)*w/100*1000)/1000:null);}
+    function renderCpi(){
+      if(!cpiData)return;
+      const x=info(cpiData),t=cpiTree(),contrib=cpiView==='contrib';
+      $('cpi-title').textContent=contrib?'CPI 對核心的貢獻':'CPI 月增率';
+      $('cpi-sub').textContent=contrib?'月增率 × 核心權重，單位：百分點(pp)':'季節調整後月增率，單位：%';
+      let h=tableOpen(x.periods);
+      t.visible.forEach(r=>{
+        const lv=Math.min(6,r.lv);
+        const series=contrib?cpiContribRow(r,x.periods):(r.values||[]);
+        if(contrib&&series===null){
+          h+=`<tr class="level-${Math.min(4,lv)}"><td class="item-cell" style="padding-left:${13+lv*20}px"><div class="item-wrap">${r.hasKids?`<span class="cpi-toggle" data-cpi-key="${r.idx}">${cpiExpand[r.idx]?'▾':'▸'}</span>`:'<span class="cpi-toggle-sp"></span>'}<span>${esc(r.name)}</span></div></td>`+x.periods.map(()=>'<td class="value missing">—</td>').join('')+'</tr>';
+          return;
+        }
+        const all=series||[],shown=all.slice(x.start).reverse();
+        const w=Number(r.weight_to_core);
+        const badge=Number.isFinite(w)?`<span class="badge b-weight">${w.toFixed(2)}%</span>`:'';
+        const sa=r.seasonality==='NSA'?'<span class="badge b-nsa">NSA</span>':'';
+        h+=`<tr class="level-${Math.min(4,lv)}"><td class="item-cell" style="padding-left:${13+lv*20}px"><div class="item-wrap">${r.hasKids?`<span class="cpi-toggle" data-cpi-key="${r.idx}">${cpiExpand[r.idx]?'▾':'▸'}</span>`:'<span class="cpi-toggle-sp"></span>'}<span>${esc(r.name)}${sa}${badge}</span></div></td>${cells(shown,all,contrib?3:2)}</tr>`;
+      });
+      $('cpi-content').className='';$('cpi-content').innerHTML=h+'</tbody></table></div>';
+    }
     function renderDerived(){if(!cpiData)return;const x=info(cpiData);let h=tableOpen(x.periods);(cpiData.derived_rows||[]).forEach(r=>{const all=r.values||[],shown=all.slice(x.start).reverse();h+=`<tr><td class="item-cell derived-cell"><div class="item-wrap"><span class="marker" style="background:#7c3aed"></span><span>${esc(r.name)}<span class="badge b-derived">Derived</span></span></div></td>${cells(shown,all)}</tr>`});$('derived-content').className='';$('derived-content').innerHTML=h+'</tbody></table></div>'}
     function renderPpi(){if(!ppiData)return;const x=info(ppiData);let h=tableOpen(x.periods);const total=ppiData.pce_impact_row;if(total?.values){const all=total.values,shown=all.slice(x.start).reverse();h+=`<tr><td class="item-cell pce-cell">合計貢獻（不含投管）<span class="badge b-weight">Coverage ${Number(ppiData.pce_impact_weight_total||21.152).toFixed(3)}%</span></td>${cells(shown,all,3,'pce-cell')}</tr>`}(ppiData.category_impact_rows||[]).forEach(r=>{const all=r.values||[],shown=all.slice(x.start).reverse();h+=`<tr><td class="item-cell derived-cell">${esc(r.name)}<span class="badge b-weight">PCE ${Number(r.pce_weight).toFixed(3)}%</span></td>${cells(shown,all,3,'derived-cell')}</tr>`});h+='</tbody></table></div><div style="padding:10px 18px 4px;color:#075985;font-weight:900">月增率（%）</div>'+tableOpen(x.periods);let prior='';(ppiData.rows||[]).forEach(r=>{if(r.category!==prior){prior=r.category;h+=`<tr><td class="item-cell us-section-cell">${esc(r.category)}</td>${x.periods.map(()=>'<td class="us-section-fill"></td>').join('')}</tr>`}const all=r.values||[],shown=all.slice(x.start).reverse();h+=`<tr><td class="item-cell ppi-cell" title="${esc(r.bls_series_id)}">${esc(r.name)}<span class="badge b-nsa">${esc(r.seasonality)}</span><span class="badge b-weight">PCE ${Number(r.pce_weight).toFixed(4)}%</span></td>${cells(shown,all)}</tr>`});$('ppi-content').className='';$('ppi-content').innerHTML=h+'</tbody></table></div>';const newest=x.periods[0],oldest=x.periods.at(-1);if(newest)$('range-text').textContent=`CPI/PPI 顯示：${newest.period} ～ ${oldest.period}`}
     function employmentInfo(){const a=employmentData?.periods||[],n=Math.min(employmentMonths,a.length),start=a.length-n;return{start,periods:a.slice(start).reverse()}}
@@ -342,6 +388,14 @@
     function bindAuChart(wrap,series){const svg=wrap.querySelector('svg'),track=svg?.querySelector('.au-track-hit'),axis=svg?.querySelector('.au-axis-hit-y'),tip=$('au-tooltip');if(!svg||!track)return;const metrics=()=>{const rect=svg.getBoundingClientRect();return{rect,sx:620/rect.width}};const show=e=>{const data=macroAlignedData(series,'au');if(!data.length)return;const {rect,sx}=metrics(),px=(e.clientX-rect.left)*sx,plotL=54,plotR=602,index=Math.max(0,Math.min(data.length-1,Math.round((px-plotL)/(plotR-plotL)*Math.max(1,data.length-1)))),point=data[index];if(point.value==null||point.value===''||!Number.isFinite(Number(point.value))){wrap.classList.remove('crosshair-active');tip.style.display='none';return}const view=auGetY(series),plotT=18,plotB=177,xx=data.length===1?(62+594)/2:62+index*(594-62)/(data.length-1),yy=plotT+(view.max-Number(point.value))*(plotB-plotT)/(view.max-view.min);wrap.classList.add('crosshair-active');svg.querySelector('.au-crosshair-x').setAttribute('y1',yy);svg.querySelector('.au-crosshair-x').setAttribute('y2',yy);svg.querySelector('.au-crosshair-y').setAttribute('x1',xx);svg.querySelector('.au-crosshair-y').setAttribute('x2',xx);svg.querySelector('.au-crosshair-dot').setAttribute('cx',xx);svg.querySelector('.au-crosshair-dot').setAttribute('cy',yy);tip.style.display='block';tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY+14)+'px';tip.innerHTML=`<strong>${esc(series.name)}</strong><br>${esc(point.date)}：${esc(ukFmt(point.value))}`};track.addEventListener('pointermove',show);track.addEventListener('pointerleave',()=>{wrap.classList.remove('crosshair-active');tip.style.display='none'});track.addEventListener('pointerdown',e=>{e.preventDefault();const startY=e.clientY,start=auGetY(series),span=start.max-start.min;wrap.classList.add('is-panning');const move=ev=>{const shift=(ev.clientY-startY)/Math.max(1,svg.getBoundingClientRect().height)*span/20;auYView.set(series.id,{min:start.min+shift,max:start.max+shift});auRerenderChart(series.id)};const up=()=>{document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up)};document.addEventListener('pointermove',move);document.addEventListener('pointerup',up)});svg.addEventListener('wheel',e=>{e.preventDefault();auAdjustY(series.id,e.deltaY<0?.82:1.22)},{passive:false});if(axis)axis.addEventListener('pointerdown',e=>{e.preventDefault();const startY=e.clientY,start=auGetY(series);const move=ev=>{const scale=Math.exp((ev.clientY-startY)/120),center=(start.min+start.max)/2,half=(start.max-start.min)*scale/2;auYView.set(series.id,{min:center-half,max:center+half});auRerenderChart(series.id)};const up=()=>{document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up)};document.addEventListener('pointermove',move);document.addEventListener('pointerup',up)})}
     function renderAu(){if(!auData)return;let html='';(auData.blocks||AU_BLOCKS).forEach(block=>{const charts=(block.series||[]).map(id=>auSeriesById(id)).filter(Boolean).map(s=>`<article class="au-chart-card"><div class="au-chart-title"><h3><span class="info-link" ${seriesInfoAttrs(s)}>${esc(s.name)}</span></h3><span>${esc(s.ticker||'')}｜${s.frequency==='quarterly'?'季':'月'}</span></div><div class="au-chart-actions"><button class="au-chart-control" type="button" data-au-y-in="${esc(s.id)}">縱軸＋</button><button class="au-chart-control" type="button" data-au-y-out="${esc(s.id)}">縱軸－</button><button class="au-chart-control" type="button" data-au-y-reset="${esc(s.id)}">重設</button></div><div class="au-chart-wrap" data-series-id="${esc(s.id)}">${drawAuChart(s)}</div></article>`).join('');html+=`<section class="au-block"><div class="au-block-head" style="background:${block.color||'#2563eb'}"><h2>${esc(block.title)}</h2><p>${(block.series||[]).length} 項指標</p></div><div class="au-chart-grid">${charts}</div></section>`});$('au-content').className='';$('au-content').innerHTML=html||'<div class="au-empty">沒有澳洲資料</div>';$('au-summary').textContent=`顯示期間：${$('au-start').value||'最早'} ～ ${$('au-end').value||'最新'}｜共 ${(auData.series||[]).length} 項指標`;document.querySelectorAll('[data-au-y-in]').forEach(b=>b.addEventListener('click',()=>auAdjustY(b.dataset.auYIn,.78)));document.querySelectorAll('[data-au-y-out]').forEach(b=>b.addEventListener('click',()=>auAdjustY(b.dataset.auYOut,1.28)));document.querySelectorAll('[data-au-y-reset]').forEach(b=>b.addEventListener('click',()=>auResetY(b.dataset.auYReset)));document.querySelectorAll('.au-chart-wrap[data-series-id]').forEach(w=>{const series=auSeriesById(w.dataset.seriesId);if(series)bindAuChart(w,series)})}
     async function loadAu(){try{auData=await getJson('./data/au_macro.json');auData.series=(auData.series||[]).filter(s=>!AU_HIDDEN_IDS.has(s.id)&&!AU_HIDDEN_NAMES.has(s.name)).map(s=>({...s,data:(s.data||[]).filter(p=>String(p.date||'')>='2015-01-01')}));auData.blocks=(auData.blocks||AU_BLOCKS).map(b=>({...b,series:(b.series||[]).filter(id=>!AU_HIDDEN_IDS.has(id))})).filter(b=>b.series.length);const r=auRange();$('au-start').value=r.min;$('au-end').value=r.max;renderAu()}catch(e){setError('au-content',e.message)}}
+    document.addEventListener('click',e=>{
+      const tab=e.target.closest('.cpi-tab');
+      if(tab){cpiView=tab.dataset.cpiView;document.querySelectorAll('.cpi-tab').forEach(b=>b.classList.toggle('active',b===tab));renderCpi();return}
+      const all=e.target.closest('[data-cpi-all]');
+      if(all){const open=all.dataset.cpiAll==='1';const t=cpiTree();t.rows.forEach(r=>{if(r.hasKids)cpiExpand[r.idx]=open});renderCpi();return}
+      const tg=e.target.closest('.cpi-toggle');
+      if(tg){const k=tg.dataset.cpiKey;cpiExpand[k]=!cpiExpand[k];const sc=$('cpi-content').querySelector('.scroll'),st=sc?sc.scrollTop:0,sl=sc?sc.scrollLeft:0;renderCpi();const s2=$('cpi-content').querySelector('.scroll');if(s2){s2.scrollTop=st;s2.scrollLeft=sl}}
+    });
     function render(){renderCpi();renderDerived();renderPpi();renderEmployment();renderUk();renderEu();renderAu()}
     async function getJson(url){const r=await fetch(`${url}?v=${Date.now()}`,{cache:'no-store'});if(!r.ok)throw new Error(`${url} HTTP ${r.status}`);return r.json()}
     async function load(){const results=await Promise.allSettled([getJson('./data/cpi.json'),getJson('./data/ppi.json'),getJson('./data/employment.json')]);if(results[0].status==='fulfilled'){cpiData=results[0].value;renderCpi();renderDerived()}else{setError('cpi-content',results[0].reason.message);setError('derived-content',results[0].reason.message)}if(results[1].status==='fulfilled'){ppiData=results[1].value;renderPpi()}else setError('ppi-content',results[1].reason.message);if(results[2].status==='fulfilled'){employmentData=results[2].value;renderEmployment()}else{setError('employment-payroll-content',results[2].reason.message);setError('employment-household-content',results[2].reason.message);setError('employment-flows-content',results[2].reason.message);setError('employment-reasons-content',results[2].reason.message);setError('employment-summary-content',results[2].reason.message)}const latestInflationUpdate=[cpiData?.updated_at_utc,ppiData?.updated_at_utc].filter(Boolean).map(v=>new Date(v)).sort((a,b)=>b-a)[0];$('update-text').textContent=latestInflationUpdate?'更新：'+new Intl.DateTimeFormat('zh-TW',{dateStyle:'short',timeStyle:'short',timeZone:'Asia/Taipei'}).format(latestInflationUpdate):''}

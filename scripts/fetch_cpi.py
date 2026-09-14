@@ -23,180 +23,347 @@ OUTPUT_PATH = (
 
 CPI_SERIES = [
     {
-        "name": "All Items",
+        "name": 'All Items',
         "bls_series_id": "CUSR0000SA0",
         "level": 0,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": None,
     },
     {
-        "name": "Food",
+        "name": 'Food',
         "bls_series_id": "CUSR0000SAF1",
         "level": 0,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": None,
     },
     {
-        "name": "Energy",
+        "name": 'Food at Home',
+        "bls_series_id": "CUSR0000SAF11",
+        "level": 1,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": None,
+    },
+    {
+        "name": 'Food Away from Home',
+        "bls_series_id": "CUSR0000SEFV",
+        "level": 1,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": None,
+    },
+    {
+        "name": 'Energy',
         "bls_series_id": "CUSR0000SA0E",
         "level": 0,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": None,
     },
     {
-        "name": "All Items Less Food and Energy",
+        "name": 'Energy Commodities',
+        "bls_series_id": "CUSR0000SACE",
+        "level": 1,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": None,
+    },
+    {
+        "name": 'Energy Services',
+        "bls_series_id": "CUSR0000SEHF",
+        "level": 1,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": None,
+    },
+    {
+        "name": 'All Items Less Food and Energy',
         "bls_series_id": "CUSR0000SA0L1E",
         "level": 0,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 100.0,
     },
     {
-        "name": (
-            "Commodities Excluding Food "
-            "and Energy Commodities"
-        ),
+        "name": 'Commodities Excluding Food and Energy Commodities',
         "bls_series_id": "CUSR0000SACL1E",
         "level": 1,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 23.82,
     },
     {
-        "name": "Household Furnishings and Supplies",
+        "name": 'Household Furnishings and Supplies',
         "bls_series_id": "CUSR0000SAH31",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 4.2,
     },
     {
-        "name": "Apparel",
+        "name": 'Apparel',
         "bls_series_id": "CUSR0000SAA",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 3.04,
     },
     {
-        "name": (
-            "Transportation Commodities "
-            "Less Motor Fuel"
-        ),
+        "name": 'Transportation Commodities Less Motor Fuel',
         "bls_series_id": "CUSR0000SATCLTB",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 8.68,
     },
     {
-        "name": "New Vehicles",
+        "name": 'New Vehicles',
         "bls_series_id": "CUSR0000SETA01",
         "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 4.75,
     },
     {
-        "name": "Used Cars and Trucks",
+        "name": 'Used Cars and Trucks',
         "bls_series_id": "CUSR0000SETA02",
         "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 3.41,
     },
     {
-        "name": "Medical Care Commodities",
+        "name": 'Medical Care Commodities',
         "bls_series_id": "CUSR0000SAM1",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 1.77,
     },
     {
-        "name": "Recreation Commodities",
+        "name": 'Recreation Commodities',
         "bls_series_id": "CUSR0000SARC",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 2.44,
     },
     {
-        "name": (
-            "Education and Communication Commodities"
-        ),
+        "name": 'Education and Communication Commodities',
         "bls_series_id": "CUSR0000SAEC",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 1.0,
     },
     {
-        "name": "Alcoholic Beverages",
+        "name": 'Educational Books and Supplies',
+        "bls_series_id": "CUSR0000SEEA",
+        "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 0.05,
+    },
+    {
+        "name": 'Information Technology Commodities',
+        "bls_series_id": "CUSR0000SEEEC",
+        "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 0.95,
+    },
+    {
+        "name": 'Personal Computers and Peripheral Equipment',
+        "bls_series_id": "CUSR0000SEEE01",
+        "level": 4,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 0.39,
+    },
+    {
+        "name": 'Computer Software and Accessories',
+        "bls_series_id": "CUUR0000SEEE02",
+        "level": 4,
+        "seasonality": "NSA",
+        "weight_to_core": 0.04,
+    },
+    {
+        "name": 'Telephone Hardware, Calculators, and Other Consumer Information Items',
+        "bls_series_id": "CUSR0000SEEE04",
+        "level": 4,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 0.52,
+    },
+    {
+        "name": 'Alcoholic Beverages',
         "bls_series_id": "CUSR0000SAF116",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 1.04,
     },
     {
-        "name": "Other Goods",
+        "name": 'Other Goods',
         "bls_series_id": "CUSR0000SAGC",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 1.64,
     },
     {
-        "name": "Services Excluding Energy Services",
+        "name": 'Services Excluding Energy Services',
         "bls_series_id": "CUSR0000SASLE",
         "level": 1,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 76.18,
     },
     {
-        "name": "Shelter",
+        "name": 'Shelter',
         "bls_series_id": "CUSR0000SAH1",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 44.67,
     },
     {
-        "name": "Rent of Primary Residence",
+        "name": 'Rent of Primary Residence',
         "bls_series_id": "CUSR0000SEHA",
-        "level": 4,
+        "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 9.78,
     },
     {
-        "name": "Lodging Away from Home",
+        "name": 'Lodging Away from Home',
         "bls_series_id": "CUSR0000SEHB",
-        "level": 4,
+        "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 1.77,
     },
     {
-        "name": (
-            "Owners' Equivalent Rent of Residences"
-        ),
+        "name": "Owners' Equivalent Rent of Residences",
         "bls_series_id": "CUSR0000SEHC",
-        "level": 4,
+        "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 32.76,
     },
     {
-        "name": (
-            "Water, Sewer and Trash Collection Services"
-        ),
+        "name": 'Water, Sewer and Trash Collection Services',
         "bls_series_id": "CUSR0000SEHG",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 1.45,
     },
     {
-        "name": "Medical Care Services",
+        "name": 'Medical Care Services',
         "bls_series_id": "CUSR0000SAM2",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 8.68,
     },
     {
-        "name": "Professional Services",
+        "name": 'Professional Services',
         "bls_series_id": "CUSR0000SEMC",
         "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 4.33,
     },
     {
-        "name": "Hospital and Related Services",
+        "name": 'Hospital and Related Services',
         "bls_series_id": "CUSR0000SEMD",
         "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 3.31,
     },
     {
-        "name": "Transportation Services",
+        "name": 'Health Insurance',
+        "bls_series_id": "CUUR0000SEME",
+        "level": 3,
+        "seasonality": "NSA",
+        "weight_to_core": 1.04,
+    },
+    {
+        "name": 'Transportation Services',
         "bls_series_id": "CUSR0000SAS4",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 7.98,
     },
     {
-        "name": "Car and Truck Rental",
+        "name": 'Car and Truck Rental',
         "bls_series_id": "CUSR0000SETA04",
         "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 0.21,
     },
     {
-        "name": (
-            "Motor Vehicle Maintenance and Repair"
-        ),
+        "name": 'Motor Vehicle Maintenance and Repair',
         "bls_series_id": "CUSR0000SETD",
         "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 1.33,
     },
     {
-        "name": "Motor Vehicle Insurance",
+        "name": 'Motor Vehicle Insurance',
         "bls_series_id": "CUSR0000SETE",
         "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 3.24,
     },
     {
-        "name": "Public Transportation",
+        "name": 'Public Transportation',
         "bls_series_id": "CUSR0000SETG",
         "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 2.07,
     },
     {
-        "name": "Airline Fare",
+        "name": 'Airline Fare',
         "bls_series_id": "CUSR0000SETG01",
         "level": 4,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 1.33,
     },
     {
-        "name": "Recreation Services",
+        "name": 'Recreation Services',
         "bls_series_id": "CUSR0000SARS",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 3.99,
     },
     {
-        "name": (
-            "Education and Communication Services"
-        ),
+        "name": 'Video and Audio Services',
+        "bls_series_id": "CUSR0000SERAS",
+        "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 0.99,
+    },
+    {
+        "name": 'Pet Services Including Veterinary',
+        "bls_series_id": "CUSR0000SERB02",
+        "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 0.69,
+    },
+    {
+        "name": 'Other Recreation Services',
+        "bls_series_id": "CUSR0000SERF",
+        "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 2.27,
+    },
+    {
+        "name": 'Education and Communication Services',
         "bls_series_id": "CUSR0000SAES",
         "level": 2,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 6.23,
+    },
+    {
+        "name": 'Tuition, Other School Fees and Childcare',
+        "bls_series_id": "CUSR0000SEEB",
+        "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 3.18,
+    },
+    {
+        "name": 'Postage and Delivery Services',
+        "bls_series_id": "CUSR0000SEEC",
+        "level": 3,
+        "seasonality": config.get("seasonality", "SA"),
+        "weight_to_core": 0.08,
+    },
+    {
+        "name": 'Telephone Services',
+        "bls_series_id": "CUUR0000SEED",
+        "level": 3,
+        "seasonality": "NSA",
+        "weight_to_core": 1.8,
+    },
+    {
+        "name": 'Other Personal Services',
+        "bls_series_id": "CUUR0000SAGS",
+        "level": 2,
+        "seasonality": "NSA",
+        "weight_to_core": 2.03,
     },
 ]
 
@@ -843,7 +1010,8 @@ def build_source_rows(
                     )
                 ),
                 "level": config["level"],
-                "seasonality": "SA",
+                "weight_to_core": config.get("weight_to_core"),
+                "seasonality": config.get("seasonality", "SA"),
                 "available": bool(monthly_changes),
                 "series_title": series_title,
                 "months": monthly_changes,
@@ -1439,9 +1607,9 @@ def main():
             f"{len(periods)} periods."
         )
 
-    if len(source_rows) != 32:
+    if len(source_rows) != len(CPI_SERIES):
         raise RuntimeError(
-            "Expected 32 CPI rows, but generated "
+            f"Expected {len(CPI_SERIES)} CPI rows, but generated "
             f"{len(source_rows)} rows."
         )
 
