@@ -265,8 +265,9 @@
       const vis=r=>{let p=r.parent;while(p!=null){if(!cpiExpand[p])return false;p=rows[p].parent}return true};
       return{rows,visible:rows.filter(vis)};
     }
-    function cpiContribRow(r,periods){const w=Number(r.weight_to_core);
-      if(!Number.isFinite(w))return null;
+    function cpiWeight(r){const w=r.weight_to_core;return (w===null||w===undefined||w==='')?null:(Number.isFinite(Number(w))?Number(w):null)}
+    function cpiContribRow(r,periods){const w=cpiWeight(r);
+      if(w===null)return null;
       return (r.values||[]).map(v=>valid(v)?Math.round(Number(v)*w/100*1000)/1000:null);}
     function renderCpi(){
       if(!cpiData)return;
@@ -282,8 +283,8 @@
           return;
         }
         const all=series||[],shown=all.slice(x.start).reverse();
-        const w=Number(r.weight_to_core);
-        const badge=Number.isFinite(w)?`<span class="badge b-weight">${w.toFixed(2)}%</span>`:'';
+        const w=cpiWeight(r);
+        const badge=w===null?'':`<span class="badge b-weight">${w.toFixed(2)}%</span>`;
         const sa=r.seasonality==='NSA'?'<span class="badge b-nsa">NSA</span>':'';
         h+=`<tr class="level-${Math.min(4,lv)}"><td class="item-cell" style="padding-left:${13+lv*20}px"><div class="item-wrap">${r.hasKids?`<span class="cpi-toggle" data-cpi-key="${r.idx}">${cpiExpand[r.idx]?'▾':'▸'}</span>`:'<span class="cpi-toggle-sp"></span>'}<span>${esc(r.name)}${sa}${badge}</span></div></td>${cells(shown,all,contrib?3:2)}</tr>`;
       });
