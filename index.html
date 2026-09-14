@@ -417,7 +417,19 @@
       const all=e.target.closest('[data-cpi-all]');
       if(all){const open=all.dataset.cpiAll==='1';const t=cpiTree();t.rows.forEach(r=>{if(r.hasKids)cpiExpand[r.idx]=open});renderCpi();return}
       const tg=e.target.closest('.cpi-toggle');
-      if(tg){const k=tg.dataset.cpiKey;cpiExpand[k]=!cpiExpand[k];const sc=$('cpi-content').querySelector('.scroll'),st=sc?sc.scrollTop:0,sl=sc?sc.scrollLeft:0;renderCpi();const s2=$('cpi-content').querySelector('.scroll');if(s2){s2.scrollTop=st;s2.scrollLeft=sl}}
+      if(tg){
+        const k=Number(tg.dataset.cpiKey),willOpen=!cpiExpand[k];
+        cpiExpand[k]=willOpen;
+        if(!willOpen){
+          // Collapsing a node also collapses everything beneath it, so re-opening
+          // reveals just the next level down until it is expanded again.
+          const rows=cpiTree().rows,stack=[k];
+          while(stack.length){const p=stack.pop();rows.forEach(r=>{if(r.parent===p&&cpiExpand[r.idx]){cpiExpand[r.idx]=false;stack.push(r.idx)}})}
+        }
+        const sc=$('cpi-content').querySelector('.scroll'),st=sc?sc.scrollTop:0,sl=sc?sc.scrollLeft:0;
+        renderCpi();
+        const s2=$('cpi-content').querySelector('.scroll');if(s2){s2.scrollTop=st;s2.scrollLeft=sl}
+      }
     });
     function render(){renderCpi();renderDerived();renderPpi();renderEmployment();renderUk();renderEu();renderAu()}
     async function getJson(url){const r=await fetch(`${url}?v=${Date.now()}`,{cache:'no-store'});if(!r.ok)throw new Error(`${url} HTTP ${r.status}`);return r.json()}
