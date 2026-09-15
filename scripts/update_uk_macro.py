@@ -1544,11 +1544,28 @@ def _parse_gdpo_levels(content: bytes) -> dict[str, dict[str, float]]:
     return out
 
 def _discover_gdpo_url() -> str:
-    html = get(GDPO_LANDING).text
+    html = _bulk_get(GDPO_LANDING).text
     m = re.search(r"/file\?uri=[^\"']+/gdplowlevelaggregates[^\"']+\.xlsx", html)
     if not m:
         raise RuntimeError("GDP output low-level aggregates xlsx link not found")
     return "https://www.ons.gov.uk" + m.group(0)
+
+def _bulk_get(url: str) -> requests.Response:
+    """A whole-dataset download is one big request among many the UK run already
+    makes, so ONS often 429s it; retry with long, patient backoff."""
+    last = None
+    for attempt in range(6):
+        resp = SESSION.get(url, timeout=180)
+        if resp.status_code == 200:
+            return resp
+        last = resp
+        if resp.status_code == 429:
+            time.sleep(15 * (attempt + 1))
+            continue
+        resp.raise_for_status()
+    if last is not None:
+        last.raise_for_status()
+    raise RuntimeError("bulk download failed: %s" % url)
 
 def update_bulk_ons_series(database: dict[str, Any], logs: list) -> None:
     """Refresh every series that carries {"ons": ...} from its whole-dataset file."""
@@ -1560,9 +1577,9 @@ def update_bulk_ons_series(database: dict[str, Any], logs: list) -> None:
     for dataset, members in by_dataset.items():
         try:
             if dataset == "gdpo":
-                store = _parse_gdpo_levels(get(_discover_gdpo_url()).content)
+                store = _parse_gdpo_levels(_bulk_get(_discover_gdpo_url()).content)
             else:
-                store = _parse_bulk_csv(get(BULK_CSV[dataset]).content)
+                store = _parse_bulk_csv(_bulk_get(BULK_CSV[dataset]).content)
         except Exception as error:
             for series in members:
                 logs.append((series["id"], "ERROR", "%s dataset: %s" % (dataset, error)))
