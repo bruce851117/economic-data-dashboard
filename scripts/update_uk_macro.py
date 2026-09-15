@@ -282,6 +282,7 @@ def merge(
     release_type: str | None = None,
     replace_source_range: bool = False,
     prune_after_source_end: bool = False,
+    backfill: bool = False,
 ) -> tuple[int, int]:
     series = by_id(database, series_id)
     if not series:
@@ -329,7 +330,13 @@ def merge(
         # overwrite all overlapping dates, and append newer official periods.
         # This prevents an ONS series beginning in 1985 from unexpectedly
         # extending a user file whose intended history begins in 2015.
-        earliest_existing = min(old) if old else min(normalized_points)
+        # Normally an ONS series that begins in 1985 must not extend a user file
+        # whose history starts later; but backfill=True (used by the bulk ONS
+        # expansion) deliberately wants the source's full history.
+        earliest_existing = (
+            min(normalized_points) if backfill
+            else (min(old) if old else min(normalized_points))
+        )
         keys_to_apply = [
             key for key in normalized_points
             if key >= earliest_existing
@@ -1591,15 +1598,18 @@ def update_bulk_ons_series(database: dict[str, Any], logs: list) -> None:
             if not vals:
                 logs.append((series["id"], "ERROR", "CDID %s absent from %s" % (cd, dataset)))
                 continue
-            points = [{"date": d, "value": v, "source_url": src} for d, v in sorted(vals.items())]
+            # Floor history at 2015 to match the rest of the UK dashboard.
+            points = [{"date": d, "value": v, "source_url": src}
+                      for d, v in sorted(vals.items()) if d >= "2015-01-01"]
             try:
-                # Some ONS whole-dataset files lag Bloomberg by a release (e.g. QNA
-                # trails the GDP first estimate by a quarter). Overwrite everything
-                # ONS covers, but keep any newer seeded point ONS has not published
-                # yet rather than pruning it away.
+                # backfill=True pulls the source's full history (from 2015); some
+                # ONS whole-dataset files lag Bloomberg by a release (e.g. QNA
+                # trails the GDP first estimate by a quarter), so keep any newer
+                # seeded point ONS has not published yet (prune_after=False).
                 logs.append((series["id"], *merge(
                     database, series["id"], points,
                     replace_source_range=True, prune_after_source_end=False,
+                    backfill=True,
                 )))
             except Exception as error:
                 logs.append((series["id"], "ERROR", str(error)))
