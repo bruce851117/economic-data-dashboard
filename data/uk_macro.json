@@ -27019,11 +27019,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKH",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27083,11 +27082,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKI",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27147,11 +27145,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKK",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27211,11 +27208,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKL",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27275,11 +27271,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKM",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27339,11 +27334,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKN",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27403,11 +27397,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKO",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27467,11 +27460,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKP",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27531,11 +27523,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKQ",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27595,11 +27586,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKR",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27659,11 +27649,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKS",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27723,11 +27712,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKT",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27787,11 +27775,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKU",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27851,11 +27838,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKV",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27915,11 +27901,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKW",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -27979,11 +27964,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKX",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -28043,11 +28027,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKY",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -28107,11 +28090,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDKZ",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -28171,11 +28153,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDLA",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -28235,11 +28216,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDLB",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -28299,11 +28279,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDLC",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {
@@ -28363,11 +28342,10 @@
     }
    ],
    "ons": {
-    "dataset": "mgdp",
+    "dataset": "contribmgdp",
     "cdid": "EDLD",
     "path": "economy/grossdomesticproductgdp",
-    "mode": "M",
-    "generator": true
+    "mode": "M"
    }
   },
   {

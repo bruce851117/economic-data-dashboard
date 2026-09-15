@@ -1497,6 +1497,8 @@ GDPO_LANDING = ("https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets
 PSF_XLSX = ("https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/"
             "publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/"
             "publicsectorfinancessummarytablesappendixafinal.xlsx")
+CONTRIB_LANDING = ("https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/"
+                   "contributionstomonthlygdp")
 
 _MON3 = {"JAN": 1, "FEB": 2, "MAR": 3, "APR": 4, "MAY": 5, "JUN": 6,
          "JUL": 7, "AUG": 8, "SEP": 9, "OCT": 10, "NOV": 11, "DEC": 12}
@@ -1578,6 +1580,38 @@ def _parse_psf(content: bytes) -> dict[str, dict[str, float]]:
                 out[cd] = vals
     return out
 
+def _discover_contrib_url() -> str:
+    html = _bulk_get(CONTRIB_LANDING).text
+    m = re.search(r"/file\?uri=[^\"']+/monthlycontributionstables[^\"']+\.xlsx", html)
+    if not m:
+        raise RuntimeError("Contributions-to-monthly-GDP xlsx link not found")
+    return "https://www.ons.gov.uk" + m.group(0)
+
+def _parse_contrib(content: bytes) -> dict[str, dict[str, float]]:
+    """First block of the CONTRIBUTIONS sheet ('Contribution to growth, latest
+    month'): CDID header row, then single-month values until the next block."""
+    wb = load_workbook(BytesIO(content), data_only=True, read_only=True)
+    ws = wb["CONTRIBUTIONS"]
+    rows = list(ws.iter_rows(values_only=True))
+    cdrow = next(i for i, r in enumerate(rows)
+                 if r and len(r) > 2 and str(r[2]).strip().upper() == "EDKH")
+    cdids = [re.sub(r"[^A-Z0-9]", "", str(c).upper()) if c is not None else "" for c in rows[cdrow]]
+    out: dict[str, dict[str, float]] = {}
+    for ci in range(2, len(cdids)):
+        cd = cdids[ci]
+        if not cd:
+            continue
+        vals: dict[str, float] = {}
+        for r in rows[cdrow + 1:]:
+            if r and str(r[0]).strip().startswith("[Not applicable]"):
+                break  # next block begins
+            d = _ons_period_to_date(r[0]) if r else None
+            if d and ci < len(r) and isinstance(r[ci], (int, float)):
+                vals[d] = float(r[ci])
+        if vals:
+            out[cd] = vals
+    return out
+
 def _discover_gdpo_url() -> str:
     html = _bulk_get(GDPO_LANDING).text
     m = re.search(r"/file\?uri=[^\"']+/gdplowlevelaggregates[^\"']+\.xlsx", html)
@@ -1632,6 +1666,8 @@ def update_bulk_ons_series(database: dict[str, Any], logs: list) -> None:
         try:
             if dataset == "gdpo":
                 store = _parse_gdpo_levels(_bulk_get(_discover_gdpo_url()).content)
+            elif dataset == "contribmgdp":
+                store = _parse_contrib(_bulk_get(_discover_contrib_url()).content)
             elif dataset == "psf":
                 store = _parse_psf(_bulk_get(PSF_XLSX).content)
             else:
@@ -1640,7 +1676,7 @@ def update_bulk_ons_series(database: dict[str, Any], logs: list) -> None:
             for series in members:
                 logs.append((series["id"], "ERROR", "%s dataset: %s" % (dataset, error)))
             continue
-        src = BULK_CSV.get(dataset, PSF_XLSX if dataset == "psf" else GDPO_LANDING)
+        src = BULK_CSV.get(dataset, {"psf": PSF_XLSX, "contribmgdp": CONTRIB_LANDING}.get(dataset, GDPO_LANDING))
         for series in members:
             cd = series["ons"]["cdid"].strip().upper()
             scale = series["ons"].get("scale", 1) or 1
