@@ -43077,712 +43077,462 @@
    "color": "#dc2626",
    "data": [
     {
-     "date": "2015-01-01",
-     "value": 2.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-02-01",
-     "value": 2.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-03-01",
-     "value": 2.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-04-01",
-     "value": 2.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-05-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-06-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-07-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-08-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-09-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-10-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-11-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-12-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-01-01",
-     "value": 2.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-02-01",
-     "value": 2.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-03-01",
-     "value": 2.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-04-01",
-     "value": 2.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-05-01",
-     "value": 2.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-06-01",
-     "value": 2.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-07-01",
-     "value": 2.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-08-01",
-     "value": 2.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-09-01",
-     "value": 2.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-10-01",
-     "value": 2.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-11-01",
-     "value": 2.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-12-01",
-     "value": 2.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-01-01",
-     "value": 2.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-02-01",
-     "value": 2.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-03-01",
-     "value": 2.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-04-01",
-     "value": 2.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-05-01",
-     "value": 3.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-06-01",
-     "value": 3.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-07-01",
-     "value": 3.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-08-01",
-     "value": 3.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-09-01",
-     "value": 3.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-10-01",
-     "value": 3.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-11-01",
-     "value": 3.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-12-01",
-     "value": 3.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-01-01",
-     "value": 3.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-02-01",
-     "value": 3.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-03-01",
-     "value": 3.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-04-01",
-     "value": 3.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-05-01",
-     "value": 3.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-06-01",
-     "value": 3.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-07-01",
-     "value": 3.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-08-01",
-     "value": 3.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-09-01",
-     "value": 3.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-10-01",
-     "value": 3.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-11-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-12-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
      "date": "2019-01-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.0633,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-02-01",
-     "value": 4.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.5556,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-03-01",
-     "value": 4.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.1361,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-04-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.4118,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-05-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.3403,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-06-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.0229,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-07-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.7836,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-08-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.9026,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-09-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.9895,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-10-01",
-     "value": 4.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.4638,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-11-01",
-     "value": 4.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.5429,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-12-01",
-     "value": 4.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.7037,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-01-01",
-     "value": 4.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 1.1932,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-02-01",
-     "value": 4.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 1.4103,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-03-01",
-     "value": 4.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 2.439,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-04-01",
-     "value": 6.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.3794,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-05-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.0449,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-06-01",
-     "value": 7.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.3934,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-07-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.2561,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-08-01",
-     "value": 7.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.3295,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-09-01",
-     "value": 7.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.3929,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-10-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.5892,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-11-01",
-     "value": 7.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.3333,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-12-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.4091,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-01-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.7489,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-02-01",
-     "value": 7.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.6895,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-03-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.0438,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-04-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 0.6061,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-05-01",
-     "value": 6.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 1.4748,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-06-01",
-     "value": 6.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 2.1217,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-07-01",
-     "value": 6.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 2.7027,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-08-01",
-     "value": 6.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.0111,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-09-01",
-     "value": 5.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.2028,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-10-01",
-     "value": 5.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.1911,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-11-01",
-     "value": 5.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.4404,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-12-01",
-     "value": 5.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.4737,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-01-01",
-     "value": 5.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.7736,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-02-01",
-     "value": 5.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.0,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-03-01",
-     "value": 4.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.9671,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-04-01",
-     "value": 4.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.4639,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-05-01",
-     "value": 4.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.6218,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-06-01",
-     "value": 4.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.4061,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-07-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.1453,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-08-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.5179,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-09-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.25,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-10-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.4286,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-11-01",
-     "value": 4.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.1224,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-12-01",
-     "value": 4.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.3453,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-01-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.1989,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-02-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.1824,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-03-01",
-     "value": 4.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.6419,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-04-01",
-     "value": 4.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 7.4074,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-05-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 7.5455,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-06-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 7.6791,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-07-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 7.716,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-08-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 7.1219,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-09-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.9888,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-10-01",
-     "value": 3.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.5752,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-11-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.383,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-12-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.5254,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-01-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.4718,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-02-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.383,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-03-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.5652,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-04-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 7.1443,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-05-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.6667,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-06-01",
-     "value": 4.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.9073,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-07-01",
-     "value": 4.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.4176,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-08-01",
-     "value": 4.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.6623,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-09-01",
-     "value": 4.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.7762,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-10-01",
-     "value": 4.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.383,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-11-01",
-     "value": 4.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.1224,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-12-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.8932,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-01-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.9492,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-02-01",
-     "value": 4.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.6013,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-03-01",
-     "value": 4.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.501,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-04-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.3563,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-05-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.4993,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-06-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.3071,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-07-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.2587,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-08-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.9967,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-09-01",
-     "value": 3.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.0694,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-10-01",
-     "value": 3.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.8483,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-11-01",
-     "value": 3.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.5,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-12-01",
-     "value": 3.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.0999,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-01-01",
-     "value": 3.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.1667,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-02-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.029,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-03-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.0008,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-04-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.0006,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-05-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.9993,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-06-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.9339,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-07-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2026-08-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.095,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     }
    ],
-   "ons": {
-    "dataset": "unem",
-    "cdid": "ZMPL",
-    "path": "employmentandlabourmarket/peoplenotinwork/unemployment",
-    "mode": "M"
-   }
+   "indeed": "wage_yoy"
   },
   {
    "id": "inddwguk",
@@ -43793,712 +43543,452 @@
    "color": "#0d9488",
    "data": [
     {
-     "date": "2015-01-01",
-     "value": 2.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-02-01",
-     "value": 2.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-03-01",
-     "value": 2.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-04-01",
-     "value": 2.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-05-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-06-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-07-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-08-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-09-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-10-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-11-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2015-12-01",
-     "value": 2.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-01-01",
-     "value": 2.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-02-01",
-     "value": 2.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-03-01",
-     "value": 2.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-04-01",
-     "value": 2.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-05-01",
-     "value": 2.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-06-01",
-     "value": 2.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-07-01",
-     "value": 2.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-08-01",
-     "value": 2.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-09-01",
-     "value": 2.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-10-01",
-     "value": 2.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-11-01",
-     "value": 2.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2016-12-01",
-     "value": 2.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-01-01",
-     "value": 2.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-02-01",
-     "value": 2.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-03-01",
-     "value": 2.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-04-01",
-     "value": 2.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-05-01",
-     "value": 3.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-06-01",
-     "value": 3.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-07-01",
-     "value": 3.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-08-01",
-     "value": 3.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-09-01",
-     "value": 3.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-10-01",
-     "value": 3.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-11-01",
-     "value": 3.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2017-12-01",
-     "value": 3.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-01-01",
-     "value": 3.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-02-01",
-     "value": 3.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-03-01",
-     "value": 3.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-04-01",
-     "value": 3.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-05-01",
-     "value": 3.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-06-01",
-     "value": 3.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-07-01",
-     "value": 3.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-08-01",
-     "value": 3.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-09-01",
-     "value": 3.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-10-01",
-     "value": 3.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-11-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2018-12-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2019-01-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2019-02-01",
-     "value": 4.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
      "date": "2019-03-01",
-     "value": 4.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.2517,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-04-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.0345,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-05-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.6294,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-06-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.2583,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-07-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.0489,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-08-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.903,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-09-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.8919,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-10-01",
-     "value": 4.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.7853,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-11-01",
-     "value": 4.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.6654,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2019-12-01",
-     "value": 4.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.5701,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-01-01",
-     "value": 4.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 2.8133,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-02-01",
-     "value": 4.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 2.1024,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-03-01",
-     "value": 4.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 1.6809,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-04-01",
-     "value": 6.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 2.7429,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-05-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.6211,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-06-01",
-     "value": 7.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.9393,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-07-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.5648,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-08-01",
-     "value": 7.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.3263,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-09-01",
-     "value": 7.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.3262,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-10-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.4372,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-11-01",
-     "value": 7.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.4385,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2020-12-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.4439,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-01-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.4971,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-02-01",
-     "value": 7.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.6158,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-03-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.4941,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-04-01",
-     "value": 7.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 2.4464,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-05-01",
-     "value": 6.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 1.7082,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-06-01",
-     "value": 6.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 1.4008,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-07-01",
-     "value": 6.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 2.0997,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-08-01",
-     "value": 6.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 2.6118,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-09-01",
-     "value": 5.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 2.9722,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-10-01",
-     "value": 5.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.135,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-11-01",
-     "value": 5.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.2781,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2021-12-01",
-     "value": 5.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.3684,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-01-01",
-     "value": 5.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.5625,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-02-01",
-     "value": 5.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.7491,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-03-01",
-     "value": 4.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.2469,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-04-01",
-     "value": 4.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.1437,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-05-01",
-     "value": 4.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.0176,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-06-01",
-     "value": 4.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.4972,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-07-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.391,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-08-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.3564,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-09-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.3044,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-10-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.3988,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-11-01",
-     "value": 4.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.267,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2022-12-01",
-     "value": 4.5,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.2988,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-01-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.2222,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-02-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.2422,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-03-01",
-     "value": 4.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.3411,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-04-01",
-     "value": 4.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.7439,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-05-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 7.1983,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-06-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 7.544,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-07-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 7.6469,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-08-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 7.5057,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-09-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 7.2756,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-10-01",
-     "value": 3.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.8953,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-11-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.649,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2023-12-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.4945,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-01-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.4601,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-02-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.4601,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-03-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.4733,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-04-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.6975,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-05-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.7921,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-06-01",
-     "value": 4.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.9061,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-07-01",
-     "value": 4.8,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.6639,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-08-01",
-     "value": 4.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.6624,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-09-01",
-     "value": 4.7,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.6187,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-10-01",
-     "value": 4.6,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.6072,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-11-01",
-     "value": 4.4,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.4272,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2024-12-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 6.1329,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-01-01",
-     "value": 4.3,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.9883,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-02-01",
-     "value": 4.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.8146,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-03-01",
-     "value": 4.2,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.6838,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-04-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.4862,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-05-01",
-     "value": 4.1,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.4522,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-06-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.3875,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-07-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.355,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-08-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.1875,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-09-01",
-     "value": 3.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 5.1083,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-10-01",
-     "value": 3.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.9715,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-11-01",
-     "value": 3.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.8059,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2025-12-01",
-     "value": 3.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.4827,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-01-01",
-     "value": 3.9,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.2555,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-02-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.0985,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-03-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.0655,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-04-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.0101,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-05-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.0002,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-06-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 3.9779,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     },
     {
      "date": "2026-07-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
-    },
-    {
-     "date": "2026-08-01",
-     "value": 4.0,
-     "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv"
+     "value": 4.0094,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
     }
    ],
-   "ons": {
-    "dataset": "unem",
-    "cdid": "ZMPL",
-    "path": "employmentandlabourmarket/peoplenotinwork/unemployment",
-    "mode": "M"
-   }
+   "indeed": "wage_3m"
   },
   {
    "id": "ukleu16r",
@@ -46749,51 +46239,407 @@
    "color": "#ea580c",
    "data": [
     {
+     "date": "2020-02-01",
+     "value": 99.56,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2020-03-01",
+     "value": 89.88,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2020-04-01",
+     "value": 45.83,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2020-05-01",
+     "value": 36.89,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2020-06-01",
+     "value": 36.3,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2020-07-01",
+     "value": 39.75,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2020-08-01",
+     "value": 46.2,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2020-09-01",
+     "value": 51.2,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2020-10-01",
+     "value": 55.17,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2020-11-01",
+     "value": 57.98,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2020-12-01",
+     "value": 66.61,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2021-01-01",
+     "value": 64.79,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2021-02-01",
+     "value": 64.37,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2021-03-01",
+     "value": 75.5,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2021-04-01",
+     "value": 90.98,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2021-05-01",
+     "value": 108.35,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2021-06-01",
+     "value": 120.29,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2021-07-01",
+     "value": 128.31,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2021-08-01",
+     "value": 139.06,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2021-09-01",
+     "value": 145.48,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2021-10-01",
+     "value": 154.95,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2021-11-01",
+     "value": 159.7,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2021-12-01",
+     "value": 157.33,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2022-01-01",
+     "value": 152.05,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2022-02-01",
+     "value": 162.49,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2022-03-01",
+     "value": 167.45,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2022-04-01",
+     "value": 167.46,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2022-05-01",
+     "value": 167.6,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2022-06-01",
+     "value": 166.98,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2022-07-01",
+     "value": 164.73,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2022-08-01",
+     "value": 164.06,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2022-09-01",
+     "value": 160.27,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2022-10-01",
+     "value": 158.6,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2022-11-01",
+     "value": 157.69,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2022-12-01",
+     "value": 152.03,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2023-01-01",
+     "value": 148.53,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2023-02-01",
+     "value": 142.52,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2023-03-01",
+     "value": 138.09,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2023-04-01",
+     "value": 135.01,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2023-05-01",
+     "value": 132.21,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2023-06-01",
+     "value": 128.08,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2023-07-01",
+     "value": 125.83,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2023-08-01",
+     "value": 123.98,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2023-09-01",
+     "value": 122.53,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2023-10-01",
+     "value": 119.92,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2023-11-01",
+     "value": 114.75,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2023-12-01",
+     "value": 110.16,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2024-01-01",
+     "value": 108.16,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2024-02-01",
+     "value": 104.53,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2024-03-01",
+     "value": 104.95,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2024-04-01",
+     "value": 102.52,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2024-05-01",
+     "value": 100.11,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2024-06-01",
+     "value": 97.66,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2024-07-01",
+     "value": 94.39,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2024-08-01",
+     "value": 90.98,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2024-09-01",
+     "value": 89.26,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2024-10-01",
+     "value": 86.84,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2024-11-01",
+     "value": 85.83,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2024-12-01",
+     "value": 87.06,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2025-01-01",
+     "value": 86.66,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2025-02-01",
+     "value": 84.16,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2025-03-01",
+     "value": 82.51,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2025-04-01",
+     "value": 79.19,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2025-05-01",
+     "value": 78.02,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2025-06-01",
+     "value": 77.64,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2025-07-01",
+     "value": 77.07,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2025-08-01",
+     "value": 75.81,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2025-09-01",
+     "value": 75.05,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
+     "date": "2025-10-01",
+     "value": 75.25,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+    },
+    {
      "date": "2025-11-01",
-     "value": 76.98
+     "value": 76.29,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
     },
     {
      "date": "2025-12-01",
-     "value": 76.82
+     "value": 77.05,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
     },
     {
      "date": "2026-01-01",
-     "value": 75.41
+     "value": 75.25,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
     },
     {
      "date": "2026-02-01",
-     "value": 76.85
+     "value": 76.61,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
     },
     {
      "date": "2026-03-01",
-     "value": 72.86
+     "value": 75.85,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
     },
     {
      "date": "2026-04-01",
-     "value": 69.92
+     "value": 71.22,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
     },
     {
      "date": "2026-05-01",
-     "value": 67.11
+     "value": 70.09,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
     },
     {
      "date": "2026-06-01",
-     "value": 66.46
+     "value": 67.51,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
     },
     {
      "date": "2026-07-01",
-     "value": 68.47
+     "value": 67.88,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
     },
     {
      "date": "2026-08-01",
-     "value": 69.07
+     "value": 68.83,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
     },
     {
      "date": "2026-09-01",
-     "value": 68.96
+     "value": 68.92,
+     "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
     }
    ],
-   "static": true
+   "indeed": "postings"
   },
   {
    "id": "ukpypemc",

@@ -1587,6 +1587,78 @@ def _discover_contrib_url() -> str:
         raise RuntimeError("Contributions-to-monthly-GDP xlsx link not found")
     return "https://www.ons.gov.uk" + m.group(0)
 
+INDEED_WAGE_CSV = ("https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/"
+                   "main/posted-wage-growth-by-country.csv")
+INDEED_POSTINGS_CSV = ("https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/"
+                       "master/GB/aggregate_job_postings_GB.csv")
+_MONYY = {"JAN": 1, "FEB": 2, "MAR": 3, "APR": 4, "MAY": 5, "JUN": 6,
+          "JUL": 7, "AUG": 8, "SEP": 9, "OCT": 10, "NOV": 11, "DEC": 12}
+
+def _indeed_month(value: str) -> str | None:
+    m = re.match(r"([A-Za-z]{3})-(\d{2})$", str(value).strip())
+    if m and m.group(1).upper() in _MONYY:
+        return "20%s-%02d-01" % (m.group(2), _MONYY[m.group(1).upper()])
+    return None
+
+def update_indeed_series(database: dict[str, Any], logs: list) -> None:
+    """Indeed Hiring Lab GB series (wage tracker + job-postings index) from their
+    public GitHub CSVs. GB posted-wage growth is a fraction, so scale to percent;
+    the postings index is daily, aggregated to a monthly mean of total postings."""
+    markers = [s for s in database.get("series", []) if s.get("indeed")]
+    if not markers:
+        return
+    sources: dict[str, dict[str, float]] = {"wage_yoy": {}, "wage_3m": {}, "postings": {}}
+    try:
+        wage = csv.DictReader(io.StringIO(_bulk_get(INDEED_WAGE_CSV).text))
+        for row in wage:
+            if row.get("jobcountry") != "GB":
+                continue
+            d = _indeed_month(row.get("month", ""))
+            if not d:
+                continue
+            for key, col in (("wage_yoy", "posted_wage_growth_yoy"),
+                             ("wage_3m", "posted_wage_growth_yoy_3moavg")):
+                try:
+                    sources[key][d] = round(float(row[col]) * 100, 4)
+                except (TypeError, ValueError):
+                    pass
+    except Exception as error:
+        for s in markers:
+            if s["indeed"].startswith("wage"):
+                logs.append((s["id"], "ERROR", "Indeed wage: %s" % error))
+    try:
+        post = csv.DictReader(io.StringIO(_bulk_get(INDEED_POSTINGS_CSV).text))
+        monthly: dict[str, list] = {}
+        for row in post:
+            if row.get("variable") != "total postings":
+                continue
+            val = row.get("indeed_job_postings_index_SA")
+            try:
+                monthly.setdefault(row["date"][:7], []).append(float(val))
+            except (TypeError, ValueError):
+                pass
+        sources["postings"] = {m + "-01": round(sum(v) / len(v), 2)
+                               for m, v in monthly.items() if v}
+    except Exception as error:
+        for s in markers:
+            if s["indeed"] == "postings":
+                logs.append((s["id"], "ERROR", "Indeed postings: %s" % error))
+    src = {"wage_yoy": INDEED_WAGE_CSV, "wage_3m": INDEED_WAGE_CSV,
+           "postings": INDEED_POSTINGS_CSV}
+    for series in markers:
+        data = sources.get(series["indeed"])
+        if not data:
+            continue
+        points = [{"date": d, "value": v, "source_url": src[series["indeed"]]}
+                  for d, v in sorted(data.items()) if d >= "2015-01-01"]
+        try:
+            logs.append((series["id"], *merge(
+                database, series["id"], points,
+                replace_source_range=True, prune_after_source_end=False, backfill=True,
+            )))
+        except Exception as error:
+            logs.append((series["id"], "ERROR", str(error)))
+
 def _parse_contrib(content: bytes) -> dict[str, dict[str, float]]:
     """First block of the CONTRIBUTIONS sheet ('Contribution to growth, latest
     month'): CDID header row, then single-month values until the next block."""
@@ -1778,6 +1850,9 @@ def main() -> None:
 
     print("[BULK ONS] refreshing expansion series", flush=True)
     update_bulk_ons_series(database, logs)
+
+    print("[INDEED] refreshing Indeed Hiring Lab series", flush=True)
+    update_indeed_series(database, logs)
 
     database["generated_at"] = datetime.now(timezone.utc).isoformat()
     DATA_FILE.write_text(
