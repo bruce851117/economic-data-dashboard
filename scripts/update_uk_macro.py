@@ -1476,6 +1476,119 @@ def normalize_ap2y_points(points: list[dict[str, Any]]) -> list[dict[str, Any]]:
         )
     return normalized
 
+# Whole-dataset ONS files backing the 2026-09 UK expansion. Each series added
+# then carries {"ons": {"dataset", "cdid", "level"?}} metadata; we download each
+# dataset once and pull every mapped CDID out of it (csv/xlsx, no HTML parsing).
+BULK_CSV = {
+    "qna": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+    "lms": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourmarketstatistics/current/lms.csv",
+    "drsi": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv",
+    "unem": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peoplenotinwork/unemployment/datasets/claimantcountandvacanciesdataset/current/unem.csv",
+}
+GDPO_LANDING = ("https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/"
+                "ukgdpolowlevelaggregates")
+
+_MON3 = {"JAN": 1, "FEB": 2, "MAR": 3, "APR": 4, "MAY": 5, "JUN": 6,
+         "JUL": 7, "AUG": 8, "SEP": 9, "OCT": 10, "NOV": 11, "DEC": 12}
+
+def _ons_period_to_date(raw: str) -> str | None:
+    s = str(raw).strip()
+    m = re.match(r"^(\d{4})\s*Q(\d)$", s)
+    if m:
+        return "%s-%02d-01" % (m.group(1), int(m.group(2)) * 3)  # quarter-end month
+    m = re.match(r"^(\d{4})\s+([A-Za-z]{3})$", s)
+    if m and m.group(2).upper() in _MON3:
+        return "%s-%02d-01" % (m.group(1), _MON3[m.group(2).upper()])
+    return None
+
+def _parse_bulk_csv(content: bytes) -> dict[str, dict[str, float]]:
+    rows = list(csv.reader(io.StringIO(content.decode("utf-8-sig", "replace"))))
+    cdids = rows[1]
+    out: dict[str, dict[str, float]] = {}
+    data_rows = [r for r in rows[2:] if r and _ons_period_to_date(r[0])]
+    for ci in range(1, len(cdids)):
+        cd = cdids[ci].strip().upper()
+        if not cd:
+            continue
+        vals: dict[str, float] = {}
+        for r in data_rows:
+            if ci >= len(r):
+                continue
+            d = _ons_period_to_date(r[0])
+            raw = r[ci].strip().replace(",", "")
+            if d and re.fullmatch(r"-?\d+(?:\.\d+)?", raw):
+                vals[d] = float(raw)
+        out[cd] = vals
+    return out
+
+def _parse_gdpo_levels(content: bytes) -> dict[str, dict[str, float]]:
+    wb = load_workbook(BytesIO(content), data_only=True, read_only=True)
+    ws = wb["2b"]
+    rows = list(ws.iter_rows(values_only=True))
+    cdids = [str(c).strip().upper() if c is not None else "" for c in rows[5]]
+    out: dict[str, dict[str, float]] = {}
+    for ci in range(1, len(cdids)):
+        cd = cdids[ci]
+        if not cd:
+            continue
+        vals: dict[str, float] = {}
+        for r in rows[6:]:
+            if not r or ci >= len(r):
+                continue
+            d = _ons_period_to_date(r[0])
+            v = r[ci]
+            if d and isinstance(v, (int, float)):
+                vals[d] = float(v)
+        if vals:
+            out[cd] = vals
+    return out
+
+def _discover_gdpo_url() -> str:
+    html = get(GDPO_LANDING).text
+    m = re.search(r"/file\?uri=[^\"']+/gdplowlevelaggregates[^\"']+\.xlsx", html)
+    if not m:
+        raise RuntimeError("GDP output low-level aggregates xlsx link not found")
+    return "https://www.ons.gov.uk" + m.group(0)
+
+def update_bulk_ons_series(database: dict[str, Any], logs: list) -> None:
+    """Refresh every series that carries {"ons": ...} from its whole-dataset file."""
+    by_dataset: dict[str, list[dict[str, Any]]] = {}
+    for series in database.get("series", []):
+        ons = series.get("ons")
+        if ons and ons.get("cdid"):
+            by_dataset.setdefault(ons["dataset"], []).append(series)
+    for dataset, members in by_dataset.items():
+        try:
+            if dataset == "gdpo":
+                store = _parse_gdpo_levels(get(_discover_gdpo_url()).content)
+            else:
+                store = _parse_bulk_csv(get(BULK_CSV[dataset]).content)
+        except Exception as error:
+            for series in members:
+                logs.append((series["id"], "ERROR", "%s dataset: %s" % (dataset, error)))
+            continue
+        src = BULK_CSV.get(dataset, GDPO_LANDING)
+        for series in members:
+            cd = series["ons"]["cdid"].strip().upper()
+            vals = store.get(cd)
+            if not vals:
+                logs.append((series["id"], "ERROR", "CDID %s absent from %s" % (cd, dataset)))
+                continue
+            points = [{"date": d, "value": v, "source_url": src} for d, v in sorted(vals.items())]
+            try:
+                # Some ONS whole-dataset files lag Bloomberg by a release (e.g. QNA
+                # trails the GDP first estimate by a quarter). Overwrite everything
+                # ONS covers, but keep any newer seeded point ONS has not published
+                # yet rather than pruning it away.
+                logs.append((series["id"], *merge(
+                    database, series["id"], points,
+                    replace_source_range=True, prune_after_source_end=False,
+                )))
+            except Exception as error:
+                logs.append((series["id"], "ERROR", str(error)))
+        time.sleep(1.5)
+
+
 def main() -> None:
     validate_pmi_parser()
     started_at = time.monotonic()
@@ -1549,6 +1662,9 @@ def main() -> None:
             logs.append((name, *update_function()))
         except Exception as error:
             logs.append((name, "ERROR", str(error)))
+
+    print("[BULK ONS] refreshing expansion series", flush=True)
+    update_bulk_ons_series(database, logs)
 
     database["generated_at"] = datetime.now(timezone.utc).isoformat()
     DATA_FILE.write_text(
