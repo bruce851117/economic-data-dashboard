@@ -1,9 +1,20 @@
 {
-  "generated_at": "2026-09-15T14:09:50.522622+00:00",
-  "source": {
-    "type": "excel_import",
-    "file": "uk econ.xlsx",
-    "sheet": "工作表2"
+ "generated_at": "2026-09-15T14:04:28.779139+00:00",
+ "source": {
+  "type": "excel_import",
+  "file": "uk econ.xlsx",
+  "sheet": "工作表2"
+ },
+ "blocks": [
+  {
+   "id": "通膨",
+   "title": "通膨",
+   "color": "#2563eb",
+   "series": [
+    "ukhca9iq",
+    "ukhpsery",
+    "ukbfftin"
+   ]
   },
   {
    "id": "就業",
@@ -67429,5 +67440,14 @@
      "value": 1.8,
      "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
     }
-  ]
+   ],
+   "ons": {
+    "dataset": "psf",
+    "cdid": "J5II",
+    "path": "economy/governmentpublicsectorandtaxes/publicsectorfinance",
+    "mode": "M",
+    "scale": 0.001
+   }
+  }
+ ]
 }
