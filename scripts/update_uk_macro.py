@@ -1494,6 +1494,9 @@ BULK_CSV = {
 }
 GDPO_LANDING = ("https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/"
                 "ukgdpolowlevelaggregates")
+PSF_XLSX = ("https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/"
+            "publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/"
+            "publicsectorfinancessummarytablesappendixafinal.xlsx")
 
 _MON3 = {"JAN": 1, "FEB": 2, "MAR": 3, "APR": 4, "MAY": 5, "JUN": 6,
          "JUL": 7, "AUG": 8, "SEP": 9, "OCT": 10, "NOV": 11, "DEC": 12}
@@ -1550,6 +1553,31 @@ def _parse_gdpo_levels(content: bytes) -> dict[str, dict[str, float]]:
             out[cd] = vals
     return out
 
+def _parse_psf(content: bytes) -> dict[str, dict[str, float]]:
+    """Public-sector-finances summary workbook: many sheets, each with a
+    'Dataset identifier' row (CDIDs sometimes prefixed ' -') over monthly rows."""
+    wb = load_workbook(BytesIO(content), data_only=True, read_only=True)
+    out: dict[str, dict[str, float]] = {}
+    for sheet in wb.worksheets:
+        rows = list(sheet.iter_rows(values_only=True))
+        cdrow = next((i for i, r in enumerate(rows[:15])
+                      if r and str(r[0]).strip().lower().startswith("dataset identif")), None)
+        if cdrow is None:
+            continue
+        cdids = [re.sub(r"[^A-Z0-9]", "", str(c).upper()) if c is not None else "" for c in rows[cdrow]]
+        for ci in range(1, len(cdids)):
+            cd = cdids[ci]
+            if len(cd) < 3 or cd in out:
+                continue
+            vals: dict[str, float] = {}
+            for r in rows[cdrow + 1:]:
+                d = _ons_period_to_date(r[0]) if r else None
+                if d and ci < len(r) and isinstance(r[ci], (int, float)):
+                    vals[d] = float(r[ci])
+            if len(vals) > 6:
+                out[cd] = vals
+    return out
+
 def _discover_gdpo_url() -> str:
     html = _bulk_get(GDPO_LANDING).text
     m = re.search(r"/file\?uri=[^\"']+/gdplowlevelaggregates[^\"']+\.xlsx", html)
@@ -1585,21 +1613,24 @@ def update_bulk_ons_series(database: dict[str, Any], logs: list) -> None:
         try:
             if dataset == "gdpo":
                 store = _parse_gdpo_levels(_bulk_get(_discover_gdpo_url()).content)
+            elif dataset == "psf":
+                store = _parse_psf(_bulk_get(PSF_XLSX).content)
             else:
                 store = _parse_bulk_csv(_bulk_get(BULK_CSV[dataset]).content)
         except Exception as error:
             for series in members:
                 logs.append((series["id"], "ERROR", "%s dataset: %s" % (dataset, error)))
             continue
-        src = BULK_CSV.get(dataset, GDPO_LANDING)
+        src = BULK_CSV.get(dataset, PSF_XLSX if dataset == "psf" else GDPO_LANDING)
         for series in members:
             cd = series["ons"]["cdid"].strip().upper()
+            scale = series["ons"].get("scale", 1) or 1
             vals = store.get(cd)
             if not vals:
                 logs.append((series["id"], "ERROR", "CDID %s absent from %s" % (cd, dataset)))
                 continue
             # Floor history at 2015 to match the rest of the UK dashboard.
-            points = [{"date": d, "value": v, "source_url": src}
+            points = [{"date": d, "value": round(v * scale, 6), "source_url": src}
                       for d, v in sorted(vals.items()) if d >= "2015-01-01"]
             try:
                 # backfill=True pulls the source's full history (from 2015); some
