@@ -1610,6 +1610,25 @@ def update_bulk_ons_series(database: dict[str, Any], logs: list) -> None:
         if ons and ons.get("cdid"):
             by_dataset.setdefault(ons["dataset"], []).append(series)
     for dataset, members in by_dataset.items():
+        # Some series are not in any whole-dataset file but are served one at a
+        # time by the ONS generator (e.g. monthly GDP m/m growth, edition mgdp).
+        if members and members[0]["ons"].get("generator"):
+            for series in members:
+                ons = series["ons"]
+                scale = ons.get("scale", 1) or 1
+                try:
+                    pts = ons_series(dataset, ons["cdid"], ons["path"])
+                    points = [{"date": p["date"], "value": round(p["value"] * scale, 6),
+                               "source_url": p.get("source_url")}
+                              for p in pts if str(p["date"]) >= "2015-01-01"]
+                    logs.append((series["id"], *merge(
+                        database, series["id"], points,
+                        replace_source_range=True, prune_after_source_end=False,
+                        backfill=True,
+                    )))
+                except Exception as error:
+                    logs.append((series["id"], "ERROR", str(error)))
+            continue
         try:
             if dataset == "gdpo":
                 store = _parse_gdpo_levels(_bulk_get(_discover_gdpo_url()).content)
