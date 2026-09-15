@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-15T13:11:25.431739+00:00",
+  "generated_at": "2026-09-15T13:14:29.497921+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -7655,6 +7655,12 @@
           "value": 0.3,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/ecyx/mgdp",
           "source_frequency": "monthly"
+        },
+        {
+          "date": "2026-07-01",
+          "value": 0.4,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/ecyx/mgdp",
+          "source_frequency": "monthly"
         }
       ]
     },
@@ -13433,47 +13439,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 99.3
+          "value": 99.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 99.0
+          "value": 99.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 99.1
+          "value": 99.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 99.0
+          "value": 99.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 98.5
+          "value": 98.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 99.2
+          "value": 99.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 99.1
+          "value": 99.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 98.4
+          "value": 98.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 98.4
+          "value": 98.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 98.6
+          "value": 98.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 98.7
+          "value": 98.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -13913,47 +13930,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 102.6
+          "value": 102.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 100.5
+          "value": 100.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 99.9
+          "value": 99.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 99.3
+          "value": 99.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 99.4
+          "value": 99.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 99.7
+          "value": 99.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 98.5
+          "value": 98.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 100.7
+          "value": 100.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 98.6
+          "value": 98.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 99.9
+          "value": 99.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 101.7
+          "value": 101.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -13973,47 +14001,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 99.3
+          "value": 99.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 99.3
+          "value": 99.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 100.2
+          "value": 100.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 100.0
+          "value": 100.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 100.6
+          "value": 100.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 102.0
+          "value": 102.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 99.1
+          "value": 99.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 97.9
+          "value": 97.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 99.2
+          "value": 99.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 101.7
+          "value": 101.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 100.4
+          "value": 100.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -14033,47 +14072,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 98.4
+          "value": 98.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 99.4
+          "value": 99.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 99.1
+          "value": 99.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 99.9
+          "value": 99.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 99.3
+          "value": 99.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 99.9
+          "value": 99.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 100.4
+          "value": 100.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 101.5
+          "value": 101.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 101.0
+          "value": 101.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 102.4
+          "value": 102.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 103.0
+          "value": 103.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -14093,47 +14143,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 100.4
+          "value": 100.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 103.7
+          "value": 103.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 104.9
+          "value": 104.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 103.7
+          "value": 103.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 104.4
+          "value": 104.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 105.4
+          "value": 105.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 106.2
+          "value": 106.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 108.4
+          "value": 108.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 109.6
+          "value": 109.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 111.1
+          "value": 111.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 112.4
+          "value": 112.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -14223,47 +14284,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 100.2
+          "value": 100.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 101.6
+          "value": 101.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 105.2
+          "value": 105.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 106.0
+          "value": 106.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 107.1
+          "value": 107.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 109.5
+          "value": 109.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 110.5
+          "value": 110.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 110.8
+          "value": 110.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 111.6
+          "value": 111.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 113.0
+          "value": 113.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 116.1
+          "value": 116.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -14283,47 +14355,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 97.0
+          "value": 97.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 98.9
+          "value": 98.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 101.6
+          "value": 101.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 103.0
+          "value": 103.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 101.9
+          "value": 101.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 97.3
+          "value": 97.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 95.1
+          "value": 95.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 94.2
+          "value": 94.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 95.7
+          "value": 95.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 96.0
+          "value": 96.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 97.8
+          "value": 97.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -14343,47 +14426,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 100.7
+          "value": 100.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 98.4
+          "value": 98.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 99.6
+          "value": 99.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 95.7
+          "value": 95.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 97.6
+          "value": 97.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 110.7
+          "value": 110.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 111.2
+          "value": 111.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 113.1
+          "value": 113.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 112.2
+          "value": 112.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 110.4
+          "value": 110.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 111.4
+          "value": 111.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -14403,47 +14497,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 101.3
+          "value": 101.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 104.2
+          "value": 104.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 109.4
+          "value": 109.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 111.9
+          "value": 111.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 113.5
+          "value": 113.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 114.4
+          "value": 114.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 117.2
+          "value": 117.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 117.3
+          "value": 117.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 118.5
+          "value": 118.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 121.9
+          "value": 121.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 126.4
+          "value": 126.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -14533,47 +14638,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 96.2
+          "value": 96.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 97.6
+          "value": 97.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 96.0
+          "value": 96.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 95.0
+          "value": 95.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 95.1
+          "value": 95.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 95.0
+          "value": 95.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 93.9
+          "value": 93.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 94.7
+          "value": 94.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 95.8
+          "value": 95.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 95.6
+          "value": 95.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 95.5
+          "value": 95.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -14593,47 +14709,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 99.7
+          "value": 99.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 99.8
+          "value": 99.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 99.9
+          "value": 99.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 100.1
+          "value": 100.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 99.8
+          "value": 99.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 100.3
+          "value": 100.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 100.5
+          "value": 100.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 100.9
+          "value": 100.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 101.3
+          "value": 101.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 100.5
+          "value": 100.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 100.1
+          "value": 100.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -14653,47 +14780,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 98.8
+          "value": 98.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 98.9
+          "value": 98.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 99.1
+          "value": 99.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 99.1
+          "value": 99.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 99.3
+          "value": 99.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 99.7
+          "value": 99.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 99.4
+          "value": 99.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 101.8
+          "value": 101.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 100.2
+          "value": 100.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 101.7
+          "value": 101.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 102.2
+          "value": 102.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -14853,47 +14991,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 99.1
+          "value": 99.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 100.5
+          "value": 100.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 102.0
+          "value": 102.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 102.8
+          "value": 102.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 104.3
+          "value": 104.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 104.2
+          "value": 104.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 104.8
+          "value": 104.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 103.5
+          "value": 103.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 102.6
+          "value": 102.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 104.9
+          "value": 104.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 106.7
+          "value": 106.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -14913,47 +15062,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 99.5
+          "value": 99.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 99.5
+          "value": 99.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 98.8
+          "value": 98.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 99.3
+          "value": 99.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 101.6
+          "value": 101.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 100.9
+          "value": 100.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 102.7
+          "value": 102.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 101.9
+          "value": 101.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 101.0
+          "value": 101.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 103.4
+          "value": 103.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 104.6
+          "value": 104.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -14973,47 +15133,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 98.2
+          "value": 98.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 98.4
+          "value": 98.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 94.6
+          "value": 94.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 96.2
+          "value": 96.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 98.1
+          "value": 98.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 98.5
+          "value": 98.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 105.1
+          "value": 105.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 103.0
+          "value": 103.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 102.4
+          "value": 102.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 106.9
+          "value": 106.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 106.8
+          "value": 106.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -15033,47 +15204,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 101.5
+          "value": 101.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 104.1
+          "value": 104.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 108.5
+          "value": 108.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 104.5
+          "value": 104.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 108.1
+          "value": 108.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 106.1
+          "value": 106.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 108.6
+          "value": 108.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 105.3
+          "value": 105.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 103.1
+          "value": 103.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 102.6
+          "value": 102.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 102.3
+          "value": 102.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -15093,47 +15275,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 101.2
+          "value": 101.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 99.4
+          "value": 99.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 98.0
+          "value": 98.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 99.2
+          "value": 99.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 98.8
+          "value": 98.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 101.1
+          "value": 101.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 102.0
+          "value": 102.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 102.3
+          "value": 102.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 105.1
+          "value": 105.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 105.6
+          "value": 105.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 107.4
+          "value": 107.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -15153,47 +15346,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 94.3
+          "value": 94.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 105.1
+          "value": 105.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 118.8
+          "value": 118.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 121.0
+          "value": 121.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 120.8
+          "value": 120.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 117.4
+          "value": 117.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 115.7
+          "value": 115.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 110.2
+          "value": 110.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 110.1
+          "value": 110.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 111.0
+          "value": 111.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 115.3
+          "value": 115.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -15213,47 +15417,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 100.4
+          "value": 100.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 101.2
+          "value": 101.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 102.2
+          "value": 102.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 102.8
+          "value": 102.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 102.6
+          "value": 102.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 106.4
+          "value": 106.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 104.9
+          "value": 104.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 104.7
+          "value": 104.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 103.2
+          "value": 103.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 105.9
+          "value": 105.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 107.9
+          "value": 107.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -15273,47 +15488,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 98.9
+          "value": 98.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 101.6
+          "value": 101.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 102.8
+          "value": 102.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 102.3
+          "value": 102.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 101.7
+          "value": 101.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 103.6
+          "value": 103.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 104.1
+          "value": 104.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 103.8
+          "value": 103.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 103.4
+          "value": 103.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 102.2
+          "value": 102.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 101.3
+          "value": 101.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -15333,47 +15559,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 101.3
+          "value": 101.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 101.8
+          "value": 101.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 102.4
+          "value": 102.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 103.3
+          "value": 103.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 103.7
+          "value": 103.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 103.9
+          "value": 103.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 104.6
+          "value": 104.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 104.8
+          "value": 104.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 105.1
+          "value": 105.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 105.6
+          "value": 105.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 105.6
+          "value": 105.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -15393,47 +15630,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 97.2
+          "value": 97.2,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 98.5
+          "value": 98.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 97.8
+          "value": 97.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 96.3
+          "value": 96.3,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 96.8
+          "value": 96.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 99.8
+          "value": 99.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 99.4
+          "value": 99.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 101.6
+          "value": 101.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 102.4
+          "value": 102.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 102.1
+          "value": 102.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 102.7
+          "value": 102.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
@@ -15453,47 +15701,58 @@
       "data": [
         {
           "date": "2023-12-01",
-          "value": 99.1
+          "value": 99.1,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-03-01",
-          "value": 97.4
+          "value": 97.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-06-01",
-          "value": 97.8
+          "value": 97.8,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-09-01",
-          "value": 96.7
+          "value": 96.7,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2024-12-01",
-          "value": 99.0
+          "value": 99.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-03-01",
-          "value": 98.6
+          "value": 98.6,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-06-01",
-          "value": 98.4
+          "value": 98.4,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-09-01",
-          "value": 97.0
+          "value": 97.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2025-12-01",
-          "value": 94.9
+          "value": 94.9,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-03-01",
-          "value": 96.0
+          "value": 96.0,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         },
         {
           "date": "2026-06-01",
-          "value": 98.5
+          "value": 98.5,
+          "source_url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/ukgdpolowlevelaggregates"
         }
       ],
       "ons": {
