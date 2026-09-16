@@ -26,6 +26,26 @@ SESSION.headers.update({
     "Accept-Language": "en-GB,en;q=0.9",
 })
 
+
+# UK dashboard scope is controlled by 123.xlsx. Only these series are retained,
+# refreshed, and written to data/uk_macro.json. Existing source-specific fetch
+# and parsing methods below are intentionally unchanged.
+UK_SELECTED_SERIES = ['ukgrabiy', 'ukgeabry', 'ukgvnpqy', 'ukgrabiq', 'ukglqt03', 'ukgenptq', 'ukgvnpeq', 'ukgvl655', 'ukgzl2kx', 'ukgzgdqs', 'ukgdm3m', 'ukgdedkh', 'ukgdedkl', 'ukgdedkp', 'ukgdedkt', 'ukgdedkw', 'ukgdedkq', 'ukgdedks', 'ukgdedlb', 'ukcci', 'ukccpfut', 'ukccefut', 'ukccpurf', 'ukrvayoy', 'ukrvamom', 'mpmigbma', 'mpmigbsa', 'ukpypemc', 'ukccunem', 'ukueilor', 'ukleu16r', 'ukuer', 'inddwuky', 'ukawmwho', 'ukawxprm', 'ukawxsvm', 'ukawxmnm', 'inddkois', 'ukvaap2y', 'uklfjpc5', 'ukvaap33', 'ukvaap3a', 'uklfmgwg', 'ukccinfl', 'ukhca9iq', 'ukhpsery', 'ukbfftin', 'ukpsbr', 'ukpsm98r', 'ukpsnb', 'ukpsj5ii']
+UK_SELECTED_SERIES_SET = set(UK_SELECTED_SERIES)
+UK_SELECTED_BLOCKS = [{'title': 'GDP季度 by類別', 'color': '#1d4ed8', 'series': ['ukgrabiy', 'ukgeabry', 'ukgvnpqy', 'ukgrabiq', 'ukglqt03', 'ukgenptq', 'ukgvnpeq', 'ukgvl655']}, {'title': 'GDP季度 by產業', 'color': '#0369a1', 'series': ['ukgzl2kx', 'ukgzgdqs']}, {'title': 'GDP月度', 'color': '#0f766e', 'series': ['ukgdm3m', 'ukgdedkh', 'ukgdedkl', 'ukgdedkp', 'ukgdedkt', 'ukgdedkw', 'ukgdedkq', 'ukgdedks', 'ukgdedlb']}, {'title': '消費者信心', 'color': '#7c3aed', 'series': ['ukcci', 'ukccpfut', 'ukccefut', 'ukccpurf']}, {'title': '零售銷售', 'color': '#ea580c', 'series': ['ukrvayoy', 'ukrvamom']}, {'title': '企業信心', 'color': '#9333ea', 'series': ['mpmigbma', 'mpmigbsa']}, {'title': '就業市場', 'color': '#15803d', 'series': ['ukpypemc', 'ukccunem', 'ukueilor', 'ukleu16r', 'ukuer', 'inddwuky', 'ukawmwho', 'ukawxprm', 'ukawxsvm', 'ukawxmnm', 'inddkois', 'ukvaap2y', 'uklfjpc5', 'ukvaap33', 'ukvaap3a', 'uklfmgwg']}, {'title': '通膨', 'color': '#b91c1c', 'series': ['ukccinfl', 'ukhca9iq', 'ukhpsery', 'ukbfftin']}, {'title': '財政', 'color': '#475569', 'series': ['ukpsbr', 'ukpsm98r', 'ukpsnb', 'ukpsj5ii']}]
+
+def apply_uk_dashboard_scope(database: dict[str, Any]) -> None:
+    """Keep only the spreadsheet-selected UK series and rebuild display blocks."""
+    available = {item.get("id"): item for item in database.get("series", [])}
+    missing = [series_id for series_id in UK_SELECTED_SERIES if series_id not in available]
+    if missing:
+        raise KeyError(f"Selected UK series missing from JSON: {missing}")
+    database["series"] = [available[series_id] for series_id in UK_SELECTED_SERIES]
+    database["blocks"] = [
+        {**block, "series": [series_id for series_id in block["series"] if series_id in available]}
+        for block in UK_SELECTED_BLOCKS
+    ]
+
 ONS = {
     "ukhca9iq": ("MM23", "DKO8", "economy/inflationandpriceindices", 0),
     "ukhpsery": ("MM23", "D7NN", "economy/inflationandpriceindices", 0),
@@ -1779,10 +1799,12 @@ def main() -> None:
     started_at = time.monotonic()
     print(f"[START] Update UK macro data version={SCRIPT_VERSION}", flush=True)
     database = json.loads(DATA_FILE.read_text(encoding="utf-8"))
-    ensure_industrial_production_series(database)
+    apply_uk_dashboard_scope(database)
     logs = []
 
     for series_id, (dataset, cdid, path, month_shift) in ONS.items():
+        if series_id not in UK_SELECTED_SERIES_SET:
+            continue
         print(f"[ONS] updating {series_id} ({cdid})", flush=True)
         try:
             points = ons_series(dataset, cdid, path)
@@ -1804,6 +1826,8 @@ def main() -> None:
             logs.append((series_id, "ERROR", str(error)))
 
     for series_id, (dataset, cdid, path) in LEVELS.items():
+        if series_id not in UK_SELECTED_SERIES_SET:
+            continue
         print(f"[ONS LEVEL] updating {series_id} ({cdid})", flush=True)
         try:
             points = year_over_year(ons_series(dataset, cdid, path))
@@ -1854,6 +1878,7 @@ def main() -> None:
     print("[INDEED] refreshing Indeed Hiring Lab series", flush=True)
     update_indeed_series(database, logs)
 
+    apply_uk_dashboard_scope(database)
     database["generated_at"] = datetime.now(timezone.utc).isoformat()
     DATA_FILE.write_text(
         json.dumps(database, ensure_ascii=False, indent=2),
