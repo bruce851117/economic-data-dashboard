@@ -229,6 +229,26 @@ def ons_series(dataset: str, cdid: str, path: str) -> list[dict[str, Any]]:
     return output
 
 
+def quarter_over_quarter_from_levels(
+    levels: dict[str, float],
+    source_url: str,
+) -> list[dict[str, Any]]:
+    """Convert a quarterly seasonally adjusted index into quarter-on-quarter %."""
+    ordered = sorted(levels.items())
+    output: list[dict[str, Any]] = []
+    previous_value: float | None = None
+    for date_value, value in ordered:
+        numeric_value = float(value)
+        if previous_value not in (None, 0):
+            output.append({
+                "date": date_value,
+                "value": round((numeric_value / previous_value - 1) * 100, 6),
+                "source_url": source_url,
+                "measure": "QoQ calculated from official ONS seasonally adjusted index",
+            })
+        previous_value = numeric_value
+    return output
+
 def year_over_year(levels: list[dict[str, Any]]) -> list[dict[str, Any]]:
     indexed = {point["date"]: point for point in levels}
     output = []
@@ -1777,8 +1797,30 @@ def update_bulk_ons_series(database: dict[str, Any], logs: list) -> None:
                 logs.append((series["id"], "ERROR", "CDID %s absent from %s" % (cd, dataset)))
                 continue
             # Floor history at 2015 to match the rest of the UK dashboard.
-            points = [{"date": d, "value": round(v * scale, 6), "source_url": src}
-                      for d, v in sorted(vals.items()) if d >= "2015-01-01"]
+            if series["id"] in {"ukgzl2kx", "ukgzgdqs"}:
+                # These two ONS CDIDs are seasonally adjusted index levels. The
+                # dashboard requires quarterly growth, so calculate QoQ from
+                # consecutive index observations. Preserve a newer seeded level
+                # (for example a first-estimate quarter not yet in QNA) and let
+                # official QNA levels overwrite all overlapping dates.
+                combined_levels: dict[str, float] = {}
+                for point in series.get("data", []):
+                    date_value = str(point.get("date", ""))
+                    value = point.get("value")
+                    if date_value >= "2014-12-01" and isinstance(value, (int, float)):
+                        combined_levels[date_value] = float(value)
+                for date_value, value in vals.items():
+                    if date_value >= "2014-12-01":
+                        combined_levels[date_value] = float(value) * scale
+                points = [
+                    point for point in quarter_over_quarter_from_levels(combined_levels, src)
+                    if point["date"] >= "2015-01-01"
+                ]
+                series["unit"] = "%"
+                series["measure"] = "QoQ calculated from official ONS seasonally adjusted index"
+            else:
+                points = [{"date": d, "value": round(v * scale, 6), "source_url": src}
+                          for d, v in sorted(vals.items()) if d >= "2015-01-01"]
             try:
                 # backfill=True pulls the source's full history (from 2015); some
                 # ONS whole-dataset files lag Bloomberg by a release (e.g. QNA
