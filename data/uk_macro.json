@@ -11551,51 +11551,707 @@
       "color": "#0891b2",
       "data": [
         {
+          "date": "2015-01-01",
+          "value": 173698.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2015-02-01",
+          "value": 55214.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2015-03-01",
+          "value": 75854.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2015-04-01",
+          "value": 57511.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 49398.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 62142.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2015-07-01",
+          "value": 56305.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 42485.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 53641.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2015-10-01",
+          "value": 57052.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 44253.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": -39419.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2016-01-01",
+          "value": 90659.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 34184.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 10806.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2016-04-01",
+          "value": 24142.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 38028.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 37633.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2016-07-01",
+          "value": 37952.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 4938.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 33805.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2016-10-01",
+          "value": 27126.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 33785.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 28869.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2017-01-01",
+          "value": 18295.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2017-02-01",
+          "value": 39860.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 41382.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2017-04-01",
+          "value": 30403.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 37042.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 32948.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2017-07-01",
+          "value": 20478.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2017-08-01",
+          "value": 35531.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 38223.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2017-10-01",
+          "value": 32306.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 31316.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 29168.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2018-01-01",
+          "value": 25955.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2018-02-01",
+          "value": 9500.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": -8968.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 64647.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2018-05-01",
+          "value": 4821.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 17977.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2018-07-01",
+          "value": 40143.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 37468.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 10286.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 36336.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 55336.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 4740.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2019-01-01",
+          "value": 41248.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2019-02-01",
+          "value": 29419.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 53178.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2019-04-01",
+          "value": 8212.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2019-05-01",
+          "value": 654.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 3123.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2019-07-01",
+          "value": -5671.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 32566.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 30655.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2019-10-01",
+          "value": 13389.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 9191.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 22613.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 59398.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2020-02-01",
+          "value": -11375.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -29970.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2020-04-01",
+          "value": -452891.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2020-05-01",
+          "value": -169285.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": -51322.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2020-07-01",
+          "value": -31079.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2020-08-01",
+          "value": -67084.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": -63243.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2020-10-01",
+          "value": -20528.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2020-11-01",
+          "value": -71482.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 39851.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2021-01-01",
+          "value": 39649.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2021-02-01",
+          "value": -3607.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 34968.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 127996.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 173813.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 169144.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 115239.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 147183.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 104381.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 32007.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 103373.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 84571.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2022-01-01",
+          "value": 51740.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 115705.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 84341.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 11879.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 22530.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 24144.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2022-07-01",
+          "value": 71892.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2022-08-01",
+          "value": 54823.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 71843.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2022-10-01",
+          "value": 50985.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2022-11-01",
+          "value": 70372.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 44480.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2023-01-01",
+          "value": 29274.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2023-02-01",
+          "value": 54866.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 58420.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2023-04-01",
+          "value": 28946.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2023-05-01",
+          "value": 21521.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 46201.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2023-07-01",
+          "value": 4171.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2023-08-01",
+          "value": 21643.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 39399.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 40354.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 33109.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 46807.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 14019.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 6636.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 9383.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 23454.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 22293.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 7055.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 6017.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2024-08-01",
+          "value": -21399.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 3851.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 33361.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2024-11-01",
+          "value": -20392.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": -21009.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2025-01-01",
+          "value": -605.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2025-02-01",
+          "value": -17103.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": -15378.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2025-04-01",
+          "value": -3982.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": -20256.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": -14220.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 2443.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 17454.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
+          "date": "2025-09-01",
+          "value": -21997.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
+        },
+        {
           "date": "2025-10-01",
-          "value": -5369.0
+          "value": -5369.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
         },
         {
           "date": "2025-11-01",
-          "value": -27424.0
+          "value": -27424.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
         },
         {
           "date": "2025-12-01",
-          "value": 5126.0
+          "value": 5126.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
         },
         {
           "date": "2026-01-01",
-          "value": 9973.0
+          "value": 9973.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
         },
         {
           "date": "2026-02-01",
-          "value": -10021.0
+          "value": -10021.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
         },
         {
           "date": "2026-03-01",
-          "value": -6564.0
+          "value": -6564.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
         },
         {
           "date": "2026-04-01",
-          "value": -17043.0
+          "value": -17043.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
         },
         {
           "date": "2026-05-01",
-          "value": -4046.0
+          "value": -4046.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
         },
         {
           "date": "2026-06-01",
-          "value": -22068.0
+          "value": -22068.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
         },
         {
           "date": "2026-07-01",
-          "value": -19319.0
+          "value": -19319.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
         },
         {
           "date": "2026-08-01",
-          "value": -26097.0
+          "value": -26097.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/realtimeinformationstatisticsreferencetableseasonallyadjusted/current/rtisasep2026.xlsx"
         }
       ],
-      "static": true
+      "special": "paye_change"
     },
     {
       "id": "ukccunem",
@@ -12433,51 +13089,702 @@
       "color": "#9333ea",
       "data": [
         {
+          "date": "2015-01-01",
+          "value": 5.733231,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2015-02-01",
+          "value": 5.400214,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2015-03-01",
+          "value": 5.440134,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2015-04-01",
+          "value": 5.652135,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2015-05-01",
+          "value": 5.713509,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2015-06-01",
+          "value": 5.426599,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2015-07-01",
+          "value": 5.393696,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2015-08-01",
+          "value": 5.311682,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2015-09-01",
+          "value": 5.230152,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2015-10-01",
+          "value": 4.962592,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2015-11-01",
+          "value": 5.00832,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2015-12-01",
+          "value": 5.25429,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2016-01-01",
+          "value": 4.925248,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2016-02-01",
+          "value": 5.115031,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2016-03-01",
+          "value": 5.168225,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2016-04-01",
+          "value": 4.727171,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2016-05-01",
+          "value": 4.879259,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2016-06-01",
+          "value": 5.147577,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2016-07-01",
+          "value": 4.65695,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2016-08-01",
+          "value": 5.102493,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2016-09-01",
+          "value": 4.738376,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2016-10-01",
+          "value": 4.660362,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2016-11-01",
+          "value": 4.947019,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2016-12-01",
+          "value": 4.597014,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2017-01-01",
+          "value": 4.595346,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2017-02-01",
+          "value": 4.70282,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2017-03-01",
+          "value": 4.373112,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2017-04-01",
+          "value": 4.564653,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2017-05-01",
+          "value": 4.385336,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2017-06-01",
+          "value": 4.311729,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2017-07-01",
+          "value": 4.337934,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2017-08-01",
+          "value": 4.323436,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2017-09-01",
+          "value": 4.133955,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2017-10-01",
+          "value": 4.297867,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2017-11-01",
+          "value": 4.369698,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2017-12-01",
+          "value": 4.396083,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2018-01-01",
+          "value": 4.181285,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2018-02-01",
+          "value": 4.047762,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2018-03-01",
+          "value": 4.383948,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2018-04-01",
+          "value": 4.17007,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2018-05-01",
+          "value": 3.928067,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2018-06-01",
+          "value": 4.0336,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2018-07-01",
+          "value": 4.145387,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2018-08-01",
+          "value": 3.915976,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2018-09-01",
+          "value": 4.183154,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2018-10-01",
+          "value": 4.113452,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2018-11-01",
+          "value": 3.817779,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2018-12-01",
+          "value": 4.142446,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2019-01-01",
+          "value": 3.874371,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2019-02-01",
+          "value": 3.811877,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2019-03-01",
+          "value": 3.810703,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2019-04-01",
+          "value": 3.902136,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2019-05-01",
+          "value": 3.681589,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 4.084657,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2019-07-01",
+          "value": 3.795634,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2019-08-01",
+          "value": 3.76643,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2019-09-01",
+          "value": 4.06469,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2019-10-01",
+          "value": 3.554501,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 3.862869,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 3.799049,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2020-01-01",
+          "value": 4.011486,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 4.038747,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": 4.253173,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2020-04-01",
+          "value": 3.986742,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2020-05-01",
+          "value": 4.142766,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 4.121732,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2020-07-01",
+          "value": 4.837992,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 4.947779,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 5.102495,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 5.392371,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 5.16142,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 5.254446,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2021-01-01",
+          "value": 5.078396,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 4.817166,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 4.845146,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 4.805973,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 4.745604,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 4.474159,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 4.523071,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 4.585201,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 4.024371,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 4.262898,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 4.350257,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 3.928421,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2022-01-01",
+          "value": 4.008168,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 3.861787,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 3.49084,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 4.102277,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 3.639373,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 3.58121,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2022-07-01",
+          "value": 3.710338,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2022-08-01",
+          "value": 3.541305,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 3.874366,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2022-10-01",
+          "value": 4.081764,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2022-11-01",
+          "value": 3.667814,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 3.969168,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2023-01-01",
+          "value": 4.010327,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2023-02-01",
+          "value": 3.976621,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 3.980995,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2023-04-01",
+          "value": 3.716661,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2023-05-01",
+          "value": 4.29699,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 4.674893,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2023-07-01",
+          "value": 4.110732,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2023-08-01",
+          "value": 4.043528,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 4.153135,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2023-10-01",
+          "value": 3.794354,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2023-11-01",
+          "value": 3.88166,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2023-12-01",
+          "value": 3.947719,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2024-01-01",
+          "value": 4.370092,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2024-02-01",
+          "value": 4.294388,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 4.410451,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2024-04-01",
+          "value": 4.403174,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2024-05-01",
+          "value": 4.449078,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 3.806501,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2024-07-01",
+          "value": 4.443526,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2024-08-01",
+          "value": 3.991338,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 4.340366,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2024-10-01",
+          "value": 4.39594,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2024-11-01",
+          "value": 4.495419,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 4.250461,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2025-01-01",
+          "value": 4.354321,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 4.743862,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 4.548244,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2025-04-01",
+          "value": 4.644671,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 4.871375,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 4.544406,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 4.740191,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 5.240048,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
+        },
+        {
           "date": "2025-09-01",
-          "value": 4.890738616551311
+          "value": 4.890739,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
         },
         {
           "date": "2025-10-01",
-          "value": 5.063098037038329
+          "value": 5.063098,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
         },
         {
           "date": "2025-11-01",
-          "value": 5.307488666766255
+          "value": 5.307489,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
         },
         {
           "date": "2025-12-01",
-          "value": 5.167169667633708
+          "value": 5.16717,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
         },
         {
           "date": "2026-01-01",
-          "value": 4.970345419387994
+          "value": 4.970345,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
         },
         {
           "date": "2026-02-01",
-          "value": 4.686610800929338
+          "value": 4.686611,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
         },
         {
           "date": "2026-03-01",
-          "value": 5.289249086411012
+          "value": 5.289249,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
         },
         {
           "date": "2026-04-01",
-          "value": 4.668751118562987
+          "value": 4.668751,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
         },
         {
           "date": "2026-05-01",
-          "value": 4.645769357897706
+          "value": 4.645769,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
         },
         {
           "date": "2026-06-01",
-          "value": 5.335507758706389
+          "value": 5.335508,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
         },
         {
           "date": "2026-07-01",
-          "value": 4.736002323467588
+          "value": 4.736002,
+          "source_url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/labourforcesurveysinglemonthestimatesx01/current/x01sep2026.xlsx"
         }
       ],
-      "static": true
+      "special": "lfs_16plus_unemp_rate"
     },
     {
       "id": "ukuer",

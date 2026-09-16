@@ -1836,6 +1836,144 @@ def update_bulk_ons_series(database: dict[str, Any], logs: list) -> None:
         time.sleep(1.5)
 
 
+PAYE_LANDING = ("https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/"
+                "earningsandworkinghours/datasets/"
+                "realtimeinformationstatisticsreferencetableseasonallyadjusted")
+X01_LANDING = ("https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/"
+               "employmentandemployeetypes/datasets/"
+               "labourforcesurveysinglemonthestimatesx01")
+
+
+def _discover_paye_url() -> str:
+    html = _bulk_get(PAYE_LANDING).text
+    m = re.search(r"/file\?uri=[^\"']+/rtisa[^\"']+\.xlsx", html)
+    if not m:
+        raise RuntimeError("PAYE RTI (SA) xlsx link not found")
+    return "https://www.ons.gov.uk" + m.group(0)
+
+
+def _discover_x01_url() -> str:
+    html = _bulk_get(X01_LANDING).text
+    m = re.search(r"/file\?uri=[^\"']+/x01[a-z0-9]*\.xlsx", html)
+    if not m:
+        raise RuntimeError("LFS single-month estimates (X01) xlsx link not found")
+    return "https://www.ons.gov.uk" + m.group(0)
+
+
+def _parse_paye_change(content: bytes) -> dict[str, float]:
+    """'1. Payrolled employees (UK)' sheet: the 'Change on previous month' column
+    (monthly seasonally-adjusted change in payrolled employees). Dates are full
+    month names ('July 2014')."""
+    wb = load_workbook(BytesIO(content), data_only=True, read_only=True)
+    sheet = next((s for s in wb.sheetnames if s.strip().startswith("1.")), None)
+    if sheet is None:
+        raise RuntimeError("PAYE sheet '1. Payrolled employees (UK)' not found")
+    ws = wb[sheet]
+    rows = list(ws.iter_rows(values_only=True))
+    header_row = next(
+        i for i, r in enumerate(rows)
+        if r and str(r[0]).strip() == "Date"
+    )
+    change_col = next(
+        ci for ci, c in enumerate(rows[header_row])
+        if c is not None and "change on previous month" in str(c).strip().lower()
+    )
+    out: dict[str, float] = {}
+    for r in rows[header_row + 1:]:
+        if not r or r[0] is None:
+            continue
+        try:
+            date_value = datetime.strptime(str(r[0]).strip(), "%B %Y").strftime("%Y-%m-01")
+        except ValueError:
+            continue
+        if change_col < len(r) and isinstance(r[change_col], (int, float)):
+            out[date_value] = float(r[change_col])
+    wb.close()
+    return out
+
+
+def _parse_x01_month_rate(content: bytes) -> dict[str, float]:
+    """'X01 SM Estimates' sheet: the single-month rate under the
+    'UK 16+ Unemployment Rates (SA)' group. Group headers sit on one row and the
+    'Month Rate' sub-label on a later row; locate both by text so a column shift
+    in a future release cannot silently pick the wrong series."""
+    wb = load_workbook(BytesIO(content), data_only=True, read_only=True)
+    sheet = next(
+        (s for s in wb.sheetnames if "X01" in s.upper() and "ESTIM" in s.upper()),
+        None,
+    )
+    if sheet is None:
+        raise RuntimeError("X01 'SM Estimates' sheet not found")
+    ws = wb[sheet]
+    rows = list(ws.iter_rows(values_only=True))
+    group_col = None
+    for r in rows[:8]:
+        for ci, c in enumerate(r):
+            if c is not None and str(c).strip().lower() == "uk 16+ unemployment rates (sa)":
+                group_col = ci
+                break
+        if group_col is not None:
+            break
+    if group_col is None:
+        raise RuntimeError("'UK 16+ Unemployment Rates (SA)' header not found in X01")
+    rate_col = None
+    for r in rows[:8]:
+        for ci in range(group_col, min(group_col + 6, len(r))):
+            if r[ci] is not None and str(r[ci]).strip().lower() == "month rate":
+                rate_col = ci
+                break
+        if rate_col is not None:
+            break
+    if rate_col is None:
+        raise RuntimeError("'Month Rate' sub-column not found for 16+ unemployment")
+    out: dict[str, float] = {}
+    for r in rows:
+        cell = r[group_col] if group_col < len(r) else None
+        if not hasattr(cell, "strftime"):
+            continue
+        if rate_col < len(r) and isinstance(r[rate_col], (int, float)):
+            out[cell.strftime("%Y-%m-01")] = round(float(r[rate_col]), 6)
+    wb.close()
+    return out
+
+
+def update_special_uk_series(database: dict[str, Any], logs: list) -> None:
+    """Two ONS series that carry no CDID in any whole-dataset file and must be
+    read out of their own reference workbooks by column label: payrolled-employee
+    change (PAYE RTI, SA) and the 16+ single-month unemployment rate (LFS X01)."""
+    markers = [s for s in database.get("series", []) if s.get("special")]
+    if not markers:
+        return
+    handlers = {
+        "paye_change": (_discover_paye_url, _parse_paye_change),
+        "lfs_16plus_unemp_rate": (_discover_x01_url, _parse_x01_month_rate),
+    }
+    cache: dict[str, tuple[str, dict[str, float]]] = {}
+    for series in markers:
+        kind = series["special"]
+        handler = handlers.get(kind)
+        if not handler:
+            logs.append((series["id"], "ERROR", "unknown special kind %s" % kind))
+            continue
+        try:
+            if kind not in cache:
+                discover, parse = handler
+                url = discover()
+                cache[kind] = (url, parse(_bulk_get(url).content))
+            url, data = cache[kind]
+            points = [{"date": d, "value": v, "source_url": url}
+                      for d, v in sorted(data.items()) if d >= "2015-01-01"]
+            if not points:
+                logs.append((series["id"], "ERROR", "no data parsed for %s" % kind))
+                continue
+            logs.append((series["id"], *merge(
+                database, series["id"], points,
+                replace_source_range=True, prune_after_source_end=False, backfill=True,
+            )))
+        except Exception as error:
+            logs.append((series["id"], "ERROR", str(error)))
+
+
 def main() -> None:
     validate_pmi_parser()
     started_at = time.monotonic()
@@ -1919,6 +2057,9 @@ def main() -> None:
 
     print("[INDEED] refreshing Indeed Hiring Lab series", flush=True)
     update_indeed_series(database, logs)
+
+    print("[SPECIAL] refreshing PAYE change + LFS 16+ unemployment rate", flush=True)
+    update_special_uk_series(database, logs)
 
     apply_uk_dashboard_scope(database)
     database["generated_at"] = datetime.now(timezone.utc).isoformat()
