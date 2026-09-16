@@ -4,7 +4,7 @@
     "sector": "manufacturing",
     "requested_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/september/",
     "status_code": 200,
-    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=018f59879b898969db523dba69e17f7b5b4f08908b4c5ee56e31e62588b6d33f6ba400bd64bf28f9c689bc7eb04f5f0bc293268a1c3c467275b8682ca911e1290fbcfce11cb29b97fa13e45857cf3aa231e9992fa1694190d08e4e7660abada49c337ddeee51d234e6f5169c2d6d31aaff47bc41430b86456619f0f9d6794397",
+    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=165760675e337d9659f9c6ce807ea1136a99ec9f8e4f174333f4bfaa9f15467ed5c842617518c7f4198bc86ca7c9a34cab36001942621838c0e472022bf384977b58b4d31e057a4298b632b1659829533f5f47ab1a06d2a553138aa5d42d1847997a0d90f2a133080256b29522e2b5cec7c68c42475c00e17318218aeccc0c08",
     "content_type": "text/html",
     "response_bytes": 922,
     "status": "failed",
@@ -78,7 +78,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/july/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 147767,
+    "response_bytes": 147765,
     "status": "parsed",
     "values": {
       "services_pmi": 54.1,

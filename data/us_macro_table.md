@@ -1,6 +1,6 @@
 # 美國總體經濟數據：待確認項目
 
-> 更新時間：2026-09-15 18:14 UTC  
+> 更新時間：2026-09-16 18:13 UTC  
 > 其他已成功指標仍會在背景抓取、接受來源修訂並更新Cache，只是不顯示於本表。
 > Conference Board原始回應會保存至 `data/us_macro_debug/`，供後續判斷GitHub Actions實際收到的HTML。
 
@@ -18,26 +18,26 @@
 > 以下為API回傳的全部季調月銷售額（data_type_code=SM、seasonally_adj=yes）。
 > 控制組採用Census MARTS官方彙總代碼 `441X`（Auto and Other Motor Vehicle Dealers）。
 
-| category_code | Census分類名稱 | 2026/07/31 | 2026/06/30 | 2026/05/31 | 2026/04/30 | 2026/03/31 |
+| category_code | Census分類名稱 | 2026/08/31 | 2026/07/31 | 2026/06/30 | 2026/05/31 | 2026/04/30 |
 |---|---|---:|---:|---:|---:|---:|
-| 44000 | Retail Trade | 660047 | 665054 | 663604 | 657830 | 653772 |
-| 441 | Motor Vehicle and Parts Dealers | 141426 | 143986 | 140675 | 139343 | 139855 |
-| 441X | Auto and Other Motor Vehicle Dealers | 129310 | 132013 | 128891 | 127537 | 128151 |
-| 442 | Furniture and Home Furnishings Stores | 11346 | 11315 | 11327 | 11152 | 11283 |
-| 443 | Electronics and Appliance Stores | 8113 | 8152 | 8149 | 8200 | 8069 |
-| 444 | Building Material and Garden Equipment and Supplies Dealers | 42583 | 42456 | 41956 | 41853 | 41828 |
-| 445 | Food and Beverage Stores | 85526 | 85487 | 85588 | 85455 | 84983 |
-| 4451 | Grocery Stores | 76993 | 77044 | 77209 | 77117 | 76694 |
-| 446 | Health and Personal Care Stores | 40505 | 40224 | 40372 | 40086 | 40178 |
-| 447 | Gasoline Stations | 59879 | 60430 | 64138 | 62364 | 60123 |
-| 448 | Clothing and Clothing Accessories Stores | 28313 | 27786 | 27986 | 27706 | 27854 |
-| 44W72 | Retail Trade and Food Services, ex Auto and Gas | 562297 | 563656 | 561379 | 557390 | 554035 |
-| 44X72 | Retail Trade and Food Services, Total | 763602 | 768072 | 766192 | 759097 | 754013 |
-| 44Y72 | Retail Trade and Food Services, ex Auto | 622176 | 624086 | 625517 | 619754 | 614158 |
-| 44Z72 | Retail Trade and Food Services, ex Gas | 703723 | 707642 | 702054 | 696733 | 693890 |
-| 451 | Sporting Goods, Hobby, Musical Instrument, and Book Stores | 8936 | 8940 | 8897 | 8885 | 8659 |
-| 452 | General Merchandise Stores | 79761 | 79558 | 79432 | 79080 | 79077 |
-| 4522 | Census API未附標籤，請依category_code判斷 | 3329 | 3327 | 3327 | 3289 | 3294 |
-| 453 | Miscellaneous Store Retailers | 16760 | 16673 | 16324 | 15671 | 15833 |
-| 454 | Nonstore Retailers | 136899 | 140047 | 138760 | 138035 | 136030 |
-| 722 | Food Services and Drinking Places | 103555 | 103018 | 102588 | 101267 | 100241 |
+| 44000 | Retail Trade | 668877 | 660638 | 665247 | 663604 | 657830 |
+| 441 | Motor Vehicle and Parts Dealers | 142379 | 141565 | 144140 | 140675 | 139343 |
+| 441X | Auto and Other Motor Vehicle Dealers | 130107 | 129461 | 132145 | 128891 | 127537 |
+| 442 | Furniture and Home Furnishings Stores | 11398 | 11296 | 11319 | 11327 | 11152 |
+| 443 | Electronics and Appliance Stores | 8307 | 8180 | 8189 | 8149 | 8200 |
+| 444 | Building Material and Garden Equipment and Supplies Dealers | 42227 | 42318 | 42380 | 41956 | 41853 |
+| 445 | Food and Beverage Stores | 85580 | 85214 | 85408 | 85588 | 85455 |
+| 4451 | Grocery Stores | 77153 | 76800 | 76968 | 77209 | 77117 |
+| 446 | Health and Personal Care Stores | 40721 | 40355 | 40238 | 40372 | 40086 |
+| 447 | Gasoline Stations | 62303 | 60455 | 60586 | 64138 | 62364 |
+| 448 | Clothing and Clothing Accessories Stores | 28353 | 28163 | 27792 | 27986 | 27706 |
+| 44W72 | Retail Trade and Food Services, ex Auto and Gas | 569265 | 562442 | 563861 | 561379 | 557390 |
+| 44X72 | Retail Trade and Food Services, Total | 773947 | 764462 | 768587 | 766192 | 759097 |
+| 44Y72 | Retail Trade and Food Services, ex Auto | 631568 | 622897 | 624447 | 625517 | 619754 |
+| 44Z72 | Retail Trade and Food Services, ex Gas | 711644 | 704007 | 708001 | 702054 | 696733 |
+| 451 | Sporting Goods, Hobby, Musical Instrument, and Book Stores | 9061 | 8951 | 8934 | 8897 | 8885 |
+| 452 | General Merchandise Stores | 80388 | 79854 | 79442 | 79432 | 79080 |
+| 4522 | Census API未附標籤，請依category_code判斷 | 3297 | 3323 | 3323 | 3327 | 3289 |
+| 453 | Miscellaneous Store Retailers | 16821 | 16515 | 16612 | 16324 | 15671 |
+| 454 | Nonstore Retailers | 141339 | 137772 | 140207 | 138760 | 138035 |
+| 722 | Food Services and Drinking Places | 105070 | 103824 | 103340 | 102588 | 101267 |
