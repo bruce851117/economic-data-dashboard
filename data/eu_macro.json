@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T09:19:15.348592+00:00",
+  "generated_at": "2026-09-16T07:02:08.352082+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
@@ -1333,6 +1333,12 @@
           "value": 1.3,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/011814145?lastNObservations=30",
           "note": "INSEE Base 2025 official annual underlying inflation; idbank=011814145"
+        },
+        {
+          "date": "2026-08-01",
+          "value": 1.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/011814145?lastNObservations=30",
+          "note": "INSEE Base 2025 official annual underlying inflation; idbank=011814145"
         }
       ]
     },
@@ -2006,6 +2012,12 @@
         },
         {
           "date": "2026-07-01",
+          "value": 2.44,
+          "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
+        },
+        {
+          "date": "2026-08-01",
           "value": 2.44,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
           "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
@@ -7341,7 +7353,7 @@
         },
         {
           "date": "2026-07-01",
-          "value": -2.4390243902439046,
+          "value": -2.3414634146341484,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
@@ -8591,37 +8603,43 @@
         },
         {
           "date": "2026-01-01",
-          "value": -2.043269230769229,
+          "value": -2.2836538461538547,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-02-01",
-          "value": -0.6857142857142784,
+          "value": -1.0285714285714342,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-03-01",
-          "value": -3.424657534246578,
+          "value": -3.7181996086105618,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-04-01",
-          "value": -0.8762322015334001,
+          "value": -1.2048192771084265,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-05-01",
-          "value": 0,
+          "value": -0.22123893805310324,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-06-01",
-          "value": -0.10638297872339608,
+          "value": -0.5319148936170248,
+          "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
+          "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
+        },
+        {
+          "date": "2026-07-01",
+          "value": -1.6146393972012896,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         }
@@ -13801,9 +13819,9 @@
         },
         {
           "date": "2026-06-01",
-          "value": 92.3,
-          "source_url": "https://www.ifo.de/sites/default/files/secure/timeseries/ifo-beschbaro-d-202608.xlsx",
-          "note": "sheet=ifo Beschäftigungsbarometer; row=303; col=2"
+          "value": 85.7,
+          "source_url": "https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026",
+          "note": "previous month revised in official July release"
         },
         {
           "date": "2026-07-01",
