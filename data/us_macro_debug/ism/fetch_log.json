@@ -4,7 +4,7 @@
     "sector": "manufacturing",
     "requested_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/september/",
     "status_code": 200,
-    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=165760675e337d9659f9c6ce807ea1136a99ec9f8e4f174333f4bfaa9f15467ed5c842617518c7f4198bc86ca7c9a34cab36001942621838c0e472022bf384977b58b4d31e057a4298b632b1659829533f5f47ab1a06d2a553138aa5d42d1847997a0d90f2a133080256b29522e2b5cec7c68c42475c00e17318218aeccc0c08",
+    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=5ee14dbc2a145aba014762dfa8602526d05422e6a2a499735e7a773f2e8cd81d975c69e9153fdcea1531f7f8e47b90b0cd5639ff524f9a40a8f74181f45bd1f97c9ddec8493dc23d622aff66b3b0c2b992ada599d7d9c330ae85a9d58ce26a54958da15206591573a01ae0ad8b86e12ea264e6bf2e5b8f01386f5df0693223f6",
     "content_type": "text/html",
     "response_bytes": 922,
     "status": "failed",
@@ -62,7 +62,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/july/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 158291,
+    "response_bytes": 158289,
     "status": "parsed",
     "values": {
       "manufacturing_pmi": 55.6,
@@ -78,7 +78,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/july/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 147765,
+    "response_bytes": 147767,
     "status": "parsed",
     "values": {
       "services_pmi": 54.1,
@@ -170,7 +170,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/march/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 87849,
+    "response_bytes": 87851,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM report does not identify March 2026"
