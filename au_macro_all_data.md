@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-09-16T07:35:46.349929+00:00
+更新時間：2026-09-21T07:54:51.812736+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -41,9 +41,9 @@
     <tr>
       <td>ANZ職缺廣告數</td>
       <td align="right"></td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#f86971">117</td>
-      <td align="right" bgcolor="#63be7b">116</td>
+      <td align="right" bgcolor="#f86971">122</td>
+      <td align="right" bgcolor="#ebf7ee">119</td>
+      <td align="right" bgcolor="#63be7b">117</td>
     </tr>
     <tr>
       <td>時薪YoY</td>
@@ -169,7 +169,7 @@
 | 勞動力未充分利用率 | OK | 0 | 0 | 2026-07 | 10.8230708 |  |
 | Employment Ratio | OK | 0 | 0 | 2026-07 | 63.87044554 |  |
 | 職缺 | OK | 0 | 0 | 2026-05 | 329.5 |  |
-| ANZ職缺廣告 | OK | 0 | 0 | 2026-07 | 117.05328933535768 |  |
+| ANZ職缺廣告 | OK | 1 | 139 | 2026-08 | 122.27108490250043 |  |
 | 時薪YoY | OK | 0 | 0 | 2026-Q2 | 3.034134007585343 |  |
 | 預計離職 | OK | 0 | 0 | 2026-Q1 | 1310.8837533 |  |
 | 失業預期 | OK | 0 | 0 | 2026-09 | 139.4 |  |
@@ -189,7 +189,7 @@
 | 就業新增-兼職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | 勞參率 | OK | 0 | 0 | 2026-07 | 66.85332364 |  |
 | 工時 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| Indeed職缺 | OK | 0 | 1 | 2026-09 | 152.49 |  |
+| Indeed職缺 | OK | 0 | 0 | 2026-09 | 152.49 |  |
 | 家戶消費-Goods | OK | 0 | 0 | 2026-07 | 7.2 |  |
 | 家戶消費-Services | OK | 0 | 0 | 2026-07 | 6.8 |  |
 | 資本支出_住房 | OK | 0 | 0 | 2026-Q2 | 2.103099304237821 |  |
