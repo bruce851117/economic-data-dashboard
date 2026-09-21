@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16T07:02:08.352082+00:00",
+  "generated_at": "2026-09-21T07:27:47.345863+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
@@ -13819,9 +13819,9 @@
         },
         {
           "date": "2026-06-01",
-          "value": 85.7,
-          "source_url": "https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026",
-          "note": "previous month revised in official July release"
+          "value": 92.3,
+          "source_url": "https://www.ifo.de/sites/default/files/secure/timeseries/ifo-beschbaro-d-202608.xlsx",
+          "note": "sheet=ifo Beschäftigungsbarometer; row=303; col=2"
         },
         {
           "date": "2026-07-01",
