@@ -4,7 +4,7 @@
     "sector": "manufacturing",
     "requested_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/september/",
     "status_code": 200,
-    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=a33bdf18864d4cd91c13bedb392db9432b39cca780cbea16644f6736225e0db24c418e04de45c928be7be73ecbccb76a004b3c74bff159d6587289e006edead115c5ff85cc4172f897c1eb981b4dc553343f3ec104e066b59745150feed34675e6c1c268b48ee63d92d220639959b7a41f9cbab8eeefb0308dab5899ebf5a7c1",
+    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=c43ec4488a6bee46017e18cea20ff3e903985cfb56caecfaa4603406be7844b54db33daf50980cafc4648623de4b30ff3bb43a91e36a7efde9c38f319bb0fa40642bb56b3a7a3de75f0ad5ba6422c94a7d277c99588df1b4636dc37485d5e160c50bf594c30ce29670e38b67548a2e996cd84aff87f887e2366ad2df89024c76",
     "content_type": "text/html",
     "response_bytes": 922,
     "status": "failed",
@@ -130,7 +130,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/may/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 86801,
+    "response_bytes": 86803,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM Services PMI value not found"
@@ -170,7 +170,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/march/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 87849,
+    "response_bytes": 87851,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM report does not identify March 2026"
@@ -210,7 +210,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/february/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 89486,
+    "response_bytes": 89488,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM Services PMI value not found"
