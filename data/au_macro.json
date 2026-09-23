@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-09-21T07:54:51.812736+00:00",
+  "generated_at": "2026-09-23T02:41:04.794377+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -22342,6 +22342,13 @@
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/fc9666a5c84d437f94e0fa46202d0aec",
           "release_type": "flash",
           "note": "Latest S&P Flash Australia manufacturing PMI; release=August 21 2026"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 49.3,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/896fba88169b47dba6c17591a763543f",
+          "release_type": "flash",
+          "note": "Latest S&P Flash Australia manufacturing PMI; release=September 22 2026"
         }
       ],
       "ticker": "",
@@ -22544,6 +22551,13 @@
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/fc9666a5c84d437f94e0fa46202d0aec",
           "release_type": "flash",
           "note": "Latest S&P Flash Australia services PMI; release=August 21 2026"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 51.4,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/896fba88169b47dba6c17591a763543f",
+          "release_type": "flash",
+          "note": "Latest S&P Flash Australia services PMI; release=September 22 2026"
         }
       ],
       "ticker": "",

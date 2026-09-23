@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-09-21T07:54:51.812736+00:00
+更新時間：2026-09-23T02:41:04.794377+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -105,14 +105,14 @@
     </tr>
     <tr>
       <td>PMI製造業</td>
-      <td align="right"></td>
+      <td align="right" bgcolor="#63be7b">49.3</td>
       <td align="right" bgcolor="#f86971">52.0</td>
       <td align="right" bgcolor="#f86971">52.0</td>
-      <td align="right" bgcolor="#63be7b">51.5</td>
+      <td align="right" bgcolor="#fba1a6">51.5</td>
     </tr>
     <tr>
       <td>PMI服務業</td>
-      <td align="right"></td>
+      <td align="right" bgcolor="#bee4c8">51.4</td>
       <td align="right" bgcolor="#fbadb1">52.9</td>
       <td align="right" bgcolor="#f86971">53.6</td>
       <td align="right" bgcolor="#63be7b">50.5</td>
@@ -169,7 +169,7 @@
 | 勞動力未充分利用率 | OK | 0 | 0 | 2026-07 | 10.8230708 |  |
 | Employment Ratio | OK | 0 | 0 | 2026-07 | 63.87044554 |  |
 | 職缺 | OK | 0 | 0 | 2026-05 | 329.5 |  |
-| ANZ職缺廣告 | OK | 1 | 139 | 2026-08 | 122.27108490250043 |  |
+| ANZ職缺廣告 | OK | 0 | 0 | 2026-08 | 122.27108490250043 |  |
 | 時薪YoY | OK | 0 | 0 | 2026-Q2 | 3.034134007585343 |  |
 | 預計離職 | OK | 0 | 0 | 2026-Q1 | 1310.8837533 |  |
 | 失業預期 | OK | 0 | 0 | 2026-09 | 139.4 |  |
@@ -178,8 +178,8 @@
 | 零售 | OK | 0 | 0 | 2026-07 | 7.2 |  |
 | NAB企業售價 | OK | 0 | 0 | 2026-07 | 1.1 |  |
 | 消費信心 | OK | 0 | 0 | 2026-09 | 84.4 |  |
-| 製造業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia manufacturing flash PMI from the newest three releases |
-| 服務業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia services flash PMI from the newest three releases |
+| 製造業PMI | OK | 1 | 0 | 2026-09 | 49.3 |  |
+| 服務業PMI | OK | 1 | 0 | 2026-09 | 51.4 |  |
 | GDP YoY | OK | 0 | 0 | 2026-Q2 | 2.298880639850265 |  |
 | GDP私人消費YoY | OK | 0 | 0 | 2026-Q2 | 1.8645731108930308 |  |
 | GDP投資YoY | OK | 0 | 0 | 2026-Q2 | 2.204651162790694 |  |
