@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T07:33:57.842427+00:00",
+  "generated_at": "2026-09-26T07:00:30.589864+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -2328,7 +2328,7 @@
         },
         {
           "date": "2026-06-01",
-          "value": -99.0,
+          "value": -199.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         }
@@ -2622,7 +2622,7 @@
         },
         {
           "date": "2026-06-01",
-          "value": -99.535938,
+          "value": -195.89204,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         }
@@ -9047,6 +9047,11 @@
           "date": "2026-08-01",
           "value": -14.0,
           "source_url": "https://tradingeconomics.com/united-kingdom/consumer-confidence"
+        },
+        {
+          "date": "2026-09-01",
+          "value": -13.0,
+          "source_url": "https://tradingeconomics.com/united-kingdom/consumer-confidence"
         }
       ]
     },
@@ -11386,6 +11391,12 @@
           "value": 51.7,
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/d3399079f4c84a81a19620a062eecbb4",
           "release_type": "final"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 52.0,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/43cc558dfc334fa3a0c53bf388f70b5b",
+          "release_type": "flash"
         }
       ]
     },
@@ -11554,6 +11565,12 @@
           "value": 52.5,
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/577726f5cdab43de8bab0ac5d4d84b97",
           "release_type": "final"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 51.7,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/43cc558dfc334fa3a0c53bf388f70b5b",
+          "release_type": "flash"
         }
       ]
     },
@@ -18421,7 +18438,7 @@
         },
         {
           "date": "2026-09-01",
-          "value": 68.7,
+          "value": 68.66,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
         }
       ],
@@ -24649,7 +24666,7 @@
         },
         {
           "date": "2023-02-01",
-          "value": -0.898,
+          "value": -0.894,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
@@ -24709,152 +24726,157 @@
         },
         {
           "date": "2024-02-01",
-          "value": 2.337,
+          "value": 2.336,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-03-01",
-          "value": 26.358,
+          "value": 26.498,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-04-01",
-          "value": -6.875,
+          "value": -6.739,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-05-01",
-          "value": 17.716,
+          "value": 17.855,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-06-01",
-          "value": 7.828,
+          "value": 7.968,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-07-01",
-          "value": 23.634,
+          "value": 23.774,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-08-01",
-          "value": 6.9,
+          "value": 7.034,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-09-01",
-          "value": -13.914,
+          "value": -13.777,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-10-01",
-          "value": 18.048,
+          "value": 18.187,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-11-01",
-          "value": 13.735,
+          "value": 13.875,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-12-01",
-          "value": 19.828,
+          "value": 19.954,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-01-01",
-          "value": -22.316,
+          "value": -22.178,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-02-01",
-          "value": 7.002,
+          "value": 7.142,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-03-01",
-          "value": 3.286,
+          "value": 1.392,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-04-01",
-          "value": 8.861,
+          "value": 9.714,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-05-01",
-          "value": 20.47,
+          "value": 24.69,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-06-01",
-          "value": -16.89,
+          "value": -23.845,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-07-01",
-          "value": 2.286,
+          "value": 2.938,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-08-01",
-          "value": 10.108,
+          "value": 10.16,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-09-01",
-          "value": -10.917,
+          "value": -10.863,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-10-01",
-          "value": 20.676,
+          "value": 20.835,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-11-01",
-          "value": 9.711,
+          "value": 10.716,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-12-01",
-          "value": 17.04,
+          "value": 12.735,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-01-01",
-          "value": -59.308,
+          "value": -59.26,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-02-01",
-          "value": 7.649,
+          "value": 7.946,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-03-01",
-          "value": 29.145,
+          "value": 29.319,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-04-01",
-          "value": 9.451,
+          "value": 9.094,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-05-01",
-          "value": 23.727,
+          "value": 23.371,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-06-01",
-          "value": 15.635,
+          "value": 15.276,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-07-01",
-          "value": -29.006,
+          "value": -26.808,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2026-08-01",
+          "value": 10.005,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         }
       ],
@@ -25551,7 +25573,7 @@
         },
         {
           "date": "2026-04-01",
-          "value": 15545.0,
+          "value": 15543.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
@@ -25566,7 +25588,12 @@
         },
         {
           "date": "2026-07-01",
-          "value": 2828.0,
+          "value": 3036.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2026-08-01",
+          "value": 10046.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         }
       ],
@@ -25588,697 +25615,702 @@
       "data": [
         {
           "date": "2015-01-01",
-          "value": -3.022,
+          "value": -2.956,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-02-01",
-          "value": 6.512,
+          "value": 6.578,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-03-01",
-          "value": 5.977,
+          "value": 6.037,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-04-01",
-          "value": 11.971,
+          "value": 11.917,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-05-01",
-          "value": 7.469,
+          "value": 7.415,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-06-01",
-          "value": 7.705,
+          "value": 7.654,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-07-01",
-          "value": 1.958,
+          "value": 1.91,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-08-01",
-          "value": 8.648,
+          "value": 8.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-09-01",
-          "value": 11.409,
+          "value": 11.359,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-10-01",
-          "value": 10.386,
+          "value": 10.339,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-11-01",
-          "value": 9.23,
+          "value": 9.183,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-12-01",
-          "value": 7.4,
+          "value": 7.352,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-01-01",
-          "value": -6.161,
+          "value": -6.217,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-02-01",
-          "value": 5.724,
+          "value": 5.668,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-03-01",
-          "value": 4.969,
+          "value": 4.921,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-04-01",
-          "value": 12.18,
+          "value": 12.182,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-05-01",
-          "value": 7.246,
+          "value": 7.248,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-06-01",
-          "value": 4.876,
+          "value": 4.882,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-07-01",
-          "value": 0.721,
+          "value": 0.718,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-08-01",
-          "value": 7.258,
+          "value": 7.255,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-09-01",
-          "value": 10.806,
+          "value": 10.801,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-10-01",
-          "value": 7.966,
+          "value": 7.955,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-11-01",
-          "value": 6.938,
+          "value": 6.927,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-12-01",
-          "value": 5.305,
+          "value": 5.295,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-01-01",
-          "value": -8.614,
+          "value": -8.632,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-02-01",
-          "value": -0.179,
+          "value": -0.197,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-03-01",
-          "value": 2.675,
+          "value": 2.666,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-04-01",
-          "value": 12.624,
+          "value": 12.804,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-05-01",
-          "value": 7.152,
+          "value": 7.332,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-06-01",
-          "value": 6.458,
+          "value": 6.636,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-07-01",
-          "value": 0.219,
+          "value": 0.396,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-08-01",
-          "value": 5.45,
+          "value": 5.627,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-09-01",
-          "value": 9.934,
+          "value": 10.108,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-10-01",
-          "value": 8.024,
+          "value": 8.196,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-11-01",
-          "value": 6.529,
+          "value": 6.701,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-12-01",
-          "value": 4.36,
+          "value": 4.537,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-01-01",
-          "value": -5.815,
+          "value": -5.639,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-02-01",
-          "value": 2.578,
+          "value": 2.754,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-03-01",
-          "value": 1.784,
+          "value": 1.961,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-04-01",
-          "value": 10.036,
+          "value": 10.014,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-05-01",
-          "value": 4.492,
+          "value": 4.47,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-06-01",
-          "value": 4.103,
+          "value": 4.077,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-07-01",
-          "value": -2.494,
+          "value": -2.514,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-08-01",
-          "value": 6.986,
+          "value": 6.966,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-09-01",
-          "value": 8.881,
+          "value": 8.856,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-10-01",
-          "value": 9.259,
+          "value": 9.241,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-11-01",
-          "value": 5.794,
+          "value": 5.776,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-12-01",
-          "value": 5.433,
+          "value": 5.414,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-01-01",
-          "value": -10.27,
+          "value": -10.292,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-02-01",
-          "value": 2.125,
+          "value": 2.103,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-03-01",
-          "value": -0.019,
+          "value": -0.038,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-04-01",
-          "value": 11.142,
+          "value": 11.169,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-05-01",
-          "value": 4.674,
+          "value": 4.701,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-06-01",
-          "value": 6.791,
+          "value": 6.813,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-07-01",
-          "value": -1.151,
+          "value": -1.123,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-08-01",
-          "value": 4.891,
+          "value": 4.919,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-09-01",
-          "value": 8.708,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2019-10-01",
-          "value": 11.255,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2019-11-01",
-          "value": 5.45,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2019-12-01",
-          "value": 6.05,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-01-01",
-          "value": -8.2,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-02-01",
-          "value": 1.931,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-03-01",
-          "value": 6.846,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-04-01",
-          "value": 49.007,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-05-01",
-          "value": 51.127,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-06-01",
-          "value": 32.165,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-07-01",
-          "value": 21.844,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-08-01",
-          "value": 24.021,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-09-01",
-          "value": 27.984,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-10-01",
-          "value": 17.914,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-11-01",
-          "value": 21.416,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-12-01",
-          "value": 23.929,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-01-01",
-          "value": 1.25,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-02-01",
-          "value": 15.478,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-03-01",
-          "value": 24.842,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-04-01",
-          "value": 23.521,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-05-01",
-          "value": 17.13,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-06-01",
-          "value": 18.721,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-07-01",
-          "value": 4.3,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-08-01",
-          "value": 13.896,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-09-01",
-          "value": 16.781,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-10-01",
-          "value": 8.015,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-11-01",
-          "value": 7.361,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-12-01",
-          "value": 9.827,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2022-01-01",
-          "value": -11.959,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2022-02-01",
-          "value": 7.095,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2022-03-01",
-          "value": 5.532,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2022-04-01",
-          "value": 13.432,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2022-05-01",
           "value": 8.732,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
+          "date": "2019-10-01",
+          "value": 11.291,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 5.486,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 6.085,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-01-01",
+          "value": -8.16,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 1.971,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": 6.879,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-04-01",
+          "value": 48.983,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-05-01",
+          "value": 51.103,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 32.143,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-07-01",
+          "value": 21.821,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 23.998,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 27.968,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 17.902,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 21.404,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 23.915,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-01-01",
+          "value": 1.263,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 15.491,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 24.843,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 23.167,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 16.776,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 18.358,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 3.947,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 13.543,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 16.422,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 7.663,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 7.009,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 9.467,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2022-01-01",
+          "value": -12.309,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 6.745,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 5.19,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 13.159,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 8.459,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
           "date": "2022-06-01",
-          "value": 18.871,
+          "value": 18.602,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2022-07-01",
-          "value": 0.605,
+          "value": 0.285,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2022-08-01",
-          "value": 7.869,
+          "value": 7.549,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2022-09-01",
-          "value": 15.353,
+          "value": 15.036,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2022-10-01",
-          "value": 11.094,
+          "value": 10.771,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2022-11-01",
-          "value": 15.564,
+          "value": 15.241,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2022-12-01",
-          "value": 15.943,
+          "value": 15.627,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-01-01",
-          "value": -8.613,
+          "value": -8.884,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-02-01",
-          "value": 10.935,
+          "value": 10.66,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-03-01",
-          "value": 17.588,
+          "value": 17.311,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-04-01",
-          "value": 19.991,
+          "value": 20.233,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-05-01",
-          "value": 15.373,
+          "value": 15.615,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-06-01",
-          "value": 19.086,
+          "value": 19.322,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-07-01",
-          "value": 2.705,
+          "value": 3.218,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-08-01",
-          "value": 11.451,
+          "value": 11.964,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-09-01",
-          "value": 15.459,
+          "value": 15.969,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-10-01",
-          "value": 16.47,
+          "value": 16.637,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-11-01",
-          "value": 15.005,
+          "value": 15.172,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-12-01",
-          "value": 8.113,
+          "value": 8.264,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-01-01",
-          "value": -14.295,
+          "value": -15.131,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-02-01",
-          "value": 11.368,
+          "value": 10.533,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-03-01",
-          "value": 14.354,
+          "value": 13.438,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-04-01",
-          "value": 19.353,
+          "value": 19.376,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-05-01",
-          "value": 17.521,
+          "value": 17.544,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-06-01",
-          "value": 14.608,
+          "value": 14.627,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-07-01",
-          "value": 3.956,
+          "value": 3.888,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-08-01",
-          "value": 14.867,
+          "value": 14.799,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-09-01",
-          "value": 18.773,
+          "value": 18.713,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-10-01",
-          "value": 19.372,
+          "value": 19.092,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-11-01",
-          "value": 13.531,
+          "value": 13.263,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-12-01",
-          "value": 18.667,
+          "value": 18.409,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-01-01",
-          "value": -14.672,
+          "value": -14.983,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-02-01",
-          "value": 11.936,
+          "value": 11.622,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-03-01",
-          "value": 13.763,
+          "value": 13.419,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-04-01",
-          "value": 19.642,
+          "value": 20.148,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-05-01",
-          "value": 17.978,
+          "value": 18.235,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-06-01",
-          "value": 24.003,
+          "value": 24.262,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-07-01",
-          "value": 1.067,
+          "value": 1.479,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-08-01",
-          "value": 14.939,
+          "value": 15.351,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-09-01",
-          "value": 22.19,
+          "value": 22.755,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-10-01",
-          "value": 15.79,
+          "value": 16.167,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-11-01",
-          "value": 9.544,
+          "value": 9.911,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-12-01",
-          "value": 12.576,
+          "value": 12.93,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-01-01",
-          "value": -32.289,
+          "value": -32.023,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-02-01",
-          "value": 12.428,
+          "value": 12.764,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-03-01",
-          "value": 11.955,
+          "value": 12.307,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-04-01",
-          "value": 23.127,
+          "value": 23.401,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-05-01",
-          "value": 18.985,
+          "value": 19.873,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-06-01",
-          "value": 12.784,
+          "value": 13.719,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-07-01",
-          "value": 1.8,
+          "value": 2.04,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2026-08-01",
+          "value": 18.268,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         }
       ],
@@ -26300,697 +26332,702 @@
       "data": [
         {
           "date": "2015-01-01",
-          "value": -3.022,
+          "value": -2.956,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-02-01",
-          "value": 6.512,
+          "value": 6.578,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-03-01",
-          "value": 5.977,
+          "value": 6.037,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-04-01",
-          "value": 11.971,
+          "value": 11.917,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-05-01",
-          "value": 7.469,
+          "value": 7.415,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-06-01",
-          "value": 7.705,
+          "value": 7.654,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-07-01",
-          "value": 1.958,
+          "value": 1.91,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-08-01",
-          "value": 8.648,
+          "value": 8.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-09-01",
-          "value": 11.409,
+          "value": 11.359,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-10-01",
-          "value": 10.386,
+          "value": 10.339,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-11-01",
-          "value": 9.23,
+          "value": 9.183,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2015-12-01",
-          "value": 7.4,
+          "value": 7.352,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-01-01",
-          "value": -6.161,
+          "value": -6.217,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-02-01",
-          "value": 5.724,
+          "value": 5.668,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-03-01",
-          "value": 4.969,
+          "value": 4.921,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-04-01",
-          "value": 12.18,
+          "value": 12.182,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-05-01",
-          "value": 7.246,
+          "value": 7.248,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-06-01",
-          "value": 4.876,
+          "value": 4.882,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-07-01",
-          "value": 0.721,
+          "value": 0.718,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-08-01",
-          "value": 7.258,
+          "value": 7.255,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-09-01",
-          "value": 10.806,
+          "value": 10.801,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-10-01",
-          "value": 7.966,
+          "value": 7.955,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-11-01",
-          "value": 6.938,
+          "value": 6.927,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2016-12-01",
-          "value": 5.305,
+          "value": 5.295,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-01-01",
-          "value": -8.614,
+          "value": -8.632,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-02-01",
-          "value": -0.179,
+          "value": -0.197,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-03-01",
-          "value": 2.675,
+          "value": 2.666,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-04-01",
-          "value": 12.624,
+          "value": 12.804,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-05-01",
-          "value": 7.152,
+          "value": 7.332,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-06-01",
-          "value": 6.458,
+          "value": 6.636,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-07-01",
-          "value": 0.219,
+          "value": 0.396,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-08-01",
-          "value": 5.45,
+          "value": 5.627,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-09-01",
-          "value": 9.934,
+          "value": 10.108,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-10-01",
-          "value": 8.024,
+          "value": 8.196,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-11-01",
-          "value": 6.529,
+          "value": 6.701,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2017-12-01",
-          "value": 4.36,
+          "value": 4.537,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-01-01",
-          "value": -5.815,
+          "value": -5.639,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-02-01",
-          "value": 2.578,
+          "value": 2.754,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-03-01",
-          "value": 1.784,
+          "value": 1.961,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-04-01",
-          "value": 10.036,
+          "value": 10.014,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-05-01",
-          "value": 4.492,
+          "value": 4.47,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-06-01",
-          "value": 4.103,
+          "value": 4.077,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-07-01",
-          "value": -2.494,
+          "value": -2.514,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-08-01",
-          "value": 6.986,
+          "value": 6.966,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-09-01",
-          "value": 8.881,
+          "value": 8.856,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-10-01",
-          "value": 9.259,
+          "value": 9.241,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-11-01",
-          "value": 5.794,
+          "value": 5.776,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2018-12-01",
-          "value": 5.433,
+          "value": 5.414,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-01-01",
-          "value": -10.27,
+          "value": -10.292,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-02-01",
-          "value": 2.125,
+          "value": 2.103,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-03-01",
-          "value": -0.019,
+          "value": -0.038,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-04-01",
-          "value": 11.142,
+          "value": 11.169,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-05-01",
-          "value": 4.674,
+          "value": 4.701,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-06-01",
-          "value": 6.791,
+          "value": 6.813,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-07-01",
-          "value": -1.151,
+          "value": -1.123,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-08-01",
-          "value": 4.891,
+          "value": 4.919,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2019-09-01",
-          "value": 8.708,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2019-10-01",
-          "value": 11.255,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2019-11-01",
-          "value": 5.45,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2019-12-01",
-          "value": 6.05,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-01-01",
-          "value": -8.2,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-02-01",
-          "value": 1.931,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-03-01",
-          "value": 6.846,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-04-01",
-          "value": 49.007,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-05-01",
-          "value": 51.127,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-06-01",
-          "value": 32.165,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-07-01",
-          "value": 21.844,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-08-01",
-          "value": 24.021,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-09-01",
-          "value": 27.984,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-10-01",
-          "value": 17.914,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-11-01",
-          "value": 21.416,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2020-12-01",
-          "value": 23.929,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-01-01",
-          "value": 1.25,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-02-01",
-          "value": 15.478,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-03-01",
-          "value": 24.842,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-04-01",
-          "value": 23.521,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-05-01",
-          "value": 17.13,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-06-01",
-          "value": 18.721,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-07-01",
-          "value": 4.3,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-08-01",
-          "value": 13.896,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-09-01",
-          "value": 16.781,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-10-01",
-          "value": 8.015,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-11-01",
-          "value": 7.361,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2021-12-01",
-          "value": 9.827,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2022-01-01",
-          "value": -11.959,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2022-02-01",
-          "value": 7.095,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2022-03-01",
-          "value": 5.532,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2022-04-01",
-          "value": 13.432,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
-        },
-        {
-          "date": "2022-05-01",
           "value": 8.732,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
+          "date": "2019-10-01",
+          "value": 11.291,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2019-11-01",
+          "value": 5.486,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2019-12-01",
+          "value": 6.085,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-01-01",
+          "value": -8.16,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-02-01",
+          "value": 1.971,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-03-01",
+          "value": 6.879,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-04-01",
+          "value": 48.983,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-05-01",
+          "value": 51.103,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-06-01",
+          "value": 32.143,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-07-01",
+          "value": 21.821,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-08-01",
+          "value": 23.998,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 27.968,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-10-01",
+          "value": 17.902,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-11-01",
+          "value": 21.404,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 23.915,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-01-01",
+          "value": 1.263,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-02-01",
+          "value": 15.491,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-03-01",
+          "value": 24.843,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-04-01",
+          "value": 23.167,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-05-01",
+          "value": 16.776,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 18.358,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-07-01",
+          "value": 3.947,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-08-01",
+          "value": 13.543,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 16.422,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-10-01",
+          "value": 7.663,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-11-01",
+          "value": 7.009,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 9.467,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2022-01-01",
+          "value": -12.309,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2022-02-01",
+          "value": 6.745,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 5.19,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2022-04-01",
+          "value": 13.159,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2022-05-01",
+          "value": 8.459,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
           "date": "2022-06-01",
-          "value": 18.871,
+          "value": 18.602,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2022-07-01",
-          "value": 0.605,
+          "value": 0.285,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2022-08-01",
-          "value": 7.869,
+          "value": 7.549,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2022-09-01",
-          "value": 15.353,
+          "value": 15.036,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2022-10-01",
-          "value": 11.094,
+          "value": 10.771,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2022-11-01",
-          "value": 15.564,
+          "value": 15.241,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2022-12-01",
-          "value": 15.943,
+          "value": 15.627,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-01-01",
-          "value": -8.613,
+          "value": -8.884,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-02-01",
-          "value": 10.935,
+          "value": 10.66,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-03-01",
-          "value": 17.588,
+          "value": 17.311,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-04-01",
-          "value": 19.991,
+          "value": 20.233,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-05-01",
-          "value": 15.373,
+          "value": 15.615,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-06-01",
-          "value": 19.086,
+          "value": 19.322,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-07-01",
-          "value": 2.705,
+          "value": 3.218,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-08-01",
-          "value": 11.451,
+          "value": 11.964,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-09-01",
-          "value": 15.459,
+          "value": 15.969,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-10-01",
-          "value": 16.47,
+          "value": 16.637,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-11-01",
-          "value": 15.005,
+          "value": 15.172,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2023-12-01",
-          "value": 8.113,
+          "value": 8.264,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-01-01",
-          "value": -14.295,
+          "value": -15.131,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-02-01",
-          "value": 11.368,
+          "value": 10.533,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-03-01",
-          "value": 14.354,
+          "value": 13.438,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-04-01",
-          "value": 19.353,
+          "value": 19.376,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-05-01",
-          "value": 17.521,
+          "value": 17.544,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-06-01",
-          "value": 14.608,
+          "value": 14.627,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-07-01",
-          "value": 3.956,
+          "value": 3.888,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-08-01",
-          "value": 14.867,
+          "value": 14.799,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-09-01",
-          "value": 18.773,
+          "value": 18.713,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-10-01",
-          "value": 19.372,
+          "value": 19.092,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-11-01",
-          "value": 13.531,
+          "value": 13.263,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2024-12-01",
-          "value": 18.667,
+          "value": 18.409,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-01-01",
-          "value": -14.672,
+          "value": -14.983,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-02-01",
-          "value": 11.936,
+          "value": 11.622,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-03-01",
-          "value": 13.763,
+          "value": 13.419,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-04-01",
-          "value": 19.642,
+          "value": 20.148,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-05-01",
-          "value": 17.978,
+          "value": 18.235,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-06-01",
-          "value": 24.003,
+          "value": 24.262,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-07-01",
-          "value": 1.067,
+          "value": 1.479,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-08-01",
-          "value": 14.939,
+          "value": 15.351,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-09-01",
-          "value": 22.19,
+          "value": 22.755,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-10-01",
-          "value": 15.79,
+          "value": 16.167,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-11-01",
-          "value": 9.544,
+          "value": 9.911,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2025-12-01",
-          "value": 12.576,
+          "value": 12.93,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-01-01",
-          "value": -32.289,
+          "value": -32.023,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-02-01",
-          "value": 12.428,
+          "value": 12.764,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-03-01",
-          "value": 11.955,
+          "value": 12.307,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-04-01",
-          "value": 23.127,
+          "value": 23.401,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-05-01",
-          "value": 18.985,
+          "value": 19.873,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-06-01",
-          "value": 12.784,
+          "value": 13.719,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         },
         {
           "date": "2026-07-01",
-          "value": 1.8,
+          "value": 2.04,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
+        },
+        {
+          "date": "2026-08-01",
+          "value": 18.268,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/datasets/publicsectorfinancesappendixatables110/current/publicsectorfinancessummarytablesappendixafinal.xlsx"
         }
       ],
