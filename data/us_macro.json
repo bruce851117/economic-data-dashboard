@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T01:04:36.926209+00:00",
+  "generated_at": "2026-09-26T08:27:59.134081+00:00",
   "source": {
     "type": "excel_import",
     "file": "US_ECON.xlsx",
@@ -50669,6 +50669,10 @@
         {
           "date": "2026-08-01",
           "value": 4
+        },
+        {
+          "date": "2026-09-01",
+          "value": 4.6
         }
       ],
       "source": "University of Michigan"
@@ -51240,6 +51244,10 @@
         {
           "date": "2026-08-01",
           "value": 3.3
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3.4
         }
       ],
       "source": "University of Michigan"
@@ -61729,6 +61737,10 @@
         {
           "date": "2026-08-01",
           "value": 51.7
+        },
+        {
+          "date": "2026-09-01",
+          "value": 48.1
         }
       ],
       "source": "University of Michigan"
@@ -62300,6 +62312,10 @@
         {
           "date": "2026-08-01",
           "value": 51.9
+        },
+        {
+          "date": "2026-09-01",
+          "value": 50.9
         }
       ],
       "source": "University of Michigan"
@@ -62871,6 +62887,10 @@
         {
           "date": "2026-08-01",
           "value": 51.5
+        },
+        {
+          "date": "2026-09-01",
+          "value": 46.3
         }
       ],
       "source": "University of Michigan"
@@ -63438,6 +63458,10 @@
         {
           "date": "2026-07-01",
           "value": 70
+        },
+        {
+          "date": "2026-08-01",
+          "value": 67
         }
       ],
       "source": "University of Michigan"
@@ -64005,6 +64029,10 @@
         {
           "date": "2026-07-01",
           "value": 88
+        },
+        {
+          "date": "2026-08-01",
+          "value": 86
         }
       ],
       "source": "University of Michigan"
@@ -70342,11 +70370,15 @@
         },
         {
           "date": "2026-09-05",
-          "value": 206
+          "value": 207
         },
         {
           "date": "2026-09-12",
-          "value": 196
+          "value": 198
+        },
+        {
+          "date": "2026-09-19",
+          "value": 197
         }
       ],
       "new": true
@@ -72793,11 +72825,15 @@
         },
         {
           "date": "2026-08-29",
-          "value": 1769
+          "value": 1765
         },
         {
           "date": "2026-09-05",
-          "value": 1730
+          "value": 1717
+        },
+        {
+          "date": "2026-09-12",
+          "value": 1719
         }
       ],
       "new": true
