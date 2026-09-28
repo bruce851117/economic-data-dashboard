@@ -1,6 +1,6 @@
 # 美國總體經濟數據：待確認項目
 
-> 更新時間：2026-09-25 18:40 UTC  
+> 更新時間：2026-09-28 20:35 UTC  
 > 其他已成功指標仍會在背景抓取、接受來源修訂並更新Cache，只是不顯示於本表。
 > Conference Board原始回應會保存至 `data/us_macro_debug/`，供後續判斷GitHub Actions實際收到的HTML。
 
@@ -20,28 +20,29 @@
 
 | category_code | Census分類名稱 | 2026/08/31 | 2026/07/31 | 2026/06/30 | 2026/05/31 | 2026/04/30 |
 |---|---|---:|---:|---:|---:|---:|
-| 44000 | Retail Trade | 668877 | 660638 | 665247 | 663604 | 657830 |
-| 441 | Motor Vehicle and Parts Dealers | 142379 | 141565 | 144140 | 140675 | 139343 |
-| 441X | Auto and Other Motor Vehicle Dealers | 130107 | 129461 | 132145 | 128891 | 127537 |
-| 442 | Furniture and Home Furnishings Stores | 11398 | 11296 | 11319 | 11327 | 11152 |
-| 443 | Electronics and Appliance Stores | 8307 | 8180 | 8189 | 8149 | 8200 |
-| 444 | Building Material and Garden Equipment and Supplies Dealers | 42227 | 42318 | 42380 | 41956 | 41853 |
-| 445 | Food and Beverage Stores | 85580 | 85214 | 85408 | 85588 | 85455 |
-| 4451 | Grocery Stores | 77153 | 76800 | 76968 | 77209 | 77117 |
-| 446 | Health and Personal Care Stores | 40721 | 40355 | 40238 | 40372 | 40086 |
-| 447 | Gasoline Stations | 62303 | 60455 | 60586 | 64138 | 62364 |
-| 448 | Clothing and Clothing Accessories Stores | 28353 | 28163 | 27792 | 27986 | 27706 |
-| 44W72 | Retail Trade and Food Services, ex Auto and Gas | 569265 | 562442 | 563861 | 561379 | 557390 |
-| 44X72 | Retail Trade and Food Services, Total | 773947 | 764462 | 768587 | 766192 | 759097 |
-| 44Y72 | Retail Trade and Food Services, ex Auto | 631568 | 622897 | 624447 | 625517 | 619754 |
-| 44Z72 | Retail Trade and Food Services, ex Gas | 711644 | 704007 | 708001 | 702054 | 696733 |
-| 451 | Sporting Goods, Hobby, Musical Instrument, and Book Stores | 9061 | 8951 | 8934 | 8897 | 8885 |
-| 452 | General Merchandise Stores | 80388 | 79854 | 79442 | 79432 | 79080 |
-| 4522 | Census API未附標籤，請依category_code判斷 | 3297 | 3323 | 3323 | 3327 | 3289 |
-| 453 | Miscellaneous Store Retailers | 16821 | 16515 | 16612 | 16324 | 15671 |
-| 454 | Nonstore Retailers | 141339 | 137772 | 140207 | 138760 | 138035 |
-| 722 | Food Services and Drinking Places | 105070 | 103824 | 103340 | 102588 | 101267 |
+| 44000 | Retail Trade | 646347 | 639031 | 642793 | 641883 | 635221 |
+| 441 | Motor Vehicle and Parts Dealers | 139178 | 138534 | 140955 | 137902 | 136157 |
+| 441X | Auto and Other Motor Vehicle Dealers | 127246 | 126743 | 129255 | 126367 | 124602 |
+| 442 | Furniture and Home Furnishings Stores | 10611 | 10537 | 10571 | 10645 | 10446 |
+| 443 | Electronics and Appliance Stores | 7735 | 7610 | 7624 | 7616 | 7637 |
+| 444 | Building Material and Garden Equipment and Supplies Dealers | 44308 | 44294 | 44366 | 43841 | 43909 |
+| 445 | Food and Beverage Stores | 84880 | 84507 | 84687 | 84883 | 84723 |
+| 4451 | Grocery Stores | 76870 | 76518 | 76684 | 76946 | 76812 |
+| 446 | Health and Personal Care Stores | 39216 | 38746 | 38451 | 38448 | 38100 |
+| 447 | Gasoline Stations | 63432 | 61607 | 61634 | 65205 | 63594 |
+| 448 | Clothing and Clothing Accessories Stores | 26503 | 26311 | 25987 | 26136 | 25864 |
+| 44W72 | Retail Trade and Food Services, ex Auto and Gas | 535153 | 529397 | 530309 | 528308 | 524170 |
+| 44X72 | Retail Trade and Food Services, Total | 737763 | 729538 | 732898 | 731415 | 723921 |
+| 44Y72 | Retail Trade and Food Services, ex Auto | 598585 | 591004 | 591943 | 593513 | 587764 |
+| 44Z72 | Retail Trade and Food Services, ex Gas | 674331 | 667931 | 671264 | 666210 | 660327 |
+| 451 | Sporting Goods, Hobby, Musical Instrument, and Book Stores | 8752 | 8674 | 8680 | 8643 | 8601 |
+| 452 | General Merchandise Stores | 81743 | 81280 | 80870 | 80798 | 80466 |
+| 4522 | Census API未附標籤，請依category_code判斷 | 3928 | 3963 | 3959 | 3963 | 3918 |
+| 453 | Miscellaneous Store Retailers | 16023 | 15727 | 15756 | 15458 | 14942 |
+| 454 | Nonstore Retailers | 123966 | 121204 | 123212 | 122308 | 120782 |
+| 722 | Food Services and Drinking Places | 91416 | 90507 | 90105 | 89532 | 88700 |
 
 ## 更新警告
 
-- ADP: ADP Pay Insights ZIP could not be parsed; https://payinsights.adp.com/artifacts/us_wage/20260925/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260924/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260923/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260922/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260921/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260920/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260919/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260918/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260917/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260916/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260915/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260914/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260913/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260912/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260911/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html)
+- BLS: ['Your request has failed. Please check your input parameters, and try your request again.']
+- ADP: ADP Pay Insights ZIP could not be parsed; https://payinsights.adp.com/artifacts/us_wage/20260928/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260927/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260926/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260925/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260924/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260923/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260922/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260921/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260920/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260919/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260918/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260917/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260916/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260915/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260914/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html)
