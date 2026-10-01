@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-26T06:54:44.507531+00:00",
+  "generated_at": "2026-10-01T08:04:52.135983+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
@@ -691,6 +691,12 @@
         {
           "date": "2026-08-01",
           "value": 2.9,
+          "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76130?tip=AM&nult=24",
+          "note": "INE table=76130; series=IPC292510; Nacional. Subyacente: General sin alimentos no elaborados ni productos energéticos. Variación anual.; stitched at 2026-01 (Base 2021 historical + Base 2025 current)"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3.1,
           "source_url": "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76130?tip=AM&nult=24",
           "note": "INE table=76130; series=IPC292510; Nacional. Subyacente: General sin alimentos no elaborados ni productos energéticos. Variación anual.; stitched at 2026-01 (Base 2021 historical + Base 2025 current)"
         }
@@ -2549,63 +2555,63 @@
         {
           "date": "2025-09-01",
           "value": 2.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-10-01",
           "value": 2.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-11-01",
           "value": 2.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-12-01",
           "value": 2.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-01-01",
           "value": 2.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-02-01",
           "value": 2.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-03-01",
           "value": 2.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-04-01",
           "value": 2.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-05-01",
           "value": 2.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-06-01",
           "value": 2.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-07-01",
           "value": 2.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-09",
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10",
           "status": "e"
         },
         {
           "date": "2026-08-01",
           "value": 2.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-09",
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10",
           "status": "e"
         }
       ]
@@ -3697,697 +3703,697 @@
         {
           "date": "2015-01-01",
           "value": 11.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2015-02-01",
           "value": 11.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2015-03-01",
           "value": 11.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2015-04-01",
           "value": 11.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2015-05-01",
           "value": 11.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2015-06-01",
           "value": 11.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2015-07-01",
           "value": 10.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2015-08-01",
           "value": 10.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2015-09-01",
           "value": 10.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2015-10-01",
           "value": 10.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2015-11-01",
           "value": 10.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2015-12-01",
           "value": 10.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2016-01-01",
           "value": 10.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2016-02-01",
           "value": 10.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2016-03-01",
           "value": 10.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2016-04-01",
           "value": 10.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2016-05-01",
           "value": 10.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2016-06-01",
           "value": 10.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2016-07-01",
           "value": 10,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2016-08-01",
           "value": 10,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2016-09-01",
           "value": 9.9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2016-10-01",
           "value": 9.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2016-11-01",
           "value": 9.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2016-12-01",
           "value": 9.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2017-01-01",
           "value": 9.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2017-02-01",
           "value": 9.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2017-03-01",
           "value": 9.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2017-04-01",
           "value": 9.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2017-05-01",
           "value": 9.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2017-06-01",
           "value": 9.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2017-07-01",
           "value": 9.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2017-08-01",
           "value": 9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2017-09-01",
           "value": 8.9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2017-10-01",
           "value": 8.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2017-11-01",
           "value": 8.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2017-12-01",
           "value": 8.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2018-01-01",
           "value": 8.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2018-02-01",
           "value": 8.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2018-03-01",
           "value": 8.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2018-04-01",
           "value": 8.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2018-05-01",
           "value": 8.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2018-06-01",
           "value": 8.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2018-07-01",
           "value": 8.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2018-08-01",
           "value": 8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2018-09-01",
           "value": 8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2018-10-01",
           "value": 8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2018-11-01",
           "value": 7.9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2018-12-01",
           "value": 7.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2019-01-01",
           "value": 7.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2019-02-01",
           "value": 7.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2019-03-01",
           "value": 7.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2019-04-01",
           "value": 7.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2019-05-01",
           "value": 7.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2019-06-01",
           "value": 7.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2019-07-01",
           "value": 7.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2019-08-01",
           "value": 7.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2019-09-01",
           "value": 7.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2019-10-01",
           "value": 7.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2019-11-01",
           "value": 7.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2019-12-01",
           "value": 7.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2020-01-01",
           "value": 7.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2020-02-01",
           "value": 7.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2020-03-01",
           "value": 7.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2020-04-01",
           "value": 7.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2020-05-01",
           "value": 7.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2020-06-01",
           "value": 8.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2020-07-01",
           "value": 8.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2020-08-01",
           "value": 8.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2020-09-01",
           "value": 8.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2020-10-01",
           "value": 8.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2020-11-01",
           "value": 8.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2020-12-01",
           "value": 8.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2021-01-01",
           "value": 8.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2021-02-01",
           "value": 8.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2021-03-01",
           "value": 8.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2021-04-01",
           "value": 8.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2021-05-01",
           "value": 8.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2021-06-01",
           "value": 7.9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2021-07-01",
           "value": 7.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2021-08-01",
           "value": 7.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2021-09-01",
           "value": 7.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2021-10-01",
           "value": 7.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2021-11-01",
           "value": 7.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2021-12-01",
           "value": 7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2022-01-01",
           "value": 6.9,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2022-02-01",
           "value": 6.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2022-03-01",
           "value": 6.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2022-04-01",
           "value": 6.8,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2022-05-01",
           "value": 6.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2022-06-01",
           "value": 6.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2022-07-01",
           "value": 6.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2022-08-01",
           "value": 6.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2022-09-01",
           "value": 6.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2022-10-01",
           "value": 6.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2022-11-01",
           "value": 6.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2022-12-01",
           "value": 6.7,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2023-01-01",
           "value": 6.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2023-02-01",
           "value": 6.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2023-03-01",
           "value": 6.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2023-04-01",
           "value": 6.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2023-05-01",
           "value": 6.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2023-06-01",
           "value": 6.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2023-07-01",
           "value": 6.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2023-08-01",
           "value": 6.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2023-09-01",
           "value": 6.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2023-10-01",
           "value": 6.6,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2023-11-01",
           "value": 6.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2023-12-01",
           "value": 6.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2024-01-01",
           "value": 6.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2024-02-01",
           "value": 6.5,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2024-03-01",
           "value": 6.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2024-04-01",
           "value": 6.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2024-05-01",
           "value": 6.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2024-06-01",
           "value": 6.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2024-07-01",
           "value": 6.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2024-08-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2024-09-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2024-10-01",
           "value": 6.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2024-11-01",
           "value": 6.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2024-12-01",
           "value": 6.2,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-01-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-02-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-03-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-04-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-05-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-06-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-07-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-08-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-09-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-10-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-11-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2025-12-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-01-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-02-01",
           "value": 6.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-03-01",
           "value": 6.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-04-01",
           "value": 6.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-05-01",
           "value": 6.3,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-06-01",
           "value": 6.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
           "date": "2026-07-01",
           "value": 6.4,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-09"
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         }
       ]
     },
@@ -5311,7 +5317,7 @@
         },
         {
           "date": "2019-09-01",
-          "value": 2266,
+          "value": 2267,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5401,19 +5407,19 @@
         },
         {
           "date": "2020-12-01",
-          "value": 2782,
+          "value": 2781,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2021-01-01",
-          "value": 2765,
+          "value": 2764,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2021-02-01",
-          "value": 2777,
+          "value": 2776,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5425,7 +5431,7 @@
         },
         {
           "date": "2021-04-01",
-          "value": 2757,
+          "value": 2756,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5437,7 +5443,7 @@
         },
         {
           "date": "2021-06-01",
-          "value": 2676,
+          "value": 2677,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5485,7 +5491,7 @@
         },
         {
           "date": "2022-02-01",
-          "value": 2333,
+          "value": 2332,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5509,7 +5515,7 @@
         },
         {
           "date": "2022-06-01",
-          "value": 2413,
+          "value": 2414,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5557,7 +5563,7 @@
         },
         {
           "date": "2023-02-01",
-          "value": 2529,
+          "value": 2528,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5581,7 +5587,7 @@
         },
         {
           "date": "2023-06-01",
-          "value": 2605,
+          "value": 2606,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5593,7 +5599,7 @@
         },
         {
           "date": "2023-08-01",
-          "value": 2637,
+          "value": 2638,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5617,7 +5623,7 @@
         },
         {
           "date": "2023-12-01",
-          "value": 2700,
+          "value": 2699,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5629,13 +5635,13 @@
         },
         {
           "date": "2024-02-01",
-          "value": 2724,
+          "value": 2723,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2024-03-01",
-          "value": 2727,
+          "value": 2726,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5653,19 +5659,19 @@
         },
         {
           "date": "2024-06-01",
-          "value": 2776,
+          "value": 2778,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2024-07-01",
-          "value": 2799,
+          "value": 2800,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2024-08-01",
-          "value": 2809,
+          "value": 2811,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5683,7 +5689,7 @@
         },
         {
           "date": "2024-11-01",
-          "value": 2861,
+          "value": 2860,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5695,13 +5701,13 @@
         },
         {
           "date": "2025-01-01",
-          "value": 2889,
+          "value": 2888,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2025-02-01",
-          "value": 2899,
+          "value": 2898,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5725,19 +5731,19 @@
         },
         {
           "date": "2025-06-01",
-          "value": 2966,
+          "value": 2968,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2025-07-01",
-          "value": 2967,
+          "value": 2969,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2025-08-01",
-          "value": 2960,
+          "value": 2962,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
@@ -5755,61 +5761,67 @@
         },
         {
           "date": "2025-11-01",
-          "value": 2974,
+          "value": 2973,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2025-12-01",
-          "value": 2977,
+          "value": 2976,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2026-01-01",
-          "value": 2978,
+          "value": 2977,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2026-02-01",
-          "value": 2980,
+          "value": 2978,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2026-03-01",
-          "value": 2980,
+          "value": 2979,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2026-04-01",
-          "value": 2999,
+          "value": 2998,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2026-05-01",
-          "value": 2987,
+          "value": 2988,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2026-06-01",
-          "value": 2987,
+          "value": 2988,
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level",
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01"
         },
         {
           "date": "2026-07-01",
-          "value": 2993,
+          "value": 2995,
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01",
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level"
         },
         {
           "date": "2026-08-01",
-          "value": 2996,
+          "value": 3000,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01",
+          "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3012,
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.ABA.A?format=sdmx_csv&lang=en&startPeriod=2015-01",
           "note": "Germany registered unemployed persons; calendar and seasonally adjusted; thousand persons; level"
         }
@@ -7339,7 +7351,7 @@
         },
         {
           "date": "2026-05-01",
-          "value": -2.818270165208947,
+          "value": -2.9154518950437303,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
@@ -7353,7 +7365,14 @@
         },
         {
           "date": "2026-07-01",
-          "value": -2.3414634146341484,
+          "value": -2.146341463414636,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
+          "status": "p",
+          "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
+        },
+        {
+          "date": "2026-08-01",
+          "value": -0.6322444678609207,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
@@ -11343,7 +11362,7 @@
         },
         {
           "date": "2026-09-01",
-          "value": 50.3,
+          "value": 50.6,
           "source_url": "https://tradingeconomics.com/france/manufacturing-pmi",
           "status": "flash",
           "note": "public indicator page; underlying source explicitly S&P Global; flash",
@@ -12144,6 +12163,14 @@
         {
           "date": "2026-08-01",
           "value": 49.5,
+          "source_url": "https://tradingeconomics.com/spain/manufacturing-pmi",
+          "status": "final",
+          "note": "public indicator page; underlying source explicitly S&P Global; final",
+          "release_type": "final"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 51,
           "source_url": "https://tradingeconomics.com/spain/manufacturing-pmi",
           "status": "final",
           "note": "public indicator page; underlying source explicitly S&P Global; final",
