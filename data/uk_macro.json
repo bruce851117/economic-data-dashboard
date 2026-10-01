@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-30T00:18:50.555939+00:00",
+  "generated_at": "2026-10-01T08:13:00.326877+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -123,227 +123,232 @@
       "data": [
         {
           "date": "2015-03-01",
-          "value": 2.7451164412028994,
+          "value": 2.640505283269756,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2015-06-01",
-          "value": 2.2521625076787677,
+          "value": 2.293391602574757,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2015-09-01",
-          "value": 1.819789760759405,
+          "value": 1.9568347150859422,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2015-12-01",
-          "value": 1.7584503124897788,
+          "value": 1.8195920658092612,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2016-03-01",
-          "value": 1.961094546190023,
+          "value": 2.086769225931717,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2016-06-01",
-          "value": 2.2442865841282744,
+          "value": 2.290294785927971,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2016-09-01",
-          "value": 2.2990216137792396,
+          "value": 2.20916202856809,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2016-12-01",
-          "value": 2.3190903712088096,
+          "value": 2.2764995509862773,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2017-03-01",
-          "value": 2.7777999964805566,
+          "value": 2.8886787571150485,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2017-06-01",
-          "value": 2.897742882688026,
+          "value": 3.1235524599962927,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2017-09-01",
-          "value": 3.138770263582713,
+          "value": 3.506393608676106,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2017-12-01",
-          "value": 3.2736112333278777,
+          "value": 3.732724963402423,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2018-03-01",
-          "value": 2.3780357779358496,
+          "value": 2.6213730288810577,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2018-06-01",
-          "value": 1.7328658032175648,
+          "value": 1.818966169008207,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2018-09-01",
-          "value": 1.369401023103367,
+          "value": 1.4187643020594942,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2018-12-01",
-          "value": 0.7447982045722501,
+          "value": 0.7225416654505157,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2019-03-01",
-          "value": 1.1729540959131368,
+          "value": 1.2132474132071636,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2019-06-01",
-          "value": 1.1685872579539236,
+          "value": 1.2550431038875765,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2019-09-01",
-          "value": 1.4041333087339014,
+          "value": 1.5377784484659873,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2019-12-01",
-          "value": 1.2787712197184886,
+          "value": 1.5542524968449767,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2020-03-01",
-          "value": -1.995022961698445,
+          "value": -1.84993572709089,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2020-06-01",
-          "value": -21.671077788191194,
+          "value": -21.5820283011407,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2020-09-01",
-          "value": -8.884537549194915,
+          "value": -8.92416694532806,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2020-12-01",
-          "value": -7.64360179961735,
+          "value": -7.834948879865545,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2021-03-01",
-          "value": -6.058910116838911,
+          "value": -6.155526745061879,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2021-06-01",
-          "value": 25.478217920345504,
+          "value": 25.386489950619495,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2021-09-01",
-          "value": 9.088141518760274,
+          "value": 9.119836817950034,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2021-12-01",
-          "value": 9.098541972777042,
+          "value": 9.152408035505587,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2022-03-01",
-          "value": 11.402968996107177,
+          "value": 11.271131415697289,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2022-06-01",
-          "value": 4.713148206632756,
+          "value": 4.5888880439424184,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2022-09-01",
-          "value": 3.080429348625202,
+          "value": 2.9419884736169966,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2022-12-01",
-          "value": 1.9442635567132438,
+          "value": 1.8248320110735072,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2023-03-01",
-          "value": 0.9785693459746003,
+          "value": 1.1022293463818,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2023-06-01",
-          "value": 0.4598337546533493,
+          "value": 0.5809701852532934,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2023-09-01",
-          "value": 0.11789895331928424,
+          "value": 0.3225274755974228,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2023-12-01",
-          "value": -0.46296766775500986,
+          "value": -0.22479953981556777,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2024-03-01",
-          "value": 0.20516362306770564,
+          "value": 0.35742398829541333,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2024-06-01",
-          "value": 0.7859420935153683,
+          "value": 0.9373896554887962,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2024-09-01",
-          "value": 1.2088584683334291,
+          "value": 1.2681404088179526,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2024-12-01",
-          "value": 1.974977684691992,
+          "value": 1.8958371431084142,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2025-03-01",
-          "value": 1.818366105817959,
+          "value": 1.7623239339028096,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2025-06-01",
-          "value": 1.3475126275344973,
+          "value": 1.1420213447260075,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2025-09-01",
-          "value": 1.242253869115162,
+          "value": 1.1528546385728422,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2025-12-01",
-          "value": 0.8568743751510732,
+          "value": 0.8015727320053623,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         },
         {
           "date": "2026-03-01",
-          "value": 0.9129978469178512,
+          "value": 0.8426832407080864,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 1.3725994828241328,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/abmi/qna"
         }
       ]
@@ -598,227 +603,232 @@
       "data": [
         {
           "date": "2015-03-01",
-          "value": 8.941833521478216,
+          "value": 8.852571298110767,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2015-06-01",
-          "value": 8.258258258258255,
+          "value": 8.46582971403591,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2015-09-01",
-          "value": 4.813751914835862,
+          "value": 5.019081654552071,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2015-12-01",
-          "value": 5.197509114718257,
+          "value": 5.406581452270864,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2016-03-01",
-          "value": 3.0740983129726507,
+          "value": 3.364561121403842,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2016-06-01",
-          "value": 5.308781662895101,
+          "value": 5.640886349896168,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2016-09-01",
-          "value": 10.95396227811336,
+          "value": 11.404709018214131,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2016-12-01",
-          "value": 5.305201318240438,
+          "value": 5.7837521715946805,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2017-03-01",
-          "value": 4.392493694774169,
+          "value": 4.733762829943022,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2017-06-01",
-          "value": 4.55333160038125,
+          "value": 4.668695933448896,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2017-09-01",
-          "value": 1.2780431683465432,
+          "value": 1.3271019093040737,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2017-12-01",
-          "value": 5.312616933700709,
+          "value": 5.2374409548045175,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2018-03-01",
-          "value": 3.769249613529424,
+          "value": 3.4889446789960976,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2018-06-01",
-          "value": -0.12016740562714734,
+          "value": -0.4738585397549899,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2018-09-01",
-          "value": -1.4553596417576253,
+          "value": -1.8559622195985837,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2018-12-01",
-          "value": -2.8642952315581227,
+          "value": -3.286439381648787,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2019-03-01",
-          "value": 1.289471756172622,
+          "value": 1.1942370845326344,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2019-06-01",
-          "value": 2.350647195486233,
+          "value": 2.6082802547770623,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2019-09-01",
-          "value": 3.0998880665586315,
+          "value": 3.615308119205718,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2019-12-01",
-          "value": 0.6118648576749042,
+          "value": 1.4506298577328325,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2020-03-01",
-          "value": -5.862165963431787,
+          "value": -5.20850998227087,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2020-06-01",
-          "value": -22.10323218729986,
+          "value": -21.794593252428697,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2020-09-01",
-          "value": -9.397609884545266,
+          "value": -9.16331269349845,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2020-12-01",
-          "value": -2.1053675304071873,
+          "value": -2.1779013094178845,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2021-03-01",
-          "value": -1.3890430372830442,
+          "value": -1.457230448960345,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2021-06-01",
-          "value": 26.36125218549663,
+          "value": 26.408897884668804,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2021-09-01",
-          "value": 9.294797274336908,
+          "value": 9.339559138044162,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2021-12-01",
-          "value": 5.872919409838273,
+          "value": 5.928185645178163,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2022-03-01",
-          "value": 12.433335642055688,
+          "value": 12.3616738597635,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2022-06-01",
-          "value": 6.602810126999281,
+          "value": 6.600211922609001,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2022-09-01",
-          "value": 6.215840288005237,
+          "value": 6.200807344025194,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2022-12-01",
-          "value": 2.355023358897901,
+          "value": 2.4384127900791697,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2023-03-01",
-          "value": 1.808031417240974,
+          "value": 1.440941238680682,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2023-06-01",
-          "value": 0.3530729709892988,
+          "value": -0.6582531992283536,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2023-09-01",
-          "value": -1.2340448477472177,
+          "value": -2.499284555947723,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2023-12-01",
-          "value": 1.0772034769604533,
+          "value": -0.6423808146219567,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2024-03-01",
-          "value": -0.6050842201598905,
+          "value": -1.8157728980691124,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2024-06-01",
-          "value": 1.2749053059464721,
+          "value": 0.18233026978951017,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2024-09-01",
-          "value": 3.784268611316932,
+          "value": 2.4760485576452718,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2024-12-01",
-          "value": 2.7109292522982775,
+          "value": 1.47373922132219,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2025-03-01",
-          "value": 4.07189547457254,
+          "value": 2.906758101979867,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2025-06-01",
-          "value": 4.0867211968254935,
+          "value": 3.6547652516165208,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2025-09-01",
-          "value": 4.142274192699924,
+          "value": 3.677944816139478,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2025-12-01",
-          "value": 3.863784708415552,
+          "value": 3.513857518080621,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         },
         {
           "date": "2026-03-01",
-          "value": 1.6108040127518874,
+          "value": 2.5903394312001504,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
+        },
+        {
+          "date": "2026-06-01",
+          "value": 3.14833054972663,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/grossdomesticproductgdp/timeseries/npqt/ukea"
         }
       ]
@@ -873,12 +883,12 @@
         },
         {
           "date": "2017-03-01",
-          "value": 1.0,
+          "value": 1.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2017-06-01",
-          "value": 0.9,
+          "value": 1.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -928,12 +938,12 @@
         },
         {
           "date": "2019-12-01",
-          "value": 0.0,
+          "value": 0.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2020-03-01",
-          "value": -2.7,
+          "value": -2.8,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -943,7 +953,7 @@
         },
         {
           "date": "2020-09-01",
-          "value": 17.0,
+          "value": 16.9,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -973,7 +983,7 @@
         },
         {
           "date": "2022-03-01",
-          "value": 1.0,
+          "value": 0.9,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1038,17 +1048,17 @@
         },
         {
           "date": "2025-06-01",
-          "value": 0.2,
+          "value": 0.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2025-09-01",
-          "value": 0.1,
+          "value": 0.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2025-12-01",
-          "value": 0.1,
+          "value": 0.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1058,7 +1068,8 @@
         },
         {
           "date": "2026-06-01",
-          "value": 0.4
+          "value": 0.5,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         }
       ],
       "ons": {
@@ -1078,12 +1089,12 @@
       "data": [
         {
           "date": "2015-03-01",
-          "value": 0.5,
+          "value": 0.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2015-06-01",
-          "value": 0.4,
+          "value": 0.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1093,22 +1104,22 @@
         },
         {
           "date": "2015-12-01",
-          "value": -0.1,
+          "value": -0.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2016-03-01",
-          "value": 2.2,
+          "value": 2.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2016-06-01",
-          "value": 0.9,
+          "value": 0.8,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2016-09-01",
-          "value": 0.9,
+          "value": 1.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1118,12 +1129,12 @@
         },
         {
           "date": "2017-03-01",
-          "value": 0.9,
+          "value": 1.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2017-06-01",
-          "value": -0.1,
+          "value": 0.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1133,12 +1144,12 @@
         },
         {
           "date": "2017-12-01",
-          "value": 0.3,
+          "value": 0.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2018-03-01",
-          "value": 0.4,
+          "value": 0.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1148,22 +1159,22 @@
         },
         {
           "date": "2018-09-01",
-          "value": 0.9,
+          "value": 0.8,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2018-12-01",
-          "value": 1.3,
+          "value": 1.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2019-03-01",
-          "value": -0.3,
+          "value": -0.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2019-06-01",
-          "value": 0.3,
+          "value": 0.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1173,97 +1184,97 @@
         },
         {
           "date": "2019-12-01",
-          "value": 0.0,
+          "value": -0.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2020-03-01",
-          "value": -2.6,
+          "value": -2.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2020-06-01",
-          "value": -21.8,
+          "value": -21.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2020-09-01",
-          "value": 19.2,
+          "value": 18.9,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2020-12-01",
-          "value": -1.6,
+          "value": -1.8,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2021-03-01",
-          "value": -3.3,
+          "value": -3.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2021-06-01",
-          "value": 11.1,
+          "value": 11.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2021-09-01",
-          "value": 2.3,
+          "value": 1.8,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2021-12-01",
-          "value": 0.1,
+          "value": 0.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2022-03-01",
-          "value": 1.5,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2022-06-01",
           "value": 1.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
+          "date": "2022-06-01",
+          "value": 1.1,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
           "date": "2022-09-01",
-          "value": -0.1,
+          "value": 0.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2022-12-01",
-          "value": 1.3,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2023-03-01",
-          "value": -1.3,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2023-06-01",
-          "value": -0.2,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2023-09-01",
-          "value": -1.3,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2023-12-01",
-          "value": -0.1,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2024-03-01",
           "value": 0.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
+          "date": "2023-03-01",
+          "value": -1.1,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2023-06-01",
+          "value": -0.4,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2023-09-01",
+          "value": -0.7,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2023-12-01",
+          "value": -0.2,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 0.4,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
           "date": "2024-06-01",
-          "value": 0.2,
+          "value": 0.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1273,12 +1284,12 @@
         },
         {
           "date": "2024-12-01",
-          "value": 0.2,
+          "value": 0.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2025-03-01",
-          "value": 0.2,
+          "value": 0.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1293,17 +1304,18 @@
         },
         {
           "date": "2025-12-01",
-          "value": 0.1,
+          "value": 0.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2026-03-01",
-          "value": 0.4,
+          "value": 0.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2026-06-01",
-          "value": 0.4
+          "value": 0.3,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         }
       ],
       "ons": {
@@ -1323,12 +1335,12 @@
       "data": [
         {
           "date": "2015-03-01",
-          "value": 3.6,
+          "value": 3.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2015-06-01",
-          "value": -0.4,
+          "value": -0.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1343,22 +1355,22 @@
         },
         {
           "date": "2016-03-01",
-          "value": 1.6,
+          "value": 1.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2016-06-01",
-          "value": 1.8,
+          "value": 1.9,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2016-09-01",
-          "value": 3.9,
+          "value": 4.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2016-12-01",
-          "value": -2.0,
+          "value": -1.9,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1383,12 +1395,12 @@
         },
         {
           "date": "2018-03-01",
-          "value": -0.8,
+          "value": -1.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2018-06-01",
-          "value": -1.9,
+          "value": -2.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1398,27 +1410,27 @@
         },
         {
           "date": "2018-12-01",
-          "value": 0.5,
+          "value": 0.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2019-03-01",
-          "value": 3.4,
+          "value": 3.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2019-06-01",
-          "value": -0.9,
+          "value": -0.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2019-09-01",
-          "value": 0.1,
+          "value": 0.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2019-12-01",
-          "value": -1.9,
+          "value": -1.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1483,72 +1495,73 @@
         },
         {
           "date": "2023-03-01",
-          "value": 3.0,
+          "value": 2.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2023-06-01",
-          "value": -1.8,
+          "value": -2.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2023-09-01",
-          "value": -1.3,
+          "value": -1.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2023-12-01",
-          "value": 1.2,
+          "value": 0.8,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2024-03-01",
-          "value": 1.3,
+          "value": 1.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2024-06-01",
-          "value": 0.1,
+          "value": -0.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2024-09-01",
-          "value": 1.2,
+          "value": 0.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2024-12-01",
-          "value": 0.2,
+          "value": -0.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2025-03-01",
-          "value": 2.6,
+          "value": 2.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2025-06-01",
-          "value": 0.1,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2025-09-01",
-          "value": 1.2,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2025-12-01",
-          "value": -0.1,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2026-03-01",
           "value": 0.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
+          "date": "2025-09-01",
+          "value": 0.8,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2025-12-01",
+          "value": -0.3,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 1.8,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
           "date": "2026-06-01",
-          "value": 1.2
+          "value": 0.9,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         }
       ],
       "ons": {
@@ -1568,232 +1581,233 @@
       "data": [
         {
           "date": "2015-03-01",
-          "value": 4.6,
+          "value": 4.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2015-06-01",
-          "value": -1.0,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2015-09-01",
-          "value": -1.0,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2015-12-01",
-          "value": 5.8,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2016-03-01",
-          "value": 4.2,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2016-06-01",
-          "value": -1.2,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2016-09-01",
-          "value": 3.9,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2016-12-01",
-          "value": -4.5,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2017-03-01",
-          "value": 2.3,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2017-06-01",
-          "value": -0.8,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2017-09-01",
-          "value": 1.2,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2017-12-01",
-          "value": 1.9,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2018-03-01",
-          "value": 0.2,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2018-06-01",
-          "value": -2.8,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2018-09-01",
-          "value": -2.4,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2018-12-01",
-          "value": 1.7,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2019-03-01",
-          "value": 1.8,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2019-06-01",
-          "value": 1.4,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2019-09-01",
-          "value": -0.9,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2019-12-01",
-          "value": -1.0,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2020-03-01",
-          "value": -1.5,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2020-06-01",
-          "value": -19.2,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2020-09-01",
-          "value": 14.6,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2020-12-01",
-          "value": 6.2,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2021-03-01",
-          "value": -3.3,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2021-06-01",
-          "value": 3.8,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2021-09-01",
           "value": -0.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2021-12-01",
-          "value": 3.7,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2022-03-01",
-          "value": 2.2,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2022-06-01",
-          "value": 1.3,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2022-09-01",
-          "value": -1.7,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
-        },
-        {
-          "date": "2022-12-01",
+          "date": "2015-09-01",
           "value": -1.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2023-03-01",
-          "value": 4.2,
+          "date": "2015-12-01",
+          "value": 6.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2023-06-01",
-          "value": 0.3,
+          "date": "2016-03-01",
+          "value": 0.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2023-09-01",
-          "value": -2.5,
+          "date": "2016-06-01",
+          "value": 4.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2023-12-01",
-          "value": 2.1,
+          "date": "2016-09-01",
+          "value": 4.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2024-03-01",
-          "value": -0.2,
+          "date": "2016-12-01",
+          "value": -5.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2024-06-01",
-          "value": 2.7,
+          "date": "2017-03-01",
+          "value": 1.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2024-09-01",
+          "date": "2017-06-01",
+          "value": -1.7,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2017-09-01",
           "value": 1.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2024-12-01",
-          "value": -0.7,
+          "date": "2017-12-01",
+          "value": 2.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2025-03-01",
-          "value": 4.2,
+          "date": "2018-03-01",
+          "value": 0.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2025-06-01",
-          "value": -0.5,
+          "date": "2018-06-01",
+          "value": -3.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2025-09-01",
-          "value": 1.3,
+          "date": "2018-09-01",
+          "value": -2.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2025-12-01",
-          "value": -3.0,
+          "date": "2018-12-01",
+          "value": 1.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
-          "date": "2026-03-01",
+          "date": "2019-03-01",
+          "value": 2.9,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2019-06-01",
+          "value": 0.5,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2019-09-01",
+          "value": -0.2,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2019-12-01",
+          "value": -0.6,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2020-03-01",
+          "value": -1.4,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2020-06-01",
+          "value": -20.6,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 16.2,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 6.4,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2021-03-01",
+          "value": -4.5,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 4.9,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2021-09-01",
+          "value": -0.1,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 3.4,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 2.6,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 1.1,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2022-09-01",
+          "value": -0.9,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2022-12-01",
+          "value": -1.5,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 3.1,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2023-06-01",
+          "value": -0.6,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2023-09-01",
+          "value": -2.3,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2023-12-01",
           "value": 0.9,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
+          "date": "2024-03-01",
+          "value": 0.4,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 2.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 0.5,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2024-12-01",
+          "value": -1.5,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 4.7,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2025-06-01",
+          "value": -1.5,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 2.5,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2025-12-01",
+          "value": -2.1,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 3.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
+        },
+        {
           "date": "2026-06-01",
-          "value": 1.65815
+          "value": 1.8,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         }
       ],
       "ons": {
@@ -1813,47 +1827,47 @@
       "data": [
         {
           "date": "2015-03-01",
-          "value": 1.0,
+          "value": 1.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2015-06-01",
-          "value": 8.0,
+          "value": 7.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2015-09-01",
-          "value": -1.0,
+          "value": -0.9,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2015-12-01",
-          "value": 2.2,
+          "value": 2.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2016-03-01",
-          "value": 2.7,
+          "value": 3.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2016-06-01",
-          "value": -0.5,
+          "value": -0.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2016-09-01",
-          "value": 4.3,
+          "value": 4.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2016-12-01",
-          "value": 4.7,
+          "value": 4.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2017-03-01",
-          "value": 1.7,
+          "value": 2.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1863,22 +1877,22 @@
         },
         {
           "date": "2017-09-01",
-          "value": 2.9,
+          "value": 2.8,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2017-12-01",
-          "value": 6.5,
+          "value": 6.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2018-03-01",
-          "value": 0.6,
+          "value": 0.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2018-06-01",
-          "value": 2.6,
+          "value": 2.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1893,7 +1907,7 @@
         },
         {
           "date": "2019-03-01",
-          "value": 2.1,
+          "value": 2.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1908,52 +1922,52 @@
         },
         {
           "date": "2019-12-01",
-          "value": -6.3,
+          "value": -6.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2020-03-01",
-          "value": -2.4,
+          "value": -2.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2020-06-01",
-          "value": -39.9,
+          "value": -38.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2020-09-01",
-          "value": 59.9,
+          "value": 55.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2020-12-01",
-          "value": 3.9,
+          "value": 3.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2021-03-01",
-          "value": 0.3,
+          "value": 0.8,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2021-06-01",
-          "value": 2.8,
+          "value": 2.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2021-09-01",
-          "value": 1.6,
+          "value": 1.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2021-12-01",
-          "value": 2.8,
+          "value": 2.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2022-03-01",
-          "value": 7.5,
+          "value": 7.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1963,27 +1977,27 @@
         },
         {
           "date": "2022-09-01",
-          "value": 1.9,
+          "value": 1.8,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2022-12-01",
-          "value": -2.7,
+          "value": -2.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2023-03-01",
-          "value": -0.9,
+          "value": -2.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2023-06-01",
-          "value": -2.5,
+          "value": -2.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2023-09-01",
-          "value": -3.6,
+          "value": -3.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
@@ -1993,52 +2007,53 @@
         },
         {
           "date": "2024-03-01",
-          "value": 3.6,
+          "value": 4.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2024-06-01",
-          "value": -1.1,
+          "value": -1.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2024-09-01",
-          "value": -2.6,
+          "value": -2.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2024-12-01",
-          "value": 1.4,
+          "value": 1.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2025-03-01",
-          "value": 0.1,
+          "value": -3.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2025-06-01",
-          "value": 2.0,
+          "value": 1.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2025-09-01",
-          "value": 2.3,
+          "value": 2.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2025-12-01",
-          "value": -2.7,
+          "value": -4.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2026-03-01",
-          "value": -0.2,
+          "value": 2.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         },
         {
           "date": "2026-06-01",
-          "value": 0.0
+          "value": 2.5,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv"
         }
       ],
       "ons": {
@@ -2058,7 +2073,7 @@
       "data": [
         {
           "date": "2015-03-01",
-          "value": 1.006711,
+          "value": 1.203501,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
@@ -2070,67 +2085,67 @@
         },
         {
           "date": "2015-09-01",
-          "value": 0.221484,
+          "value": 0.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2015-12-01",
-          "value": -0.220994,
+          "value": -0.108108,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2016-03-01",
-          "value": -0.55371,
+          "value": -0.974026,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2016-06-01",
-          "value": 0.556793,
+          "value": 0.327869,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2016-09-01",
-          "value": -1.771872,
+          "value": -2.069717,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2016-12-01",
-          "value": -0.11274,
+          "value": -0.667408,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2017-03-01",
-          "value": 0.112867,
+          "value": -0.335946,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2017-06-01",
-          "value": 1.014656,
+          "value": 1.011236,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2017-09-01",
-          "value": 1.897321,
+          "value": 1.779755,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2017-12-01",
-          "value": 2.957284,
+          "value": 2.84153,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2018-03-01",
-          "value": 1.170213,
+          "value": 1.062699,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
@@ -2142,193 +2157,193 @@
         },
         {
           "date": "2018-09-01",
-          "value": 0.313808,
+          "value": 0.41841,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2018-12-01",
-          "value": -1.564129,
+          "value": -1.666667,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2019-03-01",
-          "value": 3.177966,
+          "value": 3.495763,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2019-06-01",
-          "value": -1.848049,
+          "value": -1.74002,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2019-09-01",
-          "value": 0.732218,
+          "value": 0.625,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2019-12-01",
-          "value": 0.311526,
+          "value": -0.10352,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2020-03-01",
-          "value": 0.828157,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2020-06-01",
-          "value": -16.529774,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2020-09-01",
-          "value": 23.370234,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2020-12-01",
-          "value": 3.29013,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2021-03-01",
-          "value": -2.316602,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2021-06-01",
-          "value": 0.889328,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2021-09-01",
-          "value": -1.665034,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2021-12-01",
-          "value": -0.996016,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2022-03-01",
-          "value": -0.804829,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2022-06-01",
-          "value": -0.20284,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2022-09-01",
-          "value": -0.813008,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2022-12-01",
-          "value": 0.512295,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2023-03-01",
-          "value": 0.509684,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2023-06-01",
-          "value": 1.622718,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2023-09-01",
-          "value": 0.698603,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2023-12-01",
-          "value": -0.693756,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2024-03-01",
-          "value": 0.798403,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2024-06-01",
-          "value": -0.891089,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2024-09-01",
-          "value": 0.4995,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2024-12-01",
-          "value": -0.894632,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2025-03-01",
           "value": 0.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
+          "date": "2020-06-01",
+          "value": -16.891192,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 22.319202,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 2.752294,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2021-03-01",
+          "value": -1.984127,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 1.619433,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2021-09-01",
+          "value": -1.195219,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2021-12-01",
+          "value": -1.008065,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2022-03-01",
+          "value": -1.120163,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 0.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2022-09-01",
+          "value": -1.132853,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 0.416667,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 0.622407,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 1.443299,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2023-09-01",
+          "value": 1.01626,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2023-12-01",
+          "value": -0.201207,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 1.209677,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2024-06-01",
+          "value": -0.398406,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 0.4,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2024-12-01",
+          "value": -1.195219,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 0.201613,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
           "date": "2025-06-01",
-          "value": 0.100301,
+          "value": 0.503018,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2025-09-01",
-          "value": -1.202405,
+          "value": -1.101101,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2025-12-01",
-          "value": 0.709939,
+          "value": 0.809717,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2026-03-01",
-          "value": 0.704935,
+          "value": 0.702811,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2026-06-01",
-          "value": -299.0,
+          "value": 0.498504,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         }
@@ -2352,73 +2367,73 @@
       "data": [
         {
           "date": "2015-03-01",
-          "value": -0.114811,
+          "value": -0.117371,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2015-06-01",
-          "value": 0.229885,
+          "value": 0.235018,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2015-09-01",
-          "value": 0.344037,
+          "value": 0.468933,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2015-12-01",
-          "value": 0.571429,
+          "value": 0.583431,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2016-03-01",
-          "value": 0.909091,
+          "value": 0.928074,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2016-06-01",
-          "value": 0.900901,
+          "value": 0.91954,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2016-09-01",
-          "value": 0.892857,
+          "value": 0.911162,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2016-12-01",
-          "value": 0.884956,
+          "value": 0.902935,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2017-03-01",
-          "value": 0.877193,
+          "value": 1.230425,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2017-06-01",
-          "value": 1.086957,
+          "value": 1.104972,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2017-09-01",
-          "value": 0.537634,
+          "value": 0.655738,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2017-12-01",
-          "value": 0.427807,
+          "value": 0.542888,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
@@ -2430,199 +2445,199 @@
         },
         {
           "date": "2018-06-01",
-          "value": 0.532481,
+          "value": 0.431965,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2018-09-01",
-          "value": 0.317797,
+          "value": 0.322581,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2018-12-01",
-          "value": 0.422386,
+          "value": 0.428725,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2019-03-01",
-          "value": 0.105152,
+          "value": 0.106724,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2019-06-01",
-          "value": 0.52521,
+          "value": 0.533049,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2019-09-01",
-          "value": 0.626959,
+          "value": 0.742312,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2019-12-01",
-          "value": -0.311526,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2020-03-01",
-          "value": -3.125,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2020-06-01",
-          "value": -20.107527,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2020-09-01",
-          "value": 15.881561,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2020-12-01",
-          "value": 1.393728,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2021-03-01",
-          "value": -1.145475,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2021-06-01",
-          "value": 8.690614,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2021-09-01",
-          "value": 2.452026,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2021-12-01",
-          "value": 1.664932,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2022-03-01",
-          "value": 0.921187,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2022-06-01",
-          "value": 0.40568,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2022-09-01",
-          "value": 0.20202,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2022-12-01",
-          "value": 0.403226,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2023-03-01",
-          "value": 0.60241,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2023-06-01",
-          "value": -0.0998,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2023-09-01",
-          "value": -0.1998,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2023-12-01",
-          "value": -0.1001,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2024-03-01",
-          "value": 0.901804,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2024-06-01",
-          "value": 0.595829,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2024-09-01",
-          "value": 0.098717,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2024-12-01",
-          "value": 0.591716,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2025-03-01",
-          "value": 0.588235,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2025-06-01",
-          "value": 0.194932,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2025-09-01",
-          "value": 0.194553,
-          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
-          "measure": "QoQ calculated from official ONS seasonally adjusted index"
-        },
-        {
-          "date": "2025-12-01",
           "value": 0.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
+          "date": "2020-03-01",
+          "value": -3.157895,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2020-06-01",
+          "value": -19.891304,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2020-09-01",
+          "value": 15.739484,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2020-12-01",
+          "value": 1.4068,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2021-03-01",
+          "value": -1.040462,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2021-06-01",
+          "value": 8.411215,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2021-09-01",
+          "value": 2.478448,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2021-12-01",
+          "value": 1.68244,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2022-03-01",
+          "value": 0.620476,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2022-06-01",
+          "value": 0.4111,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2022-09-01",
+          "value": 0.204708,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2022-12-01",
+          "value": 0.40858,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2023-03-01",
+          "value": 0.508647,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2023-06-01",
+          "value": 0.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2023-09-01",
+          "value": -0.202429,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2023-12-01",
+          "value": -0.10142,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2024-03-01",
+          "value": 0.812183,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2024-06-01",
+          "value": 0.704935,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2024-09-01",
+          "value": 0.2,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2024-12-01",
+          "value": 0.399202,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 0.397614,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 0.0,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 0.39604,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
+          "date": "2025-12-01",
+          "value": -0.098619,
+          "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
+          "measure": "QoQ calculated from official ONS seasonally adjusted index"
+        },
+        {
           "date": "2026-03-01",
-          "value": 0.776699,
+          "value": 0.789733,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         },
         {
           "date": "2026-06-01",
-          "value": -288.720655,
+          "value": 0.587659,
           "source_url": "https://www.ons.gov.uk/file?uri=/economy/grossdomesticproductgdp/datasets/quarterlynationalaccounts/current/qna.csv",
           "measure": "QoQ calculated from official ONS seasonally adjusted index"
         }
