@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-01T08:04:52.135983+00:00",
+  "generated_at": "2026-10-06T08:21:33.869191+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
@@ -2613,6 +2613,12 @@
           "value": 2.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10",
           "status": "e"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2.5,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/teicp200?format=JSON&lang=EN&geo=EA21&sinceTimePeriod=2015-01&untilTimePeriod=2026-10",
+          "status": "e"
         }
       ]
     },
@@ -3689,6 +3695,11 @@
           "date": "2026-08-01",
           "value": 6.4,
           "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 6.4,
+          "source_url": "https://api.statistiken.bundesbank.de/rest/data/BBDL1/M.DE.Y.UNE.UBA000.A0000.A01.D00.0.R00.A?format=sdmx_csv&lang=en&startPeriod=2025-01"
         }
       ]
     },
@@ -3787,7 +3798,7 @@
         },
         {
           "date": "2016-06-01",
-          "value": 10.1,
+          "value": 10.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
@@ -3997,7 +4008,7 @@
         },
         {
           "date": "2019-12-01",
-          "value": 7.4,
+          "value": 7.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
@@ -4032,7 +4043,7 @@
         },
         {
           "date": "2020-07-01",
-          "value": 8.4,
+          "value": 8.5,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
@@ -4077,7 +4088,7 @@
         },
         {
           "date": "2021-04-01",
-          "value": 8.2,
+          "value": 8.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
@@ -4092,7 +4103,7 @@
         },
         {
           "date": "2021-07-01",
-          "value": 7.6,
+          "value": 7.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
@@ -4117,7 +4128,7 @@
         },
         {
           "date": "2021-12-01",
-          "value": 7,
+          "value": 7.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
@@ -4182,7 +4193,7 @@
         },
         {
           "date": "2023-01-01",
-          "value": 6.6,
+          "value": 6.7,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
@@ -4382,7 +4393,7 @@
         },
         {
           "date": "2026-05-01",
-          "value": 6.3,
+          "value": 6.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         },
         {
@@ -4392,6 +4403,11 @@
         },
         {
           "date": "2026-07-01",
+          "value": 6.4,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
+        },
+        {
+          "date": "2026-08-01",
           "value": 6.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?format=JSON&lang=EN&geo=EA21&age=TOTAL&sex=T&unit=PC_ACT&s_adj=SA&sinceTimePeriod=2015-01&untilTimePeriod=2026-10"
         }
@@ -12705,6 +12721,14 @@
           "status": "final",
           "note": "public indicator page; underlying source explicitly S&P Global; final",
           "release_type": "final"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 58.3,
+          "source_url": "https://tradingeconomics.com/spain/services-pmi",
+          "status": "final",
+          "note": "public indicator page; underlying source explicitly S&P Global; final",
+          "release_type": "final"
         }
       ]
     },
@@ -13885,26 +13909,26 @@
         {
           "date": "2026-04-01",
           "value": 91.4,
-          "source_url": "https://www.ifo.de/sites/default/files/secure/timeseries/ifo-beschbaro-d-202608.xlsx",
+          "source_url": "https://www.ifo.de/sites/default/files/secure/timeseries/empl-d-202609.xlsx",
           "note": "sheet=ifo Beschäftigungsbarometer; row=301; col=2"
         },
         {
           "date": "2026-05-01",
           "value": 93.9,
-          "source_url": "https://www.ifo.de/sites/default/files/secure/timeseries/ifo-beschbaro-d-202608.xlsx",
+          "source_url": "https://www.ifo.de/sites/default/files/secure/timeseries/empl-d-202609.xlsx",
           "note": "sheet=ifo Beschäftigungsbarometer; row=302; col=2"
         },
         {
           "date": "2026-06-01",
-          "value": 85.7,
-          "source_url": "https://www.ifo.de/en/press-release/2026-07-27/ifo-business-climate-index-rises-july-2026",
-          "note": "previous month revised in official July release"
+          "value": 92.3,
+          "source_url": "https://www.ifo.de/sites/default/files/secure/timeseries/empl-d-202609.xlsx",
+          "note": "sheet=ifo Beschäftigungsbarometer; row=303; col=2"
         },
         {
           "date": "2026-07-01",
-          "value": 86.6,
-          "source_url": "https://www.ifo.de/en/survey/ifo-business-climate-index-germany",
-          "note": "official ifo survey/time-series page"
+          "value": 93,
+          "source_url": "https://www.ifo.de/sites/default/files/secure/timeseries/empl-d-202609.xlsx",
+          "note": "sheet=ifo Beschäftigungsbarometer; row=304; col=2"
         }
       ]
     },
