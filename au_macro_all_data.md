@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-10-01T08:43:36.735909+00:00
+更新時間：2026-10-06T08:52:46.482187+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -9,10 +9,10 @@
     <tr>
       <th style="min-width:60px"></th>
       <th style="min-width:180px"></th>
+      <th align="center" style="min-width:90px">2026/10/31</th>
       <th align="center" style="min-width:90px">2026/9/30</th>
       <th align="center" style="min-width:90px">2026/8/31</th>
       <th align="center" style="min-width:90px">2026/7/31</th>
-      <th align="center" style="min-width:90px">2026/6/30</th>
     </tr>
   </thead>
   <tbody>
@@ -20,37 +20,37 @@
       <th rowspan="7" align="center" valign="middle">就業</th>
       <td>就業新增</td>
       <td align="right"></td>
-      <td align="right" bgcolor="#fee5e6">39</td>
+      <td align="right"></td>
+      <td align="right" bgcolor="#f86971">39</td>
       <td align="right" bgcolor="#63be7b">-16</td>
-      <td align="right" bgcolor="#f86971">78</td>
     </tr>
     <tr>
       <td>失業率</td>
       <td align="right"></td>
+      <td align="right"></td>
       <td align="right" bgcolor="#f86971">4.65</td>
-      <td align="right" bgcolor="#9ad5a9">4.48</td>
-      <td align="right" bgcolor="#63be7b">4.45</td>
+      <td align="right" bgcolor="#63be7b">4.48</td>
     </tr>
     <tr>
       <td>職缺</td>
       <td align="right"></td>
-      <td align="right" bgcolor="#ffffff">325</td>
       <td align="right"></td>
+      <td align="right" bgcolor="#ffffff">325</td>
       <td align="right"></td>
     </tr>
     <tr>
       <td>ANZ職缺廣告數</td>
       <td align="right"></td>
-      <td align="right" bgcolor="#f86971">122</td>
-      <td align="right" bgcolor="#ebf7ee">119</td>
-      <td align="right" bgcolor="#63be7b">117</td>
+      <td align="right" bgcolor="#f86971">125</td>
+      <td align="right" bgcolor="#fff5f6">123</td>
+      <td align="right" bgcolor="#63be7b">119</td>
     </tr>
     <tr>
       <td>時薪YoY</td>
       <td align="right"></td>
       <td align="right"></td>
       <td align="right"></td>
-      <td align="right" bgcolor="#ffffff">3.03</td>
+      <td align="right"></td>
     </tr>
     <tr>
       <td>預計離職</td>
@@ -61,61 +61,61 @@
     </tr>
     <tr>
       <td>失業預期</td>
-      <td align="right" bgcolor="#f9757c">139.4</td>
-      <td align="right" bgcolor="#fee5e7">135.7</td>
+      <td align="right" bgcolor="#f86971">142.1</td>
+      <td align="right" bgcolor="#fbabb0">139.4</td>
+      <td align="right" bgcolor="#f7fcf9">135.7</td>
       <td align="right" bgcolor="#63be7b">129.9</td>
-      <td align="right" bgcolor="#f86971">139.8</td>
     </tr>
     <tr>
       <th rowspan="3" align="center" valign="middle">通膨</th>
       <td>CPI</td>
       <td align="right"></td>
+      <td align="right"></td>
       <td align="right" bgcolor="#f86971">4.00</td>
       <td align="right" bgcolor="#63be7b">3.50</td>
-      <td align="right" bgcolor="#fee1e3">3.80</td>
     </tr>
     <tr>
       <td>Trim mean</td>
       <td align="right"></td>
-      <td align="right" bgcolor="#ffffff">3.60</td>
+      <td align="right"></td>
       <td align="right" bgcolor="#ffffff">3.60</td>
       <td align="right" bgcolor="#ffffff">3.60</td>
     </tr>
     <tr>
       <td>零售</td>
       <td align="right"></td>
+      <td align="right"></td>
       <td align="right" bgcolor="#63be7b">6.60</td>
       <td align="right" bgcolor="#f86971">7.50</td>
-      <td align="right" bgcolor="#eef8f0">7.00</td>
     </tr>
     <tr>
       <th rowspan="4" align="center" valign="middle">調查</th>
       <td>NAB企業調查 售價</td>
       <td align="right"></td>
       <td align="right"></td>
-      <td align="right" bgcolor="#f86971">1.10</td>
-      <td align="right" bgcolor="#63be7b">0.60</td>
+      <td align="right"></td>
+      <td align="right" bgcolor="#ffffff">1.10</td>
     </tr>
     <tr>
       <td>消費信心</td>
-      <td align="right" bgcolor="#fef2f3">84.40</td>
+      <td align="right" bgcolor="#f86971">80.40</td>
+      <td align="right" bgcolor="#fff6f7">84.40</td>
       <td align="right" bgcolor="#63be7b">88.90</td>
-      <td align="right" bgcolor="#fee0e2">83.90</td>
-      <td align="right" bgcolor="#f86971">80.60</td>
+      <td align="right" bgcolor="#fee5e6">83.90</td>
     </tr>
     <tr>
       <td>PMI製造業</td>
+      <td align="right"></td>
       <td align="right" bgcolor="#63be7b">49.3</td>
       <td align="right" bgcolor="#f86971">52.0</td>
       <td align="right" bgcolor="#f86971">52.0</td>
-      <td align="right" bgcolor="#fba1a6">51.5</td>
     </tr>
     <tr>
       <td>PMI服務業</td>
-      <td align="right" bgcolor="#bee4c8">51.4</td>
-      <td align="right" bgcolor="#fbadb1">52.9</td>
+      <td align="right"></td>
+      <td align="right" bgcolor="#63be7b">51.4</td>
+      <td align="right" bgcolor="#fcc8cb">52.9</td>
       <td align="right" bgcolor="#f86971">53.6</td>
-      <td align="right" bgcolor="#63be7b">50.5</td>
     </tr>
   </tbody>
 </table>
@@ -168,16 +168,16 @@
 | 就業不足率 | ERROR | 0 | 0 |  |  | RuntimeError: Official ABS workbook contained no series matching all published reference values |
 | 勞動力未充分利用率 | OK | 0 | 0 | 2026-08 | 10.834935 |  |
 | Employment Ratio | OK | 0 | 0 | 2026-08 | 63.94248392 |  |
-| 職缺 | OK | 1 | 6 | 2026-08 | 325.0 |  |
-| ANZ職缺廣告 | OK | 0 | 0 | 2026-08 | 122.27108490250043 |  |
+| 職缺 | OK | 0 | 0 | 2026-08 | 325.0 |  |
+| ANZ職缺廣告 | OK | 1 | 140 | 2026-09 | 125.29980391886193 |  |
 | 時薪YoY | OK | 0 | 0 | 2026-Q2 | 3.034134007585343 |  |
 | 預計離職 | OK | 0 | 0 | 2026-Q1 | 1310.8837533 |  |
-| 失業預期 | OK | 0 | 0 | 2026-09 | 139.4 |  |
-| CPI YoY | OK | 1 | 0 | 2026-08 | 4.0 |  |
-| Trimmed Mean YoY | OK | 1 | 0 | 2026-08 | 3.6 |  |
-| 零售 | OK | 1 | 18 | 2026-08 | 6.6 |  |
+| 失業預期 | OK | 1 | 0 | 2026-10 | 142.1 |  |
+| CPI YoY | ERROR | 0 | 0 |  |  | ChunkedEncodingError: Response ended prematurely |
+| Trimmed Mean YoY | OK | 0 | 0 | 2026-08 | 3.6 |  |
+| 零售 | OK | 0 | 0 | 2026-08 | 6.6 |  |
 | NAB企業售價 | OK | 0 | 0 | 2026-07 | 1.1 |  |
-| 消費信心 | OK | 0 | 0 | 2026-09 | 84.4 |  |
+| 消費信心 | OK | 1 | 0 | 2026-10 | 80.4 |  |
 | 製造業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia manufacturing flash PMI from the newest three releases |
 | 服務業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia services flash PMI from the newest three releases |
 | GDP YoY | OK | 0 | 0 | 2026-Q2 | 2.298880639850265 |  |
@@ -189,15 +189,15 @@
 | 就業新增-兼職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | 勞參率 | OK | 0 | 0 | 2026-08 | 67.05820676 |  |
 | 工時 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| Indeed職缺 | OK | 0 | 1 | 2026-09 | 154.58 |  |
-| 家戶消費-Goods | OK | 1 | 16 | 2026-08 | 7.7 |  |
-| 家戶消費-Services | OK | 1 | 31 | 2026-08 | 5.9 |  |
+| Indeed職缺 | OK | 0 | 0 | 2026-09 | 154.58 |  |
+| 家戶消費-Goods | OK | 0 | 0 | 2026-08 | 7.7 |  |
+| 家戶消費-Services | OK | 0 | 0 | 2026-08 | 5.9 |  |
 | 資本支出_住房 | OK | 0 | 0 | 2026-Q2 | 2.103099304237821 |  |
 | 資本支出 設備廠房 | OK | 0 | 0 | 2026-Q2 | -8.914911358445421 |  |
-| Building Approvals YoY | OK | 1 | 10 | 2026-08 | 10.317924712307391 |  |
-| Housing Credit月增率 房屋持有人 | OK | 1 | 5 | 2026-08 | 0.5 |  |
-| Housing Credit月增率 投資人 | OK | 1 | 7 | 2026-08 | 0.3 |  |
-| 房租季增率 | OK | 0 | 0 | 2026-Q2 | 0.8 |  |
+| Building Approvals YoY | OK | 0 | 0 | 2026-08 | 10.317924712307391 |  |
+| Housing Credit月增率 房屋持有人 | OK | 0 | 0 | 2026-08 | 0.5 |  |
+| Housing Credit月增率 投資人 | OK | 0 | 0 | 2026-08 | 0.3 |  |
+| 房租季增率 | ERROR | 0 | 0 |  |  | ChunkedEncodingError: Response ended prematurely |
 | Income | OK | 0 | 0 | 2026-Q2 | 632476.0 |  |
 | 利息支出等 | OK | 0 | 0 | 2026-Q2 | 42531.0 |  |
 | 所得稅 保險 | OK | 0 | 0 | 2026-Q2 | 127816.0 |  |

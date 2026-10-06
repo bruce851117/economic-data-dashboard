@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-10-01T08:43:36.735909+00:00",
+  "generated_at": "2026-10-06T08:52:46.482187+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -17452,978 +17452,984 @@
       "data": [
         {
           "date": "2015-01-01",
-          "value": 89.13908301490123,
+          "value": 89.13981000343566,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-02-01",
-          "value": 88.99634191294993,
+          "value": 88.99653974372978,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-03-01",
-          "value": 88.75495645835262,
+          "value": 88.75828633886856,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-04-01",
-          "value": 89.35161162365769,
+          "value": 89.35104949472895,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-05-01",
-          "value": 90.8253096015732,
+          "value": 90.82674676062373,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-06-01",
-          "value": 93.03306156717582,
+          "value": 93.03606148885054,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-07-01",
-          "value": 91.88159619274701,
+          "value": 91.88123829290159,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-08-01",
-          "value": 92.64855535545023,
+          "value": 92.65002447033201,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-09-01",
-          "value": 95.81348966112873,
+          "value": 95.81403382659332,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-10-01",
-          "value": 95.46552232038594,
+          "value": 95.46652134687174,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-11-01",
-          "value": 95.6642143781949,
+          "value": 95.66552147831105,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2015-12-01",
-          "value": 95.12897493348757,
+          "value": 95.12157989651338,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-01-01",
-          "value": 95.2821559562367,
+          "value": 95.28553063860977,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-02-01",
-          "value": 96.9497864041871,
+          "value": 96.95139973459563,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-03-01",
-          "value": 96.76743331688435,
+          "value": 96.76939496680546,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-04-01",
-          "value": 96.39221874332637,
+          "value": 96.39273221273177,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-05-01",
-          "value": 99.95122199794557,
+          "value": 99.95239658613177,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-06-01",
-          "value": 99.3568939192971,
+          "value": 99.35821981628386,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-07-01",
-          "value": 99.55708109159782,
+          "value": 99.55969800804874,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-08-01",
-          "value": 100.29541958315356,
+          "value": 100.2964731385746,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-09-01",
-          "value": 99.31308046822714,
+          "value": 99.31272715149106,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-10-01",
-          "value": 100.59152601792331,
+          "value": 100.59327306623065,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-11-01",
-          "value": 101.55342857960434,
+          "value": 101.55469757761337,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2016-12-01",
-          "value": 97.78052893884224,
+          "value": 97.7704662927885,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-01-01",
-          "value": 101.60933398043865,
+          "value": 101.61328721534004,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-02-01",
-          "value": 105.93202378263686,
+          "value": 105.93319422081262,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-03-01",
-          "value": 107.71088350614906,
+          "value": 107.7120752137964,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-04-01",
-          "value": 110.13128409733746,
+          "value": 110.13348042274376,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-05-01",
-          "value": 109.11818918607014,
+          "value": 109.12015120945684,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-06-01",
-          "value": 110.89601450584847,
+          "value": 110.89491866604395,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-07-01",
-          "value": 111.90959434100711,
+          "value": 111.91432581422819,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-08-01",
-          "value": 114.03178753935323,
+          "value": 114.03229667961388,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-09-01",
-          "value": 113.29028341107387,
+          "value": 113.29084592185743,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-10-01",
-          "value": 113.11288017015298,
+          "value": 113.11369817689798,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-11-01",
-          "value": 113.50301858999757,
+          "value": 113.50320899057272,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2017-12-01",
-          "value": 109.5419189801318,
+          "value": 109.52726478886365,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-01-01",
-          "value": 110.17116934966111,
+          "value": 110.18398356678169,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-02-01",
-          "value": 107.77871229023033,
+          "value": 107.77714798073133,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-03-01",
-          "value": 106.32195253032172,
+          "value": 106.3224734899017,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-04-01",
-          "value": 105.32604636316204,
+          "value": 105.32752511057453,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-05-01",
-          "value": 106.64302262315151,
+          "value": 106.64666491497937,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-06-01",
-          "value": 101.35340240663623,
+          "value": 101.35207557819508,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-07-01",
-          "value": 103.51587136835091,
+          "value": 103.52230970571324,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-08-01",
-          "value": 103.81264784080545,
+          "value": 103.81364387791363,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-09-01",
-          "value": 104.2672845201219,
+          "value": 104.26847192010314,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-10-01",
-          "value": 102.8909935447718,
+          "value": 102.88975366889596,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-11-01",
-          "value": 99.99018585597396,
+          "value": 99.98457203176358,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2018-12-01",
-          "value": 97.87339225907311,
+          "value": 97.85694551538641,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-01-01",
-          "value": 103.99633429226753,
+          "value": 104.01693086035834,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-02-01",
-          "value": 101.92576770295514,
+          "value": 101.9212786173188,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-03-01",
-          "value": 102.58357533090106,
+          "value": 102.58428193535406,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-04-01",
-          "value": 103.9440902971024,
+          "value": 103.94447243862392,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-05-01",
-          "value": 99.60423404037789,
+          "value": 99.60893386351563,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-06-01",
-          "value": 102.59319274406707,
+          "value": 102.59198703131302,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-07-01",
-          "value": 100.32059174606374,
+          "value": 100.32947921389352,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-08-01",
-          "value": 98.31995412469688,
+          "value": 98.32401236061837,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-09-01",
-          "value": 98.98533987719593,
+          "value": 98.98689617096127,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-10-01",
-          "value": 97.31872616795964,
+          "value": 97.31706841092746,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-11-01",
-          "value": 94.83624832011259,
+          "value": 94.81982550109771,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2019-12-01",
-          "value": 95.57194535630005,
+          "value": 95.55483359601807,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-01-01",
-          "value": 94.60509232225124,
+          "value": 94.63376970016971,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-02-01",
-          "value": 96.71853843791692,
+          "value": 96.71356077753485,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-03-01",
-          "value": 87.75247399392632,
+          "value": 87.75108238350032,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-04-01",
-          "value": 49.93114657956603,
+          "value": 49.928763956780394,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-05-01",
-          "value": 46.160158561558745,
+          "value": 46.16733127897813,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-06-01",
-          "value": 55.93794582605906,
+          "value": 55.936825733201886,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-07-01",
-          "value": 64.69669386487608,
+          "value": 64.70510408673957,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-08-01",
-          "value": 67.93250054431518,
+          "value": 67.94099621903388,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-09-01",
-          "value": 71.20141269050215,
+          "value": 71.2068569382703,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-10-01",
-          "value": 79.59824898825737,
+          "value": 79.60286989934332,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-11-01",
-          "value": 86.59330180868577,
+          "value": 86.55043429245455,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2020-12-01",
-          "value": 92.5488367211097,
+          "value": 92.53997868188549,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-01-01",
-          "value": 94.93060909621317,
+          "value": 94.96297874912155,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-02-01",
-          "value": 104.24249562745027,
+          "value": 104.23799417628497,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-03-01",
-          "value": 112.91644031470693,
+          "value": 112.91352588417962,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-04-01",
-          "value": 117.91718108273655,
+          "value": 117.91370279955342,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-05-01",
-          "value": 128.14575786502942,
+          "value": 128.1520611873396,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-06-01",
-          "value": 125.79633189012362,
+          "value": 125.79735668816787,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-07-01",
-          "value": 126.13926292133453,
+          "value": 126.14980520871337,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-08-01",
-          "value": 119.74838199817577,
+          "value": 119.77109942720665,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-09-01",
-          "value": 118.7506940634937,
+          "value": 118.75415255599853,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-10-01",
-          "value": 129.02129443900057,
+          "value": 129.0464670104965,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-11-01",
-          "value": 139.8231918201361,
+          "value": 139.7487277271767,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2021-12-01",
-          "value": 136.7710914368093,
+          "value": 136.7639002677699,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-01-01",
-          "value": 135.01530498757344,
+          "value": 135.0435179819936,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-02-01",
-          "value": 153.55758517674195,
+          "value": 153.54836895521774,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-03-01",
-          "value": 155.58609225015732,
+          "value": 155.57769778883826,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-04-01",
-          "value": 156.03765463377283,
+          "value": 156.03323198709498,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-05-01",
-          "value": 155.99671490070875,
+          "value": 156.00471688961534,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-06-01",
-          "value": 158.83826890856463,
+          "value": 158.84802341992716,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-07-01",
-          "value": 157.13033633897592,
+          "value": 157.14890586025862,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-08-01",
-          "value": 156.84975053069442,
+          "value": 156.89330861472843,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-09-01",
-          "value": 156.5231487411445,
+          "value": 156.52657985883204,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-10-01",
-          "value": 156.6835958844308,
+          "value": 156.7248134287079,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-11-01",
-          "value": 159.51504039324192,
+          "value": 159.41183963084842,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2022-12-01",
-          "value": 154.56323160256358,
+          "value": 154.55542751553764,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-01-01",
-          "value": 153.34559729014055,
+          "value": 153.3556372159995,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-02-01",
-          "value": 152.02301261540026,
+          "value": 152.0021895525264,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-03-01",
-          "value": 147.4108316290394,
+          "value": 147.3900817933916,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-04-01",
-          "value": 146.61634949118326,
+          "value": 146.60954333181616,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-05-01",
-          "value": 146.929234855198,
+          "value": 146.93982272122045,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-06-01",
-          "value": 142.84941437236174,
+          "value": 142.87301501431858,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-07-01",
-          "value": 143.65528864260529,
+          "value": 143.69683434431417,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-08-01",
-          "value": 143.99018261065254,
+          "value": 144.08630090213782,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-09-01",
-          "value": 142.86755245094943,
+          "value": 142.85216018429924,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-10-01",
-          "value": 138.58796045595196,
+          "value": 138.63116747280887,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-11-01",
-          "value": 131.99990459916197,
+          "value": 131.88302225873073,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2023-12-01",
-          "value": 131.8287418094851,
+          "value": 131.8078026051534,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-01-01",
-          "value": 134.6531122383,
+          "value": 134.63610181772754,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-02-01",
-          "value": 126.34015317570505,
+          "value": 126.30077864514178,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-03-01",
-          "value": 125.26137227022458,
+          "value": 125.22419157874486,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-04-01",
-          "value": 122.89627346708001,
+          "value": 122.87967649474668,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-05-01",
-          "value": 120.57704622776704,
+          "value": 120.58899420634562,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-06-01",
-          "value": 116.97607149113306,
+          "value": 117.02080810861946,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-07-01",
-          "value": 114.57888441030599,
+          "value": 114.65807170425822,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-08-01",
-          "value": 111.13642852196122,
+          "value": 111.30593848118284,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-09-01",
-          "value": 116.02170115676853,
+          "value": 115.99242685283384,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-10-01",
-          "value": 117.74075769277724,
+          "value": 117.76922467837461,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-11-01",
-          "value": 116.61862015991558,
+          "value": 116.49179723798058,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2024-12-01",
-          "value": 115.9683452397417,
+          "value": 115.93023512369575,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-01-01",
-          "value": 115.84991397875213,
+          "value": 115.80247422217651,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-02-01",
-          "value": 114.68806368369448,
+          "value": 114.62645933797988,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-03-01",
-          "value": 115.26463035377783,
+          "value": 115.20559970560558,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-04-01",
-          "value": 115.73190299659603,
+          "value": 115.70486402999293,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-05-01",
-          "value": 114.18060934424538,
+          "value": 114.19377088410643,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-06-01",
-          "value": 116.33976384185398,
+          "value": 116.39913475917139,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-07-01",
-          "value": 115.22036137211715,
+          "value": 115.33994131303442,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-08-01",
-          "value": 113.45822855878336,
+          "value": 113.71278362289448,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-09-01",
-          "value": 111.06532862649358,
+          "value": 111.02064049043227,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-10-01",
-          "value": 109.42266696440564,
+          "value": 109.4322369251832,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-11-01",
-          "value": 108.82436835191973,
+          "value": 108.69675731947656,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2025-12-01",
-          "value": 107.59862126170196,
+          "value": 107.5376256245892,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2026-01-01",
-          "value": 114.22759692250612,
+          "value": 114.1576275292713,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2026-02-01",
-          "value": 118.15628848110637,
+          "value": 118.07493860307812,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2026-03-01",
-          "value": 114.62821462558577,
+          "value": 114.54916321287301,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2026-04-01",
-          "value": 114.18737717601024,
+          "value": 114.14832704352567,
           "source": "AU_ECON.xlsx",
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2026-05-01",
-          "value": 116.78458870365063,
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "value": 116.79767021780269,
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2026-06-01",
-          "value": 117.09411101159198,
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "value": 117.16403927848731,
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2026-07-01",
-          "value": 119.34649767256766,
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "value": 119.49852521209776,
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         },
         {
           "date": "2026-08-01",
-          "value": 122.27108490250043,
-          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/september/ANZ-Indeed%20Australian%20Job%20Ads%20data_Aug2026.xlsx",
+          "value": 122.5835417010185,
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
+          "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 125.29980391886193,
+          "source_url": "https://www.anz.com.au/content/dam/anzcomau/mediacentre/images/jobads/2026/october/ANZ-Indeed%20Australian%20Job%20Ads%20data_Sep26.xlsx",
           "note": "sheet=ANZ-Indeed Australian Job Ads; col=3"
         }
       ],
@@ -19801,6 +19807,13 @@
           "date": "2026-09-01",
           "value": 139.4,
           "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/09/er20260908BullConsumerSentiment.pdf",
+          "release_type": "final",
+          "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin PDF"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 142.1,
+          "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/10/er20261006BullConsumerSentiment.pdf",
           "release_type": "final",
           "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin PDF"
         }
@@ -22228,6 +22241,13 @@
           "date": "2026-09-01",
           "value": 84.4,
           "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/09/er20260908BullConsumerSentiment.pdf",
+          "release_type": "final",
+          "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 80.4,
+          "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/10/er20261006BullConsumerSentiment.pdf",
           "release_type": "final",
           "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin"
         }
