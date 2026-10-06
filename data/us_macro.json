@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T00:23:46.139188+00:00",
+  "generated_at": "2026-10-06T09:58:13.719354+00:00",
   "source": {
     "type": "excel_import",
     "file": "US_ECON.xlsx",
@@ -748,11 +748,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 158913
+          "value": 158882
         },
         {
           "date": "2026-08-01",
-          "value": 159075
+          "value": 159015
+        },
+        {
+          "date": "2026-09-01",
+          "value": 159044
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -1319,11 +1323,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 135625
+          "value": 135582
         },
         {
           "date": "2026-08-01",
-          "value": 135752
+          "value": 135671
+        },
+        {
+          "date": "2026-09-01",
+          "value": 135717
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -1890,11 +1898,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 21565
+          "value": 21571
         },
         {
           "date": "2026-08-01",
-          "value": 21606
+          "value": 21605
+        },
+        {
+          "date": "2026-09-01",
+          "value": 21623
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -2466,6 +2478,10 @@
         {
           "date": "2026-08-01",
           "value": 609
+        },
+        {
+          "date": "2026-09-01",
+          "value": 607
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -3036,7 +3052,11 @@
         },
         {
           "date": "2026-08-01",
-          "value": 8359
+          "value": 8353
+        },
+        {
+          "date": "2026-09-01",
+          "value": 8364
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -3603,11 +3623,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 12622
+          "value": 12628
         },
         {
           "date": "2026-08-01",
-          "value": 12638
+          "value": 12643
+        },
+        {
+          "date": "2026-09-01",
+          "value": 12652
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -4178,7 +4202,11 @@
         },
         {
           "date": "2026-08-01",
-          "value": 7891
+          "value": 7890
+        },
+        {
+          "date": "2026-09-01",
+          "value": 7898
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -4745,11 +4773,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 4746
+          "value": 4752
         },
         {
           "date": "2026-08-01",
-          "value": 4747
+          "value": 4753
+        },
+        {
+          "date": "2026-09-01",
+          "value": 4754
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -5316,11 +5348,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 114060
+          "value": 114011
         },
         {
           "date": "2026-08-01",
-          "value": 114146
+          "value": 114066
+        },
+        {
+          "date": "2026-09-01",
+          "value": 114094
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -5887,10 +5923,14 @@
         },
         {
           "date": "2026-07-01",
-          "value": 28762
+          "value": 28751
         },
         {
           "date": "2026-08-01",
+          "value": 28760
+        },
+        {
+          "date": "2026-09-01",
           "value": 28778
         }
       ],
@@ -6458,11 +6498,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 6064.3
+          "value": 6065.3
         },
         {
           "date": "2026-08-01",
-          "value": 6072.1
+          "value": 6073.3
+        },
+        {
+          "date": "2026-09-01",
+          "value": 6078.3
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -7029,11 +7073,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 15486.8
+          "value": 15479.2
         },
         {
           "date": "2026-08-01",
-          "value": 15488.2
+          "value": 15474.1
+        },
+        {
+          "date": "2026-09-01",
+          "value": 15479.9
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -7600,11 +7648,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 6601.3
+          "value": 6597.8
         },
         {
           "date": "2026-08-01",
-          "value": 6606.3
+          "value": 6601.1
+        },
+        {
+          "date": "2026-09-01",
+          "value": 6608.7
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -8171,11 +8223,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 609.2
+          "value": 608.9
         },
         {
           "date": "2026-08-01",
-          "value": 611.7
+          "value": 611
+        },
+        {
+          "date": "2026-09-01",
+          "value": 611.5
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -8742,11 +8798,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 2768
+          "value": 2767
         },
         {
           "date": "2026-08-01",
-          "value": 2745
+          "value": 2749
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2739
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -9313,11 +9373,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 9097
+          "value": 9098
         },
         {
           "date": "2026-08-01",
-          "value": 9086
+          "value": 9089
+        },
+        {
+          "date": "2026-09-01",
+          "value": 9082
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -9884,11 +9948,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 22517
+          "value": 22496
         },
         {
           "date": "2026-08-01",
-          "value": 22527
+          "value": 22491
+        },
+        {
+          "date": "2026-09-01",
+          "value": 22482
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -10455,11 +10523,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 2512.7
+          "value": 2497.5
         },
         {
           "date": "2026-08-01",
-          "value": 2519.5
+          "value": 2497.7
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2486.8
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -11026,11 +11098,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 27945
+          "value": 27947
         },
         {
           "date": "2026-08-01",
-          "value": 27974
+          "value": 27985
+        },
+        {
+          "date": "2026-09-01",
+          "value": 28005
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -11597,11 +11673,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 23900.3
+          "value": 23900.5
         },
         {
           "date": "2026-08-01",
-          "value": 23928.7
+          "value": 23935.6
+        },
+        {
+          "date": "2026-09-01",
+          "value": 23958.6
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -12168,11 +12248,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 18507.8
+          "value": 18512.5
         },
         {
           "date": "2026-08-01",
-          "value": 18520.7
+          "value": 18536.9
+        },
+        {
+          "date": "2026-09-01",
+          "value": 18553.6
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -12739,11 +12823,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 9241.4
+          "value": 9241.8
         },
         {
           "date": "2026-08-01",
-          "value": 9248.5
+          "value": 9253
+        },
+        {
+          "date": "2026-09-01",
+          "value": 9266.4
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -13310,11 +13398,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 5768.9
+          "value": 5774.4
         },
         {
           "date": "2026-08-01",
-          "value": 5776.5
+          "value": 5785.8
+        },
+        {
+          "date": "2026-09-01",
+          "value": 5797.8
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -13881,11 +13973,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 3497.5
+          "value": 3496.3
         },
         {
           "date": "2026-08-01",
-          "value": 3495.7
+          "value": 3498.1
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3489.4
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -14452,11 +14548,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 5392.5
+          "value": 5388
         },
         {
           "date": "2026-08-01",
-          "value": 5408
+          "value": 5398.7
+        },
+        {
+          "date": "2026-09-01",
+          "value": 5405
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -15023,11 +15123,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 16939
+          "value": 16922
         },
         {
           "date": "2026-08-01",
-          "value": 17001
+          "value": 16959
+        },
+        {
+          "date": "2026-09-01",
+          "value": 16969
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -15594,11 +15698,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 6032
+          "value": 6030
         },
         {
           "date": "2026-08-01",
-          "value": 6035
+          "value": 6033
+        },
+        {
+          "date": "2026-09-01",
+          "value": 6039
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -16165,11 +16273,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 21
+          "value": -10
         },
         {
           "date": "2026-08-01",
-          "value": 162
+          "value": 133
+        },
+        {
+          "date": "2026-09-01",
+          "value": 29
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -16736,11 +16848,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 71
+          "value": 28
         },
         {
           "date": "2026-08-01",
-          "value": 127
+          "value": 89
+        },
+        {
+          "date": "2026-09-01",
+          "value": 46
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -17307,11 +17423,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 29
+          "value": 35
         },
         {
           "date": "2026-08-01",
-          "value": 41
+          "value": 34
+        },
+        {
+          "date": "2026-09-01",
+          "value": 18
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -17883,6 +18003,10 @@
         {
           "date": "2026-08-01",
           "value": 3
+        },
+        {
+          "date": "2026-09-01",
+          "value": -2
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -18453,7 +18577,11 @@
         },
         {
           "date": "2026-08-01",
-          "value": 22
+          "value": 16
+        },
+        {
+          "date": "2026-09-01",
+          "value": 11
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -19020,11 +19148,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 14
+          "value": 20
         },
         {
           "date": "2026-08-01",
-          "value": 16
+          "value": 15
+        },
+        {
+          "date": "2026-09-01",
+          "value": 9
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -19595,7 +19727,11 @@
         },
         {
           "date": "2026-08-01",
-          "value": 15
+          "value": 14
+        },
+        {
+          "date": "2026-09-01",
+          "value": 8
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -20162,10 +20298,14 @@
         },
         {
           "date": "2026-07-01",
-          "value": -10
+          "value": -4
         },
         {
           "date": "2026-08-01",
+          "value": 1
+        },
+        {
+          "date": "2026-09-01",
           "value": 1
         }
       ],
@@ -20733,11 +20873,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 42
+          "value": -7
         },
         {
           "date": "2026-08-01",
-          "value": 86
+          "value": 55
+        },
+        {
+          "date": "2026-09-01",
+          "value": 28
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -21304,11 +21448,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 34
+          "value": 23
         },
         {
           "date": "2026-08-01",
-          "value": 16
+          "value": 9
+        },
+        {
+          "date": "2026-09-01",
+          "value": 18
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -21875,11 +22023,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 5.3
+          "value": 6.3
         },
         {
           "date": "2026-08-01",
-          "value": 7.8
+          "value": 8
+        },
+        {
+          "date": "2026-09-01",
+          "value": 5
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -22446,11 +22598,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 13.2
+          "value": 5.6
         },
         {
           "date": "2026-08-01",
-          "value": 1.4
+          "value": -5.1
+        },
+        {
+          "date": "2026-09-01",
+          "value": 5.8
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -23017,11 +23173,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 13.8
+          "value": 10.3
         },
         {
           "date": "2026-08-01",
-          "value": 5
+          "value": 3.3
+        },
+        {
+          "date": "2026-09-01",
+          "value": 7.6
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -23588,11 +23748,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 1.4
+          "value": 1.1
         },
         {
           "date": "2026-08-01",
-          "value": 2.5
+          "value": 2.1
+        },
+        {
+          "date": "2026-09-01",
+          "value": 0.5
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -24159,11 +24323,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 5
+          "value": 4
         },
         {
           "date": "2026-08-01",
-          "value": -23
+          "value": -18
+        },
+        {
+          "date": "2026-09-01",
+          "value": -10
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -24730,11 +24898,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": -11
+          "value": -10
         },
         {
           "date": "2026-08-01",
-          "value": -11
+          "value": -9
+        },
+        {
+          "date": "2026-09-01",
+          "value": -7
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -25301,11 +25473,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 15
+          "value": -6
         },
         {
           "date": "2026-08-01",
-          "value": 10
+          "value": -5
+        },
+        {
+          "date": "2026-09-01",
+          "value": -9
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -25872,11 +26048,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 5.2
+          "value": -10
         },
         {
           "date": "2026-08-01",
-          "value": 6.8
+          "value": 0.2
+        },
+        {
+          "date": "2026-09-01",
+          "value": -10.9
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -26443,11 +26623,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 12
+          "value": 14
         },
         {
           "date": "2026-08-01",
-          "value": 29
+          "value": 38
+        },
+        {
+          "date": "2026-09-01",
+          "value": 20
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -27014,11 +27198,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 13.1
+          "value": 13.3
         },
         {
           "date": "2026-08-01",
-          "value": 28.4
+          "value": 35.1
+        },
+        {
+          "date": "2026-09-01",
+          "value": 23
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -27585,11 +27773,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 13.2
+          "value": 17.9
         },
         {
           "date": "2026-08-01",
-          "value": 12.9
+          "value": 24.4
+        },
+        {
+          "date": "2026-09-01",
+          "value": 16.7
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -28156,11 +28348,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 14.1
+          "value": 14.5
         },
         {
           "date": "2026-08-01",
-          "value": 7.1
+          "value": 11.2
+        },
+        {
+          "date": "2026-09-01",
+          "value": 13.4
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -28727,11 +28923,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": -2.4
+          "value": 3.1
         },
         {
           "date": "2026-08-01",
-          "value": 7.6
+          "value": 11.4
+        },
+        {
+          "date": "2026-09-01",
+          "value": 12
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -29298,11 +29498,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 1.5
+          "value": 0.3
         },
         {
           "date": "2026-08-01",
-          "value": -1.8
+          "value": 1.8
+        },
+        {
+          "date": "2026-09-01",
+          "value": -8.7
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -29869,11 +30073,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": -0.1
+          "value": -4.6
         },
         {
           "date": "2026-08-01",
-          "value": 15.5
+          "value": 10.7
+        },
+        {
+          "date": "2026-09-01",
+          "value": 6.3
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -30440,11 +30648,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": -21
+          "value": -38
         },
         {
           "date": "2026-08-01",
-          "value": 62
+          "value": 37
+        },
+        {
+          "date": "2026-09-01",
+          "value": 10
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -31011,11 +31223,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 8
+          "value": 6
         },
         {
           "date": "2026-08-01",
           "value": 3
+        },
+        {
+          "date": "2026-09-01",
+          "value": 6
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -31583,6 +31799,10 @@
         {
           "date": "2026-08-01",
           "value": 8805
+        },
+        {
+          "date": "2026-09-01",
+          "value": 8986
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -32150,6 +32370,10 @@
         {
           "date": "2026-08-01",
           "value": 4.1
+        },
+        {
+          "date": "2026-09-01",
+          "value": 4.2
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -32717,6 +32941,10 @@
         {
           "date": "2026-08-01",
           "value": 169777
+        },
+        {
+          "date": "2026-09-01",
+          "value": 170262
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -33284,6 +33512,10 @@
         {
           "date": "2026-08-01",
           "value": 162746
+        },
+        {
+          "date": "2026-09-01",
+          "value": 163152
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -33851,6 +34083,10 @@
         {
           "date": "2026-08-01",
           "value": 7031
+        },
+        {
+          "date": "2026-09-01",
+          "value": 7109
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -34414,6 +34650,10 @@
         {
           "date": "2026-08-01",
           "value": 1505
+        },
+        {
+          "date": "2026-09-01",
+          "value": 1446
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -34977,6 +35217,10 @@
         {
           "date": "2026-08-01",
           "value": 3673
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3773
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -35540,6 +35784,10 @@
         {
           "date": "2026-08-01",
           "value": 1834
+        },
+        {
+          "date": "2026-09-01",
+          "value": 1888
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -36107,6 +36355,10 @@
         {
           "date": "2026-08-01",
           "value": 839
+        },
+        {
+          "date": "2026-09-01",
+          "value": 845
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -36674,6 +36926,10 @@
         {
           "date": "2026-08-01",
           "value": 1777
+        },
+        {
+          "date": "2026-09-01",
+          "value": 1750
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -37241,6 +37497,10 @@
         {
           "date": "2026-08-01",
           "value": 629
+        },
+        {
+          "date": "2026-09-01",
+          "value": 605
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -37808,6 +38068,10 @@
         {
           "date": "2026-08-01",
           "value": 914
+        },
+        {
+          "date": "2026-09-01",
+          "value": 741
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -38375,6 +38639,10 @@
         {
           "date": "2026-08-01",
           "value": 2137
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2289
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -38942,6 +39210,10 @@
         {
           "date": "2026-08-01",
           "value": 702
+        },
+        {
+          "date": "2026-09-01",
+          "value": 818
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -39509,6 +39781,10 @@
         {
           "date": "2026-08-01",
           "value": 26.3
+        },
+        {
+          "date": "2026-09-01",
+          "value": 24.8
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -40075,7 +40351,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 7271
+          "value": 7335
+        },
+        {
+          "date": "2026-08-01",
+          "value": 7079
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -40643,6 +40923,10 @@
         {
           "date": "2026-07-01",
           "value": 1.9
+        },
+        {
+          "date": "2026-08-01",
+          "value": 1.9
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -41209,6 +41493,10 @@
         },
         {
           "date": "2026-07-01",
+          "value": 1.1
+        },
+        {
+          "date": "2026-08-01",
           "value": 1
         }
       ],
@@ -41772,7 +42060,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 1.0513302
+          "value": 1.0605842
+        },
+        {
+          "date": "2026-08-01",
+          "value": 1.0068269
         }
       ],
       "source": "Derived"
@@ -42339,11 +42631,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 0.16
+          "value": 0.133
         },
         {
           "date": "2026-08-01",
-          "value": 0.266
+          "value": 0.319
+        },
+        {
+          "date": "2026-09-01",
+          "value": 0.132
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -65414,6 +65710,10 @@
         {
           "date": "2026-08-01",
           "value": 9.1
+        },
+        {
+          "date": "2026-09-01",
+          "value": 9.9
         }
       ],
       "new": true
@@ -65596,6 +65896,10 @@
         },
         {
           "date": "2026-08-01",
+          "value": 3.6
+        },
+        {
+          "date": "2026-09-01",
           "value": 3.6
         }
       ],
@@ -65780,6 +66084,10 @@
         {
           "date": "2026-08-01",
           "value": 3
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2.6
         }
       ],
       "new": true
@@ -65963,6 +66271,10 @@
         {
           "date": "2026-08-01",
           "value": 4.7
+        },
+        {
+          "date": "2026-09-01",
+          "value": 4.3
         }
       ],
       "new": true
@@ -66145,6 +66457,10 @@
         },
         {
           "date": "2026-08-01",
+          "value": 4.4
+        },
+        {
+          "date": "2026-09-01",
           "value": 4.4
         }
       ],
@@ -66329,6 +66645,10 @@
         {
           "date": "2026-08-01",
           "value": 3.7
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3.6
         }
       ],
       "new": true
@@ -66512,6 +66832,10 @@
         {
           "date": "2026-08-01",
           "value": 2.7
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2.5
         }
       ],
       "new": true
@@ -66695,6 +67019,10 @@
         {
           "date": "2026-08-01",
           "value": 61.6
+        },
+        {
+          "date": "2026-09-01",
+          "value": 61.8
         }
       ],
       "new": true
@@ -66878,6 +67206,10 @@
         {
           "date": "2026-08-01",
           "value": 55.4
+        },
+        {
+          "date": "2026-09-01",
+          "value": 56.3
         }
       ],
       "new": true
@@ -67061,6 +67393,10 @@
         {
           "date": "2026-08-01",
           "value": 83.4
+        },
+        {
+          "date": "2026-09-01",
+          "value": 83.7
         }
       ],
       "new": true
@@ -67244,6 +67580,10 @@
         {
           "date": "2026-08-01",
           "value": 37.2
+        },
+        {
+          "date": "2026-09-01",
+          "value": 36.9
         }
       ],
       "new": true
@@ -67427,6 +67767,10 @@
         {
           "date": "2026-08-01",
           "value": 2000
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2098
         }
       ],
       "new": true
@@ -67610,6 +67954,10 @@
         {
           "date": "2026-08-01",
           "value": 2077
+        },
+        {
+          "date": "2026-09-01",
+          "value": 1956
         }
       ],
       "new": true
@@ -67793,6 +68141,10 @@
         {
           "date": "2026-08-01",
           "value": 1147
+        },
+        {
+          "date": "2026-09-01",
+          "value": 1189
         }
       ],
       "new": true
@@ -67976,6 +68328,10 @@
         {
           "date": "2026-08-01",
           "value": 1930
+        },
+        {
+          "date": "2026-09-01",
+          "value": 1944
         }
       ],
       "new": true
@@ -73411,7 +73767,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 22
+          "value": 24
+        },
+        {
+          "date": "2026-08-01",
+          "value": 25
         }
       ],
       "new": true
@@ -73594,7 +73954,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 326
+          "value": 299
+        },
+        {
+          "date": "2026-08-01",
+          "value": 251
         }
       ],
       "new": true
@@ -73777,7 +74141,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 580
+          "value": 576
+        },
+        {
+          "date": "2026-08-01",
+          "value": 522
         }
       ],
       "new": true
@@ -73960,7 +74328,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 1271
+          "value": 1244
+        },
+        {
+          "date": "2026-08-01",
+          "value": 1287
         }
       ],
       "new": true
@@ -74143,7 +74515,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 96
+          "value": 78
+        },
+        {
+          "date": "2026-08-01",
+          "value": 123
         }
       ],
       "new": true
@@ -74326,7 +74702,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 401
+          "value": 399
+        },
+        {
+          "date": "2026-08-01",
+          "value": 403
         }
       ],
       "new": true
@@ -74509,7 +74889,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 1138
+          "value": 1305
+        },
+        {
+          "date": "2026-08-01",
+          "value": 1186
         }
       ],
       "new": true
@@ -74692,7 +75076,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 1553
+          "value": 1585
+        },
+        {
+          "date": "2026-08-01",
+          "value": 1484
         }
       ],
       "new": true
@@ -74875,7 +75263,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 783
+          "value": 768
+        },
+        {
+          "date": "2026-08-01",
+          "value": 829
         }
       ],
       "new": true
@@ -75010,11 +75402,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 3.236
+          "value": 3.208
         },
         {
           "date": "2026-08-01",
-          "value": 3.086
+          "value": 3.113
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3.025
         }
       ],
       "new": true
@@ -75149,11 +75545,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 4.134
+          "value": 4.081
         },
         {
           "date": "2026-08-01",
-          "value": 3.985
+          "value": 3.905
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3.79
         }
       ],
       "new": true
@@ -75288,11 +75688,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 3.258
+          "value": 3.194
         },
         {
           "date": "2026-08-01",
-          "value": 3.248
+          "value": 3.119
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2.886
         }
       ],
       "new": true
@@ -75427,11 +75831,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 5.833
+          "value": 5.89
         },
         {
           "date": "2026-08-01",
-          "value": 5.23
+          "value": 5.325
+        },
+        {
+          "date": "2026-09-01",
+          "value": 5.692
         }
       ],
       "new": true
@@ -75566,11 +75974,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 3.931
+          "value": 3.91
         },
         {
           "date": "2026-08-01",
-          "value": 4.335
+          "value": 4.314
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3.797
         }
       ],
       "new": true
@@ -75705,11 +76117,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 2.793
+          "value": 2.883
         },
         {
           "date": "2026-08-01",
-          "value": 2.42
+          "value": 2.667
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2.883
         }
       ],
       "new": true
@@ -75844,11 +76260,15 @@
         },
         {
           "date": "2026-07-01",
-          "value": 2.052
+          "value": 2.024
         },
         {
           "date": "2026-08-01",
           "value": 1.79
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2.101
         }
       ],
       "new": true
@@ -75987,7 +76407,11 @@
         },
         {
           "date": "2026-08-01",
-          "value": 3.578
+          "value": 3.665
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3.913
         }
       ],
       "new": true
@@ -81651,7 +82075,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 928
+          "value": 899
+        },
+        {
+          "date": "2026-08-01",
+          "value": 798
         }
       ],
       "new": true
@@ -81834,7 +82262,11 @@
         },
         {
           "date": "2026-07-01",
-          "value": 5242
+          "value": 5379
+        },
+        {
+          "date": "2026-08-01",
+          "value": 5312
         }
       ],
       "new": true
@@ -82019,6 +82451,10 @@
         {
           "date": "2026-08-01",
           "value": 7.7
+        },
+        {
+          "date": "2026-09-01",
+          "value": 7.6
         }
       ]
     }
