@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-10-07T20:01:09.127209+00:00",
+  "updated_at_utc": "2026-10-08T19:59:20.863338+00:00",
   "series": {
     "就業-就業（人數，千人）|非農": {
       "2023-01": 154776.0,
@@ -3783,7 +3783,8 @@
       "2026-05": 4.3,
       "2026-06": 4.4,
       "2026-07": 4.4,
-      "2026-08": 4.4
+      "2026-08": 4.4,
+      "2026-09": 4.4
     },
     "就業-薪水|Atlanta Fed Job Stayer薪資": {
       "1997-01": 4.0,
@@ -4140,7 +4141,8 @@
       "2026-05": 3.6,
       "2026-06": 3.6,
       "2026-07": 3.5,
-      "2026-08": 3.6
+      "2026-08": 3.6,
+      "2026-09": 3.5
     },
     "就業-薪水|Atlanta Fed最低25%薪資": {
       "1997-01": 5.5,
@@ -4497,7 +4499,8 @@
       "2026-05": 3.5,
       "2026-06": 3.6,
       "2026-07": 3.7,
-      "2026-08": 3.7
+      "2026-08": 3.7,
+      "2026-09": 3.4
     },
     "就業-薪水|Atlanta Fed 50%薪資": {
       "1997-01": 4.5,
@@ -4854,7 +4857,8 @@
       "2026-05": 4.0,
       "2026-06": 4.0,
       "2026-07": 3.9,
-      "2026-08": 3.9
+      "2026-08": 3.9,
+      "2026-09": 4.0
     },
     "就業-薪水|Atlanta Fed 75%薪資": {
       "1997-01": 4.1,
@@ -5211,7 +5215,8 @@
       "2026-05": 4.0,
       "2026-06": 3.9,
       "2026-07": 3.9,
-      "2026-08": 4.0
+      "2026-08": 4.0,
+      "2026-09": 3.9
     },
     "就業-薪水|Atlanta Fed最高25%薪資": {
       "1997-01": 3.4,
@@ -5559,7 +5564,7 @@
       "2025-07": 4.7,
       "2025-08": 4.6,
       "2025-09": 4.5,
-      "2025-11": 4.3,
+      "2025-11": 4.2,
       "2025-12": 4.0,
       "2026-01": 3.9,
       "2026-02": 3.9,
@@ -5568,7 +5573,8 @@
       "2026-05": 3.7,
       "2026-06": 3.8,
       "2026-07": 3.8,
-      "2026-08": 3.8
+      "2026-08": 3.8,
+      "2026-09": 3.8
     },
     "就業-薪水|ADP Pay Job Changers薪資": {
       "2017-01": 7.9,
@@ -10522,7 +10528,7 @@
     }
   },
   "errors": [
-    "ADP: ADP Pay Insights ZIP could not be parsed; https://payinsights.adp.com/artifacts/us_wage/20261007/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261006/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261005/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261004/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261003/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261002/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261001/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260930/documents/ADP_PAY_history.zip: ADP base-pay history returned no usable data for: changer, stayer | https://payinsights.adp.com/artifacts/us_wage/20260929/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260928/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260927/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260926/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260925/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260924/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260923/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html)",
+    "ADP: ADP Pay Insights ZIP could not be parsed; https://payinsights.adp.com/artifacts/us_wage/20261008/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261007/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261006/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261005/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261004/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261003/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261002/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261001/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260930/documents/ADP_PAY_history.zip: ADP base-pay history returned no usable data for: changer, stayer | https://payinsights.adp.com/artifacts/us_wage/20260929/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260928/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260927/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260926/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260925/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260924/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html)",
     "NY Fed SCE: NY Fed workbook missing sheets: Five-year ahead Infl Exp"
   ]
 }

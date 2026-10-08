@@ -11,9 +11,9 @@
     <meta name="title" content="May" />
     <meta property="og:title" content="May" />
 
-    <link href="/Static/css/abovethefold.css?v=1_0_9774_35273" rel="preload" as="style">
-    <link href="/Static/css/cake.css?v=1_0_9774_35273" rel="preload" as="style">
-    <link href="/Static/css/belowthefold.css?v=1_0_9774_35273" rel="preload" as="style">
+    <link href="/Static/css/abovethefold.css?v=1_0_9776_39893" rel="preload" as="style">
+    <link href="/Static/css/cake.css?v=1_0_9776_39893" rel="preload" as="style">
+    <link href="/Static/css/belowthefold.css?v=1_0_9776_39893" rel="preload" as="style">
     <!-- OptanonConsentNoticeStart -->
     <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" type="text/javascript" charset="UTF-8" data-domain-script=35c0eee9-5e12-408b-ad13-e8ecc4146091></script>
     <script type="text/javascript">
@@ -31,7 +31,7 @@
                     'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-N9F5NCT');
     </script>
-    <script src="/Static/Vue/Components/GoogleAnalytics.js?v=1_0_9774_35273"></script>
+    <script src="/Static/Vue/Components/GoogleAnalytics.js?v=1_0_9776_39893"></script>
 
     
 
@@ -60,9 +60,9 @@
 
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     <script async src="https://kit.fontawesome.com/d948dee5ed.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="/Static/css/abovethefold.css?v=1_0_9774_35273" />
+    <link rel="stylesheet" href="/Static/css/abovethefold.css?v=1_0_9776_39893" />
     
-    <link rel="stylesheet" href="/Static/css/brand.css?v=1_0_9774_35273" />
+    <link rel="stylesheet" href="/Static/css/brand.css?v=1_0_9776_39893" />
 
         <script type="text/javascript">
             $(function () {
@@ -236,29 +236,6 @@ border-top:1px solid #b2b2b2;
 .sessions__row:nth-child(2n){
     background-color: #fff !important;
 }
-main>.hubspotLast:nth-last-child(4) .hubspot .hs-form {
-flex-wrap: unset !important;
-}
-.hubspot .hs_email>label:not(.hs-error-msg) {
-    font-size: 18px !important;
-font-family: Noto Sans,sans-serif !important;
-font-weight: bold !important;
-}
-.hubspot .hs_email>label:not(.hs-error-msg):before{
-font-size: 19px !important;
-}
-main>.hubspotLast .actions{
-margin-top: 13px !important;
-text-align:center;
-}
-main>.hubspotLast .hubspot .hs-form {
-    display: block !important;
- }
-.hubspot .hs_email .hs-error-msgs {
-color: #d8000c !important;
-    background: whitesmoke !important;
-    padding: 20px !important;
-}
 
 .MagazineArticlePage .articleSidebar {
 background-color:white;
@@ -361,6 +338,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 
+<div data-nav-anchor aria-hidden="true"></div>
 <div id="navApp" class="" v-cloak data-nav-main>
   
   
@@ -724,6 +702,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                   <div class="nav__splitButtonWrapper">
                                     <a href="/for-individuals/corporate-and-social-responsibility/" class="navMain__link navMain__link--L2">
                                       Corporate and Social Responsibility
+                                    </a>
+                                  </div>
+                                </div>
+                                <div class="col-lg-3 nav__hasL2s--column nav__hasL2s--column--nested">
+                                  <div class="nav__splitButtonWrapper">
+                                    <a href="/for-individuals/foundation/" class="navMain__link navMain__link--L2">
+                                      Foundation
+                                    </a>
+                                  </div>
+                                </div>
+                                <div class="col-lg-3 nav__hasL2s--column nav__hasL2s--column--nested">
+                                  <div class="nav__splitButtonWrapper">
+                                    <a href="/for-individuals/Growth/" class="navMain__link navMain__link--L2">
+                                      Growth
+                                    </a>
+                                  </div>
+                                </div>
+                                <div class="col-lg-3 nav__hasL2s--column nav__hasL2s--column--nested">
+                                  <div class="nav__splitButtonWrapper">
+                                    <a href="/for-individuals/Leadership/" class="navMain__link navMain__link--L2">
+                                      Leadership
                                     </a>
                                   </div>
                                 </div>
@@ -1113,6 +1112,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </b-navbar>
 </div>
 
+
 <div id="stickySentinelTopID" class="sticky_sentinel sticky_sentinel--top"></div>
 
 <script>
@@ -1125,8 +1125,77 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
     document.addEventListener("DOMContentLoaded", initThisComponent, false);
   })();
+
+  // FY27: on desktop, slide the utility row off once scrolled past it, leaving the
+  // main row (.isStuck). Ported from CMS 13; see brand.css section 4.
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!document.body.classList.contains('brand-fy27')) {
+      return;
+    }
+    var nav = document.getElementById('navApp');
+    var anchor = document.querySelector('[data-nav-anchor]');
+    var utility = nav && nav.querySelector('.navUtility__wrapper');
+    var mainNavigation = nav && nav.querySelector('.nav__wrapper--inner');
+    if (!anchor || !utility || !mainNavigation) {
+      return;
+    }
+
+    var desktop = window.matchMedia('(min-width: 1024px)');
+    var collapseOffset = 0;
+    var pendingFrame = false;
+
+    function update() {
+      pendingFrame = false;
+      var anchorTop = anchor.getBoundingClientRect().top;
+      var stuck = desktop.matches && anchorTop <= -collapseOffset;
+      nav.classList.toggle('isStuck', stuck);
+      nav.style.setProperty('--nav-top', (Math.max(0, anchorTop) - (stuck ? collapseOffset : 0)) + 'px');
+    }
+
+    function measure() {
+      if (desktop.matches) {
+        var mainBounds = mainNavigation.getBoundingClientRect();
+        var navBounds = nav.getBoundingClientRect();
+        collapseOffset = mainBounds.top - navBounds.top;
+        var utilityHeight = utility.getBoundingClientRect().height;
+        nav.style.setProperty('--nav-utility-height', utilityHeight + 'px');
+        nav.style.setProperty('--nav-main-height', mainBounds.height + 'px');
+        nav.style.setProperty('--nav-expanded-row-height', (utilityHeight + mainBounds.height) + 'px');
+        nav.style.setProperty('--nav-expanded-height', (collapseOffset + mainBounds.height) + 'px');
+      }
+      update();
+    }
+
+    function scheduleUpdate() {
+      if (!pendingFrame) {
+        pendingFrame = true;
+        window.requestAnimationFrame(update);
+      }
+    }
+
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    // NavMain.js still toggles .isStuck on Home/Conference; re-assert ours.
+    document.addEventListener('sticky-change', scheduleUpdate);
+    window.addEventListener('resize', measure);
+    window.addEventListener('load', measure);
+    if (desktop.addEventListener) {
+      desktop.addEventListener('change', measure);
+    } else if (desktop.addListener) {
+      desktop.addListener(measure);
+    }
+    if (window.ResizeObserver) {
+      var resizeObserver = new ResizeObserver(measure);
+      resizeObserver.observe(utility);
+      resizeObserver.observe(mainNavigation);
+      resizeObserver.observe(nav.querySelector('.nav__wrapper--outer'));
+    }
+    if (document.fonts) {
+      document.fonts.ready.then(measure);
+    }
+    measure();
+  });
 </script>
-        <link rel="stylesheet" href="/Static/css/cake.css?v=1_0_9774_35273" />
+        <link rel="stylesheet" href="/Static/css/cake.css?v=1_0_9776_39893" />
 
         <main class="main" id="main">
 
@@ -1388,31 +1457,7 @@ May        </span>
 
 
 
-
-<div id="hubspot-77303250" class="component hubspotLast">
-    <div class="hex-bg lazyload" data-bg="/Static/img/hexpattern.png"></div>
-    <div class="hubspot " data-hubspot>
-            <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2.js"></script>
-            <script>
-                hbspt.forms.create({
-                    portalId: "620652",
-                    formId: "0f048301-c4f1-48a7-b8fd-059169228e60"
-                });
-            </script>
-        <script>
-      window.addEventListener("load",
-        function() {
-          var emailLabel = document.querySelector('#hubspot-77303250 .hubspot [data-reactid=".hbspt-forms-0.1:$0.0.0"]');
-          if (emailLabel) {
-            emailLabel.innerText = "Subscribe to Our e-Newsletter";
-            emailLabel.parentElement.querySelector('.hs-form-required').innerText = "";
-          }
-        });
-        </script>
-    </div>
-
-
-</div>            <div id="backToTop" class="backToTop">
+            <div id="backToTop" class="backToTop">
   <button id="backToTopButton" class="button button--clear">
     <div>
 			<i class="fas fa-angle-up"></i>
@@ -1422,7 +1467,7 @@ May        </span>
 </div>
 <div id="backToTopMark"></div>
 
-            <link rel="stylesheet" href="/Static/css/belowthefold.css?v=1_0_9774_35273" />
+            <link rel="stylesheet" href="/Static/css/belowthefold.css?v=1_0_9776_39893" />
 <footer class="footer" data-footer>
   <div class="footer__row row">
           <div class="col footer__col">
@@ -1547,5 +1592,5 @@ if(FindApi){var api = new FindApi();api.setApplicationUrl('/');api.setServiceApi
 
 
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a46f7dfba9a6510e',t:'MTc5MTQwMzIyNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a477b91e78c3e86c',t:'MTc5MTQ4OTUzNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
