@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-10-06T08:52:46.482187+00:00
+更新時間：2026-10-11T08:40:12.381462+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -169,15 +169,15 @@
 | 勞動力未充分利用率 | OK | 0 | 0 | 2026-08 | 10.834935 |  |
 | Employment Ratio | OK | 0 | 0 | 2026-08 | 63.94248392 |  |
 | 職缺 | OK | 0 | 0 | 2026-08 | 325.0 |  |
-| ANZ職缺廣告 | OK | 1 | 140 | 2026-09 | 125.29980391886193 |  |
+| ANZ職缺廣告 | OK | 0 | 0 | 2026-09 | 125.29980391886193 |  |
 | 時薪YoY | OK | 0 | 0 | 2026-Q2 | 3.034134007585343 |  |
 | 預計離職 | OK | 0 | 0 | 2026-Q1 | 1310.8837533 |  |
-| 失業預期 | OK | 1 | 0 | 2026-10 | 142.1 |  |
-| CPI YoY | ERROR | 0 | 0 |  |  | ChunkedEncodingError: Response ended prematurely |
+| 失業預期 | OK | 0 | 0 | 2026-10 | 142.1 |  |
+| CPI YoY | OK | 0 | 0 | 2026-08 | 4.0 |  |
 | Trimmed Mean YoY | OK | 0 | 0 | 2026-08 | 3.6 |  |
 | 零售 | OK | 0 | 0 | 2026-08 | 6.6 |  |
 | NAB企業售價 | OK | 0 | 0 | 2026-07 | 1.1 |  |
-| 消費信心 | OK | 1 | 0 | 2026-10 | 80.4 |  |
+| 消費信心 | OK | 0 | 0 | 2026-10 | 80.4 |  |
 | 製造業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia manufacturing flash PMI from the newest three releases |
 | 服務業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia services flash PMI from the newest three releases |
 | GDP YoY | OK | 0 | 0 | 2026-Q2 | 2.298880639850265 |  |
@@ -189,7 +189,7 @@
 | 就業新增-兼職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | 勞參率 | OK | 0 | 0 | 2026-08 | 67.05820676 |  |
 | 工時 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| Indeed職缺 | OK | 0 | 0 | 2026-09 | 154.58 |  |
+| Indeed職缺 | OK | 1 | 1 | 2026-10 | 154.16 |  |
 | 家戶消費-Goods | OK | 0 | 0 | 2026-08 | 7.7 |  |
 | 家戶消費-Services | OK | 0 | 0 | 2026-08 | 5.9 |  |
 | 資本支出_住房 | OK | 0 | 0 | 2026-Q2 | 2.103099304237821 |  |
@@ -197,7 +197,7 @@
 | Building Approvals YoY | OK | 0 | 0 | 2026-08 | 10.317924712307391 |  |
 | Housing Credit月增率 房屋持有人 | OK | 0 | 0 | 2026-08 | 0.5 |  |
 | Housing Credit月增率 投資人 | OK | 0 | 0 | 2026-08 | 0.3 |  |
-| 房租季增率 | ERROR | 0 | 0 |  |  | ChunkedEncodingError: Response ended prematurely |
+| 房租季增率 | OK | 0 | 0 | 2026-Q2 | 0.8 |  |
 | Income | OK | 0 | 0 | 2026-Q2 | 632476.0 |  |
 | 利息支出等 | OK | 0 | 0 | 2026-Q2 | 42531.0 |  |
 | 所得稅 保險 | OK | 0 | 0 | 2026-Q2 | 127816.0 |  |

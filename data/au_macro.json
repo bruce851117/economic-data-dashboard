@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-10-06T08:52:46.482187+00:00",
+  "generated_at": "2026-10-11T08:40:12.381462+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -8418,10 +8418,17 @@
         },
         {
           "date": "2026-09-01",
-          "value": 154.58,
+          "value": 154.34,
           "source_url": "https://github.com/hiring-lab/job_postings_tracker/blob/master/AU/aggregate_job_postings_AU.csv",
           "release_type": "final",
-          "note": "Indeed last daily total-postings observation in month; observation_date=2026-09-25"
+          "note": "Indeed last daily total-postings observation in month; observation_date=2026-09-30"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 154.16,
+          "source_url": "https://github.com/hiring-lab/job_postings_tracker/blob/master/AU/aggregate_job_postings_AU.csv",
+          "release_type": "final",
+          "note": "Indeed last daily total-postings observation in month; observation_date=2026-10-02"
         }
       ]
     },
