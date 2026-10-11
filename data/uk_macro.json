@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T08:28:51.059255+00:00",
+  "generated_at": "2026-10-11T08:12:16.834927+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -18453,7 +18453,12 @@
         },
         {
           "date": "2026-09-01",
-          "value": 68.69,
+          "value": 68.67,
+          "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 68.12,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
         }
       ],
