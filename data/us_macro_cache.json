@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-10-13T20:16:30.740335+00:00",
+  "updated_at_utc": "2026-10-14T18:39:46.929435+00:00",
   "series": {
     "就業-就業（人數，千人）|非農": {
       "2023-01": 154776.0,
@@ -5843,7 +5843,8 @@
       "2026-05": 2.851,
       "2026-06": 2.594,
       "2026-07": 2.478,
-      "2026-08": 2.446
+      "2026-08": 2.446,
+      "2026-09": 2.564
     },
     "物價|Core Goods": {
       "2024-01": -0.287,
@@ -5876,7 +5877,8 @@
       "2026-05": 1.063,
       "2026-06": 0.818,
       "2026-07": 0.807,
-      "2026-08": 0.681
+      "2026-08": 0.681,
+      "2026-09": 0.735
     },
     "物價|Core Services": {
       "2024-01": 5.369,
@@ -5909,7 +5911,8 @@
       "2026-05": 3.421,
       "2026-06": 3.161,
       "2026-07": 3.011,
-      "2026-08": 3.009
+      "2026-08": 3.009,
+      "2026-09": 3.149
     },
     "物價|Core Services less Shelter": {
       "2024-01": 3.567,
@@ -5942,7 +5945,8 @@
       "2026-05": 3.743,
       "2026-06": 3.146,
       "2026-07": 2.987,
-      "2026-08": 3.104
+      "2026-08": 3.104,
+      "2026-09": 3.223
     },
     "物價|Core PPI": {
       "2024-01": 2.042,
@@ -10529,7 +10533,7 @@
     }
   },
   "errors": [
-    "ADP: ADP Pay Insights ZIP could not be parsed; https://payinsights.adp.com/artifacts/us_wage/20261013/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261012/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261011/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261010/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261009/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261008/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261007/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261006/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261005/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261004/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261003/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261002/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261001/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260930/documents/ADP_PAY_history.zip: ADP base-pay history returned no usable data for: changer, stayer | https://payinsights.adp.com/artifacts/us_wage/20260929/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html)",
+    "ADP: ADP Pay Insights ZIP could not be parsed; https://payinsights.adp.com/artifacts/us_wage/20261014/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261013/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261012/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261011/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261010/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261009/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261008/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261007/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261006/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261005/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261004/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261003/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261002/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261001/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260930/documents/ADP_PAY_history.zip: ADP base-pay history returned no usable data for: changer, stayer",
     "NY Fed SCE: NY Fed workbook missing sheets: Five-year ahead Infl Exp"
   ]
 }
