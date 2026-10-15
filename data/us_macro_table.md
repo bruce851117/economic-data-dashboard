@@ -1,6 +1,6 @@
 # 美國總體經濟數據：待確認項目
 
-> 更新時間：2026-10-14 18:39 UTC  
+> 更新時間：2026-10-15 18:20 UTC  
 > 其他已成功指標仍會在背景抓取、接受來源修訂並更新Cache，只是不顯示於本表。
 > Conference Board原始回應會保存至 `data/us_macro_debug/`，供後續判斷GitHub Actions實際收到的HTML。
 
@@ -18,31 +18,31 @@
 > 以下為API回傳的全部季調月銷售額（data_type_code=SM、seasonally_adj=yes）。
 > 控制組採用Census MARTS官方彙總代碼 `441X`（Auto and Other Motor Vehicle Dealers）。
 
-| category_code | Census分類名稱 | 2026/08/31 | 2026/07/31 | 2026/06/30 | 2026/05/31 | 2026/04/30 |
+| category_code | Census分類名稱 | 2026/09/30 | 2026/08/31 | 2026/07/31 | 2026/06/30 | 2026/05/31 |
 |---|---|---:|---:|---:|---:|---:|
-| 44000 | Retail Trade | 646347 | 639031 | 642793 | 641883 | 635221 |
-| 441 | Motor Vehicle and Parts Dealers | 139178 | 138534 | 140955 | 137902 | 136157 |
-| 441X | Auto and Other Motor Vehicle Dealers | 127246 | 126743 | 129255 | 126367 | 124602 |
-| 442 | Furniture and Home Furnishings Stores | 10611 | 10537 | 10571 | 10645 | 10446 |
-| 443 | Electronics and Appliance Stores | 7735 | 7610 | 7624 | 7616 | 7637 |
-| 444 | Building Material and Garden Equipment and Supplies Dealers | 44308 | 44294 | 44366 | 43841 | 43909 |
-| 445 | Food and Beverage Stores | 84880 | 84507 | 84687 | 84883 | 84723 |
-| 4451 | Grocery Stores | 76870 | 76518 | 76684 | 76946 | 76812 |
-| 446 | Health and Personal Care Stores | 39216 | 38746 | 38451 | 38448 | 38100 |
-| 447 | Gasoline Stations | 63432 | 61607 | 61634 | 65205 | 63594 |
-| 448 | Clothing and Clothing Accessories Stores | 26503 | 26311 | 25987 | 26136 | 25864 |
-| 44W72 | Retail Trade and Food Services, ex Auto and Gas | 535153 | 529397 | 530309 | 528308 | 524170 |
-| 44X72 | Retail Trade and Food Services, Total | 737763 | 729538 | 732898 | 731415 | 723921 |
-| 44Y72 | Retail Trade and Food Services, ex Auto | 598585 | 591004 | 591943 | 593513 | 587764 |
-| 44Z72 | Retail Trade and Food Services, ex Gas | 674331 | 667931 | 671264 | 666210 | 660327 |
-| 451 | Sporting Goods, Hobby, Musical Instrument, and Book Stores | 8752 | 8674 | 8680 | 8643 | 8601 |
-| 452 | General Merchandise Stores | 81743 | 81280 | 80870 | 80798 | 80466 |
-| 4522 | Census API未附標籤，請依category_code判斷 | 3928 | 3963 | 3959 | 3963 | 3918 |
-| 453 | Miscellaneous Store Retailers | 16023 | 15727 | 15756 | 15458 | 14942 |
-| 454 | Nonstore Retailers | 123966 | 121204 | 123212 | 122308 | 120782 |
-| 722 | Food Services and Drinking Places | 91416 | 90507 | 90105 | 89532 | 88700 |
+| 44000 | Retail Trade | 652115 | 647440 | 639263 | 642793 | 641883 |
+| 441 | Motor Vehicle and Parts Dealers | 139833 | 139525 | 138578 | 140955 | 137902 |
+| 441X | Auto and Other Motor Vehicle Dealers | 127788 | 127555 | 126750 | 129255 | 126367 |
+| 442 | Furniture and Home Furnishings Stores | 10696 | 10559 | 10538 | 10571 | 10645 |
+| 443 | Electronics and Appliance Stores | 7853 | 7806 | 7646 | 7624 | 7616 |
+| 444 | Building Material and Garden Equipment and Supplies Dealers | 44077 | 44323 | 44233 | 44366 | 43841 |
+| 445 | Food and Beverage Stores | 85056 | 84727 | 84556 | 84687 | 84883 |
+| 4451 | Grocery Stores | 77152 | 76783 | 76589 | 76684 | 76946 |
+| 446 | Health and Personal Care Stores | 39535 | 39248 | 38777 | 38451 | 38448 |
+| 447 | Gasoline Stations | 68021 | 63950 | 61509 | 61634 | 65205 |
+| 448 | Clothing and Clothing Accessories Stores | 26478 | 26486 | 26327 | 25987 | 26136 |
+| 44W72 | Retail Trade and Food Services, ex Auto and Gas | 537167 | 535847 | 529828 | 530309 | 528308 |
+| 44X72 | Retail Trade and Food Services, Total | 745021 | 739322 | 729915 | 732898 | 731415 |
+| 44Y72 | Retail Trade and Food Services, ex Auto | 605188 | 599797 | 591337 | 591943 | 593513 |
+| 44Z72 | Retail Trade and Food Services, ex Gas | 677000 | 675372 | 668406 | 671264 | 666210 |
+| 451 | Sporting Goods, Hobby, Musical Instrument, and Book Stores | 8681 | 8727 | 8640 | 8680 | 8643 |
+| 452 | General Merchandise Stores | 81776 | 81844 | 81233 | 80870 | 80798 |
+| 4522 | Census API未附標籤，請依category_code判斷 | 4028 | 3963 | 3985 | 3959 | 3963 |
+| 453 | Miscellaneous Store Retailers | 15826 | 16319 | 15759 | 15756 | 15458 |
+| 454 | Nonstore Retailers | 124283 | 123926 | 121467 | 123212 | 122308 |
+| 722 | Food Services and Drinking Places | 92906 | 91882 | 90652 | 90105 | 89532 |
 
 ## 更新警告
 
-- ADP: ADP Pay Insights ZIP could not be parsed; https://payinsights.adp.com/artifacts/us_wage/20261014/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261013/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261012/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261011/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261010/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261009/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261008/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261007/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261006/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261005/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261004/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261003/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261002/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261001/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20260930/documents/ADP_PAY_history.zip: ADP base-pay history returned no usable data for: changer, stayer
+- ADP: ADP Pay Insights ZIP could not be parsed; https://payinsights.adp.com/artifacts/us_wage/20261015/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261014/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261013/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261012/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261011/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261010/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261009/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261008/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261007/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261006/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261005/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261004/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261003/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261002/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261001/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html)
 - NY Fed SCE: NY Fed workbook missing sheets: Five-year ahead Infl Exp
