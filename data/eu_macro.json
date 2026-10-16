@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-11T08:04:01.658780+00:00",
+  "generated_at": "2026-10-16T06:36:17.621657+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
@@ -1345,6 +1345,12 @@
           "value": 1.1,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/011814145?lastNObservations=30",
           "note": "INSEE Base 2025 official annual underlying inflation; idbank=011814145"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 1.5,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/011814145?lastNObservations=30",
+          "note": "INSEE Base 2025 official annual underlying inflation; idbank=011814145"
         }
       ]
     },
@@ -2025,6 +2031,12 @@
         {
           "date": "2026-08-01",
           "value": 2.44,
+          "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2.43,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
           "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         }
@@ -7255,14 +7267,14 @@
         },
         {
           "date": "2025-01-01",
-          "value": 4.815229563269874,
+          "value": 4.927211646136631,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-02-01",
-          "value": 0.5636978579481422,
+          "value": 0.6764374295377573,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
@@ -7276,7 +7288,7 @@
         },
         {
           "date": "2025-04-01",
-          "value": 5.973223480947487,
+          "value": 6.07621009268795,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
@@ -7311,14 +7323,14 @@
         },
         {
           "date": "2025-09-01",
-          "value": 3.5031847133757843,
+          "value": 3.6093418259023347,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2025-10-01",
-          "value": 2.1674876847290747,
+          "value": 2.266009852216744,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
@@ -7339,14 +7351,14 @@
         },
         {
           "date": "2026-01-01",
-          "value": 1.2820512820512775,
+          "value": 1.2806830309498363,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2026-02-01",
-          "value": 1.0089686098654571,
+          "value": 0.8958566629339249,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
@@ -7360,14 +7372,14 @@
         },
         {
           "date": "2026-04-01",
-          "value": -2.235179786200203,
+          "value": -2.2330097087378653,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2026-05-01",
-          "value": -2.9154518950437303,
+          "value": -2.818270165208947,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
@@ -13937,9 +13949,9 @@
         },
         {
           "date": "2026-07-01",
-          "value": 93,
-          "source_url": "https://www.ifo.de/sites/default/files/secure/timeseries/empl-d-202609.xlsx",
-          "note": "sheet=ifo Beschäftigungsbarometer; row=304; col=2"
+          "value": 86.6,
+          "source_url": "https://www.ifo.de/en/survey/ifo-business-climate-index-germany",
+          "note": "official ifo survey/time-series page"
         }
       ]
     },
