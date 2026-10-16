@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-10-11T08:40:12.381462+00:00
+更新時間：2026-10-16T07:01:42.901316+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -20,16 +20,16 @@
       <th rowspan="7" align="center" valign="middle">就業</th>
       <td>就業新增</td>
       <td align="right"></td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#f86971">39</td>
-      <td align="right" bgcolor="#63be7b">-16</td>
+      <td align="right" bgcolor="#63be7b">-39</td>
+      <td align="right" bgcolor="#f86971">29</td>
+      <td align="right" bgcolor="#c8e8d1">-17</td>
     </tr>
     <tr>
       <td>失業率</td>
       <td align="right"></td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#f86971">4.65</td>
-      <td align="right" bgcolor="#63be7b">4.48</td>
+      <td align="right" bgcolor="#f86971">4.72</td>
+      <td align="right" bgcolor="#fcc0c4">4.65</td>
+      <td align="right" bgcolor="#63be7b">4.49</td>
     </tr>
     <tr>
       <td>職缺</td>
@@ -163,11 +163,11 @@
 
 | 指標 | 狀態 | 新增 | 修訂 | 官方最新期 | 官方最新值 | 錯誤 |
 |---|---|---:|---:|---|---:|---|
-| 就業新增 | OK | 0 | 0 | 2026-08 | 39.49333701999967 |  |
-| 失業率 | OK | 0 | 0 | 2026-08 | 4.64629609 |  |
+| 就業新增 | OK | 1 | 19 | 2026-09 | -39.32872130999931 |  |
+| 失業率 | OK | 1 | 20 | 2026-09 | 4.71834873 |  |
 | 就業不足率 | ERROR | 0 | 0 |  |  | RuntimeError: Official ABS workbook contained no series matching all published reference values |
-| 勞動力未充分利用率 | OK | 0 | 0 | 2026-08 | 10.834935 |  |
-| Employment Ratio | OK | 0 | 0 | 2026-08 | 63.94248392 |  |
+| 勞動力未充分利用率 | OK | 1 | 140 | 2026-09 | 11.0441511 |  |
+| Employment Ratio | OK | 1 | 140 | 2026-09 | 63.6130534 |  |
 | 職缺 | OK | 0 | 0 | 2026-08 | 325.0 |  |
 | ANZ職缺廣告 | OK | 0 | 0 | 2026-09 | 125.29980391886193 |  |
 | 時薪YoY | OK | 0 | 0 | 2026-Q2 | 3.034134007585343 |  |
@@ -187,9 +187,9 @@
 | 政府時薪ex bonus(季度) | OK | 0 | 0 | 2026-Q2 | 3.3 |  |
 | 就業新增-全職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | 就業新增-兼職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| 勞參率 | OK | 0 | 0 | 2026-08 | 67.05820676 |  |
+| 勞參率 | OK | 1 | 140 | 2026-09 | 66.76317272 |  |
 | 工時 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| Indeed職缺 | OK | 1 | 1 | 2026-10 | 154.16 |  |
+| Indeed職缺 | OK | 0 | 1 | 2026-10 | 153.66 |  |
 | 家戶消費-Goods | OK | 0 | 0 | 2026-08 | 7.7 |  |
 | 家戶消費-Services | OK | 0 | 0 | 2026-08 | 5.9 |  |
 | 資本支出_住房 | OK | 0 | 0 | 2026-Q2 | 2.103099304237821 |  |
