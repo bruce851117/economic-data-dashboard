@@ -4,7 +4,7 @@
     "sector": "manufacturing",
     "requested_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/october/",
     "status_code": 200,
-    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=f4f4c9729c58c262bb452eaee64b476485d5d8e2f6c13983c9267e2f3c4886e789fb7878807a87cf0a8441dd374d108a56de0967d4a4fa09ca8c2f1d778accc50aa5482bcffac1aab6daf2b81966e78065ec57bbbdabdbfb7ea69ea114694275757c7c15d52457c86ebb4a5ce3892cf0ede5f454aeb37a9096bb2d5e75c92609",
+    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=7f7333104f28e6eca5bfc8676d2ec1ec48172ff1c8f01b03c99618892580115b5d2eaa31c92941205020d3fa4696c5d3b6a838da5e230324c055ed46f290f6b688e118291d323ed89ed7464c58724508a5e626f0876873b438b378f6abb1a4631faeb68c11b77881b04c8d83364713272c994fe7a6a81da2de06e0081bd71abe",
     "content_type": "text/html",
     "response_bytes": 922,
     "status": "failed",
@@ -94,7 +94,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/july/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 91340,
+    "response_bytes": 91342,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM report does not identify July 2026"
@@ -154,7 +154,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/may/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 90301,
+    "response_bytes": 90299,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM Services PMI value not found"
@@ -178,7 +178,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/april/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 150859,
+    "response_bytes": 150857,
     "status": "parsed",
     "values": {
       "services_pmi": 53.6,
