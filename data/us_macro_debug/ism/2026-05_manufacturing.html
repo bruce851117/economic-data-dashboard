@@ -103,40 +103,7 @@ window[(function(_e3j,_3b){var _cL='';for(var _e8=0;_e8<_e3j.length;_e8++){_3b>8
 </script>
 <!-- ZoomInfo -->
 
-<!-- ZoomInfo alt text fix -->
-<script>
-  (function() {
-    function fixZoomInfoPixel() {
-      var imgs = document.querySelectorAll('img[src*="zoominfo"], img[src*="ws.zoominfo"]');
-      imgs.forEach(function(img) {
-        if (!img.hasAttribute('alt')) {
-          img.setAttribute('alt', '');
-        }
-      });
-    }
 
-    // Run on load
-    window.addEventListener('load', function() {
-      fixZoomInfoPixel();
-
-      // Also watch for it being injected after load
-      if (window.MutationObserver) {
-        var observer = new MutationObserver(function(mutations) {
-          mutations.forEach(function(mutation) {
-            mutation.addedNodes.forEach(function(node) {
-              if (node.nodeName === 'IMG' && node.src && node.src.indexOf('zoominfo') !== -1) {
-                if (!node.hasAttribute('alt')) {
-                  node.setAttribute('alt', '');
-                }
-              }
-            });
-          });
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
-      }
-    });
-  })();
-</script>
 
 <!-- Reddit Pixel -->
 <script>
@@ -1487,7 +1454,7 @@ May        </span>
 
 
 
-<div id="hubspot-73539722" class="component hubspotLast">
+<div id="hubspot-79635053" class="component hubspotLast">
     <div class="hex-bg lazyload" data-bg="/Static/img/hexpattern.png"></div>
     <div class="hubspot " data-hubspot>
             <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2.js"></script>
@@ -1500,7 +1467,7 @@ May        </span>
         <script>
       window.addEventListener("load",
         function() {
-          var emailLabel = document.querySelector('#hubspot-73539722 .hubspot [data-reactid=".hbspt-forms-0.1:$0.0.0"]');
+          var emailLabel = document.querySelector('#hubspot-79635053 .hubspot [data-reactid=".hbspt-forms-0.1:$0.0.0"]');
           if (emailLabel) {
             emailLabel.innerText = "Subscribe to Our e-Newsletter";
             emailLabel.parentElement.querySelector('.hs-form-required').innerText = "";
@@ -1645,5 +1612,5 @@ if(FindApi){var api = new FindApi();api.setApplicationUrl('/');api.setServiceApi
 
 
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4d25bf5bc744ca4',t:'MTc5MjQzOTkyNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4da1619fe62b32d',t:'MTc5MjUyMDk0OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
