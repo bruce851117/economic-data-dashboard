@@ -4,7 +4,7 @@
     "sector": "manufacturing",
     "requested_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/october/",
     "status_code": 200,
-    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=5f222975a5e0ec540dbfb8ec88ece2fe67262ca79c0b6c15e211140ce83c7b63af5a276dc6513d0b96a17c898f7d29891956ff7c6359f906249ad5e62fa3e861e5c131a66b3a071e7fd24e9369aa8f91fbf54d30e9f942b6707b29b0ea1fb529634bab56347ed0c5a84ad96f34e0b2ccbe8163a63781bb7caa10fa740d777982",
+    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=150b7c1d2e62895891b5fad89d260463f0d99495584d0bae5395d0051975b57e4083523c8985a6f1833bdca6505b31f8b4e0957d13d67848993da9ff52bb1a6a62a266c8dbd4a3cafae4322dcbd2c1c197370073f8d096ea41a42202986771c198c0afaa202485a523ba6cee575a0610ae6e330d60ece7f008cba2da26d8a113",
     "content_type": "text/html",
     "response_bytes": 922,
     "status": "failed",
@@ -94,7 +94,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/july/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 90278,
+    "response_bytes": 90282,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM report does not identify July 2026"
@@ -130,7 +130,7 @@
     "status_code": 200,
     "final_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/services/june/",
     "content_type": "text/html; charset=utf-8",
-    "response_bytes": 91825,
+    "response_bytes": 91827,
     "status": "failed",
     "error_type": "RuntimeError",
     "error": "ISM Services PMI value not found"
