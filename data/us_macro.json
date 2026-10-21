@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-16T08:02:05.671793+00:00",
+  "generated_at": "2026-10-21T08:25:30.983929+00:00",
   "source": {
     "type": "excel_import",
     "file": "US_ECON.xlsx",
@@ -47583,6 +47583,10 @@
         {
           "date": "2026-08-01",
           "value": 2.446
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2.564
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -48150,6 +48154,10 @@
         {
           "date": "2026-08-01",
           "value": 0.681
+        },
+        {
+          "date": "2026-09-01",
+          "value": 0.735
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -48717,6 +48725,10 @@
         {
           "date": "2026-08-01",
           "value": 3.009
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3.149
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -49834,19 +49846,23 @@
         },
         {
           "date": "2026-05-01",
-          "value": 4.496
+          "value": 4.503
         },
         {
           "date": "2026-06-01",
-          "value": 4.797
+          "value": 4.807
         },
         {
           "date": "2026-07-01",
-          "value": 4.256
+          "value": 4.354
         },
         {
           "date": "2026-08-01",
-          "value": 4.622
+          "value": 4.806
+        },
+        {
+          "date": "2026-09-01",
+          "value": 4.97
         }
       ],
       "source": "Bureau of Labor Statistics"
@@ -73636,7 +73652,7 @@
         },
         {
           "date": "2026-10-01",
-          "value": 104.1454125029
+          "value": 103.8011700418
         }
       ],
       "new": true
@@ -79922,6 +79938,10 @@
         {
           "date": "2026-09-01",
           "value": -8.7
+        },
+        {
+          "date": "2026-10-01",
+          "value": -20.7
         }
       ],
       "new": true
@@ -81953,6 +81973,10 @@
         {
           "date": "2026-09-01",
           "value": -22
+        },
+        {
+          "date": "2026-10-01",
+          "value": -23.6
         }
       ],
       "new": true
