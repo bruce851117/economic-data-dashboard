@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-16T06:36:17.621657+00:00",
+  "generated_at": "2026-10-21T06:50:39.326205+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
@@ -14681,12 +14681,12 @@
         },
         {
           "date": "2015-12-01",
-          "value": 2.1,
+          "value": 2.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
           "date": "2016-03-01",
-          "value": 1.8,
+          "value": 1.9,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
@@ -14741,17 +14741,17 @@
         },
         {
           "date": "2018-12-01",
-          "value": 1.2,
+          "value": 1.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
           "date": "2019-03-01",
-          "value": 1.9,
+          "value": 2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
           "date": "2019-06-01",
-          "value": 1.7,
+          "value": 1.8,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
@@ -14791,12 +14791,12 @@
         },
         {
           "date": "2021-06-01",
-          "value": 15.2,
+          "value": 15.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
           "date": "2021-09-01",
-          "value": 5.2,
+          "value": 5.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
@@ -14811,7 +14811,7 @@
         },
         {
           "date": "2022-06-01",
-          "value": 4.3,
+          "value": 4.4,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
@@ -14836,32 +14836,32 @@
         },
         {
           "date": "2023-09-01",
-          "value": 0.1,
-          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
-        },
-        {
-          "date": "2023-12-01",
           "value": 0.2,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
+          "date": "2023-12-01",
+          "value": 0.3,
+          "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
+        },
+        {
           "date": "2024-03-01",
-          "value": 0.8,
+          "value": 1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
           "date": "2024-06-01",
-          "value": 0.9,
+          "value": 1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
           "date": "2024-09-01",
-          "value": 1.2,
+          "value": 1.3,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
           "date": "2024-12-01",
-          "value": 1.5,
+          "value": 1.6,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
@@ -14876,7 +14876,7 @@
         },
         {
           "date": "2025-09-01",
-          "value": 1.2,
+          "value": 1.1,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?format=JSON&lang=EN&geo=EA21&na_item=B1GQ&unit=CLV_PCH_SM&s_adj=SCA"
         },
         {
