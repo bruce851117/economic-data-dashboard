@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T06:50:39.326205+00:00",
+  "generated_at": "2026-10-26T07:15:41.943447+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
@@ -11224,6 +11224,14 @@
           "status": "flash",
           "note": "matched UK-template label: Flash Germany Manufacturing PMI: 53.8",
           "release_type": "flash"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 54.2,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/6cefd5c05b1a4fa58028517c774c48c2",
+          "status": "flash",
+          "note": "matched UK-template label: Flash Germany Manufacturing PMI: 54.2",
+          "release_type": "flash"
         }
       ]
     },
@@ -11402,6 +11410,14 @@
         {
           "date": "2026-09-01",
           "value": 50.6,
+          "source_url": "https://tradingeconomics.com/france/manufacturing-pmi",
+          "status": "flash",
+          "note": "public indicator page; underlying source explicitly S&P Global; flash",
+          "release_type": "flash"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 49.3,
           "source_url": "https://tradingeconomics.com/france/manufacturing-pmi",
           "status": "flash",
           "note": "public indicator page; underlying source explicitly S&P Global; flash",
@@ -11915,7 +11931,7 @@
         },
         {
           "date": "2025-02-01",
-          "value": 97.5,
+          "value": 97.4,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
           "status": "A"
         },
@@ -11981,7 +11997,7 @@
         },
         {
           "date": "2026-01-01",
-          "value": 105,
+          "value": 104.9,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
           "status": "A"
         },
@@ -11993,7 +12009,7 @@
         },
         {
           "date": "2026-03-01",
-          "value": 99.8,
+          "value": 99.7,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
           "status": "A"
         },
@@ -12029,7 +12045,13 @@
         },
         {
           "date": "2026-09-01",
-          "value": 101.4,
+          "value": 101.3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 105.3,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
           "status": "A"
         }
@@ -12396,6 +12418,14 @@
           "status": "flash",
           "note": "matched UK-template label: Flash Germany Services PMI Business Activity Index: 52.9",
           "release_type": "flash"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 51.7,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/6cefd5c05b1a4fa58028517c774c48c2",
+          "status": "flash",
+          "note": "matched UK-template label: Flash Germany Services PMI Business Activity Index: 51.7",
+          "release_type": "flash"
         }
       ]
     },
@@ -12574,6 +12604,14 @@
         {
           "date": "2026-09-01",
           "value": 51.4,
+          "source_url": "https://tradingeconomics.com/france/services-pmi",
+          "status": "flash",
+          "note": "public indicator page; underlying source explicitly S&P Global; flash",
+          "release_type": "flash"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 48.4,
           "source_url": "https://tradingeconomics.com/france/services-pmi",
           "status": "flash",
           "note": "public indicator page; underlying source explicitly S&P Global; flash",
@@ -13273,7 +13311,7 @@
         },
         {
           "date": "2025-04-01",
-          "value": 96.7,
+          "value": 96.8,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
           "status": "A"
         },
@@ -13376,6 +13414,12 @@
         {
           "date": "2026-09-01",
           "value": 96.4,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 97.5,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
           "status": "A"
         }
