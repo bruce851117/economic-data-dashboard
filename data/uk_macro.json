@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T06:56:45.913041+00:00",
+  "generated_at": "2026-10-26T07:21:17.576043+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -9073,6 +9073,11 @@
           "date": "2026-09-01",
           "value": -13.0,
           "source_url": "https://tradingeconomics.com/united-kingdom/consumer-confidence"
+        },
+        {
+          "date": "2026-10-01",
+          "value": -24.0,
+          "source_url": "https://tradingeconomics.com/united-kingdom/consumer-confidence"
         }
       ]
     },
@@ -9821,7 +9826,7 @@
         },
         {
           "date": "2020-10-01",
-          "value": 9.1,
+          "value": 9.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R402C3",
@@ -10141,7 +10146,7 @@
         },
         {
           "date": "2023-06-01",
-          "value": -1.9,
+          "value": -1.8,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R434C3",
@@ -10151,7 +10156,7 @@
         },
         {
           "date": "2023-07-01",
-          "value": -3.6,
+          "value": -3.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R435C3",
@@ -10161,7 +10166,7 @@
         },
         {
           "date": "2023-08-01",
-          "value": -1.9,
+          "value": -2.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R436C3",
@@ -10191,7 +10196,7 @@
         },
         {
           "date": "2023-11-01",
-          "value": 0.3,
+          "value": 0.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R439C3",
@@ -10281,7 +10286,7 @@
         },
         {
           "date": "2024-08-01",
-          "value": 0.6,
+          "value": 0.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R448C3",
@@ -10401,7 +10406,7 @@
         },
         {
           "date": "2025-08-01",
-          "value": 1.6,
+          "value": 1.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R460C3",
@@ -10421,7 +10426,7 @@
         },
         {
           "date": "2025-10-01",
-          "value": 2.8,
+          "value": 2.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R462C3",
@@ -10431,7 +10436,7 @@
         },
         {
           "date": "2025-11-01",
-          "value": 2.0,
+          "value": 1.9,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R463C3",
@@ -10441,7 +10446,7 @@
         },
         {
           "date": "2025-12-01",
-          "value": 1.7,
+          "value": 1.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R464C3",
@@ -10451,7 +10456,7 @@
         },
         {
           "date": "2026-01-01",
-          "value": 5.4,
+          "value": 5.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R465C3",
@@ -10461,7 +10466,7 @@
         },
         {
           "date": "2026-02-01",
-          "value": 2.3,
+          "value": 2.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R466C3",
@@ -10471,7 +10476,7 @@
         },
         {
           "date": "2026-03-01",
-          "value": 1.0,
+          "value": 0.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R467C3",
@@ -10481,7 +10486,7 @@
         },
         {
           "date": "2026-04-01",
-          "value": 1.1,
+          "value": 0.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R468C3",
@@ -10491,7 +10496,7 @@
         },
         {
           "date": "2026-05-01",
-          "value": 4.5,
+          "value": 4.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R469C3",
@@ -10501,7 +10506,7 @@
         },
         {
           "date": "2026-06-01",
-          "value": 4.5,
+          "value": 4.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R470C3",
@@ -10511,7 +10516,7 @@
         },
         {
           "date": "2026-07-01",
-          "value": 1.8,
+          "value": 1.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R471C3",
@@ -10521,10 +10526,20 @@
         },
         {
           "date": "2026-08-01",
-          "value": 2.7,
+          "value": 2.9,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
           "source_sheet": "KPSA1",
           "source_cell": "R472C3",
+          "source_section": "Percentage change on same month a year earlier",
+          "dataset_code": "J45U",
+          "measure": "KPSA 1 - Percentage change on same month a year earlier; All retailing excluding automotive fuel (J45U)"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 0.8,
+          "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsalesindexreferencetables/current/mainreferencetables.xlsx",
+          "source_sheet": "KPSA1",
+          "source_cell": "R473C3",
           "source_section": "Percentage change on same month a year earlier",
           "dataset_code": "J45U",
           "measure": "KPSA 1 - Percentage change on same month a year earlier; All retailing excluding automotive fuel (J45U)"
@@ -10661,7 +10676,7 @@
         },
         {
           "date": "2017-01-01",
-          "value": -1.1,
+          "value": -1.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -10766,7 +10781,7 @@
         },
         {
           "date": "2018-10-01",
-          "value": -0.7,
+          "value": -0.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -10881,7 +10896,7 @@
         },
         {
           "date": "2020-09-01",
-          "value": 1.5,
+          "value": 1.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -10926,7 +10941,7 @@
         },
         {
           "date": "2021-06-01",
-          "value": 0.4,
+          "value": 0.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -10941,12 +10956,12 @@
         },
         {
           "date": "2021-09-01",
-          "value": -0.2,
+          "value": -0.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
           "date": "2021-10-01",
-          "value": 0.5,
+          "value": 0.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -11001,7 +11016,7 @@
         },
         {
           "date": "2022-09-01",
-          "value": -1.2,
+          "value": -1.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -11036,7 +11051,7 @@
         },
         {
           "date": "2023-04-01",
-          "value": 1.6,
+          "value": 1.5,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -11051,22 +11066,22 @@
         },
         {
           "date": "2023-07-01",
-          "value": -1.2,
-          "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
-        },
-        {
-          "date": "2023-08-01",
-          "value": -0.1,
-          "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
-        },
-        {
-          "date": "2023-09-01",
           "value": -1.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
+          "date": "2023-08-01",
+          "value": -0.2,
+          "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
+        },
+        {
+          "date": "2023-09-01",
+          "value": -1.1,
+          "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
+        },
+        {
           "date": "2023-10-01",
-          "value": 0.8,
+          "value": 0.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -11106,12 +11121,12 @@
         },
         {
           "date": "2024-06-01",
-          "value": -1.9,
+          "value": -1.8,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
           "date": "2024-07-01",
-          "value": 1.2,
+          "value": 1.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -11121,12 +11136,12 @@
         },
         {
           "date": "2024-09-01",
-          "value": 0.1,
+          "value": 0.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
           "date": "2024-10-01",
-          "value": -0.9,
+          "value": -1.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -11136,7 +11151,7 @@
         },
         {
           "date": "2024-12-01",
-          "value": 0.2,
+          "value": 0.3,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -11156,7 +11171,7 @@
         },
         {
           "date": "2025-04-01",
-          "value": -0.1,
+          "value": -0.2,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -11166,27 +11181,27 @@
         },
         {
           "date": "2025-06-01",
-          "value": 0.7,
+          "value": 0.8,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
           "date": "2025-07-01",
-          "value": 1.8,
+          "value": 1.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
           "date": "2025-08-01",
-          "value": -0.3,
+          "value": -0.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
           "date": "2025-09-01",
-          "value": 1.1,
+          "value": 1.4,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
           "date": "2025-10-01",
-          "value": -0.7,
+          "value": -0.9,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -11201,12 +11216,12 @@
         },
         {
           "date": "2026-01-01",
-          "value": 2.1,
+          "value": 2.0,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
           "date": "2026-02-01",
-          "value": -0.7,
+          "value": -0.8,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -11216,7 +11231,7 @@
         },
         {
           "date": "2026-04-01",
-          "value": 0.0,
+          "value": -0.1,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
@@ -11226,17 +11241,22 @@
         },
         {
           "date": "2026-06-01",
-          "value": 0.7,
+          "value": 0.6,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
           "date": "2026-07-01",
-          "value": -0.9,
+          "value": -0.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         },
         {
           "date": "2026-08-01",
-          "value": 0.6,
+          "value": 0.9,
+          "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
+        },
+        {
+          "date": "2026-09-01",
+          "value": -0.7,
           "source_url": "https://www.ons.gov.uk/file?uri=/businessindustryandtrade/retailindustry/datasets/retailsales/current/drsi.csv"
         }
       ],
@@ -11415,8 +11435,14 @@
         },
         {
           "date": "2026-09-01",
-          "value": 52.0,
-          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/43cc558dfc334fa3a0c53bf388f70b5b",
+          "value": 51.9,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/633ca8e6486b4e0ca4bebd0d7bd0ead6",
+          "release_type": "final"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 52.8,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/eb1c5eed6ac8438a806b4d00ada164aa",
           "release_type": "flash"
         }
       ]
@@ -11591,6 +11617,12 @@
           "date": "2026-09-01",
           "value": 51.7,
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/43cc558dfc334fa3a0c53bf388f70b5b",
+          "release_type": "flash"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 53.1,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/eb1c5eed6ac8438a806b4d00ada164aa",
           "release_type": "flash"
         }
       ]
@@ -18508,7 +18540,7 @@
         },
         {
           "date": "2026-10-01",
-          "value": 68.08,
+          "value": 68.28,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
         }
       ],
@@ -19220,7 +19252,7 @@
         },
         {
           "date": "2025-09-01",
-          "value": 729.0,
+          "value": 728.0,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem",
           "source_frequency": "monthly"
         },
@@ -19280,13 +19312,19 @@
         },
         {
           "date": "2026-07-01",
-          "value": 706.0,
+          "value": 707.0,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem",
           "source_frequency": "monthly"
         },
         {
           "date": "2026-08-01",
-          "value": 702.0,
+          "value": 704.0,
+          "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem",
+          "source_frequency": "monthly"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 691.0,
           "source_url": "https://www.ons.gov.uk/generator?format=csv&uri=/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/timeseries/ap2y/unem",
           "source_frequency": "monthly"
         }
