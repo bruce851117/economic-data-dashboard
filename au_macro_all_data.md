@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-10-21T07:26:43.673468+00:00
+更新時間：2026-10-26T07:42:37.996743+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -105,16 +105,16 @@
     </tr>
     <tr>
       <td>PMI製造業</td>
-      <td align="right"></td>
+      <td align="right" bgcolor="#91d1a2">49.7</td>
       <td align="right" bgcolor="#63be7b">49.3</td>
       <td align="right" bgcolor="#f86971">52.0</td>
       <td align="right" bgcolor="#f86971">52.0</td>
     </tr>
     <tr>
       <td>PMI服務業</td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#63be7b">51.4</td>
-      <td align="right" bgcolor="#fcc8cb">52.9</td>
+      <td align="right" bgcolor="#63be7b">47.8</td>
+      <td align="right" bgcolor="#fddbdd">51.4</td>
+      <td align="right" bgcolor="#fa8d93">52.9</td>
       <td align="right" bgcolor="#f86971">53.6</td>
     </tr>
   </tbody>
@@ -178,8 +178,8 @@
 | 零售 | OK | 0 | 0 | 2026-08 | 6.6 |  |
 | NAB企業售價 | OK | 0 | 0 | 2026-07 | 1.1 |  |
 | 消費信心 | OK | 0 | 0 | 2026-10 | 80.4 |  |
-| 製造業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia manufacturing flash PMI from the newest three releases |
-| 服務業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia services flash PMI from the newest three releases |
+| 製造業PMI | OK | 1 | 0 | 2026-10 | 49.7 |  |
+| 服務業PMI | OK | 1 | 0 | 2026-10 | 47.8 |  |
 | GDP YoY | OK | 0 | 0 | 2026-Q2 | 2.298880639850265 |  |
 | GDP私人消費YoY | OK | 0 | 0 | 2026-Q2 | 1.8645731108930308 |  |
 | GDP投資YoY | OK | 0 | 0 | 2026-Q2 | 2.204651162790694 |  |
@@ -189,7 +189,7 @@
 | 就業新增-兼職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | 勞參率 | OK | 0 | 0 | 2026-09 | 66.76317272 |  |
 | 工時 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| Indeed職缺 | OK | 0 | 0 | 2026-10 | 153.66 |  |
+| Indeed職缺 | OK | 0 | 1 | 2026-10 | 152.39 |  |
 | 家戶消費-Goods | OK | 0 | 0 | 2026-08 | 7.7 |  |
 | 家戶消費-Services | OK | 0 | 0 | 2026-08 | 5.9 |  |
 | 資本支出_住房 | OK | 0 | 0 | 2026-Q2 | 2.103099304237821 |  |
