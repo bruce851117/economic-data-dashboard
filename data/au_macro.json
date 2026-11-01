@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-10-26T07:42:37.996743+00:00",
+  "generated_at": "2026-11-01T09:02:20.170618+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -2414,7 +2414,7 @@
         },
         {
           "date": "2025-09-01",
-          "value": 0.6,
+          "value": 0.5,
           "source_url": "https://www.rba.gov.au/statistics/tables/csv/d1-data.csv",
           "release_type": "final",
           "note": "RBA table d1; series=DGFACOHM"
@@ -2491,6 +2491,13 @@
         },
         {
           "date": "2026-08-01",
+          "value": 0.5,
+          "source_url": "https://www.rba.gov.au/statistics/tables/csv/d1-data.csv",
+          "release_type": "final",
+          "note": "RBA table d1; series=DGFACOHM"
+        },
+        {
+          "date": "2026-09-01",
           "value": 0.5,
           "source_url": "https://www.rba.gov.au/statistics/tables/csv/d1-data.csv",
           "release_type": "final",
@@ -3209,7 +3216,7 @@
         },
         {
           "date": "2023-05-01",
-          "value": 0.2,
+          "value": 0.1,
           "source_url": "https://www.rba.gov.au/statistics/tables/csv/d1-data.csv",
           "release_type": "final",
           "note": "RBA table d1; series=DGFACIHM"
@@ -3377,14 +3384,14 @@
         },
         {
           "date": "2025-05-01",
-          "value": 0.6,
+          "value": 0.5,
           "source_url": "https://www.rba.gov.au/statistics/tables/csv/d1-data.csv",
           "release_type": "final",
           "note": "RBA table d1; series=DGFACIHM"
         },
         {
           "date": "2025-06-01",
-          "value": 0.7,
+          "value": 0.6,
           "source_url": "https://www.rba.gov.au/statistics/tables/csv/d1-data.csv",
           "release_type": "final",
           "note": "RBA table d1; series=DGFACIHM"
@@ -3483,6 +3490,13 @@
         {
           "date": "2026-08-01",
           "value": 0.3,
+          "source_url": "https://www.rba.gov.au/statistics/tables/csv/d1-data.csv",
+          "release_type": "final",
+          "note": "RBA table d1; series=DGFACIHM"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 0.2,
           "source_url": "https://www.rba.gov.au/statistics/tables/csv/d1-data.csv",
           "release_type": "final",
           "note": "RBA table d1; series=DGFACIHM"
@@ -8443,10 +8457,10 @@
         },
         {
           "date": "2026-10-01",
-          "value": 152.39,
+          "value": 152.24,
           "source_url": "https://github.com/hiring-lab/job_postings_tracker/blob/master/AU/aggregate_job_postings_AU.csv",
           "release_type": "final",
-          "note": "Indeed last daily total-postings observation in month; observation_date=2026-10-16"
+          "note": "Indeed last daily total-postings observation in month; observation_date=2026-10-23"
         }
       ]
     },
@@ -12371,6 +12385,12 @@
         {
           "date": "2026-06-01",
           "value": 0.8,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2015-Q1&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 2 percentage change from previous period 30014 rents 10 original 50 australia q quarterly pct percent 25 sep 2025 100 0"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 1.0,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2015-Q1&dimensionAtObservation=TIME_PERIOD",
           "note": "abs cpi 2 0 0 2 percentage change from previous period 30014 rents 10 original 50 australia q quarterly pct percent 25 sep 2025 100 0"
         }
@@ -19980,6 +20000,12 @@
           "value": 4.0,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 4.4,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         }
       ],
       "ticker": "",
@@ -19993,119 +20019,143 @@
       "unit": "%",
       "data": [
         {
+          "date": "2025-01-01",
+          "value": 5.8,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+        },
+        {
+          "date": "2025-02-01",
+          "value": 5.5,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+        },
+        {
+          "date": "2025-03-01",
+          "value": 5.2,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+        },
+        {
           "date": "2025-04-01",
-          "value": 3.2,
+          "value": 4.9,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-05-01",
-          "value": 3.0,
+          "value": 4.5,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-06-01",
-          "value": 2.8,
+          "value": 4.2,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-07-01",
-          "value": 3.1,
+          "value": 3.9,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-08-01",
-          "value": 3.1,
+          "value": 3.7,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-09-01",
-          "value": 3.2,
+          "value": 3.8,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-10-01",
-          "value": 3.3,
+          "value": 4.2,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-11-01",
-          "value": 3.2,
+          "value": 4.0,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-12-01",
-          "value": 3.3,
+          "value": 3.9,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-01-01",
-          "value": 3.3,
+          "value": 3.9,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-02-01",
-          "value": 3.3,
+          "value": 3.8,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-03-01",
-          "value": 3.3,
+          "value": 3.7,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-04-01",
-          "value": 3.4,
+          "value": 3.5,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-05-01",
-          "value": 3.5,
+          "value": 3.6,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-06-01",
           "value": 3.6,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-07-01",
           "value": 3.6,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-08-01",
           "value": 3.6,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3.6,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         }
       ],
       "ticker": "",
