@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-01T08:37:52.982386+00:00",
+  "generated_at": "2026-11-06T08:53:07.334299+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -11442,8 +11442,8 @@
         {
           "date": "2026-10-01",
           "value": 52.8,
-          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/eb1c5eed6ac8438a806b4d00ada164aa",
-          "release_type": "flash"
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/6ac6a65f08664f4596ff88e7f474bd5d",
+          "release_type": "final"
         }
       ]
     },
@@ -11621,9 +11621,9 @@
         },
         {
           "date": "2026-10-01",
-          "value": 53.1,
-          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/eb1c5eed6ac8438a806b4d00ada164aa",
-          "release_type": "flash"
+          "value": 52.8,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/cabb96eb0c2e411bb216b6f31dd2921b",
+          "release_type": "final"
         }
       ]
     },
@@ -14681,7 +14681,7 @@
       "data": [
         {
           "date": "2019-01-01",
-          "value": 5.0615,
+          "value": 5.038,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -14691,57 +14691,57 @@
         },
         {
           "date": "2019-03-01",
-          "value": 5.1471,
+          "value": 5.1483,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2019-04-01",
-          "value": 4.4118,
+          "value": 4.3956,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2019-05-01",
-          "value": 4.3344,
+          "value": 4.3333,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2019-06-01",
-          "value": 4.0371,
+          "value": 4.0512,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2019-07-01",
-          "value": 3.7836,
+          "value": 3.7752,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2019-08-01",
-          "value": 3.8961,
+          "value": 3.9062,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2019-09-01",
-          "value": 3.9957,
+          "value": 3.9795,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2019-10-01",
-          "value": 3.465,
+          "value": 3.4672,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2019-11-01",
-          "value": 3.5502,
+          "value": 3.5501,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2019-12-01",
-          "value": 3.7026,
+          "value": 3.6998,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2020-01-01",
-          "value": 1.1905,
+          "value": 1.1999,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -14761,7 +14761,7 @@
         },
         {
           "date": "2020-05-01",
-          "value": 4.0462,
+          "value": 4.0475,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -14771,7 +14771,7 @@
         },
         {
           "date": "2020-07-01",
-          "value": 3.2564,
+          "value": 3.2611,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -14781,12 +14781,12 @@
         },
         {
           "date": "2020-09-01",
-          "value": 3.3924,
+          "value": 3.3884,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2020-10-01",
-          "value": 3.596,
+          "value": 3.575,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -14796,32 +14796,32 @@
         },
         {
           "date": "2020-12-01",
-          "value": 3.4091,
+          "value": 3.3986,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2021-01-01",
-          "value": 3.7507,
+          "value": 3.7525,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2021-02-01",
-          "value": 3.6915,
+          "value": 3.6855,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2021-03-01",
-          "value": 3.0471,
+          "value": 3.0338,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2021-04-01",
-          "value": 0.61,
+          "value": 0.614,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2021-05-01",
-          "value": 1.4748,
+          "value": 1.477,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -14836,27 +14836,27 @@
         },
         {
           "date": "2021-08-01",
-          "value": 3.0207,
+          "value": 3.0111,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2021-09-01",
-          "value": 3.2038,
+          "value": 3.2028,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2021-10-01",
-          "value": 3.2035,
+          "value": 3.211,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2021-11-01",
-          "value": 3.4404,
+          "value": 3.4286,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2021-12-01",
-          "value": 3.4727,
+          "value": 3.4838,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -14866,17 +14866,17 @@
         },
         {
           "date": "2022-02-01",
-          "value": 4.0001,
+          "value": 4.0,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2022-03-01",
-          "value": 4.9521,
+          "value": 4.9454,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2022-04-01",
-          "value": 6.4639,
+          "value": 6.4909,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -14886,12 +14886,12 @@
         },
         {
           "date": "2022-06-01",
-          "value": 6.4065,
+          "value": 6.3991,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2022-07-01",
-          "value": 6.1538,
+          "value": 6.1632,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -14906,7 +14906,7 @@
         },
         {
           "date": "2022-10-01",
-          "value": 6.4262,
+          "value": 6.4472,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -14916,22 +14916,22 @@
         },
         {
           "date": "2022-12-01",
-          "value": 6.3513,
+          "value": 6.3636,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2023-01-01",
-          "value": 6.2009,
+          "value": 6.1854,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2023-02-01",
-          "value": 6.1856,
+          "value": 6.2105,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2023-03-01",
-          "value": 6.6408,
+          "value": 6.6497,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -14941,47 +14941,47 @@
         },
         {
           "date": "2023-05-01",
-          "value": 7.5401,
+          "value": 7.5415,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2023-06-01",
-          "value": 7.6777,
+          "value": 7.6512,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2023-07-01",
-          "value": 7.7199,
+          "value": 7.7286,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2023-08-01",
-          "value": 7.1085,
+          "value": 7.1207,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2023-09-01",
-          "value": 6.9827,
+          "value": 6.9812,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2023-10-01",
-          "value": 6.5752,
+          "value": 6.5755,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2023-11-01",
-          "value": 6.3898,
+          "value": 6.3886,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2023-12-01",
-          "value": 6.5217,
+          "value": 6.5152,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2024-01-01",
-          "value": 6.4718,
+          "value": 6.4815,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -14991,12 +14991,12 @@
         },
         {
           "date": "2024-03-01",
-          "value": 6.5645,
+          "value": 6.5652,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2024-04-01",
-          "value": 7.1436,
+          "value": 7.1443,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -15006,7 +15006,7 @@
         },
         {
           "date": "2024-06-01",
-          "value": 6.9073,
+          "value": 6.9156,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -15016,37 +15016,37 @@
         },
         {
           "date": "2024-08-01",
-          "value": 6.6518,
+          "value": 6.6637,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2024-09-01",
-          "value": 6.7781,
+          "value": 6.7797,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2024-10-01",
-          "value": 6.3761,
+          "value": 6.3751,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2024-11-01",
-          "value": 6.1349,
+          "value": 6.141,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2024-12-01",
-          "value": 5.8925,
+          "value": 5.9091,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2025-01-01",
-          "value": 5.9408,
+          "value": 5.9633,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2025-02-01",
-          "value": 5.6038,
+          "value": 5.5979,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -15056,7 +15056,7 @@
         },
         {
           "date": "2025-04-01",
-          "value": 5.3571,
+          "value": 5.3673,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -15066,37 +15066,37 @@
         },
         {
           "date": "2025-06-01",
-          "value": 5.3284,
+          "value": 5.3286,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2025-07-01",
-          "value": 5.2586,
+          "value": 5.2632,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2025-08-01",
-          "value": 4.9967,
+          "value": 5.0,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2025-09-01",
-          "value": 5.0694,
+          "value": 5.0779,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2025-10-01",
-          "value": 4.8544,
+          "value": 4.8691,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2025-11-01",
-          "value": 4.5002,
+          "value": 4.5016,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
           "date": "2025-12-01",
-          "value": 4.1221,
+          "value": 4.1069,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -15106,7 +15106,7 @@
         },
         {
           "date": "2026-02-01",
-          "value": 4.0285,
+          "value": 4.0355,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -15126,7 +15126,7 @@
         },
         {
           "date": "2026-06-01",
-          "value": 3.9577,
+          "value": 3.9648,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         },
         {
@@ -15136,7 +15136,12 @@
         },
         {
           "date": "2026-08-01",
-          "value": 3.9568,
+          "value": 3.9518,
+          "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3.5294,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/indeed-wage-tracker/main/posted-wage-growth-by-country.csv"
         }
       ],
@@ -18540,7 +18545,7 @@
         },
         {
           "date": "2026-10-01",
-          "value": 68.58,
+          "value": 68.7,
           "source_url": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/GB/aggregate_job_postings_GB.csv"
         }
       ],
