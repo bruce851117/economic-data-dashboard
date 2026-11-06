@@ -1,7 +1,7 @@
 {
   "source": "U.S. Bureau of Labor Statistics",
   "api_url": "https://api.bls.gov/publicAPI/v2/timeseries/data/",
-  "updated_at_utc": "2026-11-06T13:33:23.419756+00:00",
+  "updated_at_utc": "2026-11-06T13:35:14.100500+00:00",
   "default_months": 6,
   "available_filter_options": [
     3,
