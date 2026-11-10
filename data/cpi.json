@@ -4,8 +4,8 @@
   "api_url": "https://api.bls.gov/publicAPI/v2/timeseries/data/",
   "source_url": "https://www.bls.gov/news.release/cpi.t02.htm",
   "title": "Consumer Price Index - Seasonally Adjusted Monthly Change",
-  "updated_at_utc": "2026-10-14T12:35:09.194324+00:00",
-  "data_changed": false,
+  "updated_at_utc": "2026-11-10T13:33:47.107719+00:00",
+  "data_changed": true,
   "default_months": 6,
   "available_filter_options": [
     3,
@@ -18,13 +18,6 @@
   "missing_series_count": 0,
   "relative_importance_series_count": 8,
   "periods": [
-    {
-      "year": 2025,
-      "month": 10,
-      "period": "2025-10",
-      "period_name": "October",
-      "label": "25 Oct"
-    },
     {
       "year": 2025,
       "month": 11,
@@ -101,6 +94,13 @@
       "period": "2026-09",
       "period_name": "September",
       "label": "26 Sep"
+    },
+    {
+      "year": 2026,
+      "month": 10,
+      "period": "2026-10",
+      "period_name": "October",
+      "label": "26 Oct"
     }
   ],
   "rows": [
@@ -115,7 +115,6 @@
       "available": true,
       "series_title": "All items in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.252278,
         0.297788,
         0.170843,
@@ -126,7 +125,8 @@
         -0.422482,
         0.073669,
         0.396018,
-        0.648548
+        0.648548,
+        0.350285
       ],
       "relative_importance": [
         null,
@@ -154,7 +154,6 @@
       "available": true,
       "series_title": "Food in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.087697,
         0.655985,
         0.185415,
@@ -165,7 +164,8 @@
         0.205508,
         0.077801,
         0.122327,
-        0.047958
+        0.047958,
+        0.472784
       ],
       "relative_importance": [
         null,
@@ -193,7 +193,6 @@
       "available": true,
       "series_title": "Food at home in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         -0.171135,
         0.629206,
         0.191494,
@@ -204,7 +203,8 @@
         0.190128,
         -0.071552,
         0.037047,
-        -0.069709
+        -0.069709,
+        0.44346
       ],
       "relative_importance": [
         null,
@@ -232,7 +232,6 @@
       "available": true,
       "series_title": "Food away from home in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.454273,
         0.693953,
         0.149273,
@@ -243,7 +242,8 @@
         0.229272,
         0.309883,
         0.254246,
-        0.229976
+        0.229976,
+        0.518327
       ],
       "relative_importance": [
         null,
@@ -271,7 +271,6 @@
       "available": true,
       "series_title": "Energy in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         1.406484,
         0.34288,
         -1.466263,
@@ -282,7 +281,8 @@
         -5.713754,
         -1.483604,
         2.096626,
-        5.195735
+        5.195735,
+        0.699456
       ],
       "relative_importance": [
         null,
@@ -310,7 +310,6 @@
       "available": true,
       "series_title": "Energy commodities in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         1.310124,
         -0.312927,
         -3.25634,
@@ -321,7 +320,8 @@
         -9.4777,
         -2.916021,
         4.241435,
-        9.317602
+        9.317602,
+        0.809041
       ],
       "relative_importance": [
         null,
@@ -349,7 +349,6 @@
       "available": true,
       "series_title": "Energy services in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         1.502201,
         0.989986,
         0.193661,
@@ -360,7 +359,8 @@
         -0.693786,
         0.258467,
         -0.428665,
-        0.115855
+        0.115855,
+        0.551771
       ],
       "relative_importance": [
         null,
@@ -388,7 +388,6 @@
       "available": true,
       "series_title": "All items less food and energy in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.189154,
         0.2329,
         0.295045,
@@ -399,21 +398,22 @@
         -0.016661,
         0.215435,
         0.289796,
-        0.334848
+        0.334848,
+        0.296256
       ],
       "relative_importance": [
-        79.075,
-        79.075,
-        79.075,
-        79.075,
-        79.075,
-        79.075,
-        79.075,
-        79.075,
-        79.075,
-        79.075,
-        79.075,
-        79.075
+        78.905,
+        78.905,
+        78.905,
+        78.905,
+        78.905,
+        78.905,
+        78.905,
+        78.905,
+        78.905,
+        78.905,
+        78.905,
+        78.905
       ]
     },
     {
@@ -427,7 +427,6 @@
       "available": true,
       "series_title": "Commodities less food and energy commodities in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.061016,
         0.031685,
         0.041237,
@@ -438,21 +437,22 @@
         -0.085932,
         0.197693,
         0.105507,
-        0.251282
+        0.251282,
+        0.16037
       ],
       "relative_importance": [
-        18.835,
-        18.835,
-        18.835,
-        18.835,
-        18.835,
-        18.835,
-        18.835,
-        18.835,
-        18.835,
-        18.835,
-        18.835,
-        18.835
+        18.807,
+        18.807,
+        18.807,
+        18.807,
+        18.807,
+        18.807,
+        18.807,
+        18.807,
+        18.807,
+        18.807,
+        18.807,
+        18.807
       ]
     },
     {
@@ -466,7 +466,6 @@
       "available": true,
       "series_title": "Household furnishings and supplies in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.339715,
         0.505088,
         0.287433,
@@ -477,7 +476,8 @@
         -0.127741,
         0.078215,
         -0.044134,
-        -0.158216
+        -0.158216,
+        0.714022
       ],
       "relative_importance": [
         null,
@@ -505,7 +505,6 @@
       "available": true,
       "series_title": "Apparel in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         -0.398758,
         0.32908,
         0.306839,
@@ -516,7 +515,8 @@
         -0.551547,
         0.088766,
         0.016858,
-        0.306324
+        0.306324,
+        0.080365
       ],
       "relative_importance": [
         null,
@@ -544,7 +544,6 @@
       "available": true,
       "series_title": "Transportation commodities less motor fuel in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.33372,
         -0.258529,
         -0.659366,
@@ -555,7 +554,8 @@
         -0.080431,
         0.233056,
         0.280699,
-        0.388218
+        0.388218,
+        -0.382918
       ],
       "relative_importance": [
         null,
@@ -583,7 +583,6 @@
       "available": true,
       "series_title": "New vehicles in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        0.045931,
         0.179162,
         0.00503,
         0.146419,
@@ -594,7 +593,8 @@
         -0.023501,
         0.078357,
         0.251105,
-        0.198595
+        0.198595,
+        0.172035
       ],
       "relative_importance": [
         null,
@@ -622,7 +622,6 @@
       "available": true,
       "series_title": "Used cars and trucks in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        0.671827,
         0.100478,
         -0.874942,
         -1.8406,
@@ -633,21 +632,22 @@
         -0.229994,
         0.398127,
         0.36549,
-        0.66919
+        0.66919,
+        -1.224091
       ],
       "relative_importance": [
-        2.688,
-        2.688,
-        2.688,
-        2.688,
-        2.688,
-        2.688,
-        2.688,
-        2.688,
-        2.688,
-        2.688,
-        2.688,
-        2.688
+        2.67,
+        2.67,
+        2.67,
+        2.67,
+        2.67,
+        2.67,
+        2.67,
+        2.67,
+        2.67,
+        2.67,
+        2.67,
+        2.67
       ]
     },
     {
@@ -661,7 +661,6 @@
       "available": true,
       "series_title": "Medical care commodities in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.165678,
         0.32865,
         -0.0626,
@@ -672,7 +671,8 @@
         -0.159657,
         -0.61422,
         -0.229788,
-        -0.664812
+        -0.664812,
+        0.520564
       ],
       "relative_importance": [
         null,
@@ -700,7 +700,6 @@
       "available": true,
       "series_title": "Recreation commodities in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         -0.50771,
         0.102298,
         0.628609,
@@ -711,7 +710,8 @@
         0.918687,
         0.612295,
         0.00461,
-        0.858641
+        0.858641,
+        0.714204
       ],
       "relative_importance": [
         null,
@@ -739,7 +739,6 @@
       "available": true,
       "series_title": "Education and communication commodities in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         -0.426052,
         -1.688476,
         0.273235,
@@ -750,7 +749,8 @@
         -0.839768,
         1.332531,
         0.099022,
-        0.86855
+        0.86855,
+        0.498205
       ],
       "relative_importance": [
         null,
@@ -778,7 +778,6 @@
       "available": true,
       "series_title": "Educational books and supplies in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.070348,
         -0.179109,
         null,
@@ -789,7 +788,8 @@
         0.973117,
         0.77517,
         -0.7119,
-        0.156812
+        0.156812,
+        1.541968
       ],
       "relative_importance": [
         null,
@@ -817,7 +817,6 @@
       "available": true,
       "series_title": "Information technology commodities in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         -0.456222,
         -1.7795,
         0.201625,
@@ -828,7 +827,8 @@
         -0.929357,
         1.362584,
         0.137648,
-        0.906645
+        0.906645,
+        0.443453
       ],
       "relative_importance": [
         null,
@@ -856,7 +856,6 @@
       "available": true,
       "series_title": "Computers, peripherals, and smart home assistants in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         -2.723315,
         -1.328107,
         3.092203,
@@ -867,7 +866,8 @@
         -0.717851,
         3.488109,
         3.763544,
-        1.391373
+        1.391373,
+        0.549949
       ],
       "relative_importance": [
         null,
@@ -895,7 +895,6 @@
       "available": true,
       "series_title": "Computer software and accessories in U.S. city average, all urban consumers, not seasonally adjusted",
       "values": [
-        null,
         0.868537,
         6.965107,
         1.382391,
@@ -906,7 +905,8 @@
         2.323918,
         0.489168,
         -2.187065,
-        0.366144
+        0.366144,
+        -1.53007
       ],
       "relative_importance": [
         null,
@@ -934,7 +934,6 @@
       "available": true,
       "series_title": "Telephone hardware, calculators, and other consumer information items in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.994034,
         -2.638164,
         -1.709393,
@@ -945,7 +944,8 @@
         -1.321121,
         -0.12941,
         -2.430175,
-        0.552953
+        0.552953,
+        0.511491
       ],
       "relative_importance": [
         null,
@@ -973,7 +973,6 @@
       "available": true,
       "series_title": "Alcoholic beverages in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.26991,
         -0.075425,
         0.180485,
@@ -984,7 +983,8 @@
         0.032588,
         0.180504,
         0.11846,
-        0.00464
+        0.00464,
+        0.024525
       ],
       "relative_importance": [
         null,
@@ -1012,7 +1012,6 @@
       "available": true,
       "series_title": "Other goods in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.27569,
         0.443174,
         1.071044,
@@ -1023,7 +1022,8 @@
         -0.224275,
         0.372186,
         0.459188,
-        0.077394
+        0.077394,
+        0.344369
       ],
       "relative_importance": [
         null,
@@ -1051,7 +1051,6 @@
       "available": true,
       "series_title": "Services less energy services in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.208508,
         0.272308,
         0.387563,
@@ -1062,21 +1061,22 @@
         0.031949,
         0.228069,
         0.327412,
-        0.368618
+        0.368618,
+        0.33963
       ],
       "relative_importance": [
-        60.24,
-        60.24,
-        60.24,
-        60.24,
-        60.24,
-        60.24,
-        60.24,
-        60.24,
-        60.24,
-        60.24,
-        60.24,
-        60.24
+        60.098,
+        60.098,
+        60.098,
+        60.098,
+        60.098,
+        60.098,
+        60.098,
+        60.098,
+        60.098,
+        60.098,
+        60.098,
+        60.098
       ]
     },
     {
@@ -1090,7 +1090,6 @@
       "available": true,
       "series_title": "Shelter in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.241144,
         0.383377,
         0.219932,
@@ -1101,21 +1100,22 @@
         0.117524,
         0.138623,
         0.263811,
-        0.390724
+        0.390724,
+        0.304695
       ],
       "relative_importance": [
-        35.323,
-        35.323,
-        35.323,
-        35.323,
-        35.323,
-        35.323,
-        35.323,
-        35.323,
-        35.323,
-        35.323,
-        35.323,
-        35.323
+        35.238,
+        35.238,
+        35.238,
+        35.238,
+        35.238,
+        35.238,
+        35.238,
+        35.238,
+        35.238,
+        35.238,
+        35.238,
+        35.238
       ]
     },
     {
@@ -1129,7 +1129,6 @@
       "available": true,
       "series_title": "Rent of primary residence in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.174563,
         0.270386,
         0.248984,
@@ -1140,21 +1139,22 @@
         0.149531,
         0.255925,
         0.173674,
-        0.246594
+        0.246594,
+        0.201586
       ],
       "relative_importance": [
-        7.728,
-        7.728,
-        7.728,
-        7.728,
-        7.728,
-        7.728,
-        7.728,
-        7.728,
-        7.728,
-        7.728,
-        7.728,
-        7.728
+        7.707,
+        7.707,
+        7.707,
+        7.707,
+        7.707,
+        7.707,
+        7.707,
+        7.707,
+        7.707,
+        7.707,
+        7.707,
+        7.707
       ]
     },
     {
@@ -1168,7 +1168,6 @@
       "available": true,
       "series_title": "Lodging away from home in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         -0.999253,
         2.184276,
         -0.098298,
@@ -1179,7 +1178,8 @@
         -2.323384,
         -2.754693,
         2.35675,
-        2.035036
+        2.035036,
+        0.644218
       ],
       "relative_importance": [
         null,
@@ -1207,7 +1207,6 @@
       "available": true,
       "series_title": "Owners' equivalent rent of residences in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.322871,
         0.314433,
         0.219644,
@@ -1218,21 +1217,22 @@
         0.240082,
         0.259654,
         0.186277,
-        0.349776
+        0.349776,
+        0.31936
       ],
       "relative_importance": [
-        25.902,
-        25.902,
-        25.902,
-        25.902,
-        25.902,
-        25.902,
-        25.902,
-        25.902,
-        25.902,
-        25.902,
-        25.902,
-        25.902
+        25.853,
+        25.853,
+        25.853,
+        25.853,
+        25.853,
+        25.853,
+        25.853,
+        25.853,
+        25.853,
+        25.853,
+        25.853,
+        25.853
       ]
     },
     {
@@ -1246,7 +1246,6 @@
       "available": true,
       "series_title": "Water and sewer and trash collection services in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.467694,
         0.424753,
         0.6789,
@@ -1257,7 +1256,8 @@
         0.318988,
         0.447094,
         0.491056,
-        0.231028
+        0.231028,
+        0.61068
       ],
       "relative_importance": [
         null,
@@ -1285,7 +1285,6 @@
       "available": true,
       "series_title": "Medical care services in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.196173,
         0.366128,
         0.325746,
@@ -1296,7 +1295,8 @@
         -0.124474,
         0.556687,
         -0.248489,
-        0.284301
+        0.284301,
+        0.301652
       ],
       "relative_importance": [
         null,
@@ -1324,7 +1324,6 @@
       "available": true,
       "series_title": "Professional services in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.278502,
         0.270289,
         0.762818,
@@ -1335,7 +1334,8 @@
         -0.116126,
         0.411301,
         -0.164502,
-        0.106566
+        0.106566,
+        0.43215
       ],
       "relative_importance": [
         null,
@@ -1363,7 +1363,6 @@
       "available": true,
       "series_title": "Hospital and related services in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.659604,
         0.896403,
         1.028078,
@@ -1374,7 +1373,8 @@
         0.124358,
         0.404574,
         0.073676,
-        0.634419
+        0.634419,
+        0.698158
       ],
       "relative_importance": [
         null,
@@ -1402,7 +1402,6 @@
       "available": true,
       "series_title": "Health insurance in U.S. city average, all urban consumers, not seasonally adjusted",
       "values": [
-        null,
         -2.864362,
         -1.079057,
         -0.978823,
@@ -1413,7 +1412,8 @@
         -0.462983,
         -0.187074,
         -0.470384,
-        -0.238868
+        -0.238868,
+        -1.848683
       ],
       "relative_importance": [
         null,
@@ -1441,7 +1441,6 @@
       "available": true,
       "series_title": "Transportation services in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         -0.585936,
         0.414648,
         1.351931,
@@ -1452,7 +1451,8 @@
         -0.349411,
         0.282828,
         0.453691,
-        0.58518
+        0.58518,
+        0.839311
       ],
       "relative_importance": [
         null,
@@ -1480,7 +1480,6 @@
       "available": true,
       "series_title": "Car and truck rental in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         -0.497445,
         -0.984179,
         5.049665,
@@ -1491,7 +1490,8 @@
         5.145503,
         -2.965122,
         2.203206,
-        5.431362
+        5.431362,
+        -5.705026
       ],
       "relative_importance": [
         null,
@@ -1519,7 +1519,6 @@
       "available": true,
       "series_title": "Motor vehicle maintenance and repair in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.56047,
         -1.251446,
         0.096191,
@@ -1530,7 +1529,8 @@
         1.089785,
         0.628016,
         1.075872,
-        0.721294
+        0.721294,
+        0.618155
       ],
       "relative_importance": [
         null,
@@ -1559,7 +1559,6 @@
       "series_title": "Motor vehicle insurance in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
         null,
-        null,
         0.259222,
         -0.439203,
         -0.326294,
@@ -1569,7 +1568,8 @@
         -2.005653,
         -0.288676,
         -0.75105,
-        0.064836
+        0.064836,
+        0.711558
       ],
       "relative_importance": [
         null,
@@ -1597,7 +1597,6 @@
       "available": true,
       "series_title": "Public transportation in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         -2.872733,
         3.153507,
         4.014869,
@@ -1608,21 +1607,22 @@
         0.922514,
         1.650224,
         2.264494,
-        1.21011
+        1.21011,
+        1.993934
       ],
       "relative_importance": [
-        1.63,
-        1.63,
-        1.63,
-        1.63,
-        1.63,
-        1.63,
-        1.63,
-        1.63,
-        1.63,
-        1.63,
-        1.63,
-        1.63
+        1.651,
+        1.651,
+        1.651,
+        1.651,
+        1.651,
+        1.651,
+        1.651,
+        1.651,
+        1.651,
+        1.651,
+        1.651,
+        1.651
       ]
     },
     {
@@ -1636,7 +1636,6 @@
       "available": true,
       "series_title": "Airline fares in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         -5.236177,
         3.757958,
         6.520092,
@@ -1647,7 +1646,8 @@
         0.21412,
         2.221046,
         2.681359,
-        1.159186
+        1.159186,
+        0.405822
       ],
       "relative_importance": [
         null,
@@ -1675,7 +1675,6 @@
       "available": true,
       "series_title": "Recreation services in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         -0.450474,
         1.754769,
         0.385961,
@@ -1686,7 +1685,8 @@
         0.269286,
         0.000627,
         0.003137,
-        0.298043
+        0.298043,
+        0.87896
       ],
       "relative_importance": [
         null,
@@ -1714,7 +1714,6 @@
       "available": true,
       "series_title": "Video and audio services in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.838005,
         2.317701,
         0.744377,
@@ -1725,7 +1724,8 @@
         0.454182,
         0.763006,
         0.211191,
-        -0.110565
+        -0.110565,
+        0.463543
       ],
       "relative_importance": [
         null,
@@ -1753,7 +1753,6 @@
       "available": true,
       "series_title": "Pet services including veterinary in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.390249,
         0.902906,
         0.080473,
@@ -1764,7 +1763,8 @@
         0.624922,
         -0.145803,
         0.743759,
-        -0.572178
+        -0.572178,
+        0.531345
       ],
       "relative_importance": [
         null,
@@ -1792,7 +1792,6 @@
       "available": true,
       "series_title": "Other recreation services in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         -1.219564,
         1.757202,
         0.274307,
@@ -1803,7 +1802,8 @@
         0.153676,
         -0.281934,
         -0.352116,
-        0.762614
+        0.762614,
+        1.141844
       ],
       "relative_importance": [
         null,
@@ -1831,7 +1831,6 @@
       "available": true,
       "series_title": "Education and communication services in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.68965,
         -0.816336,
         0.399884,
@@ -1842,7 +1841,8 @@
         -0.778213,
         0.46422,
         1.846715,
-        0.047471
+        0.047471,
+        0.035781
       ],
       "relative_importance": [
         null,
@@ -1870,7 +1870,6 @@
       "available": true,
       "series_title": "Tuition, other school fees, and childcare in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         0.505349,
         0.186348,
         0.203606,
@@ -1881,7 +1880,8 @@
         0.106578,
         0.541634,
         0.826104,
-        0.582492
+        0.582492,
+        0.311527
       ],
       "relative_importance": [
         null,
@@ -1909,7 +1909,6 @@
       "available": true,
       "series_title": "Postage and delivery services in U.S. city average, all urban consumers, seasonally adjusted",
       "values": [
-        null,
         1.646166,
         0.525297,
         -0.116842,
@@ -1920,7 +1919,8 @@
         0.402669,
         0.168589,
         0.611545,
-        0.584277
+        0.584277,
+        1.704084
       ],
       "relative_importance": [
         null,
@@ -1948,7 +1948,6 @@
       "available": true,
       "series_title": "Telephone services in U.S. city average, all urban consumers, not seasonally adjusted",
       "values": [
-        null,
         0.918534,
         -2.759229,
         -0.153084,
@@ -1959,7 +1958,8 @@
         -2.978569,
         0.586914,
         5.372919,
-        -0.056101
+        -0.056101,
+        -0.166318
       ],
       "relative_importance": [
         null,
@@ -1987,7 +1987,6 @@
       "available": true,
       "series_title": "Other personal services in U.S. city average, all urban consumers, not seasonally adjusted",
       "values": [
-        null,
         0.786162,
         -0.207525,
         1.60562,
@@ -1998,7 +1997,8 @@
         0.492669,
         -0.164389,
         -0.017517,
-        0.35449
+        0.35449,
+        0.05412
       ],
       "relative_importance": [
         null,
@@ -2027,222 +2027,222 @@
         "Shelter"
       ],
       "values": [
-        null,
-        0.162242,
-        0.114854,
-        0.625201,
-        0.319175,
-        0.167366,
-        0.347719,
-        0.261923,
-        -0.089364,
-        0.35487,
-        0.417574,
-        0.33728
+        0.162248,
+        0.114872,
+        0.625173,
+        0.319169,
+        0.167373,
+        0.347737,
+        0.261927,
+        -0.08935,
+        0.354855,
+        0.417564,
+        0.337284,
+        0.389149
       ],
       "calculation_details": [
-        {
-          "period": "2025-10",
-          "base_name": "Services Excluding Energy Services",
-          "base_change": null,
-          "base_relative_importance": 60.24,
-          "excluded_components": [
-            {
-              "name": "Shelter",
-              "change": null,
-              "weight": 35.323
-            }
-          ],
-          "excluded_relative_importance": 35.323,
-          "effective_relative_importance": 24.917,
-          "result": null,
-          "status": "missing_relative_importance"
-        },
         {
           "period": "2025-11",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.208508,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.241144,
-              "weight": 35.323
+              "weight": 35.238
             }
           ],
-          "excluded_relative_importance": 35.323,
-          "effective_relative_importance": 24.917,
-          "result": 0.162242,
+          "excluded_relative_importance": 35.238,
+          "effective_relative_importance": 24.86,
+          "result": 0.162248,
           "status": "calculated"
         },
         {
           "period": "2025-12",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.272308,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.383377,
-              "weight": 35.323
+              "weight": 35.238
             }
           ],
-          "excluded_relative_importance": 35.323,
-          "effective_relative_importance": 24.917,
-          "result": 0.114854,
+          "excluded_relative_importance": 35.238,
+          "effective_relative_importance": 24.86,
+          "result": 0.114872,
           "status": "calculated"
         },
         {
           "period": "2026-01",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.387563,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.219932,
-              "weight": 35.323
+              "weight": 35.238
             }
           ],
-          "excluded_relative_importance": 35.323,
-          "effective_relative_importance": 24.917,
-          "result": 0.625201,
+          "excluded_relative_importance": 35.238,
+          "effective_relative_importance": 24.86,
+          "result": 0.625173,
           "status": "calculated"
         },
         {
           "period": "2026-02",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.267786,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.231536,
-              "weight": 35.323
+              "weight": 35.238
             }
           ],
-          "excluded_relative_importance": 35.323,
-          "effective_relative_importance": 24.917,
-          "result": 0.319175,
+          "excluded_relative_importance": 35.238,
+          "effective_relative_importance": 24.86,
+          "result": 0.319169,
           "status": "calculated"
         },
         {
           "period": "2026-03",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.225476,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.266467,
-              "weight": 35.323
+              "weight": 35.238
             }
           ],
-          "excluded_relative_importance": 35.323,
-          "effective_relative_importance": 24.917,
-          "result": 0.167366,
+          "excluded_relative_importance": 35.238,
+          "effective_relative_importance": 24.86,
+          "result": 0.167373,
           "status": "calculated"
         },
         {
           "period": "2026-04",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.499602,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.606741,
-              "weight": 35.323
+              "weight": 35.238
             }
           ],
-          "excluded_relative_importance": 35.323,
-          "effective_relative_importance": 24.917,
-          "result": 0.347719,
+          "excluded_relative_importance": 35.238,
+          "effective_relative_importance": 24.86,
+          "result": 0.347737,
           "status": "calculated"
         },
         {
           "period": "2026-05",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.294706,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.317831,
-              "weight": 35.323
+              "weight": 35.238
             }
           ],
-          "excluded_relative_importance": 35.323,
-          "effective_relative_importance": 24.917,
-          "result": 0.261923,
+          "excluded_relative_importance": 35.238,
+          "effective_relative_importance": 24.86,
+          "result": 0.261927,
           "status": "calculated"
         },
         {
           "period": "2026-06",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.031949,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.117524,
-              "weight": 35.323
+              "weight": 35.238
             }
           ],
-          "excluded_relative_importance": 35.323,
-          "effective_relative_importance": 24.917,
-          "result": -0.089364,
+          "excluded_relative_importance": 35.238,
+          "effective_relative_importance": 24.86,
+          "result": -0.08935,
           "status": "calculated"
         },
         {
           "period": "2026-07",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.228069,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.138623,
-              "weight": 35.323
+              "weight": 35.238
             }
           ],
-          "excluded_relative_importance": 35.323,
-          "effective_relative_importance": 24.917,
-          "result": 0.35487,
+          "excluded_relative_importance": 35.238,
+          "effective_relative_importance": 24.86,
+          "result": 0.354855,
           "status": "calculated"
         },
         {
           "period": "2026-08",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.327412,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.263811,
-              "weight": 35.323
+              "weight": 35.238
             }
           ],
-          "excluded_relative_importance": 35.323,
-          "effective_relative_importance": 24.917,
-          "result": 0.417574,
+          "excluded_relative_importance": 35.238,
+          "effective_relative_importance": 24.86,
+          "result": 0.417564,
           "status": "calculated"
         },
         {
           "period": "2026-09",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.368618,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.390724,
-              "weight": 35.323
+              "weight": 35.238
             }
           ],
-          "excluded_relative_importance": 35.323,
-          "effective_relative_importance": 24.917,
-          "result": 0.33728,
+          "excluded_relative_importance": 35.238,
+          "effective_relative_importance": 24.86,
+          "result": 0.337284,
+          "status": "calculated"
+        },
+        {
+          "period": "2026-10",
+          "base_name": "Services Excluding Energy Services",
+          "base_change": 0.33963,
+          "base_relative_importance": 60.098,
+          "excluded_components": [
+            {
+              "name": "Shelter",
+              "change": 0.304695,
+              "weight": 35.238
+            }
+          ],
+          "excluded_relative_importance": 35.238,
+          "effective_relative_importance": 24.86,
+          "result": 0.389149,
           "status": "calculated"
         }
       ],
@@ -2259,282 +2259,282 @@
         "Owners' Equivalent Rent of Residences"
       ],
       "values": [
-        null,
-        0.107046,
-        0.231862,
-        0.59126,
-        0.349566,
-        0.178717,
-        0.454221,
-        0.273162,
-        -0.204794,
-        0.189235,
-        0.50944,
-        0.422397
+        0.106955,
+        0.231829,
+        0.591393,
+        0.3496,
+        0.17867,
+        0.454195,
+        0.273161,
+        -0.204959,
+        0.18921,
+        0.509552,
+        0.422411,
+        0.399467
       ],
       "calculation_details": [
-        {
-          "period": "2025-10",
-          "base_name": "Services Excluding Energy Services",
-          "base_change": null,
-          "base_relative_importance": 60.24,
-          "excluded_components": [
-            {
-              "name": "Rent of Primary Residence",
-              "change": null,
-              "weight": 7.728
-            },
-            {
-              "name": "Owners' Equivalent Rent of Residences",
-              "change": null,
-              "weight": 25.902
-            }
-          ],
-          "excluded_relative_importance": 33.63,
-          "effective_relative_importance": 26.61,
-          "result": null,
-          "status": "missing_relative_importance"
-        },
         {
           "period": "2025-11",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.208508,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Rent of Primary Residence",
               "change": 0.174563,
-              "weight": 7.728
+              "weight": 7.707
             },
             {
               "name": "Owners' Equivalent Rent of Residences",
               "change": 0.322871,
-              "weight": 25.902
+              "weight": 25.853
             }
           ],
-          "excluded_relative_importance": 33.63,
-          "effective_relative_importance": 26.61,
-          "result": 0.107046,
+          "excluded_relative_importance": 33.56,
+          "effective_relative_importance": 26.537999999999997,
+          "result": 0.106955,
           "status": "calculated"
         },
         {
           "period": "2025-12",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.272308,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Rent of Primary Residence",
               "change": 0.270386,
-              "weight": 7.728
+              "weight": 7.707
             },
             {
               "name": "Owners' Equivalent Rent of Residences",
               "change": 0.314433,
-              "weight": 25.902
+              "weight": 25.853
             }
           ],
-          "excluded_relative_importance": 33.63,
-          "effective_relative_importance": 26.61,
-          "result": 0.231862,
+          "excluded_relative_importance": 33.56,
+          "effective_relative_importance": 26.537999999999997,
+          "result": 0.231829,
           "status": "calculated"
         },
         {
           "period": "2026-01",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.387563,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Rent of Primary Residence",
               "change": 0.248984,
-              "weight": 7.728
+              "weight": 7.707
             },
             {
               "name": "Owners' Equivalent Rent of Residences",
               "change": 0.219644,
-              "weight": 25.902
+              "weight": 25.853
             }
           ],
-          "excluded_relative_importance": 33.63,
-          "effective_relative_importance": 26.61,
-          "result": 0.59126,
+          "excluded_relative_importance": 33.56,
+          "effective_relative_importance": 26.537999999999997,
+          "result": 0.591393,
           "status": "calculated"
         },
         {
           "period": "2026-02",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.267786,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Rent of Primary Residence",
               "change": 0.131434,
-              "weight": 7.728
+              "weight": 7.707
             },
             {
               "name": "Owners' Equivalent Rent of Residences",
               "change": 0.224452,
-              "weight": 25.902
+              "weight": 25.853
             }
           ],
-          "excluded_relative_importance": 33.63,
-          "effective_relative_importance": 26.61,
-          "result": 0.349566,
+          "excluded_relative_importance": 33.56,
+          "effective_relative_importance": 26.537999999999997,
+          "result": 0.3496,
           "status": "calculated"
         },
         {
           "period": "2026-03",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.225476,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Rent of Primary Residence",
               "change": 0.190103,
-              "weight": 7.728
+              "weight": 7.707
             },
             {
               "name": "Owners' Equivalent Rent of Residences",
               "change": 0.284067,
-              "weight": 25.902
+              "weight": 25.853
             }
           ],
-          "excluded_relative_importance": 33.63,
-          "effective_relative_importance": 26.61,
-          "result": 0.178717,
+          "excluded_relative_importance": 33.56,
+          "effective_relative_importance": 26.537999999999997,
+          "result": 0.17867,
           "status": "calculated"
         },
         {
           "period": "2026-04",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.499602,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Rent of Primary Residence",
               "change": 0.545058,
-              "weight": 7.728
+              "weight": 7.707
             },
             {
               "name": "Owners' Equivalent Rent of Residences",
               "change": 0.532661,
-              "weight": 25.902
+              "weight": 25.853
             }
           ],
-          "excluded_relative_importance": 33.63,
-          "effective_relative_importance": 26.61,
-          "result": 0.454221,
+          "excluded_relative_importance": 33.56,
+          "effective_relative_importance": 26.537999999999997,
+          "result": 0.454195,
           "status": "calculated"
         },
         {
           "period": "2026-05",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.294706,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Rent of Primary Residence",
               "change": 0.361927,
-              "weight": 7.728
+              "weight": 7.707
             },
             {
               "name": "Owners' Equivalent Rent of Residences",
               "change": 0.296783,
-              "weight": 25.902
+              "weight": 25.853
             }
           ],
-          "excluded_relative_importance": 33.63,
-          "effective_relative_importance": 26.61,
-          "result": 0.273162,
+          "excluded_relative_importance": 33.56,
+          "effective_relative_importance": 26.537999999999997,
+          "result": 0.273161,
           "status": "calculated"
         },
         {
           "period": "2026-06",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.031949,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Rent of Primary Residence",
               "change": 0.149531,
-              "weight": 7.728
+              "weight": 7.707
             },
             {
               "name": "Owners' Equivalent Rent of Residences",
               "change": 0.240082,
-              "weight": 25.902
+              "weight": 25.853
             }
           ],
-          "excluded_relative_importance": 33.63,
-          "effective_relative_importance": 26.61,
-          "result": -0.204794,
+          "excluded_relative_importance": 33.56,
+          "effective_relative_importance": 26.537999999999997,
+          "result": -0.204959,
           "status": "calculated"
         },
         {
           "period": "2026-07",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.228069,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Rent of Primary Residence",
               "change": 0.255925,
-              "weight": 7.728
+              "weight": 7.707
             },
             {
               "name": "Owners' Equivalent Rent of Residences",
               "change": 0.259654,
-              "weight": 25.902
+              "weight": 25.853
             }
           ],
-          "excluded_relative_importance": 33.63,
-          "effective_relative_importance": 26.61,
-          "result": 0.189235,
+          "excluded_relative_importance": 33.56,
+          "effective_relative_importance": 26.537999999999997,
+          "result": 0.18921,
           "status": "calculated"
         },
         {
           "period": "2026-08",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.327412,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Rent of Primary Residence",
               "change": 0.173674,
-              "weight": 7.728
+              "weight": 7.707
             },
             {
               "name": "Owners' Equivalent Rent of Residences",
               "change": 0.186277,
-              "weight": 25.902
+              "weight": 25.853
             }
           ],
-          "excluded_relative_importance": 33.63,
-          "effective_relative_importance": 26.61,
-          "result": 0.50944,
+          "excluded_relative_importance": 33.56,
+          "effective_relative_importance": 26.537999999999997,
+          "result": 0.509552,
           "status": "calculated"
         },
         {
           "period": "2026-09",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.368618,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Rent of Primary Residence",
               "change": 0.246594,
-              "weight": 7.728
+              "weight": 7.707
             },
             {
               "name": "Owners' Equivalent Rent of Residences",
               "change": 0.349776,
-              "weight": 25.902
+              "weight": 25.853
             }
           ],
-          "excluded_relative_importance": 33.63,
-          "effective_relative_importance": 26.61,
-          "result": 0.422397,
+          "excluded_relative_importance": 33.56,
+          "effective_relative_importance": 26.537999999999997,
+          "result": 0.422411,
+          "status": "calculated"
+        },
+        {
+          "period": "2026-10",
+          "base_name": "Services Excluding Energy Services",
+          "base_change": 0.33963,
+          "base_relative_importance": 60.098,
+          "excluded_components": [
+            {
+              "name": "Rent of Primary Residence",
+              "change": 0.201586,
+              "weight": 7.707
+            },
+            {
+              "name": "Owners' Equivalent Rent of Residences",
+              "change": 0.31936,
+              "weight": 25.853
+            }
+          ],
+          "excluded_relative_importance": 33.56,
+          "effective_relative_importance": 26.537999999999997,
+          "result": 0.399467,
           "status": "calculated"
         }
       ],
@@ -2551,282 +2551,282 @@
         "Public Transportation"
       ],
       "values": [
-        null,
-        0.374679,
-        -0.09784,
-        0.387938,
-        0.278432,
-        0.072226,
-        0.258967,
-        0.256786,
-        -0.160192,
-        0.2642,
-        0.288297,
-        0.276185
+        0.378145,
+        -0.101285,
+        0.384043,
+        0.277762,
+        0.070684,
+        0.257541,
+        0.256706,
+        -0.16133,
+        0.262707,
+        0.28618,
+        0.275194,
+        0.274991
       ],
       "calculation_details": [
-        {
-          "period": "2025-10",
-          "base_name": "Services Excluding Energy Services",
-          "base_change": null,
-          "base_relative_importance": 60.24,
-          "excluded_components": [
-            {
-              "name": "Shelter",
-              "change": null,
-              "weight": 35.323
-            },
-            {
-              "name": "Public Transportation",
-              "change": null,
-              "weight": 1.63
-            }
-          ],
-          "excluded_relative_importance": 36.953,
-          "effective_relative_importance": 23.287,
-          "result": null,
-          "status": "missing_relative_importance"
-        },
         {
           "period": "2025-11",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.208508,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.241144,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Public Transportation",
               "change": -2.872733,
-              "weight": 1.63
+              "weight": 1.651
             }
           ],
-          "excluded_relative_importance": 36.953,
-          "effective_relative_importance": 23.287,
-          "result": 0.374679,
+          "excluded_relative_importance": 36.889,
+          "effective_relative_importance": 23.208999999999996,
+          "result": 0.378145,
           "status": "calculated"
         },
         {
           "period": "2025-12",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.272308,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.383377,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Public Transportation",
               "change": 3.153507,
-              "weight": 1.63
+              "weight": 1.651
             }
           ],
-          "excluded_relative_importance": 36.953,
-          "effective_relative_importance": 23.287,
-          "result": -0.09784,
+          "excluded_relative_importance": 36.889,
+          "effective_relative_importance": 23.208999999999996,
+          "result": -0.101285,
           "status": "calculated"
         },
         {
           "period": "2026-01",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.387563,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.219932,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Public Transportation",
               "change": 4.014869,
-              "weight": 1.63
+              "weight": 1.651
             }
           ],
-          "excluded_relative_importance": 36.953,
-          "effective_relative_importance": 23.287,
-          "result": 0.387938,
+          "excluded_relative_importance": 36.889,
+          "effective_relative_importance": 23.208999999999996,
+          "result": 0.384043,
           "status": "calculated"
         },
         {
           "period": "2026-02",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.267786,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.231536,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Public Transportation",
               "change": 0.901247,
-              "weight": 1.63
+              "weight": 1.651
             }
           ],
-          "excluded_relative_importance": 36.953,
-          "effective_relative_importance": 23.287,
-          "result": 0.278432,
+          "excluded_relative_importance": 36.889,
+          "effective_relative_importance": 23.208999999999996,
+          "result": 0.277762,
           "status": "calculated"
         },
         {
           "period": "2026-03",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.225476,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.266467,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Public Transportation",
               "change": 1.526581,
-              "weight": 1.63
+              "weight": 1.651
             }
           ],
-          "excluded_relative_importance": 36.953,
-          "effective_relative_importance": 23.287,
-          "result": 0.072226,
+          "excluded_relative_importance": 36.889,
+          "effective_relative_importance": 23.208999999999996,
+          "result": 0.070684,
           "status": "calculated"
         },
         {
           "period": "2026-04",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.499602,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.606741,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Public Transportation",
               "change": 1.615674,
-              "weight": 1.63
+              "weight": 1.651
             }
           ],
-          "excluded_relative_importance": 36.953,
-          "effective_relative_importance": 23.287,
-          "result": 0.258967,
+          "excluded_relative_importance": 36.889,
+          "effective_relative_importance": 23.208999999999996,
+          "result": 0.257541,
           "status": "calculated"
         },
         {
           "period": "2026-05",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.294706,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.317831,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Public Transportation",
               "change": 0.33532,
-              "weight": 1.63
+              "weight": 1.651
             }
           ],
-          "excluded_relative_importance": 36.953,
-          "effective_relative_importance": 23.287,
-          "result": 0.256786,
+          "excluded_relative_importance": 36.889,
+          "effective_relative_importance": 23.208999999999996,
+          "result": 0.256706,
           "status": "calculated"
         },
         {
           "period": "2026-06",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.031949,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.117524,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Public Transportation",
               "change": 0.922514,
-              "weight": 1.63
+              "weight": 1.651
             }
           ],
-          "excluded_relative_importance": 36.953,
-          "effective_relative_importance": 23.287,
-          "result": -0.160192,
+          "excluded_relative_importance": 36.889,
+          "effective_relative_importance": 23.208999999999996,
+          "result": -0.16133,
           "status": "calculated"
         },
         {
           "period": "2026-07",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.228069,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.138623,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Public Transportation",
               "change": 1.650224,
-              "weight": 1.63
+              "weight": 1.651
             }
           ],
-          "excluded_relative_importance": 36.953,
-          "effective_relative_importance": 23.287,
-          "result": 0.2642,
+          "excluded_relative_importance": 36.889,
+          "effective_relative_importance": 23.208999999999996,
+          "result": 0.262707,
           "status": "calculated"
         },
         {
           "period": "2026-08",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.327412,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.263811,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Public Transportation",
               "change": 2.264494,
-              "weight": 1.63
+              "weight": 1.651
             }
           ],
-          "excluded_relative_importance": 36.953,
-          "effective_relative_importance": 23.287,
-          "result": 0.288297,
+          "excluded_relative_importance": 36.889,
+          "effective_relative_importance": 23.208999999999996,
+          "result": 0.28618,
           "status": "calculated"
         },
         {
           "period": "2026-09",
           "base_name": "Services Excluding Energy Services",
           "base_change": 0.368618,
-          "base_relative_importance": 60.24,
+          "base_relative_importance": 60.098,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.390724,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Public Transportation",
               "change": 1.21011,
-              "weight": 1.63
+              "weight": 1.651
             }
           ],
-          "excluded_relative_importance": 36.953,
-          "effective_relative_importance": 23.287,
-          "result": 0.276185,
+          "excluded_relative_importance": 36.889,
+          "effective_relative_importance": 23.208999999999996,
+          "result": 0.275194,
+          "status": "calculated"
+        },
+        {
+          "period": "2026-10",
+          "base_name": "Services Excluding Energy Services",
+          "base_change": 0.33963,
+          "base_relative_importance": 60.098,
+          "excluded_components": [
+            {
+              "name": "Shelter",
+              "change": 0.304695,
+              "weight": 35.238
+            },
+            {
+              "name": "Public Transportation",
+              "change": 1.993934,
+              "weight": 1.651
+            }
+          ],
+          "excluded_relative_importance": 36.889,
+          "effective_relative_importance": 23.208999999999996,
+          "result": 0.274991,
           "status": "calculated"
         }
       ],
@@ -2843,282 +2843,282 @@
         "Used Cars and Trucks"
       ],
       "values": [
-        null,
-        0.150237,
-        0.175979,
-        0.499453,
-        0.241427,
-        0.175332,
-        0.203309,
-        0.120661,
-        -0.118122,
-        0.269549,
-        0.307193,
-        0.264898
+        0.150242,
+        0.175711,
+        0.498694,
+        0.241241,
+        0.175174,
+        0.203337,
+        0.120699,
+        -0.118103,
+        0.269559,
+        0.307201,
+        0.265047,
+        0.388018
       ],
       "calculation_details": [
-        {
-          "period": "2025-10",
-          "base_name": "All Items Less Food and Energy",
-          "base_change": null,
-          "base_relative_importance": 79.075,
-          "excluded_components": [
-            {
-              "name": "Shelter",
-              "change": null,
-              "weight": 35.323
-            },
-            {
-              "name": "Used Cars and Trucks",
-              "change": 0.671827,
-              "weight": 2.688
-            }
-          ],
-          "excluded_relative_importance": 38.011,
-          "effective_relative_importance": 41.064,
-          "result": null,
-          "status": "missing_relative_importance"
-        },
         {
           "period": "2025-11",
           "base_name": "All Items Less Food and Energy",
           "base_change": 0.189154,
-          "base_relative_importance": 79.075,
+          "base_relative_importance": 78.905,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.241144,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Used Cars and Trucks",
               "change": 0.100478,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 38.011,
-          "effective_relative_importance": 41.064,
-          "result": 0.150237,
+          "excluded_relative_importance": 37.908,
+          "effective_relative_importance": 40.997,
+          "result": 0.150242,
           "status": "calculated"
         },
         {
           "period": "2025-12",
           "base_name": "All Items Less Food and Energy",
           "base_change": 0.2329,
-          "base_relative_importance": 79.075,
+          "base_relative_importance": 78.905,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.383377,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Used Cars and Trucks",
               "change": -0.874942,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 38.011,
-          "effective_relative_importance": 41.064,
-          "result": 0.175979,
+          "excluded_relative_importance": 37.908,
+          "effective_relative_importance": 40.997,
+          "result": 0.175711,
           "status": "calculated"
         },
         {
           "period": "2026-01",
           "base_name": "All Items Less Food and Energy",
           "base_change": 0.295045,
-          "base_relative_importance": 79.075,
+          "base_relative_importance": 78.905,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.219932,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Used Cars and Trucks",
               "change": -1.8406,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 38.011,
-          "effective_relative_importance": 41.064,
-          "result": 0.499453,
+          "excluded_relative_importance": 37.908,
+          "effective_relative_importance": 40.997,
+          "result": 0.498694,
           "status": "calculated"
         },
         {
           "period": "2026-02",
           "base_name": "All Items Less Food and Energy",
           "base_change": 0.21605,
-          "base_relative_importance": 79.075,
+          "base_relative_importance": 78.905,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.231536,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Used Cars and Trucks",
               "change": -0.375133,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 38.011,
-          "effective_relative_importance": 41.064,
-          "result": 0.241427,
+          "excluded_relative_importance": 37.908,
+          "effective_relative_importance": 40.997,
+          "result": 0.241241,
           "status": "calculated"
         },
         {
           "period": "2026-03",
           "base_name": "All Items Less Food and Energy",
           "base_change": 0.195795,
-          "base_relative_importance": 79.075,
+          "base_relative_importance": 78.905,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.266467,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Used Cars and Trucks",
               "change": -0.420291,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 38.011,
-          "effective_relative_importance": 41.064,
-          "result": 0.175332,
+          "excluded_relative_importance": 37.908,
+          "effective_relative_importance": 40.997,
+          "result": 0.175174,
           "status": "calculated"
         },
         {
           "period": "2026-04",
           "base_name": "All Items Less Food and Energy",
           "base_change": 0.376461,
-          "base_relative_importance": 79.075,
+          "base_relative_importance": 78.905,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.606741,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Used Cars and Trucks",
               "change": -0.004449,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 38.011,
-          "effective_relative_importance": 41.064,
-          "result": 0.203309,
+          "excluded_relative_importance": 37.908,
+          "effective_relative_importance": 40.997,
+          "result": 0.203337,
           "status": "calculated"
         },
         {
           "period": "2026-05",
           "base_name": "All Items Less Food and Energy",
           "base_change": 0.208095,
-          "base_relative_importance": 79.075,
+          "base_relative_importance": 78.905,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.317831,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Used Cars and Trucks",
               "change": 0.101767,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 38.011,
-          "effective_relative_importance": 41.064,
-          "result": 0.120661,
+          "excluded_relative_importance": 37.908,
+          "effective_relative_importance": 40.997,
+          "result": 0.120699,
           "status": "calculated"
         },
         {
           "period": "2026-06",
           "base_name": "All Items Less Food and Energy",
           "base_change": -0.016661,
-          "base_relative_importance": 79.075,
+          "base_relative_importance": 78.905,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.117524,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Used Cars and Trucks",
               "change": -0.229994,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 38.011,
-          "effective_relative_importance": 41.064,
-          "result": -0.118122,
+          "excluded_relative_importance": 37.908,
+          "effective_relative_importance": 40.997,
+          "result": -0.118103,
           "status": "calculated"
         },
         {
           "period": "2026-07",
           "base_name": "All Items Less Food and Energy",
           "base_change": 0.215435,
-          "base_relative_importance": 79.075,
+          "base_relative_importance": 78.905,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.138623,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Used Cars and Trucks",
               "change": 0.398127,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 38.011,
-          "effective_relative_importance": 41.064,
-          "result": 0.269549,
+          "excluded_relative_importance": 37.908,
+          "effective_relative_importance": 40.997,
+          "result": 0.269559,
           "status": "calculated"
         },
         {
           "period": "2026-08",
           "base_name": "All Items Less Food and Energy",
           "base_change": 0.289796,
-          "base_relative_importance": 79.075,
+          "base_relative_importance": 78.905,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.263811,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Used Cars and Trucks",
               "change": 0.36549,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 38.011,
-          "effective_relative_importance": 41.064,
-          "result": 0.307193,
+          "excluded_relative_importance": 37.908,
+          "effective_relative_importance": 40.997,
+          "result": 0.307201,
           "status": "calculated"
         },
         {
           "period": "2026-09",
           "base_name": "All Items Less Food and Energy",
           "base_change": 0.334848,
-          "base_relative_importance": 79.075,
+          "base_relative_importance": 78.905,
           "excluded_components": [
             {
               "name": "Shelter",
               "change": 0.390724,
-              "weight": 35.323
+              "weight": 35.238
             },
             {
               "name": "Used Cars and Trucks",
               "change": 0.66919,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 38.011,
-          "effective_relative_importance": 41.064,
-          "result": 0.264898,
+          "excluded_relative_importance": 37.908,
+          "effective_relative_importance": 40.997,
+          "result": 0.265047,
+          "status": "calculated"
+        },
+        {
+          "period": "2026-10",
+          "base_name": "All Items Less Food and Energy",
+          "base_change": 0.296256,
+          "base_relative_importance": 78.905,
+          "excluded_components": [
+            {
+              "name": "Shelter",
+              "change": 0.304695,
+              "weight": 35.238
+            },
+            {
+              "name": "Used Cars and Trucks",
+              "change": -1.224091,
+              "weight": 2.67
+            }
+          ],
+          "excluded_relative_importance": 37.908,
+          "effective_relative_importance": 40.997,
+          "result": 0.388018,
           "status": "calculated"
         }
       ],
@@ -3134,222 +3134,222 @@
         "Used Cars and Trucks"
       ],
       "values": [
-        null,
-        0.054447,
-        0.182612,
-        0.354507,
-        0.157218,
-        0.195295,
-        0.040385,
-        -0.150437,
-        -0.06195,
-        0.164327,
-        0.062227,
-        0.181713
+        0.054487,
+        0.181694,
+        0.352602,
+        0.156757,
+        0.194761,
+        0.040347,
+        -0.150218,
+        -0.062096,
+        0.16453,
+        0.062491,
+        0.182136,
+        0.389441
       ],
       "calculation_details": [
-        {
-          "period": "2025-10",
-          "base_name": "Commodities Excluding Food and Energy Commodities",
-          "base_change": null,
-          "base_relative_importance": 18.835,
-          "excluded_components": [
-            {
-              "name": "Used Cars and Trucks",
-              "change": 0.671827,
-              "weight": 2.688
-            }
-          ],
-          "excluded_relative_importance": 2.688,
-          "effective_relative_importance": 16.147000000000002,
-          "result": null,
-          "status": "missing_relative_importance"
-        },
         {
           "period": "2025-11",
           "base_name": "Commodities Excluding Food and Energy Commodities",
           "base_change": 0.061016,
-          "base_relative_importance": 18.835,
+          "base_relative_importance": 18.807,
           "excluded_components": [
             {
               "name": "Used Cars and Trucks",
               "change": 0.100478,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 2.688,
-          "effective_relative_importance": 16.147000000000002,
-          "result": 0.054447,
+          "excluded_relative_importance": 2.67,
+          "effective_relative_importance": 16.137,
+          "result": 0.054487,
           "status": "calculated"
         },
         {
           "period": "2025-12",
           "base_name": "Commodities Excluding Food and Energy Commodities",
           "base_change": 0.031685,
-          "base_relative_importance": 18.835,
+          "base_relative_importance": 18.807,
           "excluded_components": [
             {
               "name": "Used Cars and Trucks",
               "change": -0.874942,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 2.688,
-          "effective_relative_importance": 16.147000000000002,
-          "result": 0.182612,
+          "excluded_relative_importance": 2.67,
+          "effective_relative_importance": 16.137,
+          "result": 0.181694,
           "status": "calculated"
         },
         {
           "period": "2026-01",
           "base_name": "Commodities Excluding Food and Energy Commodities",
           "base_change": 0.041237,
-          "base_relative_importance": 18.835,
+          "base_relative_importance": 18.807,
           "excluded_components": [
             {
               "name": "Used Cars and Trucks",
               "change": -1.8406,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 2.688,
-          "effective_relative_importance": 16.147000000000002,
-          "result": 0.354507,
+          "excluded_relative_importance": 2.67,
+          "effective_relative_importance": 16.137,
+          "result": 0.352602,
           "status": "calculated"
         },
         {
           "period": "2026-02",
           "base_name": "Commodities Excluding Food and Energy Commodities",
           "base_change": 0.081245,
-          "base_relative_importance": 18.835,
+          "base_relative_importance": 18.807,
           "excluded_components": [
             {
               "name": "Used Cars and Trucks",
               "change": -0.375133,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 2.688,
-          "effective_relative_importance": 16.147000000000002,
-          "result": 0.157218,
+          "excluded_relative_importance": 2.67,
+          "effective_relative_importance": 16.137,
+          "result": 0.156757,
           "status": "calculated"
         },
         {
           "period": "2026-03",
           "base_name": "Commodities Excluding Food and Energy Commodities",
           "base_change": 0.107443,
-          "base_relative_importance": 18.835,
+          "base_relative_importance": 18.807,
           "excluded_components": [
             {
               "name": "Used Cars and Trucks",
               "change": -0.420291,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 2.688,
-          "effective_relative_importance": 16.147000000000002,
-          "result": 0.195295,
+          "excluded_relative_importance": 2.67,
+          "effective_relative_importance": 16.137,
+          "result": 0.194761,
           "status": "calculated"
         },
         {
           "period": "2026-04",
           "base_name": "Commodities Excluding Food and Energy Commodities",
           "base_change": 0.033987,
-          "base_relative_importance": 18.835,
+          "base_relative_importance": 18.807,
           "excluded_components": [
             {
               "name": "Used Cars and Trucks",
               "change": -0.004449,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 2.688,
-          "effective_relative_importance": 16.147000000000002,
-          "result": 0.040385,
+          "excluded_relative_importance": 2.67,
+          "effective_relative_importance": 16.137,
+          "result": 0.040347,
           "status": "calculated"
         },
         {
           "period": "2026-05",
           "base_name": "Commodities Excluding Food and Energy Commodities",
           "base_change": -0.114444,
-          "base_relative_importance": 18.835,
+          "base_relative_importance": 18.807,
           "excluded_components": [
             {
               "name": "Used Cars and Trucks",
               "change": 0.101767,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 2.688,
-          "effective_relative_importance": 16.147000000000002,
-          "result": -0.150437,
+          "excluded_relative_importance": 2.67,
+          "effective_relative_importance": 16.137,
+          "result": -0.150218,
           "status": "calculated"
         },
         {
           "period": "2026-06",
           "base_name": "Commodities Excluding Food and Energy Commodities",
           "base_change": -0.085932,
-          "base_relative_importance": 18.835,
+          "base_relative_importance": 18.807,
           "excluded_components": [
             {
               "name": "Used Cars and Trucks",
               "change": -0.229994,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 2.688,
-          "effective_relative_importance": 16.147000000000002,
-          "result": -0.06195,
+          "excluded_relative_importance": 2.67,
+          "effective_relative_importance": 16.137,
+          "result": -0.062096,
           "status": "calculated"
         },
         {
           "period": "2026-07",
           "base_name": "Commodities Excluding Food and Energy Commodities",
           "base_change": 0.197693,
-          "base_relative_importance": 18.835,
+          "base_relative_importance": 18.807,
           "excluded_components": [
             {
               "name": "Used Cars and Trucks",
               "change": 0.398127,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 2.688,
-          "effective_relative_importance": 16.147000000000002,
-          "result": 0.164327,
+          "excluded_relative_importance": 2.67,
+          "effective_relative_importance": 16.137,
+          "result": 0.16453,
           "status": "calculated"
         },
         {
           "period": "2026-08",
           "base_name": "Commodities Excluding Food and Energy Commodities",
           "base_change": 0.105507,
-          "base_relative_importance": 18.835,
+          "base_relative_importance": 18.807,
           "excluded_components": [
             {
               "name": "Used Cars and Trucks",
               "change": 0.36549,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 2.688,
-          "effective_relative_importance": 16.147000000000002,
-          "result": 0.062227,
+          "excluded_relative_importance": 2.67,
+          "effective_relative_importance": 16.137,
+          "result": 0.062491,
           "status": "calculated"
         },
         {
           "period": "2026-09",
           "base_name": "Commodities Excluding Food and Energy Commodities",
           "base_change": 0.251282,
-          "base_relative_importance": 18.835,
+          "base_relative_importance": 18.807,
           "excluded_components": [
             {
               "name": "Used Cars and Trucks",
               "change": 0.66919,
-              "weight": 2.688
+              "weight": 2.67
             }
           ],
-          "excluded_relative_importance": 2.688,
-          "effective_relative_importance": 16.147000000000002,
-          "result": 0.181713,
+          "excluded_relative_importance": 2.67,
+          "effective_relative_importance": 16.137,
+          "result": 0.182136,
+          "status": "calculated"
+        },
+        {
+          "period": "2026-10",
+          "base_name": "Commodities Excluding Food and Energy Commodities",
+          "base_change": 0.16037,
+          "base_relative_importance": 18.807,
+          "excluded_components": [
+            {
+              "name": "Used Cars and Trucks",
+              "change": -1.224091,
+              "weight": 2.67
+            }
+          ],
+          "excluded_relative_importance": 2.67,
+          "effective_relative_importance": 16.137,
+          "result": 0.389441,
           "status": "calculated"
         }
       ],
