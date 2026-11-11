@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-11-06T09:15:13.919967+00:00",
+  "generated_at": "2026-11-11T09:12:17.188870+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -19895,6 +19895,13 @@
           "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/10/er20261006BullConsumerSentiment.pdf",
           "release_type": "final",
           "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin PDF"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 144.4,
+          "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/11/er20261110BullConsumerSentiment.pdf",
+          "release_type": "final",
+          "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin PDF"
         }
       ],
       "ticker": "",
@@ -22363,6 +22370,13 @@
           "date": "2026-10-01",
           "value": 80.4,
           "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/10/er20261006BullConsumerSentiment.pdf",
+          "release_type": "final",
+          "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 78.2,
+          "source_url": "https://library.westpaciq.com.au/content/dam/public/westpaciq/secure/economics/documents/aus/2026/11/er20261110BullConsumerSentiment.pdf",
           "release_type": "final",
           "note": "Official Westpac-Melbourne Institute Consumer Sentiment Bulletin"
         }
