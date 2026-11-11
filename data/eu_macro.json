@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-06T08:48:05.246800+00:00",
+  "generated_at": "2026-11-11T08:40:40.939173+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
@@ -2045,6 +2045,12 @@
           "value": 2.43,
           "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
           "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 2.09,
+          "source_url": "https://www.destatis.de/EN/Themes/Economy/Short-Term-Indicators/Basic-Data/vpi041a.html",
+          "note": "YoY from Destatis official core CPI index levels; excluding food and energy; rounded to 2 decimals from official one-decimal index levels"
         }
       ]
     },
@@ -2885,6 +2891,12 @@
         {
           "date": "2026-06-01",
           "value": 8.3,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 8.2,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001688527?lastNObservations=24",
           "status": "A"
         }
@@ -8696,49 +8708,55 @@
         },
         {
           "date": "2026-01-01",
-          "value": -2.2836538461538547,
+          "value": -2.158273381294973,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-02-01",
-          "value": -1.0285714285714342,
+          "value": -1.1389521640091105,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-03-01",
-          "value": -3.7181996086105618,
+          "value": -3.609756097560979,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-04-01",
-          "value": -1.2048192771084265,
+          "value": -1.0928961748633892,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-05-01",
-          "value": -0.22123893805310324,
+          "value": -0.4410143329658278,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-06-01",
-          "value": -0.5319148936170248,
+          "value": -0.954400848356296,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-07-01",
-          "value": -1.829924650161463,
+          "value": -2.148227712137485,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         },
         {
           "date": "2026-08-01",
-          "value": 2.264600715137055,
+          "value": 0.7125890736342066,
+          "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
+          "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 0.41972717733473885,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/42153-0001_00.csv",
           "note": "YoY from GENESIS X13 calendar-adjusted production levels; all available months"
         }
