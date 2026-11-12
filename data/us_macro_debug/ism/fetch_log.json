@@ -4,7 +4,7 @@
     "sector": "manufacturing",
     "requested_url": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/november/",
     "status_code": 200,
-    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=1b41af9bc29324661714b1e3876050b05d28b214d03a1a6392a0d3e6afc0500de98f74d8fe585c67d9133eb4547ba97f24007070eb97440a04f6e2566c14094d8b84780e9e0c5af5cc0678911cd9547686a66e0ec7169f81838633de2d4d30727b1b00ea5360263fd0fd362c3e3849095c2ec5daae9f092a3dc3a6b2372dfb63",
+    "final_url": "https://ecommerce.ismworld.org/SSO/Login.aspx?DPLF=Y&vi=10&vt=4b49e09173ede5af6464be02e33f95e9a30abe6c0df7f89e240c959e17833ccc80601bd2a3273b936068557c3683058fc4c5896633d1a2a3b90b250ac5ec850929d9e73b1e2b7c4d87b15028d603b3e2d802ffaa8a773e09a64d75739eb25e21fffe14f1fe4bbc3404d9943ff882f4db33947652e7936e20a10a014521a0d2da",
     "content_type": "text/html",
     "response_bytes": 922,
     "status": "failed",
