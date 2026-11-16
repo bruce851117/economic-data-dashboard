@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-11-11T09:12:17.188870+00:00
+更新時間：2026-11-16T09:25:12.068203+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -172,12 +172,12 @@
 | ANZ職缺廣告 | OK | 0 | 0 | 2026-09 | 125.29980391886193 |  |
 | 時薪YoY | OK | 0 | 0 | 2026-Q2 | 3.034134007585343 |  |
 | 預計離職 | OK | 0 | 0 | 2026-Q1 | 1310.8837533 |  |
-| 失業預期 | OK | 1 | 0 | 2026-11 | 144.4 |  |
-| CPI YoY | ERROR | 0 | 0 |  |  | ChunkedEncodingError: Response ended prematurely |
-| Trimmed Mean YoY | ERROR | 0 | 0 |  |  | ChunkedEncodingError: Response ended prematurely |
+| 失業預期 | OK | 0 | 0 | 2026-11 | 144.4 |  |
+| CPI YoY | OK | 0 | 0 | 2026-09 | 4.4 |  |
+| Trimmed Mean YoY | OK | 0 | 0 | 2026-09 | 3.6 |  |
 | 零售 | OK | 0 | 0 | 2026-09 | 6.2 |  |
 | NAB企業售價 | ERROR | 0 | 0 |  |  | RuntimeError: No latest NAB product prices value parsed from dynamically discovered official release |
-| 消費信心 | OK | 1 | 0 | 2026-11 | 78.2 |  |
+| 消費信心 | OK | 0 | 0 | 2026-11 | 78.2 |  |
 | 製造業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia manufacturing flash PMI from the newest three releases |
 | 服務業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia services flash PMI from the newest three releases |
 | GDP YoY | OK | 0 | 0 | 2026-Q2 | 2.298880639850265 |  |
@@ -189,7 +189,7 @@
 | 就業新增-兼職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | 勞參率 | OK | 0 | 0 | 2026-09 | 66.76317272 |  |
 | 工時 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| Indeed職缺 | OK | 0 | 0 | 2026-10 | 150.39 |  |
+| Indeed職缺 | ERROR | 0 | 0 |  |  | HTTPError: 403 Client Error: rate limit exceeded for url: https://api.github.com/repos/hiring-lab/job_postings_tracker/contents/AU/aggregate_job_postings_AU.csv?ref=master |
 | 家戶消費-Goods | OK | 0 | 0 | 2026-09 | 6.7 |  |
 | 家戶消費-Services | OK | 0 | 0 | 2026-09 | 6.8 |  |
 | 資本支出_住房 | OK | 0 | 0 | 2026-Q2 | 2.103099304237821 |  |
