@@ -100,7 +100,27 @@ window[(function(_e3j,_3b){var _cL='';for(var _e8=0;_e8<_e3j.length;_e8++){_3b>8
 </script>
 
 
+<!-- UTM pass-through: carries landing-page UTMs onto Register links -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var params = new URLSearchParams(window.location.search);
+  var utms = [];
+  params.forEach(function (value, key) {
+    if (key.indexOf('utm_') === 0) utms.push([key, value]);
+  });
+  if (!utms.length) return;
 
+  document.querySelectorAll('a[href*="87584239-ism-world-2027"]').forEach(function (link) {
+    try {
+      var url = new URL(link.href);
+      utms.forEach(function (u) {
+        if (!url.searchParams.has(u[0])) url.searchParams.set(u[0], u[1]);
+      });
+      link.href = url.toString();
+    } catch (e) {}
+  });
+});
+</script>
 
 
 
@@ -2519,7 +2539,7 @@ October        </span>
 <script src="/Static/Vue/Components/Disclaimer.js"></script>
 
 
-<div id="hubspot-88886977" class="component hubspotLast">
+<div id="hubspot-35284508" class="component hubspotLast">
     <div class="hex-bg lazyload" data-bg="/Static/img/hexpattern.png"></div>
     <div class="hubspot " data-hubspot>
             <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2.js"></script>
@@ -2532,7 +2552,7 @@ October        </span>
         <script>
       window.addEventListener("load",
         function() {
-          var emailLabel = document.querySelector('#hubspot-88886977 .hubspot [data-reactid=".hbspt-forms-0.1:$0.0.0"]');
+          var emailLabel = document.querySelector('#hubspot-35284508 .hubspot [data-reactid=".hbspt-forms-0.1:$0.0.0"]');
           if (emailLabel) {
             emailLabel.innerText = "Subscribe to Our e-Newsletter";
             emailLabel.parentElement.querySelector('.hs-form-required').innerText = "";
@@ -2699,5 +2719,5 @@ if(FindApi){var api = new FindApi();api.setApplicationUrl('/');api.setServiceApi
 
 
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5a0acdb89dbd63c',t:'MTc5NDYwMzMwNA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5a0acdb89dbd63c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5ba40705e158d35',t:'MTc5NDg3MTQ5Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5ba40705e158d35',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
