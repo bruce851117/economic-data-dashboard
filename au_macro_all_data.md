@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-11-16T09:25:12.068203+00:00
+更新時間：2026-11-21T09:33:17.060843+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -20,16 +20,16 @@
       <th rowspan="7" align="center" valign="middle">就業</th>
       <td>就業新增</td>
       <td align="right"></td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#63be7b">-39</td>
-      <td align="right" bgcolor="#f86971">29</td>
+      <td align="right" bgcolor="#63be7b">-44</td>
+      <td align="right" bgcolor="#81cb95">-36</td>
+      <td align="right" bgcolor="#f86971">30</td>
     </tr>
     <tr>
       <td>失業率</td>
       <td align="right"></td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#f86971">4.72</td>
-      <td align="right" bgcolor="#63be7b">4.65</td>
+      <td align="right" bgcolor="#f86971">4.86</td>
+      <td align="right" bgcolor="#d7eedd">4.74</td>
+      <td align="right" bgcolor="#63be7b">4.67</td>
     </tr>
     <tr>
       <td>職缺</td>
@@ -49,7 +49,7 @@
       <td>時薪YoY</td>
       <td align="right"></td>
       <td align="right"></td>
-      <td align="right"></td>
+      <td align="right" bgcolor="#ffffff">3.11</td>
       <td align="right"></td>
     </tr>
     <tr>
@@ -163,14 +163,14 @@
 
 | 指標 | 狀態 | 新增 | 修訂 | 官方最新期 | 官方最新值 | 錯誤 |
 |---|---|---:|---:|---|---:|---|
-| 就業新增 | OK | 0 | 0 | 2026-09 | -39.32872130999931 |  |
-| 失業率 | OK | 0 | 0 | 2026-09 | 4.71834873 |  |
+| 就業新增 | OK | 1 | 20 | 2026-10 | -43.53074434000155 |  |
+| 失業率 | OK | 1 | 21 | 2026-10 | 4.86483265 |  |
 | 就業不足率 | ERROR | 0 | 0 |  |  | RuntimeError: Official ABS workbook contained no series matching all published reference values |
-| 勞動力未充分利用率 | OK | 0 | 0 | 2026-09 | 11.0441511 |  |
-| Employment Ratio | OK | 0 | 0 | 2026-09 | 63.6130534 |  |
+| 勞動力未充分利用率 | OK | 1 | 141 | 2026-10 | 11.0746644 |  |
+| Employment Ratio | ERROR | 0 | 0 |  |  | RuntimeError: ABS series selection failed published-value verification: [{"period": "2026-04", "published": 63.7, "downloaded": 63.66411155, "difference": -0.035888450000001626, "match": true}, {"period": "2026-05", "published": 63.8, "downloaded": 63.7479092, "difference": -0.052090799999994886, "match": false}, {"period": "2026-06", "published": 64.0, "downloaded": 64.00731232, "difference": 0.00731231999999693, "match": true}, {"period": "2026-07", "published": 63.9, "downloaded": 63.83207844, "difference": -0.06792156000000205, "match": false}] |
 | 職缺 | OK | 0 | 0 | 2026-08 | 325.0 |  |
 | ANZ職缺廣告 | OK | 0 | 0 | 2026-09 | 125.29980391886193 |  |
-| 時薪YoY | OK | 0 | 0 | 2026-Q2 | 3.034134007585343 |  |
+| 時薪YoY | OK | 1 | 0 | 2026-Q3 | 3.111387678904798 |  |
 | 預計離職 | OK | 0 | 0 | 2026-Q1 | 1310.8837533 |  |
 | 失業預期 | OK | 0 | 0 | 2026-11 | 144.4 |  |
 | CPI YoY | OK | 0 | 0 | 2026-09 | 4.4 |  |
@@ -183,11 +183,11 @@
 | GDP YoY | OK | 0 | 0 | 2026-Q2 | 2.298880639850265 |  |
 | GDP私人消費YoY | OK | 0 | 0 | 2026-Q2 | 1.8645731108930308 |  |
 | GDP投資YoY | OK | 0 | 0 | 2026-Q2 | 2.204651162790694 |  |
-| 私人企業時薪ex bonus(季度) | OK | 0 | 0 | 2026-Q2 | 3.2 |  |
-| 政府時薪ex bonus(季度) | OK | 0 | 0 | 2026-Q2 | 3.3 |  |
+| 私人企業時薪ex bonus(季度) | OK | 1 | 0 | 2026-Q3 | 3.4 |  |
+| 政府時薪ex bonus(季度) | OK | 1 | 0 | 2026-Q3 | 3.9 |  |
 | 就業新增-全職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | 就業新增-兼職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| 勞參率 | OK | 0 | 0 | 2026-09 | 66.76317272 |  |
+| 勞參率 | OK | 1 | 141 | 2026-10 | 66.5853826 |  |
 | 工時 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | Indeed職缺 | ERROR | 0 | 0 |  |  | HTTPError: 403 Client Error: rate limit exceeded for url: https://api.github.com/repos/hiring-lab/job_postings_tracker/contents/AU/aggregate_job_postings_AU.csv?ref=master |
 | 家戶消費-Goods | OK | 0 | 0 | 2026-09 | 6.7 |  |
