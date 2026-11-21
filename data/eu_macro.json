@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16T08:49:24.910302+00:00",
+  "generated_at": "2026-11-21T09:00:20.375310+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
@@ -7403,14 +7403,14 @@
         },
         {
           "date": "2026-01-01",
-          "value": 1.387406616862319,
+          "value": 1.4941302027748016,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2026-02-01",
-          "value": 1.0078387458006821,
+          "value": 1.1198208286674172,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
@@ -7431,14 +7431,14 @@
         },
         {
           "date": "2026-05-01",
-          "value": -1.9436345966958202,
+          "value": -1.846452866861037,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2026-06-01",
-          "value": 5.65843621399178,
+          "value": 5.7613168724279795,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
@@ -7452,14 +7452,14 @@
         },
         {
           "date": "2026-08-01",
-          "value": -0.42149631190727677,
+          "value": -0.31612223393046035,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
         },
         {
           "date": "2026-09-01",
-          "value": -2.3565573770491732,
+          "value": -2.254098360655721,
           "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/sts_trtu_m?format=JSON&lang=EN&geo=DE&indic_bt=VOL_SLS&unit=I21&s_adj=NSA&nace_r2=G47&sinceTimePeriod=2015-01",
           "status": "p",
           "note": "YoY calculated from Eurostat NSA volume-of-sales index, 2021=100"
@@ -12001,7 +12001,7 @@
         },
         {
           "date": "2025-01-01",
-          "value": 95.6,
+          "value": 95.5,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
           "status": "A"
         },
@@ -12019,7 +12019,7 @@
         },
         {
           "date": "2025-04-01",
-          "value": 99.9,
+          "value": 99.8,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
           "status": "A"
         },
@@ -12037,7 +12037,7 @@
         },
         {
           "date": "2025-07-01",
-          "value": 96,
+          "value": 95.9,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
           "status": "A"
         },
@@ -12127,7 +12127,13 @@
         },
         {
           "date": "2026-10-01",
-          "value": 105.3,
+          "value": 105.2,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 104.1,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001585934?lastNObservations=24",
           "status": "A"
         }
@@ -13469,7 +13475,7 @@
         },
         {
           "date": "2026-03-01",
-          "value": 97.5,
+          "value": 97.6,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
           "status": "A"
         },
@@ -13505,13 +13511,19 @@
         },
         {
           "date": "2026-09-01",
-          "value": 96.4,
+          "value": 96.3,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
           "status": "A"
         },
         {
           "date": "2026-10-01",
-          "value": 97.5,
+          "value": 97.1,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 94.6,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001565530?lastNObservations=24",
           "status": "A"
         }
