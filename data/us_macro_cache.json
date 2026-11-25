@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-11-24T01:42:11.318699+00:00",
+  "updated_at_utc": "2026-11-25T23:07:49.060815+00:00",
   "series": {
     "就業-就業（人數，千人）|非農": {
       "2023-01": 154776.0,
@@ -9453,9 +9453,10 @@
       "2026-04": 2.171,
       "2026-05": 2.661,
       "2026-06": 2.685,
-      "2026-07": 2.371,
-      "2026-08": 2.694,
-      "2026-09": 2.537
+      "2026-07": 2.379,
+      "2026-08": 2.782,
+      "2026-09": 2.725,
+      "2026-10": 2.504
     },
     "消費|disposable personal income": {
       "2023-01": 20114.1,
@@ -9497,12 +9498,13 @@
       "2026-01": 23606.4,
       "2026-02": 23639.7,
       "2026-03": 23809.9,
-      "2026-04": 23822.7,
-      "2026-05": 24006.4,
-      "2026-06": 24067.7,
-      "2026-07": 24155.5,
-      "2026-08": 24236.3,
-      "2026-09": 24289.0
+      "2026-04": 23808.8,
+      "2026-05": 23982.6,
+      "2026-06": 24037.5,
+      "2026-07": 24128.9,
+      "2026-08": 24219.5,
+      "2026-09": 24295.6,
+      "2026-10": 24496.0
     },
     "消費|Personal Outlays": {
       "2023-01": 19102.0,
@@ -9547,9 +9549,10 @@
       "2026-04": 22764.2,
       "2026-05": 22943.2,
       "2026-06": 23020.1,
-      "2026-07": 23071.5,
-      "2026-08": 23264.9,
-      "2026-09": 23377.9
+      "2026-07": 23073.3,
+      "2026-08": 23287.0,
+      "2026-09": 23424.1,
+      "2026-10": 23493.4
     },
     "消費|Personal Saving": {
       "2023-01": 1012.1,
@@ -9591,12 +9594,13 @@
       "2026-01": 1332.3,
       "2026-02": 1242.1,
       "2026-03": 1216.7,
-      "2026-04": 1058.4,
-      "2026-05": 1063.3,
-      "2026-06": 1047.6,
-      "2026-07": 1084.0,
-      "2026-08": 971.4,
-      "2026-09": 911.1
+      "2026-04": 1044.5,
+      "2026-05": 1039.4,
+      "2026-06": 1017.4,
+      "2026-07": 1055.6,
+      "2026-08": 932.5,
+      "2026-09": 871.4,
+      "2026-10": 1002.7
     },
     "消費|Interest Paid": {
       "2023-01": 421.8,
@@ -9641,9 +9645,10 @@
       "2026-04": 603.7,
       "2026-05": 611.9,
       "2026-06": 620.2,
-      "2026-07": 619.4,
-      "2026-08": 618.7,
-      "2026-09": 617.9
+      "2026-07": 619.6,
+      "2026-08": 619.1,
+      "2026-09": 618.6,
+      "2026-10": 623.4
     },
     "物價|NY FED 1y通膨預期": {
       "2013-06": 3.090884447097778,
@@ -10310,18 +10315,21 @@
       "2026-07": 24.6,
       "2026-08": 27.0,
       "2026-09": 23.6,
-      "2026-10": 26.7
+      "2026-10": 26.7,
+      "2026-11": 30.8
     },
     "就業-調查|Job Hard to get": {
       "2026-07": 21.5,
       "2026-08": 19.5,
       "2026-09": 21.9,
-      "2026-10": 21.4
+      "2026-10": 21.4,
+      "2026-11": 18.4
     },
     "就業-調查|Income Higher - Lower": {
       "2026-08": 3.8,
       "2026-09": 2.5,
-      "2026-10": 6.7
+      "2026-10": 6.7,
+      "2026-11": 6.3
     },
     "消費|家戶金融狀況vs一年前": {
       "2016-01": 110.0,
@@ -10592,7 +10600,8 @@
       "2026-07": 90.2,
       "2026-08": 88.6,
       "2026-09": 84.2,
-      "2026-10": 91.7
+      "2026-10": 91.9,
+      "2026-11": 103.3
     },
     "消費|零售控制 MoM%": {
       "2023-02": -0.214,
@@ -10643,9 +10652,8 @@
     }
   },
   "errors": [
-    "BLS: 503 Server Error: Service Unavailable for url: https://api.bls.gov/publicAPI/v2/timeseries/data/",
     "Atlanta Fed: 404 Client Error: Not Found for url: https://www.atlantafed.org/error",
-    "ADP: ADP Pay Insights ZIP could not be parsed; https://payinsights.adp.com/artifacts/us_wage/20261124/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261123/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261122/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261121/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261120/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261119/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261118/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261117/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261116/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261115/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261114/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261113/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261112/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261111/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261110/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html)",
+    "ADP: ADP Pay Insights ZIP could not be parsed; https://payinsights.adp.com/artifacts/us_wage/20261125/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261124/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261123/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261122/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261121/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261120/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261119/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261118/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261117/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261116/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261115/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261114/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261113/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261112/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html) | https://payinsights.adp.com/artifacts/us_wage/20261111/documents/ADP_PAY_history.zip: response is not a ZIP file (text/html)",
     "NY Fed SCE: NY Fed workbook missing sheets: Five-year ahead Infl Exp"
   ]
 }
