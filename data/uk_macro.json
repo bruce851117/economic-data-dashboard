@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T09:06:50.719326+00:00",
+  "generated_at": "2026-11-26T10:22:19.215797+00:00",
   "source": {
     "type": "excel_import",
     "file": "uk econ.xlsx",
@@ -11475,6 +11475,12 @@
           "value": 52.8,
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/6ac6a65f08664f4596ff88e7f474bd5d",
           "release_type": "final"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 52.7,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/954258b736314484b86d49afd6362e6a",
+          "release_type": "flash"
         }
       ]
     },
@@ -11655,6 +11661,12 @@
           "value": 52.8,
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/cabb96eb0c2e411bb216b6f31dd2921b",
           "release_type": "final"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 52.0,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/954258b736314484b86d49afd6362e6a",
+          "release_type": "flash"
         }
       ]
     },
