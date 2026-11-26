@@ -1,6 +1,6 @@
 # 澳洲總體資料 Debug 表
 
-更新時間：2026-11-21T09:33:17.060843+00:00
+更新時間：2026-11-26T10:44:10.348206+00:00
 
 > 色階用於快速檢查近期數值。多數指標數值越高越偏紅、越低越偏綠；消費信心則反向顯示。空白代表該期尚無資料。
 
@@ -70,16 +70,16 @@
       <th rowspan="3" align="center" valign="middle">通膨</th>
       <td>CPI</td>
       <td align="right"></td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#f86971">4.40</td>
+      <td align="right" bgcolor="#f86971">5.00</td>
+      <td align="right" bgcolor="#e0f2e5">4.40</td>
       <td align="right" bgcolor="#63be7b">4.00</td>
     </tr>
     <tr>
       <td>Trim mean</td>
       <td align="right"></td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#ffffff">3.60</td>
-      <td align="right" bgcolor="#ffffff">3.60</td>
+      <td align="right" bgcolor="#f86971">3.80</td>
+      <td align="right" bgcolor="#63be7b">3.60</td>
+      <td align="right" bgcolor="#63be7b">3.60</td>
     </tr>
     <tr>
       <td>零售</td>
@@ -105,16 +105,16 @@
     </tr>
     <tr>
       <td>PMI製造業</td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#91d1a2">49.7</td>
-      <td align="right" bgcolor="#63be7b">49.3</td>
+      <td align="right" bgcolor="#63be7b">48.7</td>
+      <td align="right" bgcolor="#c2e5cb">49.7</td>
+      <td align="right" bgcolor="#9cd6ab">49.3</td>
       <td align="right" bgcolor="#f86971">52.0</td>
     </tr>
     <tr>
       <td>PMI服務業</td>
-      <td align="right"></td>
-      <td align="right" bgcolor="#63be7b">47.8</td>
-      <td align="right" bgcolor="#fcc1c5">51.4</td>
+      <td align="right" bgcolor="#63be7b">46.2</td>
+      <td align="right" bgcolor="#aeddba">47.8</td>
+      <td align="right" bgcolor="#fbacb1">51.4</td>
       <td align="right" bgcolor="#f86971">52.9</td>
     </tr>
   </tbody>
@@ -163,37 +163,37 @@
 
 | 指標 | 狀態 | 新增 | 修訂 | 官方最新期 | 官方最新值 | 錯誤 |
 |---|---|---:|---:|---|---:|---|
-| 就業新增 | OK | 1 | 20 | 2026-10 | -43.53074434000155 |  |
-| 失業率 | OK | 1 | 21 | 2026-10 | 4.86483265 |  |
+| 就業新增 | OK | 0 | 0 | 2026-10 | -43.53074434000155 |  |
+| 失業率 | OK | 0 | 0 | 2026-10 | 4.86483265 |  |
 | 就業不足率 | ERROR | 0 | 0 |  |  | RuntimeError: Official ABS workbook contained no series matching all published reference values |
-| 勞動力未充分利用率 | OK | 1 | 141 | 2026-10 | 11.0746644 |  |
+| 勞動力未充分利用率 | OK | 0 | 0 | 2026-10 | 11.0746644 |  |
 | Employment Ratio | ERROR | 0 | 0 |  |  | RuntimeError: ABS series selection failed published-value verification: [{"period": "2026-04", "published": 63.7, "downloaded": 63.66411155, "difference": -0.035888450000001626, "match": true}, {"period": "2026-05", "published": 63.8, "downloaded": 63.7479092, "difference": -0.052090799999994886, "match": false}, {"period": "2026-06", "published": 64.0, "downloaded": 64.00731232, "difference": 0.00731231999999693, "match": true}, {"period": "2026-07", "published": 63.9, "downloaded": 63.83207844, "difference": -0.06792156000000205, "match": false}] |
 | 職缺 | OK | 0 | 0 | 2026-08 | 325.0 |  |
 | ANZ職缺廣告 | OK | 0 | 0 | 2026-09 | 125.29980391886193 |  |
-| 時薪YoY | OK | 1 | 0 | 2026-Q3 | 3.111387678904798 |  |
+| 時薪YoY | OK | 0 | 0 | 2026-Q3 | 3.111387678904798 |  |
 | 預計離職 | OK | 0 | 0 | 2026-Q1 | 1310.8837533 |  |
 | 失業預期 | OK | 0 | 0 | 2026-11 | 144.4 |  |
-| CPI YoY | OK | 0 | 0 | 2026-09 | 4.4 |  |
-| Trimmed Mean YoY | OK | 0 | 0 | 2026-09 | 3.6 |  |
+| CPI YoY | OK | 1 | 0 | 2026-10 | 5.0 |  |
+| Trimmed Mean YoY | OK | 1 | 14 | 2026-10 | 3.8 |  |
 | 零售 | OK | 0 | 0 | 2026-09 | 6.2 |  |
 | NAB企業售價 | ERROR | 0 | 0 |  |  | RuntimeError: No latest NAB product prices value parsed from dynamically discovered official release |
 | 消費信心 | OK | 0 | 0 | 2026-11 | 78.2 |  |
-| 製造業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia manufacturing flash PMI from the newest three releases |
-| 服務業PMI | ERROR | 0 | 0 |  |  | RuntimeError: Fast PMI mode could not parse the latest Australia services flash PMI from the newest three releases |
+| 製造業PMI | OK | 1 | 0 | 2026-11 | 48.7 |  |
+| 服務業PMI | OK | 1 | 0 | 2026-11 | 46.2 |  |
 | GDP YoY | OK | 0 | 0 | 2026-Q2 | 2.298880639850265 |  |
 | GDP私人消費YoY | OK | 0 | 0 | 2026-Q2 | 1.8645731108930308 |  |
 | GDP投資YoY | OK | 0 | 0 | 2026-Q2 | 2.204651162790694 |  |
-| 私人企業時薪ex bonus(季度) | OK | 1 | 0 | 2026-Q3 | 3.4 |  |
-| 政府時薪ex bonus(季度) | OK | 1 | 0 | 2026-Q3 | 3.9 |  |
+| 私人企業時薪ex bonus(季度) | OK | 0 | 0 | 2026-Q3 | 3.4 |  |
+| 政府時薪ex bonus(季度) | OK | 0 | 0 | 2026-Q3 | 3.9 |  |
 | 就業新增-全職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
 | 就業新增-兼職 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| 勞參率 | OK | 1 | 141 | 2026-10 | 66.5853826 |  |
+| 勞參率 | OK | 0 | 0 | 2026-10 | 66.5853826 |  |
 | 工時 | ERROR | 0 | 0 |  |  | RuntimeError: Official workbook discovery/download failed:  |
-| Indeed職缺 | ERROR | 0 | 0 |  |  | HTTPError: 403 Client Error: rate limit exceeded for url: https://api.github.com/repos/hiring-lab/job_postings_tracker/contents/AU/aggregate_job_postings_AU.csv?ref=master |
+| Indeed職缺 | OK | 1 | 2 | 2026-11 | 156.55 |  |
 | 家戶消費-Goods | OK | 0 | 0 | 2026-09 | 6.7 |  |
 | 家戶消費-Services | OK | 0 | 0 | 2026-09 | 6.8 |  |
-| 資本支出_住房 | OK | 0 | 0 | 2026-Q2 | 2.103099304237821 |  |
-| 資本支出 設備廠房 | OK | 0 | 0 | 2026-Q2 | -8.914911358445421 |  |
+| 資本支出_住房 | OK | 1 | 46 | 2026-Q3 | 1.7121771217712078 |  |
+| 資本支出 設備廠房 | OK | 1 | 46 | 2026-Q3 | 23.12381834317243 |  |
 | Building Approvals YoY | OK | 0 | 0 | 2026-09 | -1.6905490259217504 |  |
 | Housing Credit月增率 房屋持有人 | OK | 0 | 0 | 2026-09 | 0.5 |  |
 | Housing Credit月增率 投資人 | OK | 0 | 0 | 2026-09 | 0.2 |  |

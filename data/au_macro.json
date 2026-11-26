@@ -1,7 +1,7 @@
 {
   "country": "Australia",
   "source_file": "au_econ.xlsx",
-  "generated_at": "2026-11-21T09:33:17.060843+00:00",
+  "generated_at": "2026-11-26T10:44:10.348206+00:00",
   "series": [
     {
       "id": "auempchg",
@@ -8004,7 +8004,7 @@
         },
         {
           "date": "2021-01-01",
-          "value": 106.82,
+          "value": 106.81,
           "source_url": "https://github.com/hiring-lab/job_postings_tracker/blob/master/AU/aggregate_job_postings_AU.csv",
           "release_type": "final",
           "note": "Indeed last daily total-postings observation in month; observation_date=2021-01-31"
@@ -8487,10 +8487,17 @@
         },
         {
           "date": "2026-10-01",
-          "value": 150.39,
+          "value": 150.15,
           "source_url": "https://github.com/hiring-lab/job_postings_tracker/blob/master/AU/aggregate_job_postings_AU.csv",
           "release_type": "final",
-          "note": "Indeed last daily total-postings observation in month; observation_date=2026-10-30"
+          "note": "Indeed last daily total-postings observation in month; observation_date=2026-10-31"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 156.55,
+          "source_url": "https://github.com/hiring-lab/job_postings_tracker/blob/master/AU/aggregate_job_postings_AU.csv",
+          "release_type": "final",
+          "note": "Indeed last daily total-postings observation in month; observation_date=2026-11-13"
         }
       ]
     },
@@ -10501,323 +10508,330 @@
       "data": [
         {
           "date": "2015-03-01",
-          "value": -7.7768808973752375,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -7.774418791299931,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2015-06-01",
-          "value": -3.090574351854647,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -3.0922751138572235,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2015-09-01",
-          "value": -9.841477467376746,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -9.839255245906543,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2015-12-01",
-          "value": 2.3731389685308635,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 2.3705179282868416,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2016-03-01",
-          "value": -9.559319746254557,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -9.557631186352733,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2016-06-01",
-          "value": -10.342125881431185,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -10.345322193136585,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2016-09-01",
-          "value": -4.764678956348045,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -4.759619230461565,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2016-12-01",
-          "value": 0.5549244079349869,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.5543423483957755,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2017-03-01",
-          "value": 1.581714683005253,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 1.5786835950551303,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2017-06-01",
-          "value": 0.534713607391879,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.5344955184606537,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2017-09-01",
-          "value": 1.94026040336992,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 1.946671028954694,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2017-12-01",
-          "value": -0.5217463895149876,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -0.5215019255455755,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2018-03-01",
-          "value": -1.7119120547140487,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -1.7219130575046426,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2018-06-01",
-          "value": -1.1270010672358555,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -1.1283902999466577,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2018-09-01",
-          "value": -2.556020897197875,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -2.539840637450197,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2018-12-01",
-          "value": 2.853471576055644,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 2.844489865440303,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2019-03-01",
-          "value": -2.5976823331753773,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -2.608479629016236,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2019-06-01",
-          "value": -3.45864661654135,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -3.456338746705212,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2019-09-01",
-          "value": 0.9712296133406628,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.9863930600202631,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2019-12-01",
-          "value": -4.55989110707804,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -4.561112806872192,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2020-03-01",
-          "value": -1.0839077727596846,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -1.101110248092474,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2020-06-01",
-          "value": -5.334743115297735,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -5.331239027995938,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2020-09-01",
-          "value": -3.3355333299487255,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -3.3037282842084736,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2020-12-01",
-          "value": 0.3676470588235281,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.3381276810497047,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2021-03-01",
-          "value": 4.039769754055467,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 4.033799416557682,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2021-06-01",
-          "value": 4.818428729504065,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 4.820150841229931,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2021-09-01",
-          "value": 0.7869481765834907,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.8256076749227459,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2021-12-01",
-          "value": 2.4376309274424024,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 2.397072278133572,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2022-03-01",
-          "value": 0.26956683398400294,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.27698355968548416,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2022-06-01",
-          "value": -1.6362287939186038,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -1.6528557426712998,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2022-09-01",
-          "value": 2.092267093916411,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 2.1336353340883463,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2022-12-01",
-          "value": 4.075698130625427,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 4.0140157899405615,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2023-03-01",
-          "value": 3.685470995210216,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 3.7055989083621066,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2023-06-01",
-          "value": 4.923221694683266,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 4.942434210526314,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2023-09-01",
-          "value": -0.35874439461883734,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -0.36439150536792253,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2023-12-01",
-          "value": 0.4091318222731344,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.34999410122300567,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2024-03-01",
-          "value": 0.7864069757965941,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.8190297045223005,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2024-06-01",
-          "value": -3.2908833636547397,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -3.1795390057138384,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2024-09-01",
-          "value": 1.9898833660800141,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 1.7302982857601679,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2024-12-01",
-          "value": 0.27052506455711445,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.31176006314128646,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2025-03-01",
-          "value": 1.9171810489310381,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 1.9512962744403728,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2025-06-01",
-          "value": -0.24065458045884336,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.011576307158023269,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2025-09-01",
-          "value": 2.275651334834361,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 1.8134115286673413,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2025-12-01",
-          "value": 2.7989621825615263,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 2.9899954524784,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2026-03-01",
-          "value": -3.2657743785850846,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -3.164440519556977,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         },
         {
           "date": "2026-06-01",
-          "value": 2.103099304237821,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 2.9752631378956673,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797535F; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 1.7121771217712078,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797535F; QoQ from official SA chain-volume level"
         }
@@ -10834,323 +10848,330 @@
       "data": [
         {
           "date": "2015-03-01",
-          "value": -1.5787425649007703,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -1.5781686667762584,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2015-06-01",
-          "value": -4.975995481502404,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -4.971883525416176,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2015-09-01",
-          "value": -5.4921540656205465,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -5.495664401218658,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2015-12-01",
-          "value": 2.251572327044027,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 2.2504649721016845,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2016-03-01",
-          "value": 0.44285890023372243,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.44261201721942367,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2016-06-01",
-          "value": 1.8003674219228438,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 1.8049016056984168,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2016-09-01",
-          "value": -1.3895572666025036,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -1.3934183219685758,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2016-12-01",
-          "value": -0.9272250350759514,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -0.9320505111244715,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2017-03-01",
-          "value": -0.6034111200049264,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -0.6009104704097101,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2017-06-01",
-          "value": 1.3008734435978386,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 1.3067904250122053,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2017-09-01",
-          "value": 1.6266128539105917,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 1.6274864376130127,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2017-12-01",
-          "value": 2.605451591551833,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 2.5978647686832668,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2018-03-01",
-          "value": 3.7884119164907304,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 3.7923459359463507,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2018-06-01",
-          "value": -1.2826308057407587,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -1.2754817867884571,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2018-09-01",
-          "value": 6.427794631102968,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 6.420310296191811,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2018-12-01",
-          "value": -1.484349790254924,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -1.5002915761013647,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2019-03-01",
-          "value": 0.818866688503106,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.8342303552206776,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2019-06-01",
-          "value": 0.1895170023824999,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.2028289298105168,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2019-09-01",
-          "value": -2.5779603307571786,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -2.5941511745592116,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2019-12-01",
-          "value": 0.1331410185287929,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.11484195559443577,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2020-03-01",
-          "value": -2.1052631578947323,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -2.097558311028569,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2020-06-01",
-          "value": -9.224674589700054,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -9.172571556101094,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2020-09-01",
-          "value": 0.7294264339152035,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.6511456477670707,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2020-12-01",
-          "value": 7.501392585257172,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 7.5068660360085415,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2021-03-01",
-          "value": 8.36547872646669,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 8.384899233607722,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2021-06-01",
-          "value": 0.7544362979492014,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.8432851456107171,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2021-09-01",
-          "value": -0.1265555789917716,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -0.28047577000986923,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2021-12-01",
-          "value": 0.3115100316789965,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.3437679045783737,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2022-03-01",
-          "value": 0.6052950155271297,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.6644173371398887,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2022-06-01",
-          "value": 2.0299257089044787,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 2.1296344041664472,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2022-09-01",
-          "value": -0.7435134857963321,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -1.0198929617287744,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2022-12-01",
-          "value": 1.1107093041277105,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 1.2038359518465658,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2023-03-01",
-          "value": 3.147353361945626,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 3.2258064516129004,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2023-06-01",
-          "value": 2.6847632256786103,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 2.915039062499991,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2023-09-01",
-          "value": -0.14471780028944004,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -0.7401432841485978,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2023-12-01",
-          "value": 0.3526570048309141,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 0.6596243009416414,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2024-03-01",
-          "value": 3.4371539979781485,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 3.499691343368627,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2024-06-01",
-          "value": -0.8889095732303232,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -0.4404477885850633,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2024-09-01",
-          "value": 0.7466190833959496,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -0.3133640552995365,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2024-12-01",
-          "value": -1.0859939408063402,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -0.5269970414201186,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2025-03-01",
-          "value": -0.6691169541042319,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -0.6087926387210674,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2025-06-01",
-          "value": 0.42694497153699107,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 1.0660681722541643,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2025-09-01",
-          "value": 11.417099669343411,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 9.88665278741614,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2025-12-01",
-          "value": -1.221011574172215,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -1.1199056921522343,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2026-03-01",
-          "value": 18.387055238422256,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": 18.355616111726135,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         },
         {
           "date": "2026-06-01",
-          "value": -8.914911358445421,
-          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/jun-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "value": -6.763319782710364,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
+          "release_type": "final",
+          "note": "series=A124797536J; QoQ from official SA chain-volume level"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 23.12381834317243,
+          "source_url": "https://www.abs.gov.au/statistics/economy/business-indicators/private-new-capital-expenditure-and-expected-expenditure-australia/sep-2026/07_volume_measures_seasonally_adjusted_capex.xlsx",
           "release_type": "final",
           "note": "series=A124797536J; QoQ from official SA chain-volume level"
         }
@@ -20077,6 +20098,12 @@
           "value": 4.4,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
           "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 5.0,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 128058 all groups cpi excluding insurance and financial services 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
         }
       ],
       "ticker": "",
@@ -20109,124 +20136,130 @@
         },
         {
           "date": "2025-04-01",
-          "value": 4.9,
+          "value": 3.2,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-05-01",
-          "value": 4.5,
+          "value": 3.0,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-06-01",
-          "value": 4.2,
+          "value": 2.8,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-07-01",
-          "value": 3.9,
+          "value": 3.0,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-08-01",
-          "value": 3.7,
+          "value": 3.1,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-09-01",
-          "value": 3.8,
+          "value": 3.2,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-10-01",
-          "value": 4.2,
+          "value": 3.3,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-11-01",
-          "value": 4.0,
+          "value": 3.2,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2025-12-01",
-          "value": 3.9,
+          "value": 3.3,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-01-01",
-          "value": 3.9,
+          "value": 3.3,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-02-01",
-          "value": 3.8,
+          "value": 3.3,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-03-01",
-          "value": 3.7,
+          "value": 3.3,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-04-01",
-          "value": 3.5,
+          "value": 3.4,
           "source": "AU_ECON.xlsx",
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-05-01",
-          "value": 3.6,
+          "value": 3.5,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-06-01",
           "value": 3.6,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-07-01",
           "value": 3.6,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-08-01",
           "value": 3.6,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         },
         {
           "date": "2026-09-01",
           "value": 3.6,
           "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
-          "note": "abs cpi 2 0 0 3 percentage change from previous year 115522 rents 10 original 50 australia m monthly pct percent 25 sep 2025 100 0"
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
+        },
+        {
+          "date": "2026-10-01",
+          "value": 3.8,
+          "source_url": "https://data.api.abs.gov.au/rest/data/ABS,CPI/all?startPeriod=2025-01&dimensionAtObservation=TIME_PERIOD",
+          "note": "abs cpi 2 0 0 3 percentage change from previous year 999902 trimmed mean 20 seasonally adjusted 50 australia m monthly pct percent 25 sep 2025 100 0"
         }
       ],
       "ticker": "",
@@ -22638,6 +22671,13 @@
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/1c95939d9500471b89c03f98a9e49550",
           "release_type": "flash",
           "note": "Latest S&P Flash Australia manufacturing PMI; release=October 23 2026"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 48.7,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/9464eb7ada2544d2abd61462a073b5bd",
+          "release_type": "flash",
+          "note": "Latest S&P Flash Australia manufacturing PMI; release=November 23 2026"
         }
       ],
       "ticker": "",
@@ -22854,6 +22894,13 @@
           "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/1c95939d9500471b89c03f98a9e49550",
           "release_type": "flash",
           "note": "Latest S&P Flash Australia services PMI; release=October 23 2026"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 46.2,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/9464eb7ada2544d2abd61462a073b5bd",
+          "release_type": "flash",
+          "note": "Latest S&P Flash Australia services PMI; release=November 23 2026"
         }
       ],
       "ticker": "",
