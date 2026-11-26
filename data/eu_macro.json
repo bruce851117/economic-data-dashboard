@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T09:00:20.375310+00:00",
+  "generated_at": "2026-11-26T10:15:02.745170+00:00",
   "source": {
     "type": "official_source_update",
     "file": "eu_macro.json",
@@ -9327,7 +9327,7 @@
         },
         {
           "date": "2025-10-01",
-          "value": 90,
+          "value": 91,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
           "status": "A"
         },
@@ -9399,7 +9399,13 @@
         },
         {
           "date": "2026-10-01",
-          "value": 80,
+          "value": 81,
+          "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
+          "status": "A"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 82,
           "source_url": "https://api.insee.fr/series/BDM/V1/data/SERIES_BDM/001587668?lastNObservations=24",
           "status": "A"
         }
@@ -11308,6 +11314,14 @@
           "status": "flash",
           "note": "matched UK-template label: Flash Germany Manufacturing PMI: 54.2",
           "release_type": "flash"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 55,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/f6792797b5b04f08a27727e1c3bee887",
+          "status": "flash",
+          "note": "matched UK-template label: Flash Germany Manufacturing PMI: 55.0",
+          "release_type": "flash"
         }
       ]
     },
@@ -11494,6 +11508,14 @@
         {
           "date": "2026-10-01",
           "value": 49.3,
+          "source_url": "https://tradingeconomics.com/france/manufacturing-pmi",
+          "status": "flash",
+          "note": "public indicator page; underlying source explicitly S&P Global; flash",
+          "release_type": "flash"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 47.9,
           "source_url": "https://tradingeconomics.com/france/manufacturing-pmi",
           "status": "flash",
           "note": "public indicator page; underlying source explicitly S&P Global; flash",
@@ -12516,6 +12538,14 @@
           "status": "flash",
           "note": "matched UK-template label: Flash Germany Services PMI Business Activity Index: 51.7",
           "release_type": "flash"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 54,
+          "source_url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/f6792797b5b04f08a27727e1c3bee887",
+          "status": "flash",
+          "note": "matched UK-template label: Flash Germany Services PMI Business Activity Index: 54.0",
+          "release_type": "flash"
         }
       ]
     },
@@ -12702,6 +12732,14 @@
         {
           "date": "2026-10-01",
           "value": 46.2,
+          "source_url": "https://tradingeconomics.com/france/services-pmi",
+          "status": "flash",
+          "note": "public indicator page; underlying source explicitly S&P Global; flash",
+          "release_type": "flash"
+        },
+        {
+          "date": "2026-11-01",
+          "value": 46.6,
           "source_url": "https://tradingeconomics.com/france/services-pmi",
           "status": "flash",
           "note": "public indicator page; underlying source explicitly S&P Global; flash",
@@ -14304,6 +14342,12 @@
         {
           "date": "2026-06-01",
           "value": 1,
+          "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/81000-0002_00.csv",
+          "note": "Destatis 81000-0002; Originalwerte; preisbereinigt Kettenindex; GDP YoY"
+        },
+        {
+          "date": "2026-09-01",
+          "value": 1.2,
           "source_url": "https://genesis.destatis.de/genesisWS/downloads/00/tables/81000-0002_00.csv",
           "note": "Destatis 81000-0002; Originalwerte; preisbereinigt Kettenindex; GDP YoY"
         }
